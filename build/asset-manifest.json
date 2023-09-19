@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f6b50cee.css",
+    "main.js": "/static/js/main.5d5165e7.js",
+    "static/media/main-photo.svg": "/static/media/main-photo.f9a4631e4b1ba8dda7670a12d18b8043.svg",
+    "static/media/dynamicLinkPhoto.svg": "/static/media/dynamicLinkPhoto.eabd9650cb8a415640eb8274de6f805e.svg",
+    "static/media/compliance-section-photo.svg": "/static/media/compliance-section-photo.bdad9c8fced11b2667e03a5ffbd08d88.svg",
+    "static/media/amico.svg": "/static/media/amico.f43ee2ab9d460d6c79bdfbcd060ebb9b.svg",
+    "static/media/pana.svg": "/static/media/pana.423fbbe815c5a3f08d4a260dc8db755c.svg",
+    "static/media/Rectangle 20.svg": "/static/media/Rectangle 20.51d9a1dd54f214d7d147.svg",
+    "static/media/easyIFU_Logo.png": "/static/media/easyIFU_Logo.75686f67e74d9af2255f.png",
+    "index.html": "/index.html",
+    "main.f6b50cee.css.map": "/static/css/main.f6b50cee.css.map",
+    "main.5d5165e7.js.map": "/static/js/main.5d5165e7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f6b50cee.css",
+    "static/js/main.5d5165e7.js"
+  ]
+}

@@ -1,0 +1,44 @@
+/* CSS for centering the custom alert */
+.custom-alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+  }
+  
+  .custom-alert .alert-content {
+    text-align: center;
+  }
+  
+  .custom-alert button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .custom-alert button:hover {
+    background-color: #0056b3;
+  }
+  
+
+
+  /* CSS for blocking overlay */
+.blocking-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000; /* Ensure the overlay is above other elements */
+    cursor: not-allowed; /* Change cursor to "not allowed" */
+  }
+  
