@@ -24,7 +24,7 @@ import { refreshAction } from './redux/actions/authActions';
 import EmailVerification from './pages/emailVerification/EmailVerification';
 import EmailCheckForResetPassword from './components/resetPsswordUsers/EmailCheckForResetPassword';
 import ResetPassword from './components/resetPsswordUsers/ResetPassword';
-import jwtDecode from 'jwt-decode';
+// import jwtDecode from 'jwt-decode';
 
 function App() {
   const location = useLocation();
