@@ -1,0 +1,26 @@
+
+name: Frontend CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [16.17.0] # Use Node.js version 16.17.0
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Dependencies
+      run: npm install
+    - name: Build
+      run: npm run build
