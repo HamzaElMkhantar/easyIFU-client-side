@@ -3,7 +3,9 @@ import {combineReducers,
         createStore, 
         applyMiddleware}  from 'redux';
 import thunk from 'redux-thunk';
-import {GenerateOTPReducer, VerifyOTPReducer, logOutReducer, 
+import {GenerateOTPReducer,
+        VerifyOTPReducer, 
+        logOutReducer, 
         loginReducer, 
         refreshTokenReducer, 
         registerReducer,
@@ -11,6 +13,25 @@ import {GenerateOTPReducer, VerifyOTPReducer, logOutReducer,
         resetPasswordReducer,
         resetUserPasswordEmailCheckReducer
     } from './reducers/authReducers';
+import {createUserReducer, 
+        deleteUserReducer, 
+        getUserReducer, 
+        toggleStatusUserReducer, 
+        updateUserReducer, 
+        usersCompanyReducer 
+    } from './reducers/userReducers';
+import {IVDDiagnosticReducer, deleteProjectReducer, getAllProjectsReducer, 
+        getProjectReducer, 
+        manufacturerInformationReducer, 
+        othersReducer, 
+        productInformationReducer, 
+        safeUseReducer, 
+        startProjectReducer, 
+        sterilityReducer, 
+        storageReducer, 
+        transfusionInfusionReducer
+    } from './reducers/projectReducers';
+import { getCompanyInfoReducer } from './reducers/companyReducers';
 
 
 const reducer = combineReducers({
@@ -22,13 +43,33 @@ const reducer = combineReducers({
     // OTP Verification and Generator reducers
     GenerateOTP: GenerateOTPReducer,
     VerifyOTP: VerifyOTPReducer,
-    // reset Password
+    // reset Password reducers
     EmailCheck: resetUserPasswordEmailCheckReducer,
     OTPVerification: resetPassOTPVerificationReducer,
-    resetPassword: resetPasswordReducer
-})
- 
+    resetPassword: resetPasswordReducer,
+    // users & company reducers
+    usersCompany: usersCompanyReducer,
+    getUser: getUserReducer,
+    updateUser: updateUserReducer,
+    toggleStatusUser: toggleStatusUserReducer,
+    deleteUser: deleteUserReducer,
+    createUser: createUserReducer,
 
+    getCompanyInfo:getCompanyInfoReducer,
+    // project reducers
+    getAllProjects: getAllProjectsReducer,
+    getProject: getProjectReducer,
+    startProject: startProjectReducer,
+    deleteProject: deleteProjectReducer,
+    manufacturerInformation: manufacturerInformationReducer,
+    productInformation: productInformationReducer,
+    sterility: sterilityReducer,
+    storage: storageReducer,
+    safeUse: safeUseReducer,
+    IVDDiagnostic: IVDDiagnosticReducer,
+    transfusionInfusion: transfusionInfusionReducer,
+    others: othersReducer
+})
 
 
 const composeEnhancers = composeWithDevTools({

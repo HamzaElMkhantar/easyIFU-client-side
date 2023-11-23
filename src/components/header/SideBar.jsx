@@ -12,6 +12,8 @@ import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAction } from '../../redux/actions/authActions';
 import { RotatingLines } from 'react-loader-spinner';
+import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
 
 const SideBar = ({isSidebarOpen}) => {
   const {logout} = useSelector(state => state);
@@ -19,8 +21,11 @@ const SideBar = ({isSidebarOpen}) => {
   const dispatch = useDispatch()
   const handleLogout = () => {
     dispatch(logoutAction())
+
   }
   const navigate = useNavigate()
+  const token = Cookies.get("eIfu_ATK") || null;
+  const decodedToken = token ? jwtDecode(token) : null;
   useEffect(() => {
     if(logoutSuccess){
       navigate("/login")
@@ -45,6 +50,8 @@ const SideBar = ({isSidebarOpen}) => {
               <Link to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/> Home</Link>
               <Link to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/> Project</Link>
               <Link to="/dashboard/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link>
+              {decodedToken && decodedToken.userInfo && decodedToken.userInfo.role === "Admin" &&
+               <Link to="/dashboard/user/create"><GroupRoundedIcon style={{color:'#C08261'}}/> Create User</Link>}
               <Link to="/dashboard/company"><StoreRoundedIcon style={{color:'#E5D283'}}/>My Company</Link>
               <Link to="/dashboard/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link>
           </div>

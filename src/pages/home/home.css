@@ -7,6 +7,7 @@
 .main-section{
     margin-bottom: 120px;
 }
+
 .home .main-section-bg {
     height: 700px;
     position: absolute;
@@ -271,7 +272,7 @@
     margin-top: 40px;
 }
 .report-card {
- width: 260px;
+ width: 240px;
  height: 300px;
  display: flex;
  flex-direction: column;
@@ -453,7 +454,7 @@
 .card-left-content .list-contact{
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
 }
 .card-left-content .list-contact li{
     display: flex;
@@ -933,7 +934,7 @@
 .card-left-content .list-contact{
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
 }
 .card-left-content .list-contact li{
     display: flex;
@@ -1075,7 +1076,7 @@
 .card-left-content .list-contact{
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
 }
 .card-left-content .list-contact li{
     display: flex;

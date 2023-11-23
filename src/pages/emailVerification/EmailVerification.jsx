@@ -12,25 +12,17 @@ const EmailVerification = () => {
     const [otpCode, setOtpCode] = useState('')
 
     const {GenerateOTP, VerifyOTP} = useSelector(state => state);
-    console.log(GenerateOTP.OTPRequest, GenerateOTP.OTPSuccess, GenerateOTP.OTPFail);
-    console.log(VerifyOTP.OTPVerifyRequest, VerifyOTP.OTPVerifySuccess, VerifyOTP.OTPVerifyFail);
-
     const dispatch = useDispatch()
     const token = Cookies.get("eIfu_ATK") || null;
-    const decodedToken = jwtDecode(token)
-    console.log(decodedToken)
+    const decodedToken = token ? jwtDecode(token) : null
     const handleOtpForm = e => {
         e.preventDefault();
         dispatch(VerifyOTPAction(decodedToken.userInfo._id, otpCode))
     }
 
     const handleBTN = () => {
-        console.log(decodedToken.userInfo._id)
         dispatch(GenerateOTPAction(decodedToken.userInfo._id))
-    }
-
-
-    
+    }    
     
     useEffect(() => {
         if(GenerateOTP.OTPRequest){

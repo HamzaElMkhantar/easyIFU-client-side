@@ -28,7 +28,6 @@ import {
       } from '../constants/authConstants';
 
 import { BaseUrl } from '../../config';
-import { Navigate } from 'react-router-dom';
 
 
 export const registerAction = (userInfo) => async (dispatch) => {
@@ -68,6 +67,7 @@ export const loginAction = (email, password) => async (dispatch) => {
           email,
           password,
         });
+
     // Store the access token and refresh token in cookies
     Cookies.set('eIfu_ATK', response.data.accessToken);
     Cookies.set('eIfu_RTK', response.data.refreshToken); // Set the expiration time as needed

@@ -15,12 +15,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { refreshAction } from '../../redux/actions/authActions'
 
 const Home = () => {
-    const dispatch = useDispatch()
 
   return (
     <div className='home'>

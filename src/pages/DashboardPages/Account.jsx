@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import easyIFUlogo from '../../assets/easyIFU_Logo.png'
-import SideBar from '../../components/header/SideBar'
-import Avatar from '@mui/material/Avatar';
 import '../../components/header/header.css';
-import { Card } from 'react-bootstrap';
+import Avatar from '@mui/material/Avatar';
+import SideBar from '../../components/header/SideBar';
+import { RotatingLines } from 'react-loader-spinner';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
-import TurnedInRoundedIcon from '@mui/icons-material/TurnedInRounded';
-import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
-
+import { UpdateUserAction, getUserAction, toggleStatusUserAction } from '../../redux/actions/userActions';
+import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
+import { toast } from 'react-toastify';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 
 const Account = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(
@@ -23,6 +22,91 @@ const Account = () => {
         localStorage.setItem('sideToggle', JSON.stringify(newToggleState));
       };
 
+
+      const {getUser, updateUser} = useSelector(state => state);
+      const {userRequest, userSuccess, user, userFailed} = getUser;
+      const {updateUserRequest, updateUserSuccess, updatedUser, updateUserFailed} = updateUser;
+      console.log(userRequest, userSuccess, user, userFailed)
+      const token = Cookies.get("eIfu_ATK") || null;
+      const decodedToken = token ? jwtDecode(token) : null
+  
+      const [userState, setUserState] = useState(null);
+
+      const [userInfo, setUserInfo] = useState({
+          adminId: decodedToken ? decodedToken.userInfo._id : null,
+          userId: decodedToken ? decodedToken.userInfo._id : null,
+          firstName: '',
+          lastName: '',
+          password: '',
+          email: '',
+        })
+      
+        const dispatch = useDispatch();
+      
+        const handleInput = (e) => {
+          setUserInfo({
+            ...userInfo,
+            [e.target.id]: e.target.value
+          })
+        }
+      
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+        
+          const { firstName, lastName, email, password } = userInfo;
+        
+          if (firstName !== '' || lastName !== '' || email !== '' || password !== '') {
+            dispatch(UpdateUserAction(userInfo, token));
+          } else {
+            toast.info("Fields are Empty");
+          }
+        
+          // Reset the form fields
+          setUserInfo({
+            ...userInfo,
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+          });
+        }
+
+        useEffect(() => {
+            dispatch(getUserAction(decodedToken.userInfo._id, token))
+        }, [])
+
+        useEffect(() => {
+            if(updateUserSuccess){
+                dispatch(getUserAction(decodedToken.userInfo._id, token))
+            }
+        }, [updateUserSuccess])
+ 
+        useEffect(() => {
+            if(userSuccess){
+                setUserState(user)
+            }
+        }, [userSuccess])
+
+  
+        useEffect(() => {
+          if(updateUserSuccess){
+              toast.success("Updated successfully")
+          }
+          if(updateUserFailed){
+              toast.warning(`${updateUserFailed.message}`)
+          }
+        }, [updateUserSuccess, updateUserFailed])
+  
+  
+        const dateFormat = (date) => {
+          const dateObject = new Date(date);
+        
+          const day = String(dateObject.getDate()).padStart(2, '0');
+          const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+          const year = dateObject.getFullYear();
+          const formattedDate = `${day}/${month}/${year}`;
+          return formattedDate;
+        };
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
@@ -84,156 +168,149 @@ const Account = () => {
         </div>
 
         {/* Dashboard  content   */}
-        <section  className='' style={{paddingTop:'20px', overflowY:'scroll', height:'94.3vh'}}>
-            <div className="container-dashboard mt-4">
- 
-                <div  className="row mt-4">
-                    <div className="col-12 col-md-6 col-lg-4 my-1">
-                        <Card>
-                            <Card.Body className='' style={{display:'flex'}}>
-                                <StoreRoundedIcon style={{ fontSize:'90px', marginRight:'15px', color:'#075670'}}/>
-                                <div style={{ width:'100%'}} className=''>
-                                    <h5 className="card-title">Projects</h5>
-                                    <h4 className="card-number">245</h4>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </div>
-
-                    <div className="col-12 col-md-6 col-lg-4 my-1">
-                        <Card>
-                            <Card.Body className='' style={{display:'flex'}}>
-                                <PersonRoundedIcon style={{ fontSize:'90px', marginRight:'15px', color:'#c08260'}}/>
-                                <div style={{ width:'100%'}} className=''>
-                                    <h5 className="card-title">Users</h5>
-                                    <h4 className="card-number">245</h4>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </div>
-                    
-                    <div className="col-12 col-md-6 col-lg-4 my-1">
-                        <Card>
-                            <Card.Body className='' style={{display:'flex'}}>
-                                <TurnedInRoundedIcon style={{ fontSize:'90px', marginRight:'15px', color:'#9A3B3B'}}/>
-                                <div style={{ width:'100%'}} className=''>
-                                    <h5 className="card-title">Documents</h5>
-                                    <h4 className="card-number">245</h4>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </div>
-                </div>
-
-                <div   className="row mt-4">
-                    <div  className="col-md-6"> 
-                    <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
-                        <h6>total project: 12</h6>  
-                        <Link to="/dashboard/project" style={{display:'flex', alignItems:'center', color:'black', backgroundColor:'#fff', borderRadius:'5px', padding:'0 5px'}}>
-                            Show More
-                            <PlayArrowRoundedIcon/>
-                        </Link>                     
-                    </div>
-                        <table style={{backgroundColor:'#fff'}} className="table table-hover my-1">
-                        <thead style={{backgroundColor:'#075670'}} className="thead-dark">
-                            <tr style={{color:'#fff'}}>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">4</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">5</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-
-
-                    <div  className="col-md-6"> 
-                        <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
-                            <h6>total users: 3</h6>  
-                            <Link to="/dashboard/users" style={{display:'flex', alignItems:'center', color:'black', backgroundColor:'#fff', borderRadius:'5px', padding:'0 5px'}}>
-                                Show More
-                                <PlayArrowRoundedIcon/>
-                            </Link>                     
-                        </div>
-                        <table style={{backgroundColor:'#fff'}} className="table table-hover my-1">
-                        <thead style={{backgroundColor:'#c08260'}} className="thead-dark">
-                            <tr style={{color:'#fff'}}>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">4</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">5</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
+        <section className='container' style={{marginTop:'20px'}}>
+       <div style={{backgroundColor:'#fff', 
+                    borderRadius:'10px', 
+                    padding:'10px',
+                    display:'flex',
+                    marginTop:'10px'
+                    }} className='col-12 manage-user-card'>
+            <div className='col-lg-2'>
+                <Avatar 
+                    sx={{ width: 130, height: 130, fontSize:'90px'}}
+                    style={{backgroundColor:'black', color:"#ecf0f3", marginBottom:'15px'}}>
+                    {userState && userState.firstName[0].toUpperCase()}
+                </Avatar>
+                
             </div>
+            <div className='manage-user-card-content px-3 col-lg-8'>
+                <p style={{fontSize:'14px', color:'gray'}}>FirstName: {userState && userState.firstName} </p>
+                <p style={{fontSize:'14px', color:'gray'}}>LastName: {userState && userState.lastName} </p>
+                <p style={{fontSize:'14px', color:'gray'}}>Email: {userState && userState.email} </p>
+                <p style={{fontSize:'14px', color:'gray'}}>Role: {userState && userState.role} </p>
+                <p style={{fontSize:'14px', color:'gray'}}>Status: {userState && userState.isActive ? "active" : "not Active"} </p>
+                {userState && userState.createdAt && <p style={{fontSize:'14px', color:'gray'}}>Created: {userState && dateFormat(userState.createdAt)} </p>}
 
-        </section>
+            </div>
+            {userRequest 
+                ? <RotatingLines
+                strokeColor="#FFFFFF"
+                strokeWidth="5"
+                animationDuration="0.75"
+                width="30"
+                visible={true}
+              /> 
+                
+                 : null}
+
+       </div>
+
+       <div  style={{
+                    backgroundColor:'#fff',
+                    marginTop:'20px',
+                    borderRadius:'10px'
+                }}
+            className="card-body col-md-12">
+  
+                    <form style={{ marginTop: '20px' }} onSubmit={handleSubmit}>
+                      <div className="row">
+                       {decodedToken &&
+                            decodedToken.userInfo &&
+                            decodedToken.userInfo.role == "Admin" &&
+                            <div className="col-md-6">
+                          <div className="form-outline mb-2">
+                            <label className="form-label" htmlFor="firstName">
+                              First Name
+                            </label>
+                            <input
+                                type="text"
+                                id="firstName"
+                                className="form-control"
+                                onChange={(e) => handleInput(e)}
+                                placeholder="First Name"
+                                value={userInfo.firstName}
+                            />
+                          </div>
+                        </div>}
+
+                        {decodedToken &&
+                        decodedToken.userInfo &&
+                        decodedToken.userInfo.role == "Admin" &&
+                            <div className="col-md-6">
+                                <div className="form-outline mb-2">
+                                    <label className="form-label" htmlFor="lastName">
+                                    Last Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="lastName"
+                                        onChange={(e) => handleInput(e)}
+                                        className="form-control"
+                                        placeholder="Last Name"
+                                        value={userInfo.lastName}
+                                    />
+                                </div>
+                            </div>}
+
+                      </div>
+                      <div className="row">
+                        {decodedToken &&
+                        decodedToken.userInfo &&
+                        decodedToken.userInfo.role == "Admin" &&
+                            <div className="col-md-6">
+                            <div className="form-outline mb-2">
+                                <label className="form-label" htmlFor="email">
+                                E-mail
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    onChange={(e) => handleInput(e)}
+                                    className="form-control"
+                                    placeholder="E-mail"
+                                    value={userInfo.email}
+                                />
+                            </div>
+                            </div>}
+
+                        <div className="col-md-6">
+                          <div className="form-outline mb-2">
+                            <label className="form-label" htmlFor="password">
+                              Password
+                            </label>
+                            <input
+                                value={userInfo.password}
+                                type="password"
+                                id="password"
+                                onChange={(e) => handleInput(e)}
+                                className="form-control"
+                                placeholder="Password"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-center pt-1 mb-4 pb-1">
+                        <button disabled={updateUserRequest ? true : false}
+                          style={{ width: '100%', backgroundColor: '#08408b', border: '0', fontSize: '18px' , fontWeight:'600'}}
+                          className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
+                          type="submit"
+                        >
+                         {updateUserRequest ?
+                              <div>
+                                  <RotatingLines
+                                  strokeColor="#FFFFFF"
+                                  strokeWidth="5"
+                                  animationDuration="0.75"
+                                  width="30"
+                                  visible={true}
+                                /> 
+                              </div>
+                         :"Update"}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+      </section>
       </main>
     </div>
   )

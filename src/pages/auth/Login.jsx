@@ -46,10 +46,7 @@ const Login = () => {
 
   useEffect(() => {
     setErrMsg('')
-  }, [userEmail, userPassword])
-  
-  const location = useLocation();
-  
+  }, [userEmail, userPassword])  
 
 
 
@@ -67,8 +64,8 @@ const Login = () => {
   }
 
   return (
-    <section style={{ backgroundColor: '#ecf0f3'}} className="h-90 gradient-form" >
-      <div style={{paddingTop:'120px'}} className="container py h-90">
+    <section style={{ backgroundColor: '#ecf0f3', height:'100vh'}} className="h-90 gradient-form" >
+      <div style={{height:'100%', display:'flex', justifyContent:'center', alignContent:'center'}} className="container py h-90">
         <div className="row d-flex justify-content-center align-items-center h-90">
           <div className="col-xl-10">
             <div className="card rounded-3 text-black" style={{overflow:'hidden'}}>

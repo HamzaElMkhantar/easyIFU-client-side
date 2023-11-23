@@ -1,16 +1,78 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
+import { useEffect, useState } from 'react';
 import SideBar from '../../components/header/SideBar'
 import Avatar from '@mui/material/Avatar';
-import {Routes, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../../components/header/header.css';
+import easyIFUlogo from '../../assets/easyIFU_Logo.png'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteUserAction, usersCompanyAction } from '../../redux/actions/userActions';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
+import { toast } from 'react-toastify';
+import { RotatingLines } from 'react-loader-spinner';
 
 const Users = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [users, setUsers] = useState(null);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   }
+
+  const token = Cookies.get("eIfu_ATK") || null;
+  const decodedToken = token ? jwtDecode(token) : null
+
+
+  const {usersCompany, deleteUser} = useSelector(state => state)
+  const {allUsers, usersCompanyRequest, usersCompanySuccess, usersCompanyFailed} = usersCompany;
+  const {deleteUserRequest, deleteUserSuccess, deleteUserFail} = deleteUser;
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(usersCompanyAction(decodedToken.userInfo, token))
+  },[])
+
+  useEffect(() => {
+    if(deleteUserSuccess){
+      dispatch(usersCompanyAction(decodedToken.userInfo, token))
+      toast.success("user deleted successfully")
+    }
+  },[deleteUserSuccess])
+
+  useEffect(() => {
+    if(deleteUserFail){
+      toast.warning(`${deleteUserFail.message}`)
+    }
+  },[deleteUserFail])
+  useEffect(() => {
+    if(usersCompanySuccess){
+      setUsers(allUsers)
+    }
+  },[usersCompanySuccess])
+
+  const handleUserDelete = (userId) => {
+    const ids = {
+      userId,
+      adminId: decodedToken.userInfo._id,
+      companyId: decodedToken.userInfo.companyId
+    }
+    dispatch(deleteUserAction(ids, token))
+  }
+
+  const dateFormat = (date) => {
+    const dateObject = new Date(date);
+  
+    const day = String(dateObject.getDate()).padStart(2, '0');
+    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+    const year = dateObject.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
+    return formattedDate;
+  };
+  
 
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
@@ -19,23 +81,134 @@ const Users = () => {
       <main className='' style={{paddingTop:'0px', width:'100%'}}>
         {/* Dashboard header  */}
         <div  style={{ borderBottom:'1px solid lightGray'}} id="page-content-wrapper">
-          <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} className='container'>
-            <span href="#menu-toggle" id="menu-toggle" onClick={toggleSidebar}>
-              &#9776;
-            </span>
-            <div >
-              <Avatar
-              sx={{ width: 40, height: 40 }}
-                  style={{backgroundColor:'black'}}>
-                  
-              </Avatar>
-            </div>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} className='container-dashboard'>
+                <div style={{display:'flex', alignItems:'center'}} className=''>
+                    <span href="#menu-toggle" id="menu-toggle" onClick={toggleSidebar}>
+                        &#9776;
+                    </span>
+                    <Link to="/">
+                        <img className='dash-Logo' src={easyIFUlogo} alt="easyIFU-logo" />
+                    </Link>
+                    <div style={{display:'flex', flexWrap:'wrap', gridGap:'5px'}} className='dash-header-sm-devices'>
+                        
+                    </div>
+                </div>
+                <div style={{display:'flex', alignItems:'center'}} >
+                    <div  className="dropdown">
+                            <button style={{ 
+                                        }}
+                                    className="dropdown-toggle" 
+                                    type="button" 
+                                    // id="dropdownMenuButton1" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false">
+                                        menu
+                            </button>
+                            <ul style={{padding:'5px'}} className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                {/* <li style={{display:'flex', alignItems:'center'}} ><Link  to="/profile">Profile</Link></li>
+                                <li style={{cursor:'pointer', display:'flex', alignItems:'center'}}><span>SignOut</span></li> */}
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                    <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard">Home</Link>
+                                </li>
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                    <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/project">Project</Link>
+                                </li>
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                    <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/users">Users</Link>
+                                </li>
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/company">Company</Link>
+                                </li>
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/account">Account</Link>
+                                </li>
+                            </ul>
+                        </div>
+                            <Avatar sx={{bgcolor:'#000000'}}></Avatar>
+                </div>
           </div>
         </div>
 
         {/* Dashboard  content   */}
-        <section className='container' style={{marginTop:'20px'}}>
-         
+        <section className='' style={{marginTop:'20px'}}>
+          <div style={{ padding: '20px' }} className="col-md-12">
+  <div
+    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+  >
+    <h6>total users: {users ? users?.lengt : <>No users</>}</h6>
+  </div>
+  <div className="table-responsive">
+
+    <table style={{ backgroundColor: '#fff' }} className="table table-hover my-1">
+      <thead style={{ backgroundColor: '#c08260' }} className="thead-dark">
+        <tr style={{ color: '#fff' }}>
+          <th scope="col">#</th>
+          <th scope="col">Full Name</th>
+          <th scope="col">Role</th>
+          <th scope="col">Created</th>
+          <th scope="col">Email</th>
+          <th scope="col">Status</th>
+          {decodedToken &&
+          decodedToken?.userInfo &&
+          decodedToken?.userInfo.role == "Admin" &&
+          <th scope="col">Manage</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {users &&
+          users?.map((item, index) => {
+            return (
+              <tr key={index}>
+                <th scope="row">{index + 1}</th>
+                <td>{item.firstName} {item.lastName}</td>
+                <td>{item.role}</td>
+                <td>{dateFormat(item.createdAt)}</td>
+                <td>{item.email}</td>
+                <td>{item.isActive ? 'Active' : 'Not Active'}</td>
+                {decodedToken &&
+                decodedToken?.userInfo &&
+                decodedToken?.userInfo.role == "Admin" &&
+                <td>
+                  <div style={{display:'flex'}}>
+                    <Link to={`/dashboard/user/${item._id}`}
+                      style={{ margin: '2px 5px', padding: '5px', borderRadius: '5px', border:'1px solid lightGray'}}
+                    >
+                      <SettingsSuggestRoundedIcon style={{ color: '#404040' }} />
+                    </Link>
+                    <button
+                        disabled={deleteUserRequest ? true : false}
+                        onClick={() => handleUserDelete(item._id)}
+                        style={{ margin: '2px 5px', padding: '5px', borderRadius: '5px', border:'1px solid lightGray'}}
+                    >
+                      {deleteUserRequest ?
+                              <div>
+                                  <RotatingLines
+                                  strokeColor="#FFFFFF"
+                                  strokeWidth="5"
+                                  animationDuration="0.75"
+                                  width="30"
+                                  visible={true}
+                                /> 
+                              </div>
+                         :
+                          <DeleteRoundedIcon style={{ color: '#F24E4E' }} />
+                         }
+                    </button>
+                  </div>
+                </td>}
+              </tr>
+            );
+          })}
+      </tbody>
+    </table>
+  </div>
+</div>
+
         </section>
       </main>
     </div>
