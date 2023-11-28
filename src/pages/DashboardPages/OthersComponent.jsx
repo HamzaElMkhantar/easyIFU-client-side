@@ -516,9 +516,9 @@ const OthersComponent = () => {
               <textarea
                 className="form-control"
                 required={formData.containsCMRSubstances ? true : false}
-                name="listOfSubstances"
-                value={formData.listOfSubstances}
-                onChange={(e) => handleInputChange('listOfSubstances', e.target.value)}
+                name="cmrSubstancesList"
+                value={formData.cmrSubstancesList}
+                onChange={(e) => handleInputChange('cmrSubstancesList', e.target.value)}
               />
             </div>
           </div>
@@ -532,10 +532,10 @@ const OthersComponent = () => {
               <input
                 type="checkbox"
                 className="form-check-input"
-                name="intendedForBodyIntroduction"
+                name="intendedForIntroduction"
                 value="Yes"
-                checked={formData.intendedForBodyIntroduction}
-                onChange={() => handleCheckboxChange('intendedForBodyIntroduction', 'Yes')}
+                checked={formData.intendedForIntroduction}
+                onChange={() => handleCheckboxChange('intendedForIntroduction', 'Yes')}
               />
             </div>
             <div className="form-check">
@@ -543,23 +543,23 @@ const OthersComponent = () => {
               <input
                 type="checkbox"
                 className="form-check-input"
-                name="intendedForBodyIntroduction"
+                name="intendedForIntroduction"
                 value="No"
-                checked={!formData.intendedForBodyIntroduction}
-                onChange={() => handleCheckboxChange('intendedForBodyIntroduction', 'No')}
+                checked={!formData.intendedForIntroduction}
+                onChange={() => handleCheckboxChange('intendedForIntroduction', 'No')}
               />
             </div>
           </div>
         </div>
 
-        {formData.intendedForBodyIntroduction && (
+        {formData.intendedForIntroduction && (
           <div>
             <div className="form-group">
               <label>Qualitative composition of the device:</label>
               <textarea
                 className="form-control"
                 name="qualitativeComposition"
-                required={formData.intendedForBodyIntroduction ? true : false}
+                required={formData.intendedForIntroduction ? true : false}
                 value={formData.qualitativeComposition}
                 onChange={(e) => handleInputChange('qualitativeComposition', e.target.value)}
               />
@@ -568,10 +568,10 @@ const OthersComponent = () => {
               <label>Quantitative information on the main constituent:</label>
               <textarea
                 className="form-control"
-                name="quantitativeInfo"
-                required={formData.intendedForBodyIntroduction ? true : false}
-                value={formData.quantitativeInfo}
-                onChange={(e) => handleInputChange('quantitativeInfo', e.target.value)}
+                name="quantitativeInformation"
+                required={formData.intendedForIntroduction ? true : false}
+                value={formData.quantitativeInformation}
+                onChange={(e) => handleInputChange('quantitativeInformation', e.target.value)}
               />
             </div>
           </div>

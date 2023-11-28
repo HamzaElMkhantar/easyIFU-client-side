@@ -76,15 +76,22 @@ const ManageUser = () => {
         if(updatedUser){
             setUserState(updatedUser)
         }
+      
+      }, [user, updatedUser])
+      
+      useEffect(() => {
+        if(toggleUserSuccess){
+          setUserState(toggledUser)
+        }
+     
         if(toggledUser){
-            setUserState(toggledUser)
             if(toggledUser.isActive){
                 toast.success("user is active")
-            }else if(!toggledUser.isActive){
+            }else{
                 toast.success("user is Deactivate")
             }
         }
-      }, [user, updatedUser, toggledUser])
+      }, [toggleUserSuccess, toggledUser])
 
       useEffect(() => {
         if(updateUserSuccess){
@@ -146,27 +153,53 @@ const ManageUser = () => {
                     display:'flex',
                     marginTop:'10px'
                     }} className='col-12 manage-user-card'>
-            <div className='col-lg-2'>
+            <div className='col-lg-2' style={{display:'flex', flexDirection:'column', justifyItems:'center', alignItems:'center'}}>
                 <Avatar 
                     sx={{ width: 130, height: 130, fontSize:'90px'}}
                     style={{backgroundColor:'black', color:"#ecf0f3", marginBottom:'15px'}}>
-                    H
-                </Avatar>
+                    {userState && userState.firstName[0]}
+                </Avatar> 
+                {/* toggleUserRequest */}
                 <div  style={{display:'flex', justifyContent:'', marginTop:'20px'}} className='mx-4'>
                     {userState &&
                     userState.isActive === true ?
-                    <button onClick={() => handleUserToggle()} style={{padding:'1px 15px', 
+                    <button 
+                        onClick={() => handleUserToggle()} 
+                        style={{padding:'1px 15px', 
                                     borderRadius:'6px', 
                                     backgroundColor:'#4CA44C90', 
                                     color:'#033C03', 
-                                    fontWeight:'600'
-                                }} >Activate</button>
-                   : <button onClick={() => handleUserToggle()} style={{padding:'1px 15px', 
+                                    fontWeight:'600',
+                                    width:'100px'
+                                }} >
+                      {toggleUserRequest 
+                      ? <RotatingLines
+                          strokeColor="#FFFFFF"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="20"
+                          visible={true}/> 
+                      : "Activate"}
+                    </button>
+                   : <button 
+                        onClick={() => handleUserToggle()}
+                        style={{padding:'1px 15px', 
                                     borderRadius:'6px', 
                                     backgroundColor:'#8C1B0890', 
                                     color:'#8C1B08', 
-                                    fontWeight:'600'
-                                }} >Deactivate</button>}
+                                    fontWeight:'600',
+                                    width:'110px'
+
+                                }} >
+                      {toggleUserRequest 
+                      ? <RotatingLines
+                          strokeColor="#FFFFFF"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="20"
+                          visible={true}/> 
+                      : "Deactivate"}
+                      </button>}
                 </div>
             </div>
             <div className='manage-user-card-content px-3 col-lg-8'>

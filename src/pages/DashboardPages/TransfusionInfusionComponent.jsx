@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
 import { transfusionInfusionAction } from '../../redux/actions/projectActions';
+import { RotatingLines } from 'react-loader-spinner';
 
 const TransfusionInfusionComponent = () => {
   const {projectId} = useParams();
@@ -241,9 +242,20 @@ const TransfusionInfusionComponent = () => {
             </div>
           </div>
         </div>
-        <div style={{width:"100%", display:'flex', justifyContent:"center", alignItems:'center', marginTop:"30px"}}>
-            <button style={{padding:'4px 20px', borderRadius:'4px', backgroundColor:'#011D41', color:'#fff', fontWeight:"600"}}>Save</button>
-        </div>
+        {!transfusionInfusionRequest
+              ? <div style={{width:"100%", display:'flex', justifyContent:"center", alignItems:'center', marginTop:"30px"}}>
+                  <button style={{padding:'4px 20px', borderRadius:'4px', backgroundColor:'#011D41', color:'#fff', fontWeight:"600"}}>Save</button>
+              </div>
+              : <div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
+                  <RotatingLines
+                      strokeColor="#011d41"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      width="40"
+                      visible={true}
+                      /> 
+              </div>  
+          }
       </form>
     </div>
   );

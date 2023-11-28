@@ -25,6 +25,8 @@ const ProductInfoComponent = () => {
         udiDI: '',
         udiPI: '',
         aidc: '',
+        udiFormat: '',
+        udiType: '',
         useByDate: '',
         dateOfManufacture: '',
         serialNumber: '',
@@ -63,7 +65,9 @@ const ProductInfoComponent = () => {
             [name]: newValue,
         });
 
+        
     }
+    console.log(formData)
 
     const dispatch = useDispatch()
     const handleSubmit = e => {
@@ -137,6 +141,96 @@ const ProductInfoComponent = () => {
                 <div className="form-group">
                     <label>4- Insert the UDI of the device*:</label>
                 </div>
+                <div  className="form-group">
+                    <label>Choose UDI Format :</label>
+                    <div style={{display:'flex'}}>
+
+                    <div style={{display:'flex'}}>
+                        <input style={{width:''}}
+                        type="CheckBox"
+                        // required={udiFormat == "" ? true : false}
+                        className="form-check-input"
+                        checked={formData.udiFormat == "GS1" ? true : false}
+                        onClick={() => setFormData({...formData, udiFormat: 'GS1' })}
+                        />
+                        <label className="form-check-label mx-3">GS1</label>
+                    </div>
+                    <div style={{display:'flex'}}>
+                     <input style={{width:''}}
+                        type="CheckBox"
+                        required={numbersData == "" ? true : false}
+                        className="form-check-input"
+                        checked={formData.udiFormat == "HIBCC" ? true : false}
+                        onClick={() => setFormData({...formData, udiFormat: 'HIBCC' })}
+                        />
+                    <label className="form-check-label mx-3">HIBCC</label>
+
+                    </div>
+                    <div style={{display:'flex'}}>
+                        <input style={{width:''}}
+                        type="CheckBox"
+                        required={numbersData == "" ? true : false}
+                        className="form-check-input"
+                        checked={formData.udiFormat == "ICCBBA" ? true : false}
+                        onClick={() => setFormData({...formData, udiFormat: 'ICCBBA' })}
+                        />
+                        <label className="form-check-label mx-3">ICCBBA</label>
+                    </div>
+                    <div style={{display:'flex'}}>
+                     <input style={{width:''}}
+                        type="CheckBox"
+                        required={numbersData == "" ? true : false}
+                        className="form-check-input"
+                        checked={formData.udiFormat == "IFA" ? true : false}
+                        onClick={() => setFormData({...formData, udiFormat: 'IFA' })}
+                        />
+                    <label className="form-check-label mx-3">IFA</label>
+
+                    </div>
+                    </div>
+                </div>
+
+                {formData.udiFormat == "GS1" &&
+                    <div  className="form-group">
+                        <label>Choose UDI Format :</label>
+                        <div style={{display:'flex'}}>
+                            
+                            <div style={{display:'flex'}}>
+                                <input style={{width:''}}
+                                type="CheckBox"
+                                required={formData.udiFormat == "GS1" && formData.udiType == "" ? true : false}
+                                className="form-check-input"
+                                checked={formData.udiType == 'GS1 (1D Bar Code)' ? true : false}
+                                onClick={() => setFormData({...formData, udiType: 'GS1 (1D Bar Code)' })}
+                                />
+                                <label className="form-check-label mx-3">GS1 (1D Bar Code)</label>
+                            </div>
+                            <div style={{display:'flex'}}>
+                                <input style={{width:''}}
+                                type="CheckBox"
+                                required={ formData.udiFormat == "GS1" && formData.udiType == "" ? true : false}
+                                className="form-check-input"
+                                checked={formData.udiType == "GS1 (Separate Bar Code)" ? true : false}
+                                onClick={() => setFormData({...formData, udiType: 'GS1 (Separate Bar Code)' })}
+                                />
+                                <label className="form-check-label mx-3">GS1 (Separate Bar Code)</label>
+        
+                            </div>
+                            <div style={{display:'flex'}}>
+                                <input style={{width:''}}
+                                type="CheckBox"
+                                required={formData.udiFormat == "GS1" && formData.udiType == "" ? true : false}
+                                className="form-check-input"
+                                checked={formData.udiType == 'GS1 (Data Matrix)' ? true : false}
+                                onClick={() => setFormData({...formData, udiType: 'GS1 (Data Matrix)' })}
+                                />
+                            <label className="form-check-label mx-3">GS1 (Data Matrix)</label>
+        
+                            </div>
+                        </div>
+                    </div>
+                }
+
                 <div className="form-group">
                     <label>UDI-DI:</label>
                     <input
@@ -147,7 +241,7 @@ const ProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                     <label>UDI-PI:</label>
                     <input
                     type="text"
@@ -156,7 +250,7 @@ const ProductInfoComponent = () => {
                     value={formData.udiPI}
                     onChange={handleInputChange}
                     />
-                </div>
+                </div> */}
                 <div className="form-group">
                     <label>AIDC:</label>
                     <input
@@ -287,7 +381,7 @@ const ProductInfoComponent = () => {
                     <option value="Large">Large</option>
                     </select>
                 </div> */}
-                <div className="form-group">
+                {/* <div className="form-group">
                     <label>11- Do you want to add your manufacturer logo in the label ?</label>
                     <div className="form-check">
                     <input
@@ -311,7 +405,7 @@ const ProductInfoComponent = () => {
                         onChange={handleInputChange}
                     />
                     </div>
-                )}
+                )} */}
                 </div>
             </div>
            {!productRequest 

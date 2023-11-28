@@ -31,7 +31,7 @@ import {IVDDiagnosticReducer, deleteProjectReducer, getAllProjectsReducer,
         storageReducer, 
         transfusionInfusionReducer
     } from './reducers/projectReducers';
-import { getCompanyInfoReducer } from './reducers/companyReducers';
+import { getCompanyInfoReducer, updateCompanyInfoReducer } from './reducers/companyReducers';
 
 
 const reducer = combineReducers({
@@ -56,6 +56,7 @@ const reducer = combineReducers({
     createUser: createUserReducer,
 
     getCompanyInfo:getCompanyInfoReducer,
+    updateCompanyInfo: updateCompanyInfoReducer,
     // project reducers
     getAllProjects: getAllProjectsReducer,
     getProject: getProjectReducer,

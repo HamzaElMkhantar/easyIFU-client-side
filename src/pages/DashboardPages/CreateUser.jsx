@@ -8,15 +8,21 @@ import { UpdateUserAction, createUserAction, getUserAction, toggleStatusUserActi
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import easyIFUlogo from '../../assets/easyIFU_Logo.png' 
 
 
 const CreateUser = () => {
 
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [userState, setUserState] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(
+      JSON.parse(localStorage.getItem('sideToggle')) || false
+    );
     const toggleSidebar = () => {
-      setIsSidebarOpen(!isSidebarOpen);
-    }
+        const newToggleState = !isSidebarOpen;
+        setIsSidebarOpen(newToggleState);
+        localStorage.setItem('sideToggle', JSON.stringify(newToggleState));
+      };
  
     const {getUser, updateUser, toggleStatusUser, createUser} = useSelector(state => state);
     const {createUserRequest, createUserSuccess, createUserFail} = createUser;
@@ -80,19 +86,58 @@ const CreateUser = () => {
     <main className='' style={{paddingTop:'0px', width:'100%'}}>
       {/* Dashboard header  */}
       <div  style={{ borderBottom:'1px solid lightGray'}} id="page-content-wrapper">
-        <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} className='container'>
-          <span href="#menu-toggle" id="menu-toggle" onClick={toggleSidebar}>
-            &#9776;
-          </span>
-          <div >
-            <Avatar
-            sx={{ width: 40, height: 40 }}
-                style={{backgroundColor:'black'}}>
-                
-            </Avatar>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} className='container-dashboard'>
+                <div style={{display:'flex', alignItems:'center'}} className=''>
+                    <span href="#menu-toggle" id="menu-toggle" onClick={toggleSidebar}>
+                        &#9776;
+                    </span>
+                    <Link to="/">
+                        <img className='dash-Logo' src={easyIFUlogo} alt="easyIFU-logo" />
+                    </Link>
+                    <div style={{display:'flex', flexWrap:'wrap', gridGap:'5px'}} className='dash-header-sm-devices'>
+                        
+                    </div>
+                </div>
+                <div style={{display:'flex', alignItems:'center'}} >
+                    <div  className="dropdown">
+                            <button style={{ 
+                                        }}
+                                    className="dropdown-toggle" 
+                                    type="button" 
+                                    // id="dropdownMenuButton1" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false">
+                                        menu
+                            </button>
+                            <ul style={{padding:'5px'}} className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                {/* <li style={{display:'flex', alignItems:'center'}} ><Link  to="/profile">Profile</Link></li>
+                                <li style={{cursor:'pointer', display:'flex', alignItems:'center'}}><span>SignOut</span></li> */}
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                    <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard">Home</Link>
+                                </li>
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                    <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/project">Project</Link>
+                                </li>
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                    <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/users">Users</Link>
+                                </li>
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/company">Company</Link>
+                                </li>
+                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
+                                <ChevronRightIcon/>
+                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/account">Account</Link>
+                                </li>
+                            </ul>
+                        </div>
+                            <Avatar sx={{bgcolor:'#000000'}}></Avatar>
+                </div>
           </div>
         </div>
-      </div>
 
       {/* Dashboard  content   */}
       <section className='container' style={{marginTop:'20px'}}>

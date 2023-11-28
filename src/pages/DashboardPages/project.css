@@ -31,7 +31,6 @@ form h2 {
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 15px;
-
 }
 
 .manufactureInfo form div input {
@@ -39,7 +38,10 @@ form h2 {
     border-radius: 5px;
     width: 100%;
 }
-
+form div input {
+    padding:0 10px;
+    outline-color: #195aaf;
+}
 /* product Info */
 
 .productInfo , .sterility, .storage{
@@ -242,7 +244,7 @@ form h2 {
 
 .label-info-content-item{
     background-color: #ffffff;
-    padding: 10px;
+    /* padding: 0 10px; */
 }
 
 .comment-content{
@@ -280,23 +282,23 @@ form h2 {
 
 /* --------- label design ---------- */
 
-.label-1 .label-1-line-1 {
-    display: flex;
-    justify-content: space-between;
-    /* align-items: center; */
-}
-.label-1 .label-1-line-1 .symbol-content {
-    width: 29%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-items: flex-start;
-    
+
+.label-info-content-item {
+    margin-bottom: 20px;
+    background-color: #ecf0f3;
 }
 
+.label-1, 
+.label-2, 
+.label-3,
+.label-info-content-item-cmnt{
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 2px;
+}
 
-
-
+/* label - 1 */
 .label-1 .symbol-content .symbol-content-item{
     height: auto;
     max-height: 50px;
@@ -307,12 +309,21 @@ form h2 {
     align-items: center;
 }
 
-.label-1 .symbol-content .symbol-content-item div{
+.label-1 .label-1-line-1 .symbol-content {
+    width: 29%;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    justify-content: flex-start;
     flex-direction: column;
-    margin: 0;
+    align-items: flex-start;
+
+}
+
+.label-1 .label-1-line-1{
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    justify-content: space-between;
+    grid-gap: 5px;
 }
 .label-1 .symbol-content .symbol-content-item div p {
     font-size: 11px;
@@ -323,48 +334,78 @@ form h2 {
     max-width: 50px;
     max-height: 50px;
     margin-right: 7px;
-    /* height: auto; */
+    image-rendering: -webkit-optimize-contrast;
 }
 
-/* img-and-2-paragraphs */
-.label-1 .symbol-content.img-and-2-paragraphs .symbol-content-item {
+
+.label-1 .label-1-line-1 .paragraph-only {
+    width: 35% !important;
+}
+.label-1 .label-1-line-1 .img-with-paragraph {
 
 }
+.label-1 .label-1-line-1 .img-and-2-paragraphs {
+    width: 40% !important;
+    display: flex !important;
+}
 
-/* img-only */
-.label-1 .symbol-content.img-only {
+/* img with 2 paragraph */
+.label-1 .img-and-2-paragraphs .symbol-content-item{
+    max-height: 70px !important;
+    width: 100%;
+    display: flex !important;
+    justify-content: flex-start !important;
+}
+
+.label-1 .img-and-2-paragraphs .symbol-content-item p {
+    height: 100% !important;
+    width: 100% !important;
+    font-size: 11px !important;
+}
+
+/* paragraph-only */
+.label-1 .paragraph-only .symbol-content-item{
+    max-height: 1550px !important;
+    width: 100% !important;
+    font-size: 12px !important;
+    
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+}
+.label-1 .paragraph-only .symbol-content-item p {
+    height: 100% ;
+    width: 100% ;
+    font-size: 12px;
+    padding-bottom: 5px;
+    margin-bottom: 0px;
 }
 
-.label-1 .symbol-content.img-only .symbol-content-item {
-    margin: 10px;
-}
-
-/* .paragraph-only */
-
-.label-1 .label-1-line-1 .paragraph-only .symbol-content-item p{
-    font-size: 13px;
-    margin-bottom: 0px !important;
-}
 
 .label-1 .label-1-line-1 .paragraph-only .symbol-content-item{
-    /* margin: 0; */
     height: auto;
     max-height: 60px;
     line-height: 1.3;
     margin-bottom: 1px;
 }
 
-/*other-symbols */
+/* img-only */
+.symbol-content.img-only {
+    margin: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    grid-gap: 10px;
+}
+
+
+/* other-symbols */
 .label-1 .label-1-last-line{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 .label-1 .label-1-last-line .other-symbols {
-    width: 20%;
-    max-width: 120px;
+    width: 30%;
+    max-width: 200px;
     min-width: 70px;
     display: flex;
     justify-content: space-between;
@@ -372,9 +413,8 @@ form h2 {
     flex-direction: column;
     align-items: flex-start;
 }
-.label-1 .label-1-last-line .other-symbols .symbol-content-item{
-}
-.label-1 .label-1-last-line .other-symbols img {
+
+.other-symbols img {
     width: 25px;
 }
 .label-1  .symbol-content-item.sterileSymbol{
@@ -383,4 +423,113 @@ form h2 {
 }
 .label-1 .symbol-content.img-only  .symbol-content-item.sterileSymbol .sterileSymbol-img {
     min-width: 70px !important;
+}
+
+
+/* label - 2 */
+
+.label-2 .img-and-2-paragraphs , 
+.label-2 .img-with-paragraph ,
+.label-2 .img-only,
+.label-2 .paragraph-only
+{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.label-2 .img-and-2-paragraphs {
+    align-items: flex-start;
+}
+.label-2 .img-with-paragraph {
+    align-items: flex-end;
+}
+.label-2 .paragraph-only{
+    /* margin-bottom: 5px; */
+}
+
+.label-2 .paragraph-only .symbol-content-item {
+    width: 32%;
+    margin-right: 8px;
+}
+.label-2 .paragraph-only .symbol-content-item p{
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+.label-2 .paragraph-only .symbol-content-item p::before {
+    content: '- ';
+}
+.label-2 .img-and-2-paragraphs .symbol-content-item {
+    width: 23%;
+}
+
+.label-2 .img-and-2-paragraphs .symbol-content-item {
+    height: auto;
+    line-height: 1.3;
+    margin-bottom: 1px;
+
+    display: flex;
+    align-items: center;
+}
+
+.label-2 .symbol-content .symbol-content-item .symbol-img{
+    max-width: 50px;
+    max-height: 50px;
+    margin-right: 7px;
+
+    image-rendering: -webkit-optimize-contrast;
+
+}
+.label-2 p {
+    font-size: 11px;
+    margin: 0;
+}
+
+.label-2 .img-with-paragraph .symbol-content-item{
+    margin-right: 10px;   
+    margin-bottom: 10px !important;
+}
+.label-2 .img-with-paragraph .symbol-content-item img {
+    margin-bottom: 5px;
+}
+
+.label-2 .img-only{
+    align-items: center;
+}
+.label-2 .img-only .symbol-content-item{
+    width: 10%;
+}
+
+.label-2 .symbol-content.img-only  .symbol-content-item.sterileSymbol .sterileSymbol-img {
+    min-width: 70px !important;
+}
+
+
+/* other-symbols */
+.label-2 .label-1-last-line{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.label-2 .other-symbols {
+    width: 30%;
+    max-width: 200px;
+    min-width: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* flex-direction: column; */
+    flex-wrap: wrap;
+    align-items: flex-start;
+    grid-gap: 10px;
+    margin-top: 10px;
+}
+.label-2 .other-symbols .symbol-content-item {
+    margin-bottom: 5px;
+} 
+.label-2 .other-symbols p {
+    font-size: 14px;
+}
+.other-symbols img {
+    width: 30px;
 }

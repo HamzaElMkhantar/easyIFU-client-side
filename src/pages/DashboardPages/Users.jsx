@@ -4,7 +4,7 @@ import SideBar from '../../components/header/SideBar'
 import Avatar from '@mui/material/Avatar';
 import { Link } from 'react-router-dom';
 import '../../components/header/header.css';
-import easyIFUlogo from '../../assets/easyIFU_Logo.png'
+import easyIFUlogo from '../../assets/easyIFU_Logo.png' 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
@@ -16,12 +16,16 @@ import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 
 const Users = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [users, setUsers] = useState(null);
-
+  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(
+    JSON.parse(localStorage.getItem('sideToggle')) || false
+  );
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  }
+      const newToggleState = !isSidebarOpen;
+      setIsSidebarOpen(newToggleState);
+      localStorage.setItem('sideToggle', JSON.stringify(newToggleState));
+    };
 
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
@@ -137,77 +141,76 @@ const Users = () => {
         {/* Dashboard  content   */}
         <section className='' style={{marginTop:'20px'}}>
           <div style={{ padding: '20px' }} className="col-md-12">
-  <div
-    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-  >
-    <h6>total users: {users ? users?.lengt : <>No users</>}</h6>
-  </div>
-  <div className="table-responsive">
+            <div className='container'>
+              <h6>total users: {users ? users?.lengt : <>No users</>}</h6>
+              <div className="table-responsive">
 
-    <table style={{ backgroundColor: '#fff' }} className="table table-hover my-1">
-      <thead style={{ backgroundColor: '#c08260' }} className="thead-dark">
-        <tr style={{ color: '#fff' }}>
-          <th scope="col">#</th>
-          <th scope="col">Full Name</th>
-          <th scope="col">Role</th>
-          <th scope="col">Created</th>
-          <th scope="col">Email</th>
-          <th scope="col">Status</th>
-          {decodedToken &&
-          decodedToken?.userInfo &&
-          decodedToken?.userInfo.role == "Admin" &&
-          <th scope="col">Manage</th>}
-        </tr>
-      </thead>
-      <tbody>
-        {users &&
-          users?.map((item, index) => {
-            return (
-              <tr key={index}>
-                <th scope="row">{index + 1}</th>
-                <td>{item.firstName} {item.lastName}</td>
-                <td>{item.role}</td>
-                <td>{dateFormat(item.createdAt)}</td>
-                <td>{item.email}</td>
-                <td>{item.isActive ? 'Active' : 'Not Active'}</td>
-                {decodedToken &&
-                decodedToken?.userInfo &&
-                decodedToken?.userInfo.role == "Admin" &&
-                <td>
-                  <div style={{display:'flex'}}>
-                    <Link to={`/dashboard/user/${item._id}`}
-                      style={{ margin: '2px 5px', padding: '5px', borderRadius: '5px', border:'1px solid lightGray'}}
-                    >
-                      <SettingsSuggestRoundedIcon style={{ color: '#404040' }} />
-                    </Link>
-                    <button
-                        disabled={deleteUserRequest ? true : false}
-                        onClick={() => handleUserDelete(item._id)}
-                        style={{ margin: '2px 5px', padding: '5px', borderRadius: '5px', border:'1px solid lightGray'}}
-                    >
-                      {deleteUserRequest ?
-                              <div>
-                                  <RotatingLines
-                                  strokeColor="#FFFFFF"
-                                  strokeWidth="5"
-                                  animationDuration="0.75"
-                                  width="30"
-                                  visible={true}
-                                /> 
+                <table style={{ backgroundColor: '#fff' }} className="table table-hover my-1">
+                  <thead style={{ backgroundColor: '#c08260' }} className="thead-dark">
+                    <tr style={{ color: '#fff' }}>
+                      <th scope="col">#</th>
+                      <th scope="col">Full Name</th>
+                      <th scope="col">Role</th>
+                      <th scope="col">Created</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Status</th>
+                      {decodedToken &&
+                      decodedToken?.userInfo &&
+                      decodedToken?.userInfo.role == "Admin" &&
+                      <th scope="col">Manage</th>}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users &&
+                      users?.map((item, index) => {
+                        return (
+                          <tr key={index}>
+                            <th scope="row">{index + 1}</th>
+                            <td>{item.firstName} {item.lastName}</td>
+                            <td>{item.role}</td>
+                            <td>{dateFormat(item.createdAt)}</td>
+                            <td>{item.email}</td>
+                            <td>{item.isActive ? 'Active' : 'Not Active'}</td>
+                            {decodedToken &&
+                            decodedToken?.userInfo &&
+                            decodedToken?.userInfo.role == "Admin" &&
+                            <td>
+                              <div style={{display:'flex'}}>
+                                <Link to={`/dashboard/user/${item._id}`}
+                                  style={{ margin: '2px 5px', padding: '5px', borderRadius: '5px', border:'1px solid lightGray'}}
+                                >
+                                  <SettingsSuggestRoundedIcon style={{ color: '#404040' }} />
+                                </Link>
+                                <button
+                                    disabled={deleteUserRequest ? true : false}
+                                    onClick={() => handleUserDelete(item._id)}
+                                    style={{ margin: '2px 5px', padding: '5px', borderRadius: '5px', border:'1px solid lightGray'}}
+                                >
+                                  {deleteUserRequest ?
+                                          <div>
+                                              <RotatingLines
+                                              strokeColor="#FFFFFF"
+                                              strokeWidth="5"
+                                              animationDuration="0.75"
+                                              width="30"
+                                              visible={true}
+                                            /> 
+                                          </div>
+                                    :
+                                      <DeleteRoundedIcon style={{ color: '#F24E4E' }} />
+                                    }
+                                </button>
                               </div>
-                         :
-                          <DeleteRoundedIcon style={{ color: '#F24E4E' }} />
-                         }
-                    </button>
-                  </div>
-                </td>}
-              </tr>
-            );
-          })}
-      </tbody>
-    </table>
-  </div>
-</div>
+                            </td>}
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+          </div>
 
         </section>
       </main>

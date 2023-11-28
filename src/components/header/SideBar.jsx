@@ -42,9 +42,9 @@ const SideBar = ({isSidebarOpen}) => {
             <img src={headerLogo} alt='Logo' width='150' height='60' style={{marginLeft:'-50px', padding:'0', borderRadius:'4px'}} />
           </Link>
           <div className='sideBrd-user-info'>
-            <h4>Hamza El Mkhantar</h4>
-            <p>hamzaelmkhantar4@gmail.com</p>
-            <p>Administartor</p>
+            <h4>{decodedToken && decodedToken.userInfo && `${decodedToken.userInfo.firstName} ${decodedToken.userInfo.lastName}`}</h4>
+            <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.email}</p>
+            <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.role == 'Admin' ? "Administration" : decodedToken.userInfo.role }</p>
           </div>
           <div className='navList'>
               <Link to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/> Home</Link>

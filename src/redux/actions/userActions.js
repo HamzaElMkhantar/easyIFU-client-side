@@ -19,7 +19,7 @@ export const usersCompanyAction = (user, token) => async (dispatch) => {
             'Authorization': `Bearer ${token}`
         }
     }
-
+    // console.log(user)
     const userId = user._id;
     const companyId = user.companyId
 

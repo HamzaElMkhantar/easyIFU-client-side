@@ -100,13 +100,13 @@ const Account = () => {
   
         const dateFormat = (date) => {
           const dateObject = new Date(date);
-        
           const day = String(dateObject.getDate()).padStart(2, '0');
           const month = String(dateObject.getMonth() + 1).padStart(2, '0');
           const year = dateObject.getFullYear();
           const formattedDate = `${day}/${month}/${year}`;
           return formattedDate;
         };
+        
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
@@ -169,43 +169,43 @@ const Account = () => {
 
         {/* Dashboard  content   */}
         <section className='container' style={{marginTop:'20px'}}>
-       <div style={{backgroundColor:'#fff', 
-                    borderRadius:'10px', 
-                    padding:'10px',
-                    display:'flex',
-                    marginTop:'10px'
-                    }} className='col-12 manage-user-card'>
-            <div className='col-lg-2'>
-                <Avatar 
-                    sx={{ width: 130, height: 130, fontSize:'90px'}}
-                    style={{backgroundColor:'black', color:"#ecf0f3", marginBottom:'15px'}}>
-                    {userState && userState.firstName[0].toUpperCase()}
-                </Avatar>
-                
-            </div>
-            <div className='manage-user-card-content px-3 col-lg-8'>
-                <p style={{fontSize:'14px', color:'gray'}}>FirstName: {userState && userState.firstName} </p>
-                <p style={{fontSize:'14px', color:'gray'}}>LastName: {userState && userState.lastName} </p>
-                <p style={{fontSize:'14px', color:'gray'}}>Email: {userState && userState.email} </p>
-                <p style={{fontSize:'14px', color:'gray'}}>Role: {userState && userState.role} </p>
-                <p style={{fontSize:'14px', color:'gray'}}>Status: {userState && userState.isActive ? "active" : "not Active"} </p>
-                {userState && userState.createdAt && <p style={{fontSize:'14px', color:'gray'}}>Created: {userState && dateFormat(userState.createdAt)} </p>}
+          <div style={{backgroundColor:'#fff', 
+                        borderRadius:'10px', 
+                        padding:'10px',
+                        display:'flex',
+                        marginTop:'10px'
+                        }} className='col-12 manage-user-card'>
+                <div className='col-lg-2'>
+                    <Avatar 
+                        sx={{ width: 130, height: 130, fontSize:'90px'}}
+                        style={{backgroundColor:'black', color:"#ecf0f3", marginBottom:'15px'}}>
+                        {userState && userState.firstName[0].toUpperCase()}
+                    </Avatar>
+                    
+                </div>
+                <div className='manage-user-card-content px-3 col-lg-8'>
+                    <p style={{fontSize:'14px', color:'gray'}}>FirstName: {userState && userState.firstName} </p>
+                    <p style={{fontSize:'14px', color:'gray'}}>LastName: {userState && userState.lastName} </p>
+                    <p style={{fontSize:'14px', color:'gray'}}>Email: {userState && userState.email} </p>
+                    <p style={{fontSize:'14px', color:'gray'}}>Role: {userState && userState.role} </p>
+                    <p style={{fontSize:'14px', color:'gray'}}>Status: {userState && userState.isActive ? "active" : "not Active"} </p>
+                    {userState && userState.createdAt && <p style={{fontSize:'14px', color:'gray'}}>Created: {userState && dateFormat(userState.createdAt)} </p>}
 
-            </div>
-            {userRequest 
-                ? <RotatingLines
-                strokeColor="#FFFFFF"
-                strokeWidth="5"
-                animationDuration="0.75"
-                width="30"
-                visible={true}
-              /> 
-                
-                 : null}
+                </div>
+                {userRequest 
+                    ? <RotatingLines
+                    strokeColor="#FFFFFF"
+                    strokeWidth="5"
+                    animationDuration="0.75"
+                    width="30"
+                    visible={true}
+                  /> 
+                    
+                    : null}
 
-       </div>
+          </div>
 
-       <div  style={{
+          <div  style={{
                     backgroundColor:'#fff',
                     marginTop:'20px',
                     borderRadius:'10px'
@@ -309,7 +309,7 @@ const Account = () => {
                         </button>
                       </div>
                     </form>
-                  </div>
+          </div>
       </section>
       </main>
     </div>

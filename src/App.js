@@ -34,6 +34,7 @@ import IVDDiagnosticComponent from './pages/DashboardPages/IVDDiagnosticComponen
 import TransfusionInfusionComponent from './pages/DashboardPages/TransfusionInfusionComponent';
 import OthersComponent from './pages/DashboardPages/OthersComponent';
 import LabelInformation from './pages/DashboardPages/LabelInformation';
+import jwtDecode from 'jwt-decode';
 // import jwtDecode from 'jwt-decode';
 
 function App() {
@@ -66,7 +67,7 @@ function App() {
 
   const R_Token = Cookies.get('eIfu_RTK') || null;
   const A_Token = Cookies.get('eIfu_ATK') || null;
-
+  const decodedToken = A_Token ? jwtDecode(A_Token) : null
 
   const intervalRef = useRef(null);
   const dispatch = useDispatch();
@@ -129,7 +130,11 @@ function App() {
           <Route path='/dashboard/user/create' element={<CreateUser />} />
         </Route>
           {/* this route for user who logged in but still don't verified his email */}
-          <Route path='/verify' element={<EmailVerification />} />
+          {decodedToken && 
+            decodedToken.userInfo && 
+              decodedToken.userInfo.OTPVerified == false && 
+            <Route path='/verify' element={<EmailVerification />} />
+          }
 
 
 
