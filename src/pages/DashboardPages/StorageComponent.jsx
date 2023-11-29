@@ -250,6 +250,7 @@ const StorageComponent = () => {
               type="text"
               className="form-control"
               name="lowerTemperatureLimit"
+              placeholder='number + unit'
               value={formData.lowerTemperatureLimit}
               required={formData.hasLowerLimitOfTemperature ? true : false}
               onChange={(e) => handleInputChange('lowerTemperatureLimit', e.target.value)}
@@ -292,6 +293,7 @@ const StorageComponent = () => {
               type="text"
               className="form-control"
               name="upperTemperatureLimit"
+              placeholder='umber + unit'
               value={formData.upperTemperatureLimit}
               required={formData.hasUpperLimitOfTemperature ? true : false}
               onChange={(e) => handleInputChange('upperTemperatureLimit', e.target.value)}
@@ -394,7 +396,7 @@ const StorageComponent = () => {
                   type="text"
                   className="form-control"
                   name="atmosphericPressureMin"
-                  placeholder="Min"
+                  placeholder="Min (number + unit)"
                   required={formData.hasAtmosphericPressureRange ? true : false}
                   value={formData.atmosphericPressureMin}
                   onChange={(e) => handleInputChange('atmosphericPressureMin', e.target.value)}
@@ -406,7 +408,7 @@ const StorageComponent = () => {
                   className="form-control"
                   name="atmosphericPressureMax"
                   required={formData.hasAtmosphericPressureRange ? true : false}
-                  placeholder="Max"
+                  placeholder="Max (number + unit)"
                   value={formData.atmosphericPressureMax}
                   onChange={(e) => handleInputChange('atmosphericPressureMax', e.target.value)}
                 />

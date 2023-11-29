@@ -1168,22 +1168,22 @@ const LabelInformation = () => {
                 {projectInfo.labelData.hasHumidityRange &&
                   <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
                     <div style={{display:'flex', alignItems:'flex-end'}}>
-                      <p style={{marginBottom:'-10px', marginRight:'px', zIndex:'2'}} >{projectInfo.labelData.humidityMin}</p>
+                      <p style={{marginBottom:'-10px', marginRight:'px', zIndex:'2'}} >{projectInfo.labelData.humidityMin}%</p>
                     </div>
                     <img className='symbol-img' src={HumidityLimit} />
                     <div style={{display:'flex', justifyContent:'flex-end'}}>
-                      <p style={{marginTop:'-11px', zIndex:'2'}} >{projectInfo.labelData.humidityMax}</p>
+                      <p style={{marginTop:'-11px', zIndex:'2'}} >{projectInfo.labelData.humidityMax}%</p>
                     </div>
                   </div>}
 
                 {projectInfo.labelData.hasAtmosphericPressureRange &&
                   <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
                     <div style={{display:'flex', alignItems:'flex-end'}}>
-                      <p style={{marginBottom:'-10px', marginRight:'px', zIndex:'2'}} >{projectInfo.labelData.humidityMin}</p>
+                      <p style={{marginBottom:'-10px', marginRight:'px', zIndex:'2'}} >{projectInfo.labelData.atmosphericPressureMax}</p>
                     </div>
                     <img className='symbol-img' src={AtmPressureLimit} />
                     <div style={{display:'flex', justifyContent:'flex-end'}}>
-                      <p style={{marginTop:'-11px', zIndex:'2'}} >{projectInfo.labelData.humidityMax}</p>
+                      <p style={{marginTop:'-11px', zIndex:'2'}} >{projectInfo.labelData.atmosphericPressureMax}</p>
                     </div>
                   </div>}
                 
