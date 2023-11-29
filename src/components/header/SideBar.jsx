@@ -26,6 +26,7 @@ const SideBar = ({isSidebarOpen}) => {
   const navigate = useNavigate()
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null;
+  console.log(decodedToken)
   useEffect(() => {
     if(logoutSuccess){
       navigate("/login")
@@ -42,9 +43,9 @@ const SideBar = ({isSidebarOpen}) => {
             <img src={headerLogo} alt='Logo' width='150' height='60' style={{marginLeft:'-50px', padding:'0', borderRadius:'4px'}} />
           </Link>
           <div className='sideBrd-user-info'>
-            <h4>{decodedToken && decodedToken.userInfo && `${decodedToken.userInfo.firstName} ${decodedToken.userInfo.lastName}`}</h4>
+            <h4>{decodedToken && decodedToken.userInfo && `${decodedToken && decodedToken.userInfo && decodedToken.userInfo.firstName} ${decodedToken && decodedToken.userInfo && decodedToken.userInfo.lastName}`}</h4>
             <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.email}</p>
-            <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.role == 'Admin' ? "Administration" : decodedToken.userInfo.role }</p>
+            <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.role && decodedToken.userInfo.role == 'Admin' ? "Administration" :decodedToken && decodedToken.userInfo &&  decodedToken.userInfo.role }</p>
           </div>
           <div className='navList'>
               <Link to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/> Home</Link>

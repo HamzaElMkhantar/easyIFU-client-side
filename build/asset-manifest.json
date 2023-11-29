@@ -1,21 +1,38 @@
 {
   "files": {
-    "main.css": "/static/css/main.ef5954fc.css",
-    "main.js": "/static/js/main.162db3da.js",
+    "main.css": "/static/css/main.a31855f3.css",
+    "main.js": "/static/js/main.9321bdf1.js",
+    "static/js/703.8c992282.chunk.js": "/static/js/703.8c992282.chunk.js",
+    "static/js/198.55d3eab5.chunk.js": "/static/js/198.55d3eab5.chunk.js",
     "static/media/main-photo.svg": "/static/media/main-photo.f9a4631e4b1ba8dda7670a12d18b8043.svg",
     "static/media/dynamicLinkPhoto.svg": "/static/media/dynamicLinkPhoto.eabd9650cb8a415640eb8274de6f805e.svg",
     "static/media/compliance-section-photo.svg": "/static/media/compliance-section-photo.bdad9c8fced11b2667e03a5ffbd08d88.svg",
     "static/media/amico.svg": "/static/media/amico.f43ee2ab9d460d6c79bdfbcd060ebb9b.svg",
     "static/media/pana.svg": "/static/media/pana.423fbbe815c5a3f08d4a260dc8db755c.svg",
+    "static/media/keep_away_from_sunlight.png": "/static/media/keep_away_from_sunlight.f4eab74f508e052e9ad4.png",
+    "static/media/do_not_re-use.png": "/static/media/do_not_re-use.c098b1b2a3454b47df42.png",
+    "static/media/404.svg": "/static/media/404.3e3bd5b7ec048294966c6a0748da7666.svg",
     "static/media/Rectangle 20.svg": "/static/media/Rectangle 20.51d9a1dd54f214d7d147.svg",
+    "static/media/biological_risks.png": "/static/media/biological_risks.8bce320a7e887d916303.png",
+    "static/media/Contains_biological_material_of_animal_origin.png": "/static/media/Contains_biological_material_of_animal_origin.4252533e266479cfcb03.png",
     "static/media/easyIFU_Logo.png": "/static/media/easyIFU_Logo.75686f67e74d9af2255f.png",
+    "static/media/positive-control.png": "/static/media/positive-control.d0013f0d90e3700e23c4.png",
+    "static/media/Date_of_manufacture.png": "/static/media/Date_of_manufacture.99f99664e78019065072.png",
+    "static/media/Manufacturer.png": "/static/media/Manufacturer.2798f381e76e88e54d53.png",
+    "static/media/Sterilized_usings_team_or_dry_heat.png": "/static/media/Sterilized_usings_team_or_dry_heat.3ec25b417771fff2ff46.png",
+    "static/media/catalogue_number.png": "/static/media/catalogue_number.aca6e6c1b1ee09c68133.png",
+    "static/media/protect_from_heat_and_radioactive_soures.png": "/static/media/protect_from_heat_and_radioactive_soures.d3f698155a193a53d6cf.png",
+    "static/media/Repackaging.png": "/static/media/Repackaging.2fd7aff8dd602d07804c.png",
     "index.html": "/index.html",
+    "static/media/CE_mark.svg": "/static/media/CE_mark.4c5be815b2e66295af323e0da7dc896a.svg",
     "static/media/sideBrdBG.svg": "/static/media/sideBrdBG.7feb5bb3c4c28521d962da5ca987fbf8.svg",
-    "main.ef5954fc.css.map": "/static/css/main.ef5954fc.css.map",
-    "main.162db3da.js.map": "/static/js/main.162db3da.js.map"
+    "main.a31855f3.css.map": "/static/css/main.a31855f3.css.map",
+    "main.9321bdf1.js.map": "/static/js/main.9321bdf1.js.map",
+    "703.8c992282.chunk.js.map": "/static/js/703.8c992282.chunk.js.map",
+    "198.55d3eab5.chunk.js.map": "/static/js/198.55d3eab5.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ef5954fc.css",
-    "static/js/main.162db3da.js"
+    "static/css/main.a31855f3.css",
+    "static/js/main.9321bdf1.js"
   ]
 }
