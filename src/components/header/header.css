@@ -1,3 +1,4 @@
+
 .navbar{
     position: fixed;
     width: 100%;
@@ -122,18 +123,23 @@
 /* togglee */
 
 .dropdown .dropdown-toggle {
-  background-color: #fff !important;
+  background-color: #08408B !important;
   transition: .3s all ease;
-  height: 30px !important;
-  margin-top: 2px;
   margin-right: 10px;
+  padding: 2px 5px;
+  outline: none !important;
   border-radius:8px ;
   display: flex;
   align-items: center;
   font-weight: 600;
-
+  border: 0;
   display: none;
 }
+
+.dropdown .dropdown-menu {
+  display: none;
+}
+
 .dropdown .dropdown-toggle:hover {
   background-color: #03195c !important;
   color: #eaeaea !important;
@@ -187,12 +193,78 @@
     display: none;
 }
 
+
+
+
+/* Add this CSS to your stylesheets or style section in your component */
+.custom-dropdown-container {
+  display: none;
+  align-items: center;
+}
+
+.custom-dropdown {
+  position: relative;
+}
+
+.custom-dropdown-toggle {
+  background-color: #08408B;
+  color: white;
+  border: none;
+  padding: 2px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-dropdown-menu {
+  position: absolute;
+  top:120%;
+  left: 0;
+  display: none;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none; /* Allows clicks to "pass through" the invisible element */
+  border-radius: 5px;
+}
+
+.custom-dropdown.open .custom-dropdown-menu {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto; /* Enables interaction with the visible element */
+}
+
+.custom-dropdown-menu a {
+  padding: 5px 20px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+.custom-dropdown-menu a:hover {
+  background-color: #f9f9f9;
+}
+
+.avatar {
+  margin-left: 10px;
+}
+
+
 @media screen and (max-width: 778px) {
   #wrapper{
     display: none !important;
   }
   .dropdown .dropdown-toggle {
     display: block;
+  }
+
+  .custom-dropdown-container {
+    display: flex;
   }
 
   #page-content-wrapper #menu-toggle {

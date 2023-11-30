@@ -62,7 +62,7 @@ export const getAllProjectsAction = ( token) => async (dispatch) => {
             }
         }
     
-        const response = await axios.get(`${BaseUrl}/api/v1/project`, config);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project`, config);
 
         dispatch({ 
             type: ALL_PROJECTS_SUCCESS, 
@@ -101,7 +101,7 @@ export const getProjectAction = (projectId, token) => async (dispatch) => {
             }
         }
     
-        const response = await axios.get(`${BaseUrl}/api/v1/project/${projectId}`, config);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/${projectId}`, config);
 
         dispatch({ 
             type: GET_PROJECT_SUCCESS, 
@@ -138,7 +138,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${BaseUrl}/api/v1/project/create-project`, {projectData}, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/create-project`, {projectData}, config);
   
       dispatch({ 
             type: START_PROJECT_SUCCESS, 
@@ -175,7 +175,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.delete(`${BaseUrl}/api/v1/project/delete-project/${projectId}`, config);
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/api/v1/project/delete-project/${projectId}`, config);
   
       dispatch({ 
             type: DELETE_PROJECT_SUCCESS, 
@@ -210,7 +210,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${BaseUrl}/api/v1/project/manufacturer-information`, manufacturerData, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/manufacturer-information`, manufacturerData, config);
   
       dispatch({ 
             type: MANUFACTURER_INFORMATION_SUCCESS, 
@@ -245,7 +245,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${BaseUrl}/api/v1/project/product-information`, productInfoData, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/product-information`, productInfoData, config);
   
       dispatch({ 
             type: PRODUCT_INFORMATION_SUCCESS, 
@@ -281,7 +281,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${BaseUrl}/api/v1/project/sterility`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/sterility`, data, config);
   
       dispatch({ 
             type: STERILITY_SUCCESS, 
@@ -317,7 +317,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${BaseUrl}/api/v1/project/storage`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/storage`, data, config);
   
       dispatch({ 
             type: STORAGE_SUCCESS, 
@@ -353,7 +353,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${BaseUrl}/api/v1/project/safeUse`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/safeUse`, data, config);
   
       dispatch({ 
             type: SAFE_USE_SUCCESS, 
@@ -389,7 +389,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${BaseUrl}/api/v1/project/IVD-diagnostic`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/IVD-diagnostic`, data, config);
   
       dispatch({ 
             type: IVD_DIAGNOSTIC_SUCCESS, 
@@ -425,7 +425,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${BaseUrl}/api/v1/project/transfusion-infusion`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/transfusion-infusion`, data, config);
   
       dispatch({ 
             type: TRANSFUSION_INFUSION_SUCCESS, 
@@ -461,7 +461,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${BaseUrl}/api/v1/project/others`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/others`, data, config);
   
       dispatch({ 
             type: OTHERS_SUCCESS, 

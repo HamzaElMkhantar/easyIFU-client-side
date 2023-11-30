@@ -22,7 +22,7 @@ export const getCompanyInfoAction = (companyId, token) => async (dispatch) => {
             }
         }
     
-        const response = await axios.get(`${BaseUrl}/api/v1/company/${companyId}`, config);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/company/${companyId}`, config);
 
         dispatch({ 
             type: GET_COMPANY_SUCCESS, 
@@ -61,7 +61,7 @@ export const updateCompanyInfoAction = (data, token) => async (dispatch) => {
             }
         }
     
-        const response = await axios.post(`${BaseUrl}/api/v1/company/update`, data, config);
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/company/update`, data, config);
 
         dispatch({ 
             type: UPDATE_COMPANY_SUCCESS, 

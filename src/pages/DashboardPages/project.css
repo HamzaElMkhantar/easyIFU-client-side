@@ -1,4 +1,20 @@
-
+/* YourComponentStyles.css */
+@media print {
+    .label-1 {
+      border: none;
+    }
+  
+    .no-print {
+      display: none;
+    }
+    
+  
+    @page {
+      size: A3;
+      margin: 10mm;
+    }
+  }
+  
 
 .manufactureInfo, .productInfo , .sterility, .storage, .safe-use, .ivd-diagnostic, .transfusion-infusion, .others{
     padding-top: 50px;

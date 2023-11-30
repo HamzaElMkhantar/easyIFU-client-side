@@ -9,9 +9,15 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
+import easyIFUlogo from '../../assets/easyIFU_Logo.png'
 
 
 const ManageUser = () => {
+  const [isOpen, setIsOpen] = useState(false);
+      
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
     const {userId} = useParams();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -126,20 +132,38 @@ const ManageUser = () => {
 
     <main className='' style={{paddingTop:'0px', width:'100%'}}>
       {/* Dashboard header  */}
-      <div  style={{ borderBottom:'1px solid lightGray'}} id="page-content-wrapper">
-        <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} className='container'>
-          <span href="#menu-toggle" id="menu-toggle" onClick={toggleSidebar}>
-            &#9776;
-          </span>
-          <div >
-            <Avatar
-            sx={{ width: 40, height: 40 }}
-                style={{backgroundColor:'black'}}>
-                
-            </Avatar>
+        <div  style={{ borderBottom:'1px solid lightGray'}} id="page-content-wrapper">
+            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} className='container-dashboard'>
+                <div style={{display:'flex', alignItems:'center'}} className=''>
+                    <span href="#menu-toggle" id="menu-toggle" onClick={toggleSidebar}>
+                        &#9776;
+                    </span>
+                    <Link to="/">
+                        <img className='dash-Logo' src={easyIFUlogo} alt="easyIFU-logo" />
+                    </Link>
+                      <div style={{display:'flex', flexWrap:'wrap', gridGap:'5px'}} className='dash-header-sm-devices'>
+                          
+                      </div>
+          </div>
+          <div className="custom-dropdown-container">
+                      <div className={`custom-dropdown ${isOpen ? 'open' : ''}`}>
+                        <button className="custom-dropdown-toggle" onClick={toggleDropdown}>
+                          menu
+                        </button>
+                        <div className="custom-dropdown-menu">
+                          {/* Dropdown items */}
+                          <Link to="/dashboard">Home</Link>
+                          <Link to="/dashboard/project">Project</Link>
+                          <Link to="/dashboard/users">Users</Link>
+                          <Link to="/dashboard/user/create">Create User</Link>
+                          <Link to="/dashboard/company">Company</Link>
+                          <Link to="/dashboard/account">Account</Link>
+                        </div>
+                      </div>
+                      <Avatar className="avatar" sx={{ bgcolor: '#000000' }}></Avatar>
+        </div>
           </div>
         </div>
-      </div>
 
       {/* Dashboard  content   */}
       <section className='container' style={{marginTop:'20px'}}>

@@ -23,7 +23,7 @@ export const usersCompanyAction = (user, token) => async (dispatch) => {
     const userId = user._id;
     const companyId = user.companyId
 
-        const {data} = await axios.get(`${BaseUrl}/api/v1/user/companyUsers/${companyId}/${userId}`);
+        const {data} = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/user/companyUsers/${companyId}/${userId}`);
 
     dispatch({ 
         type: USERS_COMPANY_SUCCESS, 
@@ -63,7 +63,7 @@ export const getUserAction = (userId, token) => async (dispatch) => {
       }
    
   
-      const {data} = await axios.get(`${BaseUrl}/api/v1/user/getUser/${userId}` , config);
+      const {data} = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/user/getUser/${userId}` , config);
       console.log(data)
       dispatch({ 
           type: GET_USER_SUCCESS,
@@ -99,7 +99,7 @@ export const getUserAction = (userId, token) => async (dispatch) => {
               'Authorization': `Bearer ${token}`
           }
       }
-      const {data} = await axios.post(`${BaseUrl}/api/v1/user/update`, userInfo, config);
+      const {data} = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/user/update`, userInfo, config);
       console.log(data)
         Cookies.set('eIfu_ATK', data.accessToken);
       dispatch({ 
@@ -136,7 +136,7 @@ export const getUserAction = (userId, token) => async (dispatch) => {
               'Authorization': `Bearer ${token}`
           }
       }
-      const {data} = await axios.post(`${BaseUrl}/api/v1/user/userStatus`, ids, config);
+      const {data} = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/user/userStatus`, ids, config);
       console.log(data)
       dispatch({ 
           type: TOGGLE_STATUS_USER_SUCCESS,
@@ -173,7 +173,7 @@ export const getUserAction = (userId, token) => async (dispatch) => {
           },
           data: ids
       }
-      const {data} = await axios.delete(`${BaseUrl}/api/v1/user/delete`, config);
+      const {data} = await axios.delete(`${process.env.REACT_APP_BASE_URL}/api/v1/user/delete`, config);
       console.log(data)
       dispatch({ 
           type: DELETE_USER_SUCCESS,
@@ -210,7 +210,7 @@ export const getUserAction = (userId, token) => async (dispatch) => {
               'Authorization': `Bearer ${token}`
           }
       }
-      const {data} = await axios.post(`${BaseUrl}/api/v1/user/create`, userInfo, config);
+      const {data} = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/user/create`, userInfo, config);
       console.log(data)
       dispatch({ 
           type: CREATE_USER_SUCCESS,

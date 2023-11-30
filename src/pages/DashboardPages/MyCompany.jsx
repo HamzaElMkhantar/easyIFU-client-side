@@ -12,7 +12,12 @@ import { toast } from 'react-toastify';
 import jwtDecode from 'jwt-decode';
 import Cookies from 'js-cookie';
 const MyCompany = () => {
-
+  const [isOpen, setIsOpen] = useState(false);
+      
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState(
     JSON.parse(localStorage.getItem('sideToggle')) || false
   );
@@ -132,42 +137,23 @@ const MyCompany = () => {
                           
                       </div>
           </div>
-                <div style={{display:'flex', alignItems:'center'}} >
-                    <div  className="dropdown">
-                            <button style={{ 
-                                        }}
-                                    className="dropdown-toggle" 
-                                    type="button" 
-                                    // id="dropdownMenuButton1" 
-                                    data-bs-toggle="dropdown" 
-                                    aria-expanded="false">
-                                        menu
-                            </button>
-                            <ul style={{padding:'5px'}} className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
-                                    <ChevronRightIcon/>
-                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard">Home</Link>
-                                </li>
-                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
-                                    <ChevronRightIcon/>
-                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/project">Project</Link>
-                                </li>
-                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
-                                    <ChevronRightIcon/>
-                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/users">Users</Link>
-                                </li>
-                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
-                                <ChevronRightIcon/>
-                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/company">Company</Link>
-                                </li>
-                                <li style={{width:'100%', display:'flex', alignItems:'center'}}>
-                                <ChevronRightIcon/>
-                                    <Link style={{width:'100px', padding:'2px 5px', fontSize:'16px', fontWeight:'600', color:'black'}} to="/dashboard/account">Account</Link>
-                                </li>
-                            </ul>
+          <div className="custom-dropdown-container">
+                      <div className={`custom-dropdown ${isOpen ? 'open' : ''}`}>
+                        <button className="custom-dropdown-toggle" onClick={toggleDropdown}>
+                          menu
+                        </button>
+                        <div className="custom-dropdown-menu">
+                          {/* Dropdown items */}
+                          <Link to="/dashboard">Home</Link>
+                          <Link to="/dashboard/project">Project</Link>
+                          <Link to="/dashboard/users">Users</Link>
+                          <Link to="/dashboard/user/create">Create User</Link>
+                          <Link to="/dashboard/company">Company</Link>
+                          <Link to="/dashboard/account">Account</Link>
                         </div>
-                        <Avatar sx={{bgcolor:'#000000'}}></Avatar>
-                </div>
+                      </div>
+                      <Avatar className="avatar" sx={{ bgcolor: '#000000' }}></Avatar>
+        </div>
           </div>
         </div>
 

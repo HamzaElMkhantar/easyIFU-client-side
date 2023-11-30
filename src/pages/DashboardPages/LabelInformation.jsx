@@ -1910,6 +1910,35 @@ const LabelInformation = () => {
     const handleComment = (e) => {
       e.preventDefault();
     }
+
+    // const handlePrint = () => {
+    //   const printWindow = window.open('', '_blank');
+    //   if (printWindow) {
+    //     const printContent = componentRef.current.innerHTML;
+    //     printWindow.document.write('<html><head><title>Print</title></head><body>');
+    //     printWindow.document.write(printContent);
+    //     printWindow.document.write('</body></html>');
+    //     printWindow.document.close();
+    //     printWindow.print();
+    //   } else {
+    //     console.error('Failed to open print window.');
+    //   }
+    // };
+    const handlePrint = () => {
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        const printContent = componentRef.current.innerHTML;
+        printWindow.document.write('<html><head><title>Print</title>');
+        printWindow.document.write('<style>@media print {.print-content {display: block;} .no-print {display: none;}}</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(printContent);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+      } else {
+        console.error('Failed to open print window.');
+      }
+    };
   return (
     <div className="container label-information" style={{paddingBottom: "40px"}}>
       <div style={{display:'none'}}>
@@ -1954,7 +1983,12 @@ const LabelInformation = () => {
               {projectInfo && 
                 <div className='label-info-data'>
 
-                    <div style={{border: '1px solid black'}} ref={componentRef} className='label-1'> {/* width: `${22.1}cm` */}
+                    <div 
+                          onClick={handlePrint}
+                          style={{ border: '1px solid black' }}
+                          className='label-1 no-print'
+                          ref={componentRef}
+                          > {/* width: `${22.1}cm` */}
                         <div className='label-1-line-1'>
                           {symbolsWithImageAnd2ParagraphsOrMore()}
                           {symbolsWithImageAndParagraph()}
@@ -1977,6 +2011,7 @@ const LabelInformation = () => {
                           {otherSymbols()}
                         </div>
                     </div>
+                    
 
                     {/* downloader buttons */}
                   {/* <div>

@@ -27,8 +27,6 @@ import {
         RESET_PASSWORD_FAILED, 
       } from '../constants/authConstants';
 
-import { BaseUrl } from '../../config';
-
 
 export const registerAction = (userInfo) => async (dispatch) => {
   try {
@@ -36,7 +34,7 @@ export const registerAction = (userInfo) => async (dispatch) => {
 
     dispatch({ type: REGISTER_REQUEST });
 
-    const response = await axios.post(`${BaseUrl}/api/v1/auth/register`, userInfo);
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/register`, userInfo);
     console.log(response.data)
 
 
@@ -63,7 +61,7 @@ export const loginAction = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: LOGIN_REQUEST });
 
-    const response = await axios.post(`${BaseUrl}/api/v1/auth/login`, {
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/login`, {
           email,
           password,
         });
@@ -114,7 +112,7 @@ export const refreshAction = () => async (dispatch) => {
     };
 
     // Send a request to the /api/v1/auth/refresh endpoint using Fetch.
-    const response = await fetch('http://localhost:4000/api/v1/auth/refresh', requestOptions);
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, requestOptions);
 
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
@@ -148,7 +146,7 @@ export const logoutAction = () => async (dispatch) => {
   
       dispatch({ type: LOGOUT_REQUEST });
 
-      const {data} = await axios.post(BaseUrl+'/api/v1/auth/logout')
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout')
       // console.log(data)
       // window.location.reload();
       
@@ -178,7 +176,7 @@ export const logoutAction = () => async (dispatch) => {
       console.log(id)
       dispatch({ type: "OTP_GENERATE_REQUEST" });
 
-      const {data} = await axios.post(BaseUrl+'/api/v1/auth/generateOTP',{id})
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/generateOTP',{id})
       console.log(data)
 
       dispatch({ 
@@ -210,7 +208,7 @@ export const logoutAction = () => async (dispatch) => {
   
       dispatch({ type: "OTP_VERIFY_REQUEST"});
 
-      const {data} = await axios.post(BaseUrl+'/api/v1/auth/verifyOTP',{id, VerificationOTP})
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/verifyOTP',{id, VerificationOTP})
 
       Cookies.set('eIfu_ATK', data.accessToken);
       dispatch({ 
@@ -241,7 +239,7 @@ export const logoutAction = () => async (dispatch) => {
   
         dispatch({ type: RESET_PASSWORD_EMAIL_CHECK_REQUEST});
 
-        const {data} = await axios.post(BaseUrl+'/api/v1/auth/checkEmail',{email})
+        const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/checkEmail',{email})
 
         dispatch({ 
           type: RESET_PASSWORD_EMAIL_CHECK_SUCCESS,
@@ -270,7 +268,7 @@ export const resetPassOTPVerificationAction = (email, otpCode) => async (dispatc
   try {
       dispatch({ type: RESET_PASSWORD_CODE_CHECK_REQUEST});
 
-      const {data} = await axios.post(BaseUrl+'/api/v1/auth/checkResetCode',{email, resetPassOTP: otpCode})
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/checkResetCode',{email, resetPassOTP: otpCode})
       console.log(data)
       dispatch({ 
         type: RESET_PASSWORD_CODE_CHECK_SUCCESS,
@@ -301,7 +299,7 @@ export const resetPasswordAction = (email, newPassword) => async (dispatch) => {
   try {
       dispatch({ type: RESET_PASSWORD_REQUEST});
 
-      const {data} = await axios.post(BaseUrl+'/api/v1/auth/resetPassword',{email, newPassword})
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/resetPassword',{email, newPassword})
       console.log(data)
       dispatch({ 
         type: RESET_PASSWORD_SUCCESS,
