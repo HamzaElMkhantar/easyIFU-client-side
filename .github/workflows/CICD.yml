@@ -17,6 +17,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -25,5 +36,5 @@ jobs:
       - name: Install dependencies
         run: sudo npm ci
   
-      - name: build project
+      - name: Build project
         run: npm run build
