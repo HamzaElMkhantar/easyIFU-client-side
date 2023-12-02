@@ -16,15 +16,28 @@ jobs:
         node-version: [16.17.0]
 
     steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: remove node_module
-        run: sudo rm -rf /var/www/frontend/_work/easyIFU-client-side/easyIFU-client-side/node_modules
 
       - name: Install dependencies
-        run: sudo npm i
+        run: /home/hamza/.nvm/versions/node/v16.17.0/bin/npm ci
   
       - name: Build project
         run: npm run build
+
+      - name: Restart Nginx
+        run: sudo service nginx restart
