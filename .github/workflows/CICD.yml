@@ -34,7 +34,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: sudo npm ci
+        run: npm ci
   
       - name: Build project
         run: npm run build
