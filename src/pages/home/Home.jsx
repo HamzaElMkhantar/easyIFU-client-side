@@ -62,9 +62,9 @@ const Home = () => {
                     <h4>Experience Hassle-Free eIFU Compliance</h4>
                     <p>The EasyIFU platform is following the requirements of (EU) 2021/2226 on electronic instructions for use of medical devices. This is compatible with the requirements of (EU) 2017/745 criteria. The platform is passing all the validation and cybersecurity tests. The platform is constantly updated following the latest regulatory requirements.</p>
     
-                    <button className='homeButton'>Learn More 
-                        {/* <ArrowForwardIcon style={{marginLeft:'10px'}} /> */}
-                    </button>
+                    {/* <button className='homeButton'>Learn More 
+                        <ArrowForwardIcon style={{marginLeft:'10px'}} />
+                    </button> */}
                 </div>
             </div>
 
@@ -79,9 +79,9 @@ const Home = () => {
                     <p>
                         When you generate a QR code or weblink on the EasylFU platform, customers who scan it or click on the link will be directed to the latest version of your elFU. Our platform manages your documentation and ensures it's readily available to your customers. Any updates made on the platform are immediately reflected in the link, thanks to our Dynamic QR function.
                     </p>
-                    <button className='homeButton'>Learn More 
+                    {/* <button className='homeButton'>Learn More 
                         <ArrowForwardIcon style={{marginLeft:'10px'}} />
-                    </button>
+                    </button> */}
                 </div>
             </div>
 
@@ -97,9 +97,9 @@ const Home = () => {
                     <p>
                         EasylFU provides users with a default checklist that's fully compatible with (EU) 2017/745 regulations when creating IFUs. Additionally, our platform allows you to customize the checklist by adding or removing criteria to suit your specific needs.
                     </p>
-                    <button className='homeButton'>Learn More 
-                        {/* <ArrowForwardIcon style={{marginLeft:'10px'}} /> */}
-                    </button>
+                    {/* <button className='homeButton'>Learn More 
+                        <ArrowForwardIcon style={{marginLeft:'10px'}} />
+                    </button> */}
                 </div>
             </div>
 
@@ -152,9 +152,9 @@ const Home = () => {
                     <h6>COMPANY BRAND</h6>
                     <h4>Strengthen Your Brand's Reputation with EasylFU</h4>
                     <p>EasylFU provides users with a default checklist that's fully compatible with (EU) 2017/745 regulations when creating IFUs. Additionally, our platform allows you to customize the checklist by adding or removing criteria to suit your specific needs.</p>
-                    <button className='homeButton'>Learn More 
-                        {/* <ArrowForwardIcon style={{marginLeft:'10px'}} /> */}
-                    </button>
+                    {/* <button className='homeButton'>Learn More 
+                        <ArrowForwardIcon style={{marginLeft:'10px'}} />
+                    </button> */}
                 </div>
             </div>
 
@@ -184,7 +184,7 @@ const Home = () => {
                                 </ul>
                         </div>
                         <div className='card-bottom'>
-                            <span><h3>400$/</h3>month Package</span>
+                            <span><h3>400$/</h3>month</span>
                             <button>Choose</button>
                         </div>
                     </div>
@@ -208,7 +208,7 @@ const Home = () => {
                         </div>
 
                         <div className='card-bottom'>
-                            <span><h3>400$/</h3>month Package</span>
+                            <span><h3>4320$/</h3>year</span>
                             <h3 style={{color:'#EEBA00', textAlign:'center', fontWeight:'700', margin:'5px 0'}}>You Save 10%</h3>
                             <button>Choose</button>
                         </div>
