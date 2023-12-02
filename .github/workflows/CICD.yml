@@ -20,9 +20,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: remove node_module
+        run: sudo rm -rf /var/www/frontend/_work/easyIFU-client-side/easyIFU-client-side/node_modules
 
       - name: Install dependencies
-        run: sudo npm ci
+        run: sudo npm i
   
       - name: Build project
         run: npm run build
