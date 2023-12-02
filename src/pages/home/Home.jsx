@@ -63,7 +63,7 @@ const Home = () => {
                     <p>The EasyIFU platform is following the requirements of (EU) 2021/2226 on electronic instructions for use of medical devices. This is compatible with the requirements of (EU) 2017/745 criteria. The platform is passing all the validation and cybersecurity tests. The platform is constantly updated following the latest regulatory requirements.</p>
     
                     <button className='homeButton'>Learn More 
-                        <ArrowForwardIcon style={{marginLeft:'10px'}} />
+                        {/* <ArrowForwardIcon style={{marginLeft:'10px'}} /> */}
                     </button>
                 </div>
             </div>
@@ -98,7 +98,7 @@ const Home = () => {
                         EasylFU provides users with a default checklist that's fully compatible with (EU) 2017/745 regulations when creating IFUs. Additionally, our platform allows you to customize the checklist by adding or removing criteria to suit your specific needs.
                     </p>
                     <button className='homeButton'>Learn More 
-                        <ArrowForwardIcon style={{marginLeft:'10px'}} />
+                        {/* <ArrowForwardIcon style={{marginLeft:'10px'}} /> */}
                     </button>
                 </div>
             </div>
@@ -153,7 +153,7 @@ const Home = () => {
                     <h4>Strengthen Your Brand's Reputation with EasylFU</h4>
                     <p>EasylFU provides users with a default checklist that's fully compatible with (EU) 2017/745 regulations when creating IFUs. Additionally, our platform allows you to customize the checklist by adding or removing criteria to suit your specific needs.</p>
                     <button className='homeButton'>Learn More 
-                        <ArrowForwardIcon style={{marginLeft:'10px'}} />
+                        {/* <ArrowForwardIcon style={{marginLeft:'10px'}} /> */}
                     </button>
                 </div>
             </div>
