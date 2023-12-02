@@ -16,7 +16,11 @@ jobs:
         node-version: [16.17.0]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
 
       - name: Cache Node.js dependencies
         uses: actions/cache@v2
@@ -34,7 +38,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: /home/hamza/.nvm/versions/node/v16.17.0/bin/npm ci
+        run: npm ci
   
       - name: Build project
         run: npm run build
