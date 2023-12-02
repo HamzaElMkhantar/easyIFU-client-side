@@ -1,4 +1,4 @@
-name: REACT CI
+name: REACT CICD
 
 on:
   push:
