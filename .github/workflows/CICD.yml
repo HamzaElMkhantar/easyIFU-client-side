@@ -21,7 +21,12 @@ jobs:
       - name: Cache Node.js dependencies
         uses: actions/cache@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          path: |
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
