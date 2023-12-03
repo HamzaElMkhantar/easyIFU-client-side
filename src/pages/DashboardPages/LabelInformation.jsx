@@ -1911,34 +1911,6 @@ const LabelInformation = () => {
       e.preventDefault();
     }
 
-    // const handlePrint = () => {
-    //   const printWindow = window.open('', '_blank');
-    //   if (printWindow) {
-    //     const printContent = componentRef.current.innerHTML;
-    //     printWindow.document.write('<html><head><title>Print</title></head><body>');
-    //     printWindow.document.write(printContent);
-    //     printWindow.document.write('</body></html>');
-    //     printWindow.document.close();
-    //     printWindow.print();
-    //   } else {
-    //     console.error('Failed to open print window.');
-    //   }
-    // };
-    const handlePrint = () => {
-      const printWindow = window.open('', '_blank');
-      if (printWindow) {
-        const printContent = componentRef.current.innerHTML;
-        printWindow.document.write('<html><head><title>Print</title>');
-        printWindow.document.write('<style>@media print {.print-content {display: block;} .no-print {display: none;}}</style>');
-        printWindow.document.write('</head><body>');
-        printWindow.document.write(printContent);
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.print();
-      } else {
-        console.error('Failed to open print window.');
-      }
-    };
   return (
     <div className="container label-information" style={{paddingBottom: "40px"}}>
       <div style={{display:'none'}}>
@@ -1984,10 +1956,8 @@ const LabelInformation = () => {
                 <div className='label-info-data'>
 
                     <div 
-                          onClick={handlePrint}
                           style={{ border: '1px solid black' }}
                           className='label-1 no-print'
-                          ref={componentRef}
                           > {/* width: `${22.1}cm` */}
                         <div className='label-1-line-1'>
                           {symbolsWithImageAnd2ParagraphsOrMore()}
@@ -2002,8 +1972,8 @@ const LabelInformation = () => {
                             <div style={{display:'flex', alignItems:'center'}}>
                               <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
                               <div style={{fontSize:'12px'}}>
-                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && convertDateToYYMMDD(projectInfo.labelData.dateOfManufacture)}</p>
-                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && convertDateToYYMMDD(projectInfo.labelData.useByDate)}</p>
+                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.dateOfManufacture}</p>
+                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.useByDate}</p>
                                 <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.LOTNumber}</p>
                                 <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.serialNumber}</p>
                               </div>
