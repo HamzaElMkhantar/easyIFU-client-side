@@ -35,6 +35,8 @@ import TransfusionInfusionComponent from './pages/DashboardPages/TransfusionInfu
 import OthersComponent from './pages/DashboardPages/OthersComponent';
 import LabelInformation from './pages/DashboardPages/LabelInformation';
 import jwtDecode from 'jwt-decode';
+import IsVerified from './pages/emailVerification/IsVerified';
+import { ScrollToTop } from './utilities/ScrollToTop';
 // import jwtDecode from 'jwt-decode';
 
 function App() {
@@ -57,14 +59,13 @@ function App() {
       setShowNav(true);
     }
 
-    if(currentPage === 'dashboard'){
+    if(currentPage === 'dashboard' || currentPage === 'verify'){
       setShowFooter(false)
     }else{
       setShowFooter(true)
     }
   }, [location]);
   
-
   const R_Token = Cookies.get('eIfu_RTK') || null;
   const A_Token = Cookies.get('eIfu_ATK') || null;
   const decodedToken = A_Token ? jwtDecode(A_Token) : null
@@ -93,14 +94,17 @@ function App() {
     };
   }, [dispatch]);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, [location.pathname]);
+
+console.log(decodedToken && decodedToken.userInfo)
+
   return (
     <div className="App">
       {showNav && <Header />}
+        <ScrollToTop />
       <Routes>
-        
         <Route path='/' element={<Home />} />
         <Route element={<ProtectedRoute />}>
           <Route path='/login' element={<Login />} /> 
@@ -110,32 +114,31 @@ function App() {
         </Route>
 
         <Route element={<RequireAuth />}>
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/dashboard/project' element={<Project />} />
-          <Route path='/dashboard/users' element={<Users />} />
-          <Route path='/dashboard/company' element={<MyCompany />} />
-          <Route path='/dashboard/account' element={<Account />} />
-          {/* routes for creator */}
-          <Route path='/dashboard/create-project/step1/:projectId' element={<ManufacturerInfoComponent />} />
-          <Route path='/dashboard/create-project/step2/:projectId' element={<ProductInfoComponent />} />
-          <Route path='/dashboard/create-project/step3/:projectId' element={<SterilityComponent />} />
-          <Route path='/dashboard/create-project/step4/:projectId' element={<StorageComponent />} />
-          <Route path='/dashboard/create-project/step5/:projectId' element={<SafeUseComponent />} />
-          <Route path='/dashboard/create-project/step6/:projectId' element={<IVDDiagnosticComponent />} />
-          <Route path='/dashboard/create-project/step7/:projectId' element={<TransfusionInfusionComponent />} />
-          <Route path='/dashboard/create-project/step8/:projectId' element={<OthersComponent />} />
-          <Route path='/dashboard/project-information/:projectId' element={<LabelInformation />} />
-          {/* this routes for admin users */}
-          <Route path='/dashboard/user/:userId' element={<ManageUser />} />
-          <Route path='/dashboard/user/create' element={<CreateUser />} />
-        </Route>
-          {/* this route for user who logged in but still don't verified his email */}
+          <Route element={<IsVerified /> }>
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/dashboard/project' element={<Project />} />
+            <Route path='/dashboard/users' element={<Users />} />
+            <Route path='/dashboard/company' element={<MyCompany />} />
+            <Route path='/dashboard/account' element={<Account />} />
+            {/* routes for creator */}
+            <Route path='/dashboard/create-project/step1/:projectId' element={<ManufacturerInfoComponent />} />
+            <Route path='/dashboard/create-project/step2/:projectId' element={<ProductInfoComponent />} />
+            <Route path='/dashboard/create-project/step3/:projectId' element={<SterilityComponent />} />
+            <Route path='/dashboard/create-project/step4/:projectId' element={<StorageComponent />} />
+            <Route path='/dashboard/create-project/step5/:projectId' element={<SafeUseComponent />} />
+            <Route path='/dashboard/create-project/step6/:projectId' element={<IVDDiagnosticComponent />} />
+            <Route path='/dashboard/create-project/step7/:projectId' element={<TransfusionInfusionComponent />} />
+            <Route path='/dashboard/create-project/step8/:projectId' element={<OthersComponent />} />
+            <Route path='/dashboard/project-information/:projectId' element={<LabelInformation />} />
+            {/* this routes for admin users */}
+            <Route path='/dashboard/user/:userId' element={<ManageUser />} />
+            <Route path='/dashboard/user/create' element={<CreateUser />} />
+          </Route>
           {decodedToken && 
-            decodedToken.userInfo && 
-              decodedToken.userInfo.OTPVerified == false && 
-            <Route path='/verify' element={<EmailVerification />} />
-          }
-
+              decodedToken.userInfo && 
+                decodedToken.userInfo.OTPVerified == false &&
+            <Route path='/verify' element={<EmailVerification />} />}
+        </Route>
 
 
         <Route path='*' element={<NoFoundPage />} />
