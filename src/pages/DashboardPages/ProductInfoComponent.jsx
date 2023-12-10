@@ -81,7 +81,7 @@ const ProductInfoComponent = () => {
     Object.keys(formData).forEach((key) => {
         formDataObject.append(key, formData[key]);
       });
-    const handleSubmit = e => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         console.log(formData)
 
@@ -92,7 +92,7 @@ const ProductInfoComponent = () => {
             return;
         }
 
-        dispatch(productInformationAction(formDataObject, token))
+       await dispatch(productInformationAction(formDataObject, token))
 
     }
 
