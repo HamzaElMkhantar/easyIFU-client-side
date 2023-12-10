@@ -599,21 +599,21 @@ const CreatorReview = () => {
                 </div>}
 
                 {projectInfo.labelData.hasLowerLimitOfTemperature &&
-                projectInfo.labelData.hasUpperLimitOfTemperature == false &&
+                 !projectInfo.labelData.hasUpperLimitOfTemperature &&
                 <div className='symbol-content-item symbol-content-item-range'>
                     <p className='min-temperature'>{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img' src={lower_limit_temperaure} />
                 </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                projectInfo.labelData.hasLowerLimitOfTemperature == false &&
+                 !projectInfo.labelData.hasLowerLimitOfTemperature &&
                 <div className='symbol-content-item symbol-content-item-range'>
                     <img className='symbol-img' style={{width:'5vw'}}  src={upper_limit_temperaure} />
                     <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
                 </div>}
 
-                {projectInfo.labelData.hasUpperLimitOfTemperature == true &&
-                projectInfo.labelData.hasLowerLimitOfTemperature == true &&
+                {projectInfo.labelData.hasUpperLimitOfTemperature &&
+                projectInfo.labelData.hasLowerLimitOfTemperature &&
                 <div className='symbol-content-item symbol-content-item-range'>
                     <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img'  src={temperature} />
@@ -1132,7 +1132,7 @@ const CreatorReview = () => {
                                 {projectInfo &&
                                     projectInfo.comments?.length > 0 ?
                                     projectInfo.comments.map((item, index) => 
-                                        (
+                                    (item.comment == '' || item.comment === undefined) ? null : (
                                             <div className='label-info-comments' >
                                                 <div className='comment-content' style={{ border:'0.5px solid lightGray'}}>
                                                 <div className='comment-header' style={{display:'flex', alignItems:'center'}}>

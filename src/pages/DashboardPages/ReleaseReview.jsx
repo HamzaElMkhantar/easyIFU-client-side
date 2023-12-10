@@ -637,21 +637,21 @@ const ReleaseReview = () => {
                 </div>}
 
                 {projectInfo.labelData.hasLowerLimitOfTemperature &&
-                projectInfo.labelData.hasUpperLimitOfTemperature == false &&
+                    !projectInfo.labelData.hasUpperLimitOfTemperature &&
                 <div className='symbol-content-item symbol-content-item-range'>
                     <p className='min-temperature'>{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img' src={lower_limit_temperaure} />
                 </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                projectInfo.labelData.hasLowerLimitOfTemperature == false &&
+                    !projectInfo.labelData.hasLowerLimitOfTemperature &&
                 <div className='symbol-content-item symbol-content-item-range'>
                     <img className='symbol-img' style={{width:'5vw'}}  src={upper_limit_temperaure} />
                     <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
                 </div>}
 
-                {projectInfo.labelData.hasUpperLimitOfTemperature == true &&
-                projectInfo.labelData.hasLowerLimitOfTemperature == true &&
+                {projectInfo.labelData.hasUpperLimitOfTemperature &&
+                    projectInfo.labelData.hasLowerLimitOfTemperature &&
                 <div className='symbol-content-item symbol-content-item-range'>
                     <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img'  src={temperature} />
@@ -1217,8 +1217,8 @@ const ReleaseReview = () => {
                                 {projectInfo &&
                                     projectInfo.comments?.length > 0 ?
                                     projectInfo.comments.map((item, index) => 
-                                        (
-                                            <div className='label-info-comments' >
+                                    (item.comment == '' || item.comment === undefined) ? null : (
+                                            <div className='label-info-comments' key={item._id}>
                                                 <div className='comment-content' style={{ border:'0.5px solid lightGray'}}>
                                                 <div className='comment-header' style={{display:'flex', alignItems:'center'}}>
                                                     <Avatar style={{marginRight:'10px', backgroundColor: '#9A3B3A', fontWeight:'700'}} >{item.name[0].toUpperCase()}</Avatar>

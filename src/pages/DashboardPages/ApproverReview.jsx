@@ -610,21 +610,21 @@ const ApproverReview = () => {
                 </div>}
 
                 {projectInfo.labelData.hasLowerLimitOfTemperature &&
-                projectInfo.labelData.hasUpperLimitOfTemperature == false &&
+                 !projectInfo.labelData.hasUpperLimitOfTemperature &&
                 <div className='symbol-content-item symbol-content-item-range'>
                     <p className='min-temperature'>{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img' src={lower_limit_temperaure} />
                 </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                projectInfo.labelData.hasLowerLimitOfTemperature == false &&
+                    !projectInfo.labelData.hasLowerLimitOfTemperature &&
                 <div className='symbol-content-item symbol-content-item-range'>
                     <img className='symbol-img' style={{width:'5vw'}}  src={upper_limit_temperaure} />
                     <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
                 </div>}
 
-                {projectInfo.labelData.hasUpperLimitOfTemperature == true &&
-                projectInfo.labelData.hasLowerLimitOfTemperature == true &&
+                {projectInfo.labelData.hasUpperLimitOfTemperature &&
+                projectInfo.labelData.hasLowerLimitOfTemperature &&
                 <div className='symbol-content-item symbol-content-item-range'>
                     <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img'  src={temperature} />
@@ -870,7 +870,7 @@ const ApproverReview = () => {
     }
     }
 
-    
+    console.log(projectInfo)
     const formatDate = (createdAt) => {
         const options = {
           day: 'numeric',
@@ -1144,30 +1144,31 @@ const ApproverReview = () => {
                         }
 
                         <div className=''>
-                            <h5>Comments :</h5>
+                            <h5>Comments :  </h5>
                                 <div ref={commentsDivRef} style={{borderRadius:'5px', maxHeight:'600px', overflowY:'scroll'}} className='label-info-content-item label-info-content-item-cmnt'>
                                 {projectInfo &&
-                                    projectInfo.comments?.length > 0 ?
-                                    projectInfo.comments.map((item, index) => 
-                                        (
-                                            <div className='label-info-comments' >
-                                                <div className='comment-content' style={{ border:'0.5px solid lightGray'}}>
-                                                <div className='comment-header' style={{display:'flex', alignItems:'center'}}>
-                                                    <Avatar style={{marginRight:'10px', backgroundColor: '#9A3B3A', fontWeight:'700'}} >{item.name[0].toUpperCase()}</Avatar>
-                                                    <div>
-                                                        <p className='comment-user-name'>{item.name}</p>
-                                                        <p className='comment-user-role'>{item.role}</p>
-                                                        <p className='comment-user-role'>createdAt: {formatDate(item.createdAt)}</p>
+                                        projectInfo.comments?.length > 0 ?
+                                        projectInfo.comments.map((item, index) => 
+                                            (item.comment == '' || item.comment === undefined) ? null : (
+                                                <div className='label-info-comments' key={index}>
+                                                    <div className='comment-content' style={{ border:'0.5px solid lightGray'}}>
+                                                        <div className='comment-header' style={{display:'flex', alignItems:'center'}}>
+                                                            <Avatar style={{marginRight:'10px', backgroundColor: '#9A3B3A', fontWeight:'700'}} >{item.name[0].toUpperCase()}</Avatar>
+                                                            <div>
+                                                                <p className='comment-user-name'>{item.name}</p>
+                                                                <p className='comment-user-role'>{item.role}</p>
+                                                                <p className='comment-user-role'>createdAt: {formatDate(item.createdAt)}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="comment-user-description">
+                                                            {item.comment}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="comment-user-description">
-                                                    {item.comment}
-                                                </div>
-                                                </div>
-                                            </div>)
-                                    )
-                                
-                                : <p>No comments yet</p>}
+                                            )
+                                        )
+                                        : <p>No comments yet</p>
+}
                             
                                 </div>
                         </div>

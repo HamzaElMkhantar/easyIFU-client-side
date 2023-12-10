@@ -1523,7 +1523,7 @@ const LabelInformation = () => {
       return null;
     }
 
-    
+    console.log(projectInfo)
 
     // ---- UDI handler functions ----
 
@@ -1942,21 +1942,21 @@ const LabelInformation = () => {
                   </div>}
 
                 {projectInfo.labelData.hasLowerLimitOfTemperature &&
-                  projectInfo.labelData.hasUpperLimitOfTemperature == false &&
+                  !projectInfo.labelData.hasUpperLimitOfTemperature &&
                   <div className='symbol-content-item symbol-content-item-range'>
                       <p className='min-temperature'>{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img' src={lower_limit_temperaure} />
                   </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                  projectInfo.labelData.hasLowerLimitOfTemperature == false &&
+                  !projectInfo.labelData.hasLowerLimitOfTemperature &&
                   <div className='symbol-content-item symbol-content-item-range'>
                     <img className='symbol-img' style={{width:'5vw'}}  src={upper_limit_temperaure} />
                       <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
                   </div>}
 
-                {projectInfo.labelData.hasUpperLimitOfTemperature == true &&
-                  projectInfo.labelData.hasLowerLimitOfTemperature == true &&
+                {projectInfo.labelData.hasUpperLimitOfTemperature &&
+                  projectInfo.labelData.hasLowerLimitOfTemperature &&
                   <div className='symbol-content-item symbol-content-item-range'>
                       <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img'  src={temperature} />
