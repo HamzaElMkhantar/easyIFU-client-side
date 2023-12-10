@@ -127,7 +127,7 @@ const Users = () => {
         <section className='' style={{marginTop:'20px'}}>
           <div style={{ padding: '20px' }} className="col-md-12">
             <div className='container'>
-              <h6>total users: {users ? users?.lengt : <>No users</>}</h6>
+              <h6>total users: {users ? users?.length : <>No users</>}</h6>
               <div className="table-responsive">
 
                 <table style={{ backgroundColor: '#fff' }} className="table table-hover my-1">

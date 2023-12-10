@@ -27,10 +27,26 @@ import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST,
             PRODUCT_INFORMATION_REQUEST,
             PRODUCT_INFORMATION_RESET,
             PRODUCT_INFORMATION_SUCCESS,
+            RELEASED_PROJECT_FAILED,
+            RELEASED_PROJECT_REQUEST,
+            RELEASED_PROJECT_RESET,
+            RELEASED_PROJECT_SUCCESS,
+            RELEASE_PROJECT_FAILED,
+            RELEASE_PROJECT_REQUEST,
+            RELEASE_PROJECT_RESET,
+            RELEASE_PROJECT_SUCCESS,
+            ROLE_PROJECT_FAILED,
+            ROLE_PROJECT_REQUEST,
+            ROLE_PROJECT_RESET,
+            ROLE_PROJECT_SUCCESS,
             SAFE_USE_FAILED,
             SAFE_USE_REQUEST,
             SAFE_USE_RESET,
             SAFE_USE_SUCCESS,
+            SENDING_PROJECT_FAILED,
+            SENDING_PROJECT_REQUEST,
+            SENDING_PROJECT_RESET,
+            SENDING_PROJECT_SUCCESS,
             START_PROJECT_FAILED, 
             START_PROJECT_REQUEST, 
             START_PROJECT_RESET, 
@@ -239,11 +255,13 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
   
       dispatch({ type: PRODUCT_INFORMATION_REQUEST});
 
-      const config = {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }
+
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`
+          }
+        };
   
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/product-information`, productInfoData, config);
   
@@ -481,6 +499,149 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
         setTimeout(() =>{
           dispatch({ 
             type: OTHERS_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const sendingProjectToOtherRoleAction = (data, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: SENDING_PROJECT_REQUEST});
+
+      const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/sending-project-to-other-role`, data, config);
+
+      dispatch({ 
+            type: SENDING_PROJECT_SUCCESS, 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: SENDING_PROJECT_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: SENDING_PROJECT_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: SENDING_PROJECT_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const ProjectByRoleIdAction = (roleId, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: ROLE_PROJECT_REQUEST});
+
+      const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/project-by-role/${roleId}`, config);
+  
+      dispatch({ 
+            type: ROLE_PROJECT_SUCCESS, 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: ROLE_PROJECT_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: ROLE_PROJECT_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: ROLE_PROJECT_RESET
+          });
+        }, 1500)
+      }
+  };
+  export const releasedProjectAction = (companyId, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: RELEASED_PROJECT_REQUEST});
+
+      const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/released-project/${companyId}`, config);
+  console.log(response.data)
+      dispatch({ 
+            type: RELEASED_PROJECT_SUCCESS, 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: RELEASED_PROJECT_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: RELEASED_PROJECT_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: RELEASED_PROJECT_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const ReleaseTheProjectAction = (data, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: RELEASE_PROJECT_REQUEST});
+
+      const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/release-the-project`, data, config);
+  
+      dispatch({ 
+            type: RELEASE_PROJECT_SUCCESS, 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: RELEASE_PROJECT_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: RELEASE_PROJECT_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: RELEASE_PROJECT_RESET
           });
         }, 1500)
       }

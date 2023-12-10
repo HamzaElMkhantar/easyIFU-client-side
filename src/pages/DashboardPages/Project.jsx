@@ -49,7 +49,6 @@ const Project = () => {
     };
 
   // -- component logic --
-
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
   const dispatch = useDispatch();

@@ -20,12 +20,13 @@ import {createUserReducer,
         updateUserReducer, 
         usersCompanyReducer 
     } from './reducers/userReducers';
-import {IVDDiagnosticReducer, deleteProjectReducer, getAllProjectsReducer, 
+import {IVDDiagnosticReducer, ProjectByRoleIdReducer, ReleaseTheProjectReducer, ReleasedProjectReducer, deleteProjectReducer, getAllProjectsReducer, 
         getProjectReducer, 
         manufacturerInformationReducer, 
         othersReducer, 
         productInformationReducer, 
         safeUseReducer, 
+        sendingProjectToOtherRoleReducer, 
         startProjectReducer, 
         sterilityReducer, 
         storageReducer, 
@@ -54,7 +55,6 @@ const reducer = combineReducers({
     toggleStatusUser: toggleStatusUserReducer,
     deleteUser: deleteUserReducer,
     createUser: createUserReducer,
-
     getCompanyInfo:getCompanyInfoReducer,
     updateCompanyInfo: updateCompanyInfoReducer,
     // project reducers
@@ -69,7 +69,11 @@ const reducer = combineReducers({
     safeUse: safeUseReducer,
     IVDDiagnostic: IVDDiagnosticReducer,
     transfusionInfusion: transfusionInfusionReducer,
-    others: othersReducer
+    others: othersReducer,
+    sendingProjectToOtherRole: sendingProjectToOtherRoleReducer,
+    ProjectByRoleId: ProjectByRoleIdReducer,
+    ReleasedProject: ReleasedProjectReducer,
+    ReleaseTheProject: ReleaseTheProjectReducer
 })
 
 
@@ -77,6 +81,5 @@ const composeEnhancers = composeWithDevTools({
     serialize: true, 
   });
 const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
-
 
 export default store;

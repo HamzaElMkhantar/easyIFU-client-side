@@ -96,7 +96,6 @@ export const refreshAction = () => async (dispatch) => {
   try {
     dispatch({ type: REFRESH_REQUEST });
     const refreshToken = Cookies.get('eIfu_RTK') || null;
-
     if (!refreshToken) {
       // Handle the case where the refresh token is missing.
       dispatch({ type: REFRESH_FAILED, payload: 'Refresh token missing' });
@@ -113,7 +112,6 @@ export const refreshAction = () => async (dispatch) => {
 
     // Send a request to the /api/v1/auth/refresh endpoint using Fetch.
     const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, requestOptions);
-
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
     }
@@ -122,7 +120,6 @@ export const refreshAction = () => async (dispatch) => {
     const data = await response.json();
 
     await Cookies.set('eIfu_ATK', data.accessToken);
-    // console.log(data);
     dispatch({ type: REFRESH_SUCCESS, payload: data });
     setTimeout(() =>{
       dispatch({ 

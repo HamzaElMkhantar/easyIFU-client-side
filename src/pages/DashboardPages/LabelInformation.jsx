@@ -5,7 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { getProjectAction } from '../../redux/actions/projectActions';
+import { getProjectAction, sendingProjectToOtherRoleAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 
@@ -14,14 +14,16 @@ import Manufacturer from '../../assets/eIFUSymbols/Manufacturer.png'
 import Distributor from '../../assets/eIFUSymbols/Distributor.png'
 import Authorized_Representative from '../../assets/eIFUSymbols/Authorized_Representative.png'
 import Importer from '../../assets/eIFUSymbols/Importer.png'
-import CE_mark from '../../assets/eIFUSymbols/CE_mark.svg'
+import CE_mark from '../../assets/eIFUSymbols/CE_mark.png'
 import catalogueNumberSymbol from '../../assets/eIFUSymbols/catalogue_number.png'
 import modelNumberSymbol from '../../assets/eIFUSymbols/model_number.png'
 import Serial_numberSymbol from '../../assets/eIFUSymbols/Serial_number.png'
 import Batch_codeSymbol from '../../assets/eIFUSymbols/Batch_code.png'
 import Date_of_manufactureSymbol from '../../assets/eIFUSymbols/Date_of_manufacture.png'
+import Use_by_date from '../../assets/eIFUSymbols/Use_by_date.png'
+
 import Medical_deviceSymbol from '../../assets/eIFUSymbols/Medical_device.png'
-import nonSterileSymbol from '../../assets/eIFUSymbols/nonSterile.jpeg'
+import nonSterileSymbol from '../../assets/eIFUSymbols/nonSterile.png'
 // sterile symbols
 import sterileSymbol from '../../assets/eIFUSymbols/sterile.png'
 import sterile_ASymbol from '../../assets/eIFUSymbols/sterile_A.png'
@@ -33,13 +35,13 @@ import do_not_resterilizeSymbol from '../../assets/eIFUSymbols/do_not_resteriliz
 import sterile_fluid_pathSymbol from '../../assets/eIFUSymbols/sterile_fluid_path.png'
 import VaporizedHydrogenPeroxideSymbol from '../../assets/eIFUSymbols/VaporizedHydrogenPeroxide.png'
 import single_S_B_S from '../../assets/eIFUSymbols/singleSBS.png'
-import double_S_B_S from '../../assets/eIFUSymbols/doubleSBS.jpeg'
+import double_S_B_S from '../../assets/eIFUSymbols/doubleSBS.png'
 import double_S_B_S_outside from '../../assets/eIFUSymbols/Single-sterile-barrier-system-with-protective-packaging-outside.png'
 import double_S_B_S_inside from '../../assets/eIFUSymbols/Single-sterile-barrier-system-with-protective-packaging-inside.png'
 // storage symbols
 import fragile_handle_with_care from '../../assets/eIFUSymbols/fragile_handle_with_care.png'
 import keep_away_from_sunlight from '../../assets/eIFUSymbols/keep_away_from_sunlight.png'
-import protect_from_heat_and_radioactive_soures from '../../assets/eIFUSymbols/protect_from_heat_and_radioactive_soures.png'
+import protect_from_heat_and_radioactive_soures from '../../assets/eIFUSymbols/protect_from_heat_and_radioactive.png'
 import keep_dry from '../../assets/eIFUSymbols/keep_dry.png'
 import lower_limit_temperaure from '../../assets/eIFUSymbols/lower_limit_temperaure.png'
 import upper_limit_temperaure from '../../assets/eIFUSymbols/upper_limit_temperaure.png'
@@ -56,10 +58,10 @@ import contains_or_presence_of_natural_rubber_latex from '../../assets/eIFUSymbo
 import contains_human_blood from '../../assets/eIFUSymbols/contains_human_blood.png'
 import Contains_a_medicinal_substance from '../../assets/eIFUSymbols/Contains_a_medicinal_substance.png'
 import Contains_biological_material_of_animal_origin from '../../assets/eIFUSymbols/Contains_biological_material_of_animal_origin.png'
-import Contains_human_origin from '../../assets/eIFUSymbols/Contains_human_origin.jpeg'
-import Contains_hazardous_substances from '../../assets/eIFUSymbols/Contains_hazardous_substances.jpeg'
+import Contains_human_origin from '../../assets/eIFUSymbols/Contains_human_origin.png'
+import Contains_hazardous_substances from '../../assets/eIFUSymbols/Contains_hazardous_substances.png'
 import Contains_nano_materials from '../../assets/eIFUSymbols/Contains_nano_materials.png'
-import Single_patient_multiple_use from '../../assets/eIFUSymbols/Single_patient_multiple_use.jpeg'
+import Single_patient_multiple_use from '../../assets/eIFUSymbols/Single_patient_multiple_use.png'
 
 // In Vitro Diagnostic IVD Symbols
 import control from '../../assets/eIFUSymbols/control.png'
@@ -78,9 +80,9 @@ import one_way_valve from '../../assets/eIFUSymbols/one-way-valve.png'
 
 // Other (step-8) Symbols
 import patient_identification from '../../assets/eIFUSymbols/patient_identification.png'
-import Patient_information_website from '../../assets/eIFUSymbols/Patient_information_website.jpeg'
+import Patient_information_website from '../../assets/eIFUSymbols/Patient_information_website.png'
 import Health_care_centre_or_doctor from '../../assets/eIFUSymbols/Health_care_centre_or_doctor.png'
-import date from '../../assets/eIFUSymbols/date.jpg'
+import date from '../../assets/eIFUSymbols/date.png'
 import Translation from '../../assets/eIFUSymbols/Translation.png'
 import Repackaging from '../../assets/eIFUSymbols/Repackaging.png'
 import udi from '../../assets/eIFUSymbols/udi.png'
@@ -107,18 +109,35 @@ const LabelInformation = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
-  const {getProject, usersCompany} = useSelector(state => state);
+  const {getProject, usersCompany, sendingProjectToOtherRole} = useSelector(state => state);
   const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
   const {usersCompanyRequest, usersCompanySuccess, usersCompanyFail, allUsers} = usersCompany;
+  const {sendingProjectRequest, sendingProjectSuccess, sendingProjectFail, sendingProjectMessage} = sendingProjectToOtherRole
 
 
   const [projectInfo, setProjectInfo] = useState({});
   const [allUsersCompany, setAllUsersCompany] = useState([]);
   const [imageSrc, setImageSrc] = useState('');
-  const [sendTo, setSendTo] = useState('');
-
+  const [sendTo, setSendTo] = useState({
+    projectId,
+    senderId: decodedToken && decodedToken.userInfo && decodedToken.userInfo._id,
+    receivedId: ''
+  });
 
   const dispatch = useDispatch()
+  const  handleSendLabel = () => {
+    dispatch(sendingProjectToOtherRoleAction(sendTo, token))
+  }
+
+
+  useEffect(() => {
+    if(sendingProjectSuccess){
+      toast.success(`${sendingProjectMessage.message}`)
+    }
+    if(sendingProjectFail){
+      toast.error(`${sendingProjectFail.message}`)
+    }
+  },  [sendingProjectSuccess, sendingProjectFail])
   useEffect(() => {
     dispatch(getProjectAction(projectId, token))
     dispatch(usersCompanyAction({
@@ -139,6 +158,7 @@ const LabelInformation = () => {
       toast.warning(`${getProjectFail.message}`)
     }
   }, [getProjectSuccess, getProjectFail, usersCompanySuccess])
+
 
     const handleManufacturerInfo = () => {
       if(projectInfo && projectInfo.labelData){
@@ -762,9 +782,6 @@ const LabelInformation = () => {
       return null;
     }
 
-  
-
-
 // handling the categories of the label symbol
     const symbolsWithImageAnd2ParagraphsOrMore = () => {
       if(projectInfo && projectInfo.labelData){
@@ -805,9 +822,8 @@ const LabelInformation = () => {
                       <p>{projectInfo.labelData.importerName}</p>
                       <p>{projectInfo.labelData.importerAddress}</p> 
                     </div>
-                  </div>
-                }
-
+                  </div>}
+{/*  -----  */}
                 {projectInfo.labelData.associatedWithIndividualPatient &&
                   <div className='symbol-content-item'>
                     <img className='symbol-img' src={patient_identification} />
@@ -859,19 +875,7 @@ const LabelInformation = () => {
                           <p>{projectInfo.labelData.repackagingEntityAddress}</p>}
                       </div>
                     </div>}
-
-                  {/* {projectInfo.labelData.reprocessedDevice &&
-                    <div className='symbol-content-item'>
-                      <img className='symbol-img' src={Repackaging} />
-                      <div>
-                        {projectInfo.labelData.reprocessingCycles &&
-                          <p>number of reprocessing cycles: {projectInfo.labelData.reprocessingCycles}</p>}
-                        {projectInfo.labelData.reprocessingLimitation &&
-                          <p>{projectInfo.labelData.reprocessingLimitation}</p>}
-                      </div>
-                    </div>} */}
                 
-
           </div>
         )
       }
@@ -1137,31 +1141,31 @@ const LabelInformation = () => {
 
                 {projectInfo.labelData.hasLowerLimitOfTemperature &&
                   projectInfo.labelData.hasUpperLimitOfTemperature == false &&
-                  <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
+                  <div style={{display:'flex', height:'auto', backgroundColor:''}} className=''>
                     <div style={{display:'flex', alignItems:'flex-end'}}>
                       <p style={{marginBottom:'-3px', marginRight:'-13px', zIndex:'2'}} >{projectInfo.labelData.lowerTemperatureLimit}</p>
                     </div>
-                    <img className='symbol-img' src={lower_limit_temperaure} />
+                    <img className='symbol-img' style={{width:'5vw'}} src={lower_limit_temperaure} />
                   </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
                   projectInfo.labelData.hasLowerLimitOfTemperature == false &&
                   <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
-                    <img className='symbol-img' src={upper_limit_temperaure} />
+                    <img className='symbol-img' style={{width:'5vw'}}  src={upper_limit_temperaure} />
                     <div style={{display:'flex', justifyContent:'flex-end'}}>
                       <p style={{marginTop:'-2px' ,marginLeft:'-13px', zIndex:'2'}} >{projectInfo.labelData.upperTemperatureLimit}</p>
                     </div>
                   </div>}
-
+                  {/* modified !! */}
                 {projectInfo.labelData.hasUpperLimitOfTemperature == true &&
                   projectInfo.labelData.hasLowerLimitOfTemperature == true &&
                   <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
                     <div style={{display:'flex', alignItems:'flex-end'}}>
-                      <p style={{marginBottom:'-3px', marginRight:'-13px', zIndex:'2'}} >{projectInfo.labelData.lowerTemperatureLimit}</p>
+                      <p style={{marginBottom:'-0.4vh', marginRight:'-6px', zIndex:'2', fontSize:'1vw'}} >{projectInfo.labelData.lowerTemperatureLimit}</p>
                     </div>
-                    <img className='symbol-img' src={temperature} />
+                    <img className='symbol-img' style={{width:'2vw', height:'2vh'}}  src={temperature} />
                     <div style={{display:'flex', justifyContent:'flex-end'}}>
-                      <p style={{marginTop:'-2px' ,marginLeft:'-13px', zIndex:'2'}} >{projectInfo.labelData.upperTemperatureLimit}</p>
+                      <p style={{marginTop:'-0.4vh' ,marginLeft:'-6px', zIndex:'2', fontSize:'1vw'}} >{projectInfo.labelData.upperTemperatureLimit}</p>
                     </div>
                   </div>}
 
@@ -1519,6 +1523,8 @@ const LabelInformation = () => {
       return null;
     }
 
+    
+
     // ---- UDI handler functions ----
 
     const convertDateToYYMMDD = (inputDate) => {
@@ -1605,13 +1611,13 @@ const LabelInformation = () => {
                 });
             return (
               <div style={{display:'flex', justifyContent:'', alignItems:'center', flexWrap:'wrap', gridGap:'5px', width: '100%' }}>
-                <div style={{textAlign:'center'}}>
+                <div style={{textAlign:'center', margin:'0'}}>
                   <svg id='gs1-barcode-udiDI' style={{ width: '100%' }}></svg>
-                  <p style={{fontSize:'12px', fontWeight:'500'}}>(01){udiDI}</p>
+                  <p style={{fontSize:'12px', fontWeight:'500', margin:'0'}}>(01){udiDI}</p>
                 </div>
-                <div style={{textAlign:'center'}}>
+                <div style={{textAlign:'center', margin:'0'}}>
                   <svg id='gs1-barcode-udiPI' style={{ width: '100%' }}></svg>
-                  <p style={{fontSize:'12px', fontWeight:'500'}}>{udiPI}</p>
+                  <p style={{fontSize:'12px', fontWeight:'500', margin:'0'}}>{udiPI}</p>
                 </div>
               </div>
             )
@@ -1702,97 +1708,9 @@ const LabelInformation = () => {
     useEffect(() => {
         handleUDI() 
     }, [projectInfo])
-    //   // Example Usage
-    //   const manufacturerDate = '01/01/2022';
-    //   const operationDate = '221231';
-    //   const lotNumber = 'ABC123';
-    //   const serialNumber = '123456789';
-  
-    //   const generateGS1Barcode = (manufacturerDate, operationDate, lotNumber, serialNumber) => {
-    //     const gs1Data = `(11)${manufacturerDate}(17)${operationDate}(10)${lotNumber}(21)${serialNumber}`;
-    //     JsBarcode('#gs1-barcode', gs1Data, { 
-    //       format: 'CODE128',
-    //       width: .5, // Set the width of the bars
-    //       height: 30, // Set the height of the bars
-    //       displayValue: true, // Show the human-readable value below the barcode
-    //       background: 'white', // Set the background color of the SVG
-    //       lineColor: 'black', // Set the color of the bars });
-    //       fontSize: 8
-    //         });
-    //   };
-  
-    //   const generateHIBCCBarcode = (manufacturerDate, operationDate, lotNumber, serialNumber) => {
-    //     const hibccData = `^^011^${manufacturerDate}^^17^${operationDate}^^10^${lotNumber}^^21^${serialNumber}^^`;
-    //     JsBarcode('#hibcc-barcode', "+/EAH783/Z34H159", { 
-    //       format: 'CODE128',
-    //       width: .5, // Set the width of the bars
-    //       height: 30, // Set the height of the bars
-    //       displayValue: true, // Show the human-readable value below the barcode
-    //       background: 'white', // Set the background color of the SVG
-    //       lineColor: 'black', // Set the color of the bars });
-    //       fontSize: 8
-    //         });
-    //   };
-  
-    //   const generateICCBBABarcode = (manufacturerDate, operationDate, lotNumber, serialNumber) => {
-    //     const iccbbaData = `*011${manufacturerDate}*017${operationDate}*010${lotNumber}*021${serialNumber}*`;
-    //     JsBarcode('#iccbba-barcode', iccbbaData, { 
-    //       format: 'CODE128',
-    //       width: .5, // Set the width of the bars
-    //       height: 30, // Set the height of the bars
-    //       displayValue: true, // Show the human-readable value below the barcode
-    //       background: 'white', // Set the background color of the SVG
-    //       lineColor: 'black', // Set the color of the bars });
-    //       fontSize: 8
-    //         });
-    //   };
-  
-    //   const generateIFABarcode = (manufacturerDate, operationDate, lotNumber, serialNumber) => {
-    //     const ifaData = `11:${manufacturerDate}17:${operationDate}10:${lotNumber}21:${serialNumber}`;
-    //     JsBarcode('#ifa-barcode', ifaData, { 
-    //       format: 'CODE128',
-    //       width: 0.5, // Set the width of the bars
-    //       height: 30, // Set the height of the bars
-    //       displayValue: false, // Show the human-readable value below the barcode
-    //       background: 'white', // Set the background color of the SVG
-    //       lineColor: 'black', // Set the color of the bars });
-    //       fontSize: 8
-    //         });
-    //   };
 
-    //   const generateDataMatrixBarcode = (manufacturerDate, operationDate, lotNumber, serialNumber) => {
-    //     const dataMatrixData = `(11)${manufacturerDate}(17)${operationDate}(10)${lotNumber}(21)${serialNumber}`;
-      
-    //     const typeNumber = 5;
-    //     const errorCorrectionLevel = 'L';
-    //     const qr = QRCode(typeNumber, errorCorrectionLevel);
-    //     qr.addData(dataMatrixData);
-    //     qr.make();
-      
-    //     return qr.createSvgTag({ scalable: true });
-    //   };
-
-    //   const dataMatrixSVG = generateDataMatrixBarcode(manufacturerDate, operationDate, lotNumber, serialNumber);
-
-    //   // Wait for the DOM to fully load before trying to access an element
-    //   // window.onload = () => {
-    //     const container = document.getElementById('data-matrix-container');
-    //     if (container) {
-    //       container.innerHTML = dataMatrixSVG;
-    //     }
-    //   // };
-  
-    //   // Call your barcode generation functions
-    //   generateGS1Barcode(manufacturerDate, operationDate, lotNumber, serialNumber);
-    //   generateHIBCCBarcode(manufacturerDate, operationDate, lotNumber, serialNumber);
-    //   generateICCBBABarcode(manufacturerDate, operationDate, lotNumber, serialNumber);
-    //   generateIFABarcode(manufacturerDate, operationDate, lotNumber, serialNumber);
-
-  
-    // }, []); 
-
-// data matrix
-    const [dataMatrixValue, setDataMatrixValue] = useState('EMD TEST lkwjhfglmnvkjqc whhgkrdDATA MATRIX');
+    // data matrix
+    const [dataMatrixValue, setDataMatrixValue] = useState('61297564251294350845');
     useEffect(() => {
       let canvas = document.createElement("canvas");
       bwipjs.toCanvas(canvas, {
@@ -1807,6 +1725,482 @@ const LabelInformation = () => {
     }, [dataMatrixValue]);
     
 
+ // --------- new label design ----------
+    const symbolsWithTextBehind = () => {
+      if(projectInfo && projectInfo.labelData){
+        return (
+          <div className='symbols-with-text-behind'>
+                {projectInfo.labelData.associatedWithIndividualPatient &&
+                    ( projectInfo.labelData.healthCareCentreName == ''
+                      || projectInfo.labelData.healthCareCentreAddress == ''
+                      || projectInfo.labelData.doctorName == ''
+                    ) &&
+                  <div className='symbol-content-item symbol-content-item-with-text'>
+                    <img className='symbol-img' src={Health_care_centre_or_doctor} />
+                    <div>
+                      {projectInfo.labelData.healthCareCentreName && 
+                        <p>{projectInfo.labelData.healthCareCentreName}</p>
+                      }
+                      {projectInfo.labelData.healthCareCentreAddress && 
+                        <p>{projectInfo.labelData.healthCareCentreAddress}</p>
+                      }
+                      {projectInfo.labelData.doctorName && 
+                        <p>{projectInfo.labelData.doctorName}</p>
+                      }
+                    </div>
+                  </div>}
+
+
+                  {projectInfo.labelData.translationActivity &&
+                    <div className='symbol-content-item symbol-content-item-with-text'>
+                      <img className='symbol-img' src={Translation} />
+                      <div>
+                        {projectInfo.labelData.translationEntityName &&
+                          <p>{projectInfo.labelData.translationEntityName}</p>}
+                        {projectInfo.labelData.translationEntityAddress &&
+                          <p>{projectInfo.labelData.translationEntityAddress}</p>}
+                      </div>
+                    </div>}
+
+                  {projectInfo.labelData.modificationToPackaging &&
+                    <div className='symbol-content-item symbol-content-item-with-text'>
+                      <img className='symbol-img' src={Repackaging} />
+                      <div>
+                        {projectInfo.labelData.repackagingEntityName &&
+                          <p>{projectInfo.labelData.repackagingEntityName}</p>}
+                        {projectInfo.labelData.repackagingEntityAddress &&
+                          <p>{projectInfo.labelData.repackagingEntityAddress}</p>}
+                      </div>
+                    </div>}
+                {projectInfo.labelData.associatedWithIndividualPatient &&
+                  (projectInfo.labelData.patientName || projectInfo.labelData.patientNumber) &&
+                  <div className='symbol-content-item symbol-content-item-with-text'>
+                    <img className='symbol-img' src={patient_identification} />
+                    <div>
+                      <p>{projectInfo.labelData.patientName}</p>
+                      <p>{projectInfo.labelData.patientNumber}</p>
+                    </div>
+                  </div>}
+
+
+            {/* sterility */}
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess &&
+
+                (projectInfo.labelData.hasVaporizedHydrogenPeroxide  == true
+                  || projectInfo.labelData.hasAsepticProcessing  == true
+                  || projectInfo.labelData.hasEthyleneOxide  == true
+                  || projectInfo.labelData.hasIrradiation  == true
+                  || projectInfo.labelData.hasSteamOrDryHeat  == true
+                ) 
+                ?null
+                :<div className='symbol-content-item sterileSymbol'>
+                  <img className='symbol-img sterileSymbol-img' src={sterileSymbol} />
+                </div>
+              }
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess &&
+
+                    projectInfo.labelData.hasAsepticProcessing &&
+                      <div className='symbol-content-item sterileSymbol'>
+                        <img className='symbol-img sterileSymbol-img' src={sterile_ASymbol} />
+                      </div>
+              }
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess &&
+
+                    projectInfo.labelData.hasEthyleneOxide &&
+                      <div className='symbol-content-item sterileSymbol'>
+                        <img className='symbol-img sterileSymbol-img' src={Sterile_EOSymbol} />
+                      </div>
+              }
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess &&
+
+                    projectInfo.labelData.hasIrradiation &&
+                      <div className='symbol-content-item sterileSymbol'>
+                        <img className='symbol-img sterileSymbol-img' src={Sterile_RSymbol} />
+                      </div>
+              }
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess &&
+
+                    projectInfo.labelData.hasSteamOrDryHeat &&
+                      <div className='symbol-content-item sterileSymbol'>
+                        <img className='symbol-img sterileSymbol-img' src={Sterilized_usings_team_or_dry_heatSymbol} />
+                      </div>
+              }
+
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess &&
+
+                    projectInfo.labelData.isIntendedToBeResterilized &&
+                        <div className='symbol-content-item'>
+                          <img className='symbol-img' src={do_not_resterilizeSymbol} />
+                        </div>
+              }
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess == false &&
+
+                <div className='symbol-content-item'>
+                  <img className='symbol-img' src={nonSterileSymbol} />
+                </div>
+              }
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess == false &&
+
+                  projectInfo.labelData.canBeUsedIfDamaged &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={package_is_damageSymbol} />
+                </div>}
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess == false &&
+
+                  projectInfo.labelData.hasSterileFluidPath &&
+                <div className='symbol-content-item'>
+                  <img className='symbol-img' src={sterile_fluid_pathSymbol} />
+              </div>}
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess == false &&
+            
+                projectInfo.labelData.hasVaporizedHydrogenPeroxide &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={VaporizedHydrogenPeroxideSymbol} />
+                  </div>}
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess == false &&
+                
+                  projectInfo.labelData.hasSingleSterileBarrierSystem &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={single_S_B_S} />
+                  </div>}
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess == false &&
+                
+                  projectInfo.labelData.hasTwoSterileBarrierSystems &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={double_S_B_S} />
+                  </div>}
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess == false &&
+                
+                  projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveInside &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={double_S_B_S_inside} />
+                  </div>}
+
+              {projectInfo.labelData.isSterile == true &&
+                projectInfo.labelData.hasSterilizationProcess == false &&
+                
+                  projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveOutside &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={double_S_B_S_outside} />
+                  </div>}
+
+              {projectInfo.labelData.needInstructionsForUse &&
+                  !projectInfo.labelData.eIFULink &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={consult_instruction_for_use} />
+                    {projectInfo.labelData.eIFULink &&
+                      <div className=''>
+                        <p>{projectInfo.labelData.eIFULink}</p>
+                      </div>
+                    }
+                  </div>}
+
+                  {/* storage */}
+
+                {projectInfo.labelData.requiresCarefulHandling &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={fragile_handle_with_care} />
+                  </div>}
+
+                {projectInfo.labelData.requiresProtectionFromLight &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={keep_away_from_sunlight} />
+                  </div>}
+
+                {projectInfo.labelData.requiresProtectionFromHeatAndRadioactiveSources &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={protect_from_heat_and_radioactive_soures} />
+                  </div>}
+
+                {projectInfo.labelData.requiresProtectionFromMoisture &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={keep_dry} />
+                  </div>}
+
+                {projectInfo.labelData.hasLowerLimitOfTemperature &&
+                  projectInfo.labelData.hasUpperLimitOfTemperature == false &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min-temperature'>{projectInfo.labelData.lowerTemperatureLimit}</p>
+                    <img className='symbol-img' src={lower_limit_temperaure} />
+                  </div>}
+
+                {projectInfo.labelData.hasUpperLimitOfTemperature &&
+                  projectInfo.labelData.hasLowerLimitOfTemperature == false &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                    <img className='symbol-img' style={{width:'5vw'}}  src={upper_limit_temperaure} />
+                      <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
+                  </div>}
+
+                {projectInfo.labelData.hasUpperLimitOfTemperature == true &&
+                  projectInfo.labelData.hasLowerLimitOfTemperature == true &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
+                    <img className='symbol-img'  src={temperature} />
+                      <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
+                  </div>}
+
+                {projectInfo.labelData.hasHumidityRange &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min' >{projectInfo.labelData.humidityMin}%</p>
+                    <img className='symbol-img' src={HumidityLimit} />
+                      <p className='max' >{projectInfo.labelData.humidityMax}%</p>
+                  </div>}
+
+                {projectInfo.labelData.hasAtmosphericPressureRange &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min' >{projectInfo.labelData.atmosphericPressureMin}</p>
+                    <img className='symbol-img' src={AtmPressureLimit} />
+                      <p className='max' >{projectInfo.labelData.atmosphericPressureMax}</p>
+                  </div>}
+                
+                  {/* safe use */}
+                
+                {projectInfo.labelData.hasBiologicalRisks &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={biological_risks} />
+                  </div>}
+
+                {projectInfo.labelData.isIntendedForSingleUse &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={do_not_re_use} />
+                  </div>}
+
+                {projectInfo.labelData.needCaution &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={caution} />
+                  </div>}
+
+                {projectInfo.labelData.containsRubberLatex &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={contains_or_presence_of_natural_rubber_latex} />
+                  </div>}
+
+                {projectInfo.labelData.containsBloodDerivatives &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={contains_human_blood} />
+                  </div>}
+
+                {projectInfo.labelData.containsMedicinalSubstance &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Contains_a_medicinal_substance} />
+                  </div>}
+
+                {projectInfo.labelData.containsAnimalOriginMaterial &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Contains_biological_material_of_animal_origin} />
+                  </div>}
+
+                {projectInfo.labelData.containsHumanOriginMaterial &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Contains_human_origin} />
+                  </div>}
+
+                {projectInfo.labelData.containsHazardousSubstances &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Contains_hazardous_substances} />
+                  </div>}
+
+                {projectInfo.labelData.containsNanoMaterials &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Contains_nano_materials} />
+                  </div>}
+
+                {projectInfo.labelData.multipleUsesOnSinglePatient &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Single_patient_multiple_use} />
+                  </div>}
+
+                  {/* Diagnostic IVD */}
+
+                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                  projectInfo.labelData.isControlMaterial &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={control} />
+                    </div>
+                }
+
+                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                  projectInfo.labelData.isControlMaterialForNegativeRange &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={control_negative} />
+                    </div>
+                }
+
+                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                  projectInfo.labelData.isControlMaterialForPositiveRange &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={control_positive} />
+                    </div>
+                }
+
+                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                  projectInfo.labelData.isIVDForPerformanceEvaluation &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={for_IVD_performance_evaluation_only} />
+                    </div>
+                }
+
+                {projectInfo.labelData.isMedicalDeviceForSampleCollection &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={sampling_site} />
+                  </div>}
+
+                {projectInfo.labelData.hasFluidPath &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={fluid_path} />
+                  </div>}
+
+                {projectInfo.labelData.isNonPyrogenic &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Non_pyrogenic} />
+                  </div>}
+
+                {projectInfo.labelData.hasOneWayValve &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={one_way_valve} />
+                  </div>}
+
+                  {projectInfo.labelData.numberOfDropsPerMilliliter !== "Not applicable" &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Drops_per_millilitre} />
+                      <div>
+                        <p>{projectInfo.labelData.numberOfDropsPerMilliliter}</p>
+                      </div>
+                  </div>}
+
+                {projectInfo.labelData.liquidFilterPoreSize !== "Not applicable" &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Liquid_filter_with_pore_size} />
+                      <div>
+                        <p>{projectInfo.labelData.liquidFilterPoreSize}</p>
+                      </div>
+                  </div>}
+          </div>
+        )
+      }
+      return ;
+    }
+
+    const projectOwnerInfo = () => {
+      if(projectInfo && projectInfo.labelData){
+        return (
+          <div className='project-owner-info'>
+
+              <div className='symbol-content-item' style={{width:''}}>
+                  <img className='symbol-img' src={Manufacturer} />
+                  <div className=''>
+                    <p>{projectInfo.labelData.manufacturerName}</p>
+                    <p>{projectInfo.labelData.manufacturerAddress}</p>
+                  </div>
+                </div>
+
+              {projectInfo.labelData.hasDistributor &&
+                  <div className='symbol-content-item' style={{width:''}}>
+                    <img className='symbol-img' src={Distributor} />
+                    <div className=''>
+                      <p>{projectInfo.labelData.distributorAddress}</p>
+                      <p>{projectInfo.labelData.distributorAddress}</p> 
+                    </div>
+                  </div>
+                }
+              {projectInfo.labelData.useByDate &&
+                <div className='symbol-content-item'>
+                  <img className='symbol-img' src={Use_by_date} />
+                  <div className=''>
+                    <p>{projectInfo.labelData.useByDate}</p>
+                  </div>
+                </div>}
+
+              {projectInfo.labelData.dateOfManufacture &&
+                <div className='symbol-content-item'>
+                  <img className='symbol-img' src={Date_of_manufactureSymbol} />
+                  <div className=''>
+                    <p>{projectInfo.labelData.dateOfManufacture}</p>
+                  </div>
+                </div>}
+
+              {projectInfo.labelData.LOTNumber &&
+                <div className='symbol-content-item'>
+                  <img className='symbol-img' src={Batch_codeSymbol} />
+                  <div className=''>
+                    <p>{projectInfo.labelData.LOTNumber}</p>
+                  </div>
+                </div>}
+
+              {projectInfo.labelData.serialNumber &&
+                <div className='symbol-content-item'>
+                  <img className='symbol-img' src={Serial_numberSymbol} />
+                  <div className=''>
+                    <p>{projectInfo.labelData.serialNumber}</p>
+                  </div>
+                </div>}
+
+              {(projectInfo.labelData.catalogueNumber || projectInfo.labelData.modelNumber)&&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={catalogueNumberSymbol} />
+                      <div className=''>
+                        <p>{projectInfo.labelData.catalogueNumber}</p>
+                      </div>
+                    </div>}
+
+              {projectInfo.labelData.modelNumber &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={modelNumberSymbol} />
+                      <div className=''>
+                        <p>{projectInfo.labelData.modelNumber}</p>
+                      </div>
+                    </div>}
+                
+
+                {/* if outside of EUROPE */}
+              {projectInfo.labelData.isOutsideEU &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Authorized_Representative} />
+                    <div className=''>
+                      <p>{projectInfo.labelData.europeanAuthorizedRepName}</p>
+                      <p>{projectInfo.labelData.europeanAuthorizedRepAddress}</p> 
+                    </div>
+                  </div>
+                }
+              {projectInfo.labelData.isOutsideEU &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Importer} />
+                    <div className=''>
+                      <p>{projectInfo.labelData.importerName}</p>
+                      <p>{projectInfo.labelData.importerAddress}</p> 
+                    </div>
+                  </div>
+                }
+
+
+          </div>
+        )
+      }
+    }
 
 //  ----------- download functions ---------------
     const componentRef = useRef();
@@ -1911,8 +2305,9 @@ const LabelInformation = () => {
       e.preventDefault();
     }
 
+ 
   return (
-    <div className="container label-information" style={{paddingBottom: "40px"}}>
+    <div className="container label-information" style={{paddingBottom: "20px"}}>
       <div style={{display:'none'}}>
                 <div style={{display:'flex', flexDirection:'column', width:'100px'}}>
                   <div style={{backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
@@ -1940,37 +2335,179 @@ const LabelInformation = () => {
 
                   <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
        </div>
-      <Link to='/dashboard/project' className='label-info-link'><ArrowBackIcon /> Back</Link>
+       <div style={{display:'flex', justifyContent:'space-between', backgroundColor:''}}>
+          <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'><ArrowBackIcon /> Back</Link>
+          {!getProjectRequest && 
+          <>
+            <h3 className='label-info-title'>{projectInfo && projectInfo.projectName}</h3>
 
+              <div style={{marginTop:'0px', alignItems:'center'}}>
+                    <h6>Send Project To:</h6>
+                    <div style={{display:'flex',  height:'35px', alignItems:'center', width:'250px'}}>
+                      <select  value={sendTo.receivedId} onChange={(e) => setSendTo({...sendTo,receivedId: e.target.value})} style={{width:'100%', padding:'2px 10px', borderRadius:'10px', outline:'none', border:'2px solid lightGray'}}>
+                        <option>Choose User :</option>
+                          {allUsersCompany &&
+                            allUsersCompany.map(item => {
+                              return (
+                              <option value={`${item._id}`}>{`${item.firstName} ${item.lastName}: ( ${item.role} )`}</option>
+                              )})
+                          }
+                      </select>
+                      <button className='mx-2 mb-2' onClick={() => handleSendLabel()}
+                          style={{marginRight:'5px', 
+                                  borderRadius:'10px', 
+                                  marginTop:'10px',
+                                  color:'#fff', 
+                                  backgroundColor:'#08408B', 
+                                  display:'flex', 
+                                  alignItems:'center'
+                                }}
+                          disabled={sendingProjectRequest ? true : false}
+                      >{sendingProjectRequest
+                        ?<div style={{width:'100%',display:'flex', justifyContent:'center'}}>
+                          <RotatingLines
+                            strokeColor="#011d41"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            width="30"
+                            visible={true}
+                          /> 
+                        </div>
+                      :"Send"}
+                      <SendIcon style={{marginLeft:'5px', fontSize:'20px', color:'#FFF'}}/></button>
+
+                    </div>
+                  </div>
+          </>
+                }
+       </div>
+      <div>
+      </div>
       {!getProjectRequest
       ?(<div>
-        <h3 className='label-info-title'>Label Title</h3>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+        </div>
         <div className='label-info-content row'>
-     
           {/* label */}
-          <div className='col-lg-10'>
+          <div className='col-lg-12'>
 
-              <h5>Label Information :</h5>
             <div style={{borderRadius:'5px'}} className='label-info-content-item'>
               {projectInfo && 
-                <div className='label-info-data'>
+                <div className='label-info-data' style={{display:'flex', justifyContent:'center'}} >
 
-                    <div 
-                          style={{ border: '1px solid black' }}
-                          className='label-1 no-print'
-                          > {/* width: `${22.1}cm` */}
-                        <div className='label-1-line-1'>
-                          {symbolsWithImageAnd2ParagraphsOrMore()}
-                          {symbolsWithImageAndParagraph()}
-                          {paragraphOnly()}
+                  <div className='template-1' >
+                    <div className='template-1-content'>
+                      <div className='template-1-content-top'>
+                        <div className='template-1-content-top-left'>
+                          <div className='template-1-content-top-left-header'>
+                            <div style={{width:'15%'}}>
+                              {projectInfo && 
+                                projectInfo.labelData && 
+                                  projectInfo.labelData.productType == "Medical device" &&
+                                    <img className='symbol-img' src={Medical_deviceSymbol} />
+                                  }
+                            </div>
+                            <div style={{width:'70%', textAlign:'center'}}>
+                              {projectInfo && 
+                                projectInfo.labelData && 
+                                projectInfo.labelData.productName &&
+                                <h5>{projectInfo.labelData.productName}</h5>}
+                             {projectInfo && 
+                                projectInfo.labelData && 
+                                  projectInfo.labelData.intendedPurpose &&
+                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                            </div>
+                            {projectInfo &&
+                               projectInfo.labelData && 
+                                 projectInfo.labelData.productClass == 'Class I'
+                                ?(<img style={{width:'8%'}} className='symbol-img' src={CE_mark} />)
+                    
+                                :( <div style={{width:'8%'}}  className=''>
+                                      <img style={{width:'100%'}} className='' src={CE_mark} />
+                                        {projectInfo &&
+                                          projectInfo.labelData && 
+                                        <p style={{fontSize:'60%', marginTop:'3px',  marginRight:'10px'}} >{projectInfo.labelData.notifiedBodyNumber}</p>}
+                                  </div>)}
+                          </div>
+                          <ul className='template-1-content-top-left-body'>
+                          {projectInfo &&
+                            projectInfo.labelData && 
+                              projectInfo.labelData.intendedForIntroduction &&
+                            <>
+                                {projectInfo.labelData.qualitativeComposition &&
+                                  <li>{projectInfo.labelData.qualitativeComposition}</li>}
+                              {projectInfo.labelData.quantitativeInformation && 
+                                <li>{projectInfo.labelData.quantitativeInformation}</li>}
+                            </>
+                            }
+                            {projectInfo &&
+                              projectInfo.labelData && 
+                              projectInfo.labelData.containsCMRSubstances &&
+                              <div className='symbol-content-item'>
+                                {projectInfo.labelData.cmrSubstancesList &&
+                                  <li>{projectInfo.labelData.cmrSubstancesList}</li>}
+                              </div>}
+                            </ul>
                         </div>
-                        {symbolsWithImageOnly()}
-                        <div className='label-1-last-line'>
-                          {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' && handleUDI()}
+
+                        <div className='template-1-content-top-right'>
+                          <div className='template-1-content-top-right-top'>
+                            <div style={{display:'flex', flexDirection:'column'}}>
+                              {projectInfo &&
+                                projectInfo.labelData && 
+                                  projectInfo.labelData.quantity && 
+                              <p style={{flex:'0.95'}}>QTY: {projectInfo.labelData.quantity}</p>}
+                              <div >
+                                {projectInfo &&
+                                  projectInfo.labelData && 
+                                  (projectInfo.labelData.addManufacturerLogo
+                                   || projectInfo.labelData.addWebsite) &&
+                                  <img style={{width:'25%', marginTop:''}} className='symbol-img' src={Patient_information_website} />}
+                              </div>
+                            </div>
+                              {projectInfo &&
+                                  projectInfo.labelData && 
+                                  projectInfo.labelData.manufacturerLogo &&
+                                <img src={`${process.env.REACT_APP_BASE_URL}/assets/companyImage/${projectInfo.labelData.manufacturerLogo}`} alt="" />}
+                          </div>
+                          {projectInfo && projectInfo.labelData &&  projectInfo.labelData.addWebsite &&
+                           projectInfo.labelData.website &&
+                            <p>{projectInfo.labelData.website}</p>}
+                        </div>
+                      </div>
+                      <div className='template-1-content-mid'>
+                        <div className='template-1-content-mid-fist-item'>
+                          {projectInfo && 
+                            projectInfo.labelData && 
+                              projectInfo.labelData.packagingContents &&
+                          <p className='template-1-content-mid-fist-item-top'>
+                            {projectInfo.labelData.packagingContents}
+                          </p>}
+                          <div className='template-1-content-mid-fist-item-bottom'>
+                          {projectInfo && 
+                            projectInfo.labelData && 
+                              projectInfo.labelData.customMadeDevice &&
+                              <p>custom-made device</p>}
+                          {projectInfo && 
+                            projectInfo.labelData && 
+                              projectInfo.labelData.clinicalInvestigationOnly &&
+                              <p>exclusively for clinical investigation</p>}
+                          </div>
+                        </div>
+                        <div className='template-1-content-mid-second-item'>
+                          {projectOwnerInfo()}
+                        </div>
+                      </div>
+                      <div className='template-1-content-bottom'>
+                        <div className='rest-of-the symbols'>
+                          {symbolsWithTextBehind()}
+                        </div>
+                        <div className="code-bar">
+                        {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' && handleUDI()}
                           {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
                               imageSrc &&
-                            <div style={{display:'flex', alignItems:'center'}}>
-                              <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
+                            <div style={{display:'flex', alignItems:'center', marginTop:'1%'}}>
+                              <img style={{width:'15%', height:'auto'}} src={imageSrc} alt={`data matrix from`} />
                               <div style={{fontSize:'12px'}}>
                                 <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.dateOfManufacture}</p>
                                 <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.useByDate}</p>
@@ -1978,122 +2515,25 @@ const LabelInformation = () => {
                                 <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.serialNumber}</p>
                               </div>
                             </div>}
-                          {otherSymbols()}
                         </div>
-                    </div>
-                    
-
-                    {/* downloader buttons */}
-                  {/* <div>
-                    <button style={{backgroundColor:'#02295c', color:"#fff",  marginRight:'10px', borderRadius:'5px'}} onClick={() => handleDownloadImage('png')}>Download as PNG</button>
-                    <button style={{backgroundColor:'#02295c', color:"#fff",  marginRight:'10px', borderRadius:'5px'}} onClick={() => handleDownloadImage('jpeg')}>Download as JPEG</button>
-                    <button onClick={handleDownloadSVG}>Download as SVG</button>
-                    <button onClick={downloadPDF}>{
-                      !loader ? 
-                      "Download as PDF" : 
-                      (<div style={{width:'30%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
-                      <RotatingLines
-                          strokeColor="#011d41"
-                          strokeWidth="5"
-                          animationDuration="0.75"
-                          width="90"
-                          visible={true}
-                          /></div>)}
-                    </button>
-                  </div> */}
-              
-                  <div className='label-2 mt-4' style={{ border:'1px solid black'}}> {/* width: `${22.1}cm` */}
-                      {paragraphOnly()}
-                      {symbolsWithImageAnd2ParagraphsOrMore()}
-                      {/* {symbolsWithImageAndParagraph()} */}
-                      {imgWithPar_label2()}
-                    {symbolsWithImageOnly()}
-                    <div className='label-1-last-line'>
-                      {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' &&
-                      <div style={{display:'flex', alignItems:'flex-end', justifyContent:'space-between', width:'100%'}}>
-                        {handleUDI()}
-                        {projectInfo.labelData.quantity > 0 &&
-                        <div className='' style={{display:'flex', alignItems:'flex-end'}}>
-                          <p style={{fontSize:'20px'}}>QTY:{projectInfo.labelData.quantity}</p>
-                        </div>}
-                      </div>}
-                       {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
-                          imageSrc &&
-                        <div style={{display:'flex', alignItems:'center'}}>
-                          <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
-                          <div style={{fontSize:'12px'}}>
-                            <p style={{margin:'2px 10px'}}>{projectInfo.labelData && (projectInfo.labelData.dateOfManufacture)}</p>
-                            <p style={{margin:'2px 10px'}}>{projectInfo.labelData && (projectInfo.labelData.useByDate)}</p>
-                            <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.LOTNumber}</p>
-                            <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.serialNumber}</p>
-                          </div>
-                        </div>}
-                      {/* {otherSymbols()} */} 
-                      {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' &&
-                        <div className='' style={{display:'flex', alignItems:'flex-end'}}>
-                          <p style={{fontSize:'20px'}}>QTY:{projectInfo.labelData.quantity}</p>
-                        </div>}
-                                                           
+                      </div>
                     </div>
                   </div>
- 
                 </div>
               }
             </div>
 
           </div>
-          {/* comment */}
-          <div className='col-md'>
-              {/* <h5>Comments :</h5>
-            <div style={{borderRadius:'5px'}} className='label-info-content-item label-info-content-item-cmnt'>
-              <div className='label-info-comments'>
-                <div className='comment-content'>
-                  <div className='comment-header'>
-                    <p className='comment-user-name'>User Name</p>
-                    <p className='comment-user-role'>Creator</p>
-                  </div>
-                  <div className="comment-user-description">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                  </div>
-                </div>
-              </div>
-              <form style={{width:'100%', marginTop:'10px'}} onSubmit={handleComment}>
-                <div style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between', borderRadius:'10px', overflow:'hidden', border:'1px solid lightGray', height:'35px'}}>
-                  <input style={{width:'80%', outline:'none', padding:'0 15px'}} />
-                  <button style={{marginRight:'5px', borderRadius:'20px', width:'40px'}}>
-                    <SendIcon style={{marginLeft:'5px', color:'#0E5FC9'}}/>
-                  </button>
-                </div>
-              </form>
-            </div> */}
-
-            <div style={{marginTop:'20px'}}>
-              <h6>Send Project To:</h6>
-              <select onChange={(e) => setSendTo(e.target.value)} style={{width:'100%', padding:'10px 5px', borderRadius:'10px', outline:'none', border:'2px solid lightGray'}}>
-                <option>Choose User :</option>
-                  {allUsersCompany &&
-                    allUsersCompany.map(item => {
-                      return (
-                      <option value={`${item._id}`}>{`${item.firstName} ${item.lastName}: ( ${item.role} )`}</option>
-                      )})
-                  }
-              </select>
-              <button style={{marginRight:'5px', borderRadius:'10px', marginTop:'10px', color:'#fff', backgroundColor:'#08408B', display:'flex', alignItems:'center'}}
-                // onClick={() => dispatch()}
-              >Send Label <SendIcon style={{marginLeft:'5px', color:'#FFF'}}/></button>
-            </div>
-          </div>
-
-        </div>
+          
         {/* label description */}
         <h6>Description :</h6>
             {projectInfo && 
               projectInfo.projectDescription &&
               <p className='label-info-description'>
-                  {/* {projectInfo.projectDescription} */}
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                  {projectInfo.projectDescription}
               </p>
             }
+        </div>
       </div>)
 
       // ----- rotation request -----

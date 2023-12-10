@@ -4,7 +4,7 @@ import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAction } from '../redux/actions/authActions';
 import { toast } from 'react-toastify';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RotatingLines } from 'react-loader-spinner';
 
 
@@ -26,17 +26,16 @@ const LogoutModal = () => {
 
   const {logout} = useSelector(state => state);
   const {logoutRequest, logoutSuccess, logoutFail} = logout
-console.log(logoutRequest, logoutSuccess, logoutFail)
 
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logoutAction())
   }
-
+const navigate = useNavigate()
   useEffect(() => {
     if(logoutSuccess){
-        <Navigate to="/login" />;
+      navigate("/login")
     }
 
     if(logoutFail){

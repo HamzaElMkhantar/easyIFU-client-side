@@ -6,10 +6,14 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAction } from '../../redux/actions/authActions';
 import { RotatingLines } from 'react-loader-spinner';
+import { Avatar } from '@mui/material';
+import jwtDecode from 'jwt-decode';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [toggle, setToggle] = useState(false);
   const token = Cookies.get('eIfu_ATK') || null;
+  const decodedToken = token ? jwtDecode(token) : null;
 
   const dispatch = useDispatch()
   const toggleMenu = () => {
@@ -22,6 +26,7 @@ const Header = () => {
     dispatch(logoutAction())
   }
 
+ 
   return (
     <nav 
      className='navbar navbar-expand-md navbar-light'>
@@ -95,13 +100,30 @@ const Header = () => {
                     Log In
                 </button>
             </Link>
-            : <li style={{display:'flex'}} className='nav-item'>
-                <Link to="/dashboard" onClick={() => setMenuOpen(false)} className='nav-link px-2 mx-1' href='#price'>
-                  dashboard
-                </Link>
-                <Link onClick={() => dispatch(logoutAction())} className='nav-link px-0' href='#price'>
-                  logOut
-                </Link>
+            : <li style={{position:'relative'}} className='nav-item'>
+              <Avatar style={{backgroundColor:'#072D60', color:'#fff', fontWeight:'600', cursor:'pointer'}} 
+                onClick={() => setToggle(!toggle)}>
+                {decodedToken && decodedToken.userInfo && decodedToken.userInfo.firstName[0].toUpperCase()}
+              </Avatar>
+              <ul style={!toggle ? {display:'none'} 
+                : {display:'flex', 
+                    flexDirection:'column', position:'absolute', 
+                    backgroundColor:'#fff', 
+                    top:'50px', 
+                    right:'0px', 
+                    borderRadius:'5px', 
+                    border:'1px solid lightGray', 
+                    textAlign:'left',
+                    padding:'0',
+                  }}
+              >
+                  <Link to="/dashboard" style={{width:'150px', padding:'5px 20px'}} onClick={() => setMenuOpen(false)} className='nav-link' href='#price'>
+                    dashboard
+                  </Link>
+                  <Link style={{width:'150px', padding:'5px 20px'}} onClick={() => dispatch(logoutAction())} className='nav-link' href='#price'>
+                    logOut
+                  </Link>
+              </ul>
               </li>
           }
           

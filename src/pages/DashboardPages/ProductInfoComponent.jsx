@@ -56,9 +56,16 @@ const ProductInfoComponent = () => {
             const futureDate = new Date(currentDate.setMonth(currentDate.getMonth() + monthsToAdd));
     
             // Format the date as "dd/mm/yyyy"
-            newValue = `${futureDate.getDate()}/${futureDate.getMonth() + 1}/${futureDate.getFullYear()}`;
-        }
+            const day = String(futureDate.getDate()).padStart(2, '0');
+            const month = String(futureDate.getMonth() + 1).padStart(2, '0');
+            const year = futureDate.getFullYear();
 
+            // Format the date as "dd/mm/yyyy"
+            newValue = `${day}/${month}/${year}`;
+        }
+        if(name == "manufacturerLogo"){
+            newValue = e.target.files[0]
+        }
 
         setFormData({
             ...formData,
@@ -70,18 +77,22 @@ const ProductInfoComponent = () => {
     console.log(formData)
 
     const dispatch = useDispatch()
+    const formDataObject = new FormData();
+    Object.keys(formData).forEach((key) => {
+        formDataObject.append(key, formData[key]);
+      });
     const handleSubmit = e => {
         e.preventDefault();
         console.log(formData)
 
         // Use a regular expression to check for the format dd/mm/yyyy
         const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/;
-        if (!formData.dateOfManufacture.match(dateFormat)) {
+        if (formData.dateOfManufacture !== '' &&!formData.dateOfManufacture.match(dateFormat)) {
             toast.warning('Please enter a date in the format dd/mm/yyyy.');
             return;
         }
 
-        dispatch(productInformationAction(formData, token))
+        dispatch(productInformationAction(formDataObject, token))
 
     }
 
@@ -99,9 +110,8 @@ const ProductInfoComponent = () => {
   return (
     <div className="container productInfo">
         <HorizontalLinearStepper step={1}/>
-        <form className='productInfo-form' onSubmit={handleSubmit}>
-            <h2>Product Information</h2>
-            
+        <form className='productInfo-form' onSubmit={handleSubmit} encType='multipart/form-data'>
+            <h2>Product Information</h2>            
             <div className="row">
                 <div className="col-md-6">
                 <div className="form-group">
@@ -148,7 +158,7 @@ const ProductInfoComponent = () => {
                     <div style={{display:'flex'}}>
                         <input style={{width:''}}
                         type="CheckBox"
-                        // required={udiFormat == "" ? true : false}
+                        required={formData.udiFormat == "" ? true : false}
                         className="form-check-input"
                         checked={formData.udiFormat == "GS1" ? true : false}
                         onClick={() => setFormData({...formData, udiFormat: 'GS1' })}
@@ -158,7 +168,7 @@ const ProductInfoComponent = () => {
                     <div style={{display:'flex'}}>
                      <input style={{width:''}}
                         type="CheckBox"
-                        required={numbersData == "" ? true : false}
+                        required={formData.udiFormat == "" ? true : false}
                         className="form-check-input"
                         checked={formData.udiFormat == "HIBCC" ? true : false}
                         onClick={() => setFormData({...formData, udiFormat: 'HIBCC' })}
@@ -169,7 +179,7 @@ const ProductInfoComponent = () => {
                     <div style={{display:'flex'}}>
                         <input style={{width:''}}
                         type="CheckBox"
-                        required={numbersData == "" ? true : false}
+                        required={formData.udiFormat == "" ? true : false}
                         className="form-check-input"
                         checked={formData.udiFormat == "ICCBBA" ? true : false}
                         onClick={() => setFormData({...formData, udiFormat: 'ICCBBA' })}
@@ -179,7 +189,7 @@ const ProductInfoComponent = () => {
                     <div style={{display:'flex'}}>
                      <input style={{width:''}}
                         type="CheckBox"
-                        required={numbersData == "" ? true : false}
+                        required={formData.udiFormat == "" ? true : false}
                         className="form-check-input"
                         checked={formData.udiFormat == "IFA" ? true : false}
                         onClick={() => setFormData({...formData, udiFormat: 'IFA' })}
@@ -275,7 +285,7 @@ const ProductInfoComponent = () => {
                 <div className="col-md-6">
                 
                 <div className="form-group">
-                    <label>6- Date of Manufacture*:</label>
+                    <label>6- Date of Manufacture(Optional):</label>
                     <input
                     type="text"
                     className="form-control"
@@ -381,7 +391,7 @@ const ProductInfoComponent = () => {
                     <option value="Large">Large</option>
                     </select>
                 </div> */}
-                {/* <div className="form-group">
+                <div className="form-group">
                     <label>11- Do you want to add your manufacturer logo in the label ?</label>
                     <div className="form-check">
                     <input
@@ -398,14 +408,14 @@ const ProductInfoComponent = () => {
                     <div className="form-group">
                     <label>Insert your logo:</label>
                     <input
-                        type="text"
+                        type="file"
                         className="form-control"
                         name="manufacturerLogo"
-                        value={formData.manufacturerLogo}
+                        
                         onChange={handleInputChange}
                     />
                     </div>
-                )} */}
+                )}
                 </div>
             </div>
            {!productRequest 

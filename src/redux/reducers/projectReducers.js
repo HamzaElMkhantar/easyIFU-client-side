@@ -26,10 +26,26 @@ import {ALL_PROJECTS_FAILED,
         PRODUCT_INFORMATION_REQUEST,
         PRODUCT_INFORMATION_RESET,
         PRODUCT_INFORMATION_SUCCESS,
+        RELEASED_PROJECT_FAILED,
+        RELEASED_PROJECT_REQUEST,
+        RELEASED_PROJECT_RESET,
+        RELEASED_PROJECT_SUCCESS,
+        RELEASE_PROJECT_FAILED,
+        RELEASE_PROJECT_REQUEST,
+        RELEASE_PROJECT_RESET,
+        RELEASE_PROJECT_SUCCESS,
+        ROLE_PROJECT_FAILED,
+        ROLE_PROJECT_REQUEST,
+        ROLE_PROJECT_RESET,
+        ROLE_PROJECT_SUCCESS,
         SAFE_USE_FAILED,
         SAFE_USE_REQUEST,
         SAFE_USE_RESET,
         SAFE_USE_SUCCESS,
+        SENDING_PROJECT_FAILED,
+        SENDING_PROJECT_REQUEST,
+        SENDING_PROJECT_RESET,
+        SENDING_PROJECT_SUCCESS,
         START_PROJECT_FAILED, 
         START_PROJECT_REQUEST, 
         START_PROJECT_RESET, 
@@ -129,6 +145,35 @@ const others = {
     othersSuccess :  false,
     othersFail : null,
     projectInfo: null
+}
+
+const sendingProject = {
+    sendingProjectRequest : false,
+    sendingProjectSuccess :  false,
+    sendingProjectFail : null,
+    sendingProjectMessage: null
+}
+
+const roleProject = { 
+    roleProjectRequest : false,
+    roleProjectSuccess :  false,
+    roleProjectFail : null,
+    roleProjects : null
+}
+
+const releaseProject = {
+    releaseProjectRequest : false,
+    releaseProjectSuccess :  false,
+    releaseProjectFail : null,
+    releaseProjectMessage : null
+
+}
+
+const releasedProject = {
+    releasedProjectRequest : false,
+    releasedProjectSuccess :  false,
+    releasedProjectFail : null,
+    releasedProjects: null
 }
 
 export const getAllProjectsReducer = (state = getProjects, action) => {
@@ -496,6 +541,128 @@ export const othersReducer = (state = others, action) => {
             } ;
         case OTHERS_RESET :
             return others;
+        default :
+            return state ;
+    }
+}
+
+
+export const sendingProjectToOtherRoleReducer = (state = sendingProject, action) => {
+    switch(action.type){
+        case SENDING_PROJECT_REQUEST:
+            return {
+                ...state,
+                sendingProjectRequest : true,
+                sendingProjectSuccess :  false,
+                sendingProjectFail : null,
+            } ;
+        case SENDING_PROJECT_SUCCESS :
+            return {
+                ...state,
+                sendingProjectRequest : false,
+                sendingProjectSuccess : true,
+                sendingProjectMessage : action.payload
+            } ;
+        case SENDING_PROJECT_FAILED :
+            return {
+                ...state,
+                sendingProjectFail : action.payload,
+                sendingProjectSuccess :  false,
+                sendingProjectRequest : false
+            } ;
+        case SENDING_PROJECT_RESET :
+            return sendingProject;
+        default :
+            return state ;
+    }
+}
+
+export const ProjectByRoleIdReducer = (state = roleProject, action) => {
+    switch(action.type){
+        case ROLE_PROJECT_REQUEST:
+            return {
+                ...state,
+                roleProjectRequest : true,
+                roleProjectSuccess :  false,
+                roleProjectFail : null,
+            } ;
+        case ROLE_PROJECT_SUCCESS :
+            return {
+                ...state,
+                roleProjectRequest : false,
+                roleProjectSuccess : true,
+                roleProjects : action.payload
+            } ;
+        case ROLE_PROJECT_FAILED :
+            return {
+                ...state,
+                roleProjectFail : action.payload,
+                roleProjectSuccess :  false,
+                roleProjectRequest : false
+            } ;
+        case ROLE_PROJECT_RESET :
+            return roleProject;
+        default :
+            return state ;
+    }
+}
+
+
+export const ReleasedProjectReducer = (state = releasedProject, action) => {
+    switch(action.type){
+        case RELEASED_PROJECT_REQUEST:
+            return {
+                ...state,
+                releasedProjectRequest : true,
+                releasedProjectSuccess :  false,
+                releasedProjectFail : null,
+            } ;
+        case RELEASED_PROJECT_SUCCESS :
+            return {
+                ...state,
+                releasedProjectRequest : false,
+                releasedProjectSuccess : true,
+                releasedProjects: action.payload
+            } ;
+        case RELEASED_PROJECT_FAILED :
+            return {
+                ...state,
+                releasedProjectFail : action.payload,
+                releasedProjectSuccess :  false,
+                releasedProjectRequest : false
+            } ;
+        case RELEASED_PROJECT_RESET :
+            return releasedProject;
+        default :
+            return state ;
+    }
+}
+
+export const ReleaseTheProjectReducer = (state = releaseProject, action) => {
+    switch(action.type){
+        case RELEASE_PROJECT_REQUEST:
+            return {
+                ...state,
+                releaseProjectRequest : true,
+                releaseProjectSuccess :  false,
+                releaseProjectFail : null,
+            } ;
+        case RELEASE_PROJECT_SUCCESS :
+            return {
+                ...state,
+                releaseProjectRequest : false,
+                releaseProjectSuccess : true,
+                releaseProjectMessage: action.payload
+            } ;
+        case RELEASE_PROJECT_FAILED :
+            return {
+                ...state,
+                releaseProjectFail : action.payload,
+                releaseProjectSuccess :  false,
+                releaseProjectRequest : false
+            } ;
+        case RELEASE_PROJECT_RESET :
+            return releaseProject;
         default :
             return state ;
     }

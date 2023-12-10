@@ -221,8 +221,8 @@ const CreateUser = () => {
                                         <option>choose role</option>
                                         <option value="Admin">Admin</option>
                                         <option value="Creator">Creator</option>
-                                        <option value="Reviewer">Reviewer</option>
                                         <option value="Approver">Approver</option>
+                                        <option value="Release">Release</option>
                                     </select>
                                     </div>
                                 </div>

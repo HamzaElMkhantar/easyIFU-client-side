@@ -33,6 +33,8 @@ const RequireAuth = () => {
 
           if (decodedAccessToken.exp) {
             const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+          console.log('Refresh Token expires at:', new Date(decodedAccessToken.exp * 1000));
+
             if (decodedAccessToken.exp < currentTimeInSeconds) {
               console.log('Access Token has expired');
               // <LogoutModal openValue={true} />
@@ -55,7 +57,7 @@ const RequireAuth = () => {
         }
         if (refreshToken) {
           const decodedRefreshToken = jwt_decode(refreshToken);
-          // console.log('Refresh Token expires at:', new Date(decodedRefreshToken.exp * 1000));
+          console.log('Refresh Token expires at:', new Date(decodedRefreshToken.exp * 1000));
 
           if (decodedRefreshToken.exp) {
             const currentTimeInSeconds = Math.floor(Date.now() / 1000);

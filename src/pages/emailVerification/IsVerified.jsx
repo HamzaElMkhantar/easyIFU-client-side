@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import React, { useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import LogoutModal from '../../utilities/LogoutModal';
 
 const IsVerified = () => {
     const R_Token = Cookies.get('eIfu_RTK') || null;
@@ -10,8 +11,9 @@ const IsVerified = () => {
 
     const location = useLocation();
   return (
-    A_Token &&
-    decodedToken && 
+    (!A_Token || !R_Token)
+    ? <LogoutModal />
+    :decodedToken && 
     decodedToken.userInfo &&
     decodedToken.userInfo.OTPVerified == true
     ? <Outlet />

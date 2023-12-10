@@ -1,20 +1,3 @@
-/* YourComponentStyles.css */
-@media print {
-    .label-1 {
-      border: none;
-    }
-  
-    .no-print {
-      display: none;
-    }
-    
-  
-    @page {
-      size: A3;
-      margin: 10mm;
-    }
-  }
-  
 
 .manufactureInfo, .productInfo , .sterility, .storage, .safe-use, .ivd-diagnostic, .transfusion-infusion, .others{
     padding-top: 50px;
@@ -315,54 +298,51 @@ form div input {
 }
 
 /* label - 1 */
-.label-1 .symbol-content .symbol-content-item{
-    height: auto;
-    max-height: 50px;
-    margin: 5px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.label-1 .label-1-line-1 .symbol-content {
-    width: 29%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-items: flex-start;
-
-}
-
-.label-1 .label-1-line-1{
-    display: flex;
-    flex-direction: row;
-    height: auto;
-    justify-content: space-between;
-    grid-gap: 5px;
-}
-.label-1 .symbol-content .symbol-content-item div p {
-    font-size: 11px;
-    margin: 0;
+.label-1 {
+    width:50vw ;
 }
 
 .label-1 .symbol-content .symbol-content-item .symbol-img{
-    max-width: 50px;
-    max-height: 50px;
-    margin-right: 7px;
+    width: 30%;
+    height: auto;
+    max-height: 60px;
+    max-width:60px ;
+    margin-right: 1.5%;
     image-rendering: -webkit-optimize-contrast;
 }
 
 
 .label-1 .label-1-line-1 .paragraph-only {
     width: 35% !important;
+    display: flex;
+    grid-gap: 1%;
 }
-.label-1 .label-1-line-1 .img-with-paragraph {
+.label-1 .label-1-line-1 .img-with-paragraph .symbol-content-item{
+    display: flex;
+    justify-content: flex-start;
+}
+.label-1 .label-1-line-1 .img-with-paragraph .symbol-content-item img {
+    width: 40%;
+    max-width: 60px;
+    height: auto;
+    max-height: 60px;
+}
+.label-1 .label-1-line-1 .img-with-paragraph{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    grid-gap: 2%;
+}
+.label-1 .label-1-line-1 .img-with-paragraph p{
+    /* font-size: var(--base-font-size) !important; */
+    font-size: 90% !important;
+    margin-left: 2% !important;
 
 }
 .label-1 .label-1-line-1 .img-and-2-paragraphs {
     width: 40% !important;
     display: flex !important;
+    grid-gap: 2%;
 }
 
 /* img with 2 paragraph */
@@ -371,29 +351,32 @@ form div input {
     width: 100%;
     display: flex !important;
     justify-content: flex-start !important;
+
 }
 
 .label-1 .img-and-2-paragraphs .symbol-content-item p {
     height: 100% !important;
     width: 100% !important;
-    font-size: 11px !important;
+    /* font-size: var(--base-font-size)!important; */
+    font-size: 80% !important;
 }
 
 /* paragraph-only */
 .label-1 .paragraph-only .symbol-content-item{
     max-height: 1550px !important;
     width: 100% !important;
-    font-size: 12px !important;
-    
     display: flex;
     flex-direction: column;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
 }
 .label-1 .paragraph-only .symbol-content-item p {
     height: 100% ;
     width: 100% ;
-    font-size: 12px;
     padding-bottom: 5px;
     margin-bottom: 0px;
+    font-size: 90% !important;
+
 }
 
 
@@ -402,6 +385,7 @@ form div input {
     max-height: 60px;
     line-height: 1.3;
     margin-bottom: 1px;
+    
 }
 
 /* img-only */
@@ -409,7 +393,7 @@ form div input {
     margin: 10px 0;
     display: flex;
     flex-wrap: wrap;
-    grid-gap: 10px;
+    grid-gap: 2%;
 }
 
 
@@ -439,8 +423,52 @@ form div input {
 }
 .label-1 .symbol-content.img-only  .symbol-content-item.sterileSymbol .sterileSymbol-img {
     min-width: 70px !important;
+    width: 100% !important;
 }
 
+
+.label-1 .symbol-content .symbol-content-item {
+    height: auto;
+    /* max-height: 25%; */
+    margin: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: red; */
+}
+
+.label-1 .label-1-line-1 .symbol-content {
+    width: 32%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.label-1 .label-1-line-1 {
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    justify-content: space-between;
+    grid-gap: 1%;
+}
+
+.label-1 .symbol-content .symbol-content-item div p {
+    font-size: 70% !important;
+    margin: 0;
+}
+.larger-font-size {
+    font-size: 1px !important;
+    background-color: red;
+  }
+/* Media query for screens with a maximum width of 600px */
+@media screen and (max-width: 600px) {
+    .your-class-name {
+      /* Styles to apply when the viewport width is 600px or less */
+      /* For example, you can change the width of the element */
+      width: 100%;
+    }
+  }
 
 /* label - 2 */
 
@@ -548,4 +576,222 @@ form div input {
 }
 .other-symbols img {
     width: 30px;
+}
+
+
+/* ------ new design ------- */
+
+/* Template-1 */
+.template-1 {
+    background-color: #fff;
+    padding: 10px;
+    border: 0.5px solid lightGray;
+    width: 700px;
+    font-size:110% !important;
+    font-weight: 500;
+}
+.template-1 .template-1-content-top {
+    display: flex;
+    justify-content:space-between;
+    grid-gap: .5%;
+}
+
+.template-1 .template-1-content-top .template-1-content-top-left, 
+.template-1 .template-1-content-top .template-1-content-top-right {
+    /* border: 1px solid black; */
+    padding: 5px;
+    flex: 0.5;
+}
+.template-1 .template-1-content-top .template-1-content-top-left {
+    flex: 0.65;
+} 
+.template-1 .template-1-content-top .template-1-content-top-right {
+    flex: 0.35;
+}
+.template-1 .template-1-content-top-left-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+.template-1  .template-1-content-top-left-body {
+    margin-top: 2%;
+    margin-left: 0;
+    padding-left: 3%;
+    margin-bottom: 0;
+}
+.template-1  .template-1-content-top-left-body li{
+    list-style:disc !important;
+    font-size: 70%;
+}
+.template-1 .template-1-content-top-left-header h5 {
+    font-weight: 800;
+    margin: 0;
+    padding: 0;
+    font-size: 130%;
+}
+.template-1 .template-1-content-top-left-header p {
+    margin: 0;
+    padding: 0;
+    font-size: 90%;
+}
+.template-1  .template-1-content-top-left-header .symbol-img{
+    width: 65%;
+}
+
+.template-1 .template-1-content-top-right{
+}
+.template-1 .template-1-content-top-right img {
+    width: 60%;
+}
+.template-1 .template-1-content-top-right-top{
+    display: flex;
+    justify-content: space-between;
+}
+
+.template-1 .template-1-content-top-right > p {
+    font-size: 70%;
+    font-weight: 700;
+    padding: 0;
+    margin-bottom: 0%;
+}
+
+.template-1-content-mid-fist-item-top{
+    text-align: center;
+    /* border-bottom:1px solid black ; */
+    font-size: 80%;
+    padding-bottom: 3px;
+    margin-top: 2px;
+}
+.template-1-content-mid-fist-item-bottom{
+    display: flex;
+    justify-content: space-between;
+    margin-top: -1%;
+    margin-bottom: 2%;
+}
+.template-1-content-mid-fist-item-bottom > p {
+    margin: 0;
+    padding: 0;
+    font-size: 80%;
+}
+
+.template-1-content-mid-second-item{
+    /* border: 1px solid black; */
+    min-height: 10px;
+}
+
+.template-1 .project-owner-info{
+    width: 100%;
+    display: flex;
+    grid-gap: .5%;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+    padding-left: 1%;
+    padding-top: 1%;
+}
+
+.template-1 .project-owner-info .symbol-content-item {
+    width: 24.5%;
+    display: flex;
+    align-items: center;
+    grid-gap: 1%;
+    justify-content: flex-start;
+    margin-bottom: 2%;
+}
+
+.template-1 .project-owner-info .symbol-content-item  p {
+    font-size: 50%;
+    padding: 0;
+    margin: 0;
+}
+.template-1 .project-owner-info .symbol-content-item img {
+    width: 25%;
+    max-height: 60px;
+    min-width: 35px;
+    height: 80%;
+    margin-right: 1%;
+    
+}
+
+/* rest of the symbols */
+.template-1 .symbols-with-text-behind{
+    /* border: 1px solid black; */
+    padding: 2% 1%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    /* justify-content: space-between; */
+    grid-gap: 3%;
+    margin-top: 1%;
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item {
+    width: 8%;
+    text-align: center;
+    margin-bottom: 2%;
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item p{
+    font-size: 80%;
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item  img {
+    width: 90%;
+    min-width: 30px;
+    min-height: 30px;
+    
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item-range {
+    position: relative;
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item-range p {
+    position: absolute;
+    font-size: 50%;
+}
+.template-1 .symbols-with-text-behind .symbol-content-item-range .min{
+    bottom: -40%;
+    left: -13%;
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item-range .max {
+    top: -23%;
+    right: -15%;
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item-range .min-temperature{
+    bottom: -43%;
+    /* left: 0%; */
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item-range .max-temperature{
+    top: -3%;
+    right: -5%;
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item-with-text{
+    width: 35%;
+    display: flex;
+    text-align: left;
+    grid-gap: 2%;
+    align-items: center;
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item-with-text p {
+    padding: 0;
+    margin: 0;
+    font-size: 70%;
+}
+
+.template-1 .symbols-with-text-behind .symbol-content-item-with-text img {
+    width: 20%;
+    height: auto;
+}
+
+/* UDI */
+
+.template-1 {
+
 }
