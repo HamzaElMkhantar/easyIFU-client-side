@@ -176,6 +176,12 @@ const releasedProject = {
     releasedProjects: null
 }
 
+const uploadLogo = {
+    uploadLogoRequest : true,
+    uploadLogoSuccess :  false,
+    uploadLogoFail : null
+}
+
 export const getAllProjectsReducer = (state = getProjects, action) => {
 
     switch(action.type){
@@ -358,6 +364,36 @@ export const productInformationReducer = (state = productInfo, action) => {
             } ;
         case PRODUCT_INFORMATION_RESET :
             return productInfo;
+        default :
+            return state ;
+    }
+}
+
+
+export const uploadManufacturerLogoReducer = (state = uploadLogo, action) => {
+    switch(action.type){
+        case "UPLOAD-LOGO-REQUEST":
+            return {
+                ...state,
+                uploadLogoRequest : true,
+                uploadLogoSuccess :  false,
+                uploadLogoFail : null,
+            } ;
+        case "UPLOAD-LOGO-SUCCESS" :
+            return {
+                ...state,
+                uploadLogoRequest : false,
+                uploadLogoSuccess : true
+            } ;
+        case "UPLOAD-LOGO-FAILED" :
+            return {
+                ...state,
+                uploadLogoFail : action.payload,
+                uploadLogoSuccess :  false,
+                uploadLogoRequest : false
+            } ;
+        case "UPLOAD-LOGO-RESET" :
+            return uploadLogo;
         default :
             return state ;
     }

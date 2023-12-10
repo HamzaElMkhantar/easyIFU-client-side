@@ -258,7 +258,6 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
 
         const config = {
           headers: {
-            'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`
           }
         };
@@ -283,6 +282,44 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
         setTimeout(() =>{
           dispatch({ 
             type: PRODUCT_INFORMATION_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const uploadManufacturerLogoAction = (formDATA, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: "UPLOAD-LOGO-REQUEST"});
+
+
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`
+          }
+        };
+  
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/upload-manufacturerLogo`, formDATA, config);
+  
+      dispatch({ 
+            type: "UPLOAD-LOGO-SUCCESS", 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: "UPLOAD-LOGO-RESET"
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: "UPLOAD-LOGO-FAILED", 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: "UPLOAD-LOGO-RESET"
           });
         }, 1500)
       }

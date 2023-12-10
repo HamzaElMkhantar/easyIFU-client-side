@@ -30,7 +30,8 @@ import {IVDDiagnosticReducer, ProjectByRoleIdReducer, ReleaseTheProjectReducer, 
         startProjectReducer, 
         sterilityReducer, 
         storageReducer, 
-        transfusionInfusionReducer
+        transfusionInfusionReducer,
+        uploadManufacturerLogoReducer
     } from './reducers/projectReducers';
 import { getCompanyInfoReducer, updateCompanyInfoReducer } from './reducers/companyReducers';
 
@@ -64,6 +65,7 @@ const reducer = combineReducers({
     deleteProject: deleteProjectReducer,
     manufacturerInformation: manufacturerInformationReducer,
     productInformation: productInformationReducer,
+    uploadManufacturerLogo: uploadManufacturerLogoReducer,
     sterility: sterilityReducer,
     storage: storageReducer,
     safeUse: safeUseReducer,

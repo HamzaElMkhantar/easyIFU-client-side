@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
-import { productInformationAction } from '../../redux/actions/projectActions';
+import { productInformationAction, uploadManufacturerLogoAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 
@@ -14,9 +14,13 @@ const ProductInfoComponent = () => {
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {productInformation} = useSelector(state => state);
+    const {productInformation, uploadManufacturerLogo} = useSelector(state => state);
     const {productRequest, productSuccess, productFail, projectInfo} = productInformation;
+    const {uploadLogoRequest, uploadLogoSuccess, uploadLogoFail} = uploadManufacturerLogo;
+
     const [numbersData, setNumbersData] = useState('')
+    const [manufacturerLogo, setManufacturerLogo] = useState('')
+
     const [formData, setFormData] = useState({
         projectId,
         productName: '',
@@ -35,7 +39,6 @@ const ProductInfoComponent = () => {
         modelNumber: '',
         packagingContents: '',
         addManufacturerLogo: false,
-        manufacturerLogo: '',
     });
 
 
@@ -74,13 +77,22 @@ const ProductInfoComponent = () => {
 
         
     }
+
     console.log(formData)
+    console.log(manufacturerLogo)
 
     const dispatch = useDispatch()
     const formDataObject = new FormData();
-    Object.keys(formData).forEach((key) => {
-        formDataObject.append(key, formData[key]);
-      });
+    // Object.keys(formData).forEach((key) => {
+    //     formDataObject.append(key, formData[key]);
+    //   });
+
+
+    formDataObject.append('manufacturerLogo', formData.manufacturerLogo);
+    formDataObject.append('projectId', projectId);
+
+    console.log(formDataObject)
+
     const handleSubmit = async(e) => {
         e.preventDefault();
         console.log(formData)
@@ -92,7 +104,8 @@ const ProductInfoComponent = () => {
             return;
         }
 
-       await dispatch(productInformationAction(formDataObject, token))
+       await dispatch(productInformationAction(formData, token))
+       await dispatch(uploadManufacturerLogoAction(formDataObject, token))
 
     }
 
@@ -110,7 +123,7 @@ const ProductInfoComponent = () => {
   return (
     <div className="container productInfo">
         <HorizontalLinearStepper step={1}/>
-        <form className='productInfo-form' onSubmit={handleSubmit} encType='multipart/form-data'>
+        <form className='productInfo-form' onSubmit={handleSubmit}>
             <h2>Product Information</h2>            
             <div className="row">
                 <div className="col-md-6">
