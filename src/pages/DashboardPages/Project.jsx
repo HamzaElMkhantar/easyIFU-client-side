@@ -352,7 +352,9 @@ const Project = () => {
                       <tr>
                         <th scope="row">{index+1}</th>
                         <td>{item.projectName}</td>
-                        <td>{item.projectDescription}</td>
+                        <td >{item.projectDescription.length > 20 
+                                ? item.projectDescription.substring(0, 20) + '...' 
+                                : item.projectDescription}</td>
                         {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
                         <td>
                           {item.projectStep < 9 
