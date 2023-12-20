@@ -2,6 +2,14 @@ import {GET_COMPANY_FAILED,
         GET_COMPANY_REQUEST, 
         GET_COMPANY_RESET, 
         GET_COMPANY_SUCCESS, 
+        PAYMENT_COMPANY_FAILED, 
+        PAYMENT_COMPANY_REQUEST, 
+        PAYMENT_COMPANY_RESET, 
+        PAYMENT_COMPANY_SUCCESS, 
+        PRICES_COMPANY_FAILED, 
+        PRICES_COMPANY_REQUEST, 
+        PRICES_COMPANY_RESET, 
+        PRICES_COMPANY_SUCCESS, 
         UPDATE_COMPANY_FAILED, 
         UPDATE_COMPANY_REQUEST,
         UPDATE_COMPANY_RESET,
@@ -18,6 +26,20 @@ const updatedCompanyInfo = {
     updatedCompanySuccess : false,
     updatedCompanyFail : null,
     updatedCompanyInfo: null
+}
+
+const paymentCompany = {
+    paymentCompanyRequest : false,
+    paymentCompanySuccess :  false,
+    paymentCompanyFail : null,
+    paymentCompanyInfo: null
+}
+
+const pricesCompany = {
+    pricesCompanyRequest : false,
+    pricesCompanySuccess :  false,
+    pricesCompanyFail : null,
+    pricesCompany: null
 }
 export const getCompanyInfoReducer = (state = companyInfo, action) => {
 
@@ -75,6 +97,69 @@ export const updateCompanyInfoReducer = (state = updatedCompanyInfo, action) => 
             } ;
         case UPDATE_COMPANY_RESET:
             return updatedCompanyInfo;
+        default :
+            return state ;
+    }
+}
+
+export const paymentCompanyReducer = (state = paymentCompany, action) => {
+
+    switch(action.type){
+        case PAYMENT_COMPANY_REQUEST:
+            return {
+                ...state,
+                paymentCompanyRequest : true,
+                paymentCompanySuccess :  false,
+                paymentCompanyFail : null,
+            } ;
+        case PAYMENT_COMPANY_SUCCESS:
+            return {
+                ...state,
+                paymentCompanyRequest : false,
+                paymentCompanySuccess : true,
+                paymentCompanyInfo: action.payload
+            } ;
+        case PAYMENT_COMPANY_FAILED:
+            return {
+                ...state,
+                paymentCompanyFail : action.payload,
+                paymentCompanySuccess :  false,
+                paymentCompanyRequest : false
+            } ;
+        case PAYMENT_COMPANY_RESET:
+            return paymentCompany;
+        default :
+            return state ;
+    }
+}
+
+
+export const paymentPricesCompanyReducer = (state = pricesCompany, action) => {
+
+    switch(action.type){
+        case PRICES_COMPANY_REQUEST:
+            return {
+                ...state,
+                pricesCompanyRequest : true,
+                pricesCompanySuccess :  false,
+                pricesCompanyFail : null,
+            } ;
+        case PRICES_COMPANY_SUCCESS:
+            return {
+                ...state,
+                pricesCompanyRequest : false,
+                pricesCompanySuccess : true,
+                pricesCompany: action.payload
+            } ;
+        case PRICES_COMPANY_FAILED:
+            return {
+                ...state,
+                pricesCompanyFail : action.payload,
+                pricesCompanySuccess :  false,
+                pricesCompanyRequest : false
+            } ;
+        case PRICES_COMPANY_RESET:
+            return pricesCompany;
         default :
             return state ;
     }

@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersCompanyAction } from '../../redux/actions/userActions';
-import { getProjectAction } from '../../redux/actions/projectActions';
+import { getProjectAction, saveDocumentAction } from '../../redux/actions/projectActions';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { Avatar } from '@mui/material';
@@ -89,24 +89,36 @@ import Repackaging from '../../assets/eIFUSymbols/Repackaging.png'
 import udi from '../../assets/eIFUSymbols/udi.png'
 
 import * as htmlToImage from 'html-to-image'; // Correct import statement
+// import htmlToImage from 'html-to-image';
+import { toSvg, toSvgDataURL, toPng } from 'html-to-image'
 import { saveAs } from 'file-saver';
 import html2canvas from 'html2canvas';
 // import imageToSvg from 'image-to-svg';
 import domToImage from 'dom-to-image';
 import { jsPDF } from "jspdf";
+import domtoimage from 'dom-to-image';
+import { saveSvgAsPng } from 'save-svg-as-png';
 
+// import ReactDownloadSvg from 'react-download-svg';
+import download from 'downloadjs'; // This library helps in downloading files
+
+// import { Trigger as ReactDownloadSvg } from 'react-download-svg';
+
+import { useReactToPrint } from 'react-to-print';
 
 // bar  code generator library
 import JsBarcode from 'jsbarcode';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
+import axios from 'axios';
 const ReleasedProject = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {getProject} = useSelector(state => state);
+  const {getProject, saveDocument} = useSelector(state => state);
   const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+  const {documentRequest, documentSuccess, documentFail, documentMessage} = saveDocument;
 
 
   const [projectInfo, setProjectInfo] = useState({});
@@ -117,6 +129,17 @@ const ReleasedProject = () => {
     dispatch(getProjectAction(projectId, token))
 
 }, [])
+
+useEffect(() => {
+    if(documentSuccess){
+        toast.success(`${documentMessage.message}`)
+    }
+
+
+    if(documentFail){
+      toast.warning(`${documentFail.message}`)
+    }
+  }, [ documentSuccess, documentFail,])
 
   useEffect(() => {
     if(getProjectSuccess){
@@ -129,12 +152,20 @@ const ReleasedProject = () => {
     }
   }, [getProjectSuccess, getProjectFail])
 
+    //  handle dynamic data for label
+
+    const [dynamicData, setDynamicData] = useState({
+        LotNumber: '',
+        expirationDate: '',
+        serialNumber: '',
+        manufacturerDate: ''
+    })
 
     // ---- UDI handler functions ----
 
   const convertDateToYYMMDD = (inputDate) => {
     // Split the input date into day, month, and year
-    const [day, month, year] = inputDate.split('/');
+    const [month, day, year] = inputDate.split('-');
     
     // Ensure the date components are valid
     if (day && month && year) {
@@ -159,10 +190,14 @@ const ReleasedProject = () => {
     const handleUDI = () => {
     
     if(projectInfo && projectInfo.labelData){
-        const {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc} = projectInfo.labelData
+        let {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc} = projectInfo.labelData
+        dateOfManufacture = dynamicData.manufacturerDate ? dynamicData.manufacturerDate : dateOfManufacture
+        useByDate = dynamicData.expirationDate ? dynamicData.expirationDate : useByDate
+        serialNumber = dynamicData.serialNumber ? dynamicData.serialNumber : serialNumber
+        LOTNumber = dynamicData.LotNumber ? dynamicData.LotNumber : LOTNumber
 
         let udiData = (udiDI && udiDI !== '' ? "(01)" + udiDI : '') +
-                    (dateOfManufacture && dateOfManufacture !== '' ? "(11)" + convertDateToYYMMDD(dateOfManufacture) : '') +
+                    (dateOfManufacture && dateOfManufacture !== '' ? "(11)" +  convertDateToYYMMDD(dateOfManufacture) : '') +
                     (useByDate && useByDate !== '' ? "(17)" + convertDateToYYMMDD(useByDate) : '') +
                     (LOTNumber && LOTNumber !== '' ? "(10)" + LOTNumber : '') +
                     (serialNumber && serialNumber !== '' ? "(21)" + serialNumber : '');
@@ -520,40 +555,40 @@ const ReleasedProject = () => {
                 </div>}
 
                 {projectInfo.labelData.hasLowerLimitOfTemperature &&
-                 !projectInfo.labelData.hasUpperLimitOfTemperature &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <p className='min-temperature'>{projectInfo.labelData.lowerTemperatureLimit}</p>
+                  !projectInfo.labelData.hasUpperLimitOfTemperature &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min-temperature p-1 m-1'>{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img' src={lower_limit_temperaure} />
-                </div>}
+                  </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                 !projectInfo.labelData.hasLowerLimitOfTemperature &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <img className='symbol-img' style={{width:'5vw'}}  src={upper_limit_temperaure} />
-                    <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
-                </div>}
+                  !projectInfo.labelData.hasLowerLimitOfTemperature &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                    <img className='symbol-img p-1 m-1' src={upper_limit_temperaure} />
+                      <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
+                  </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                projectInfo.labelData.hasLowerLimitOfTemperature &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
-                    <img className='symbol-img'  src={temperature} />
-                    <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
-                </div>}
+                  projectInfo.labelData.hasLowerLimitOfTemperature &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
+                    <img className='symbol-img p-1 m-1'  src={temperature} />
+                      <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
+                  </div>}
 
                 {projectInfo.labelData.hasHumidityRange &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <p className='min' >{projectInfo.labelData.humidityMin}%</p>
-                    <img className='symbol-img' src={HumidityLimit} />
-                    <p className='max' >{projectInfo.labelData.humidityMax}%</p>
-                </div>}
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min' >{projectInfo.labelData.humidityMin}%</p>
+                    <img className='symbol-img p-2' src={HumidityLimit} />
+                      <p className='max' >{projectInfo.labelData.humidityMax}%</p>
+                  </div>}
 
                 {projectInfo.labelData.hasAtmosphericPressureRange &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <p className='min' >{projectInfo.labelData.atmosphericPressureMin}</p>
-                    <img className='symbol-img' src={AtmPressureLimit} />
-                    <p className='max' >{projectInfo.labelData.atmosphericPressureMax}</p>
-                </div>}
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min' >{projectInfo.labelData.atmosphericPressureMin}</p>
+                    <img className='symbol-img p-1 m-1' src={AtmPressureLimit} />
+                      <p className='max' >{projectInfo.labelData.atmosphericPressureMax}</p>
+                  </div>}
                 
                 {/* safe use */}
                 
@@ -709,7 +744,7 @@ const ReleasedProject = () => {
                 <div className='symbol-content-item'>
                 <img className='symbol-img' src={Use_by_date} />
                 <div className=''>
-                    <p>{projectInfo.labelData.useByDate}</p>
+                    <p>{dynamicData.expirationDate ? dynamicData.expirationDate : projectInfo.labelData.useByDate}</p>
                 </div>
                 </div>}
 
@@ -717,7 +752,7 @@ const ReleasedProject = () => {
                 <div className='symbol-content-item'>
                 <img className='symbol-img' src={Date_of_manufactureSymbol} />
                 <div className=''>
-                    <p>{projectInfo.labelData.dateOfManufacture}</p>
+                    <p>{ dynamicData.manufacturerDate ? dynamicData.manufacturerDate : projectInfo.labelData.dateOfManufacture}</p>
                 </div>
                 </div>}
 
@@ -725,7 +760,7 @@ const ReleasedProject = () => {
                 <div className='symbol-content-item'>
                 <img className='symbol-img' src={Batch_codeSymbol} />
                 <div className=''>
-                    <p>{projectInfo.labelData.LOTNumber}</p>
+                    <p>{dynamicData.LotNumber ? dynamicData.LotNumber : projectInfo.labelData.LOTNumber}</p>
                 </div>
                 </div>}
 
@@ -733,7 +768,7 @@ const ReleasedProject = () => {
                 <div className='symbol-content-item'>
                 <img className='symbol-img' src={Serial_numberSymbol} />
                 <div className=''>
-                    <p>{projectInfo.labelData.serialNumber}</p>
+                    <p>{dynamicData.serialNumber ? dynamicData.serialNumber :  projectInfo.labelData.serialNumber}</p>
                 </div>
                 </div>}
 
@@ -795,51 +830,290 @@ const ReleasedProject = () => {
         return new Intl.DateTimeFormat('en-GB', options).format(dateObject);
     };
     const componentRef = useRef();
-
+    
+    // const handleDownloadSVG = async () => {
+    //     const node = componentRef.current;
+      
+    //     // Set the desired dimensions for resizing
+    //     const desiredWidth = 900; // Replace with your desired width
+    //     const desiredHeight = 630; // Replace with your desired height
+      
+    //     // Resize the SVG element or its content
+    //     // node.style.width = `${desiredWidth}px`;
+    //     // node.style.height = `${desiredHeight}px`;
+      
+    //     try {
+    //       // Generate the resized SVG data URL
+    //       const dataUrl = await htmlToImage.toSvg(node);
+      
+    //       // Create a Blob from the SVG data URL
+    //       const blob = new Blob([dataUrl], { type: 'image/svg+xml' });
+      
+    //       // Reset the dimensions to their original values
+    //       node.style.width = null;
+    //       node.style.height = null;
+      
+    //       // Create a download link
+    //       const link = document.createElement('a');
+      
+    //       // Set the link's href attribute to the SVG data URL
+    //       link.href = dataUrl;
+      
+    //       // Set the download attribute with the desired file name
+    //       link.download = 'Label.svg';
+      
+    //       // Append the link to the document
+    //       document.body.appendChild(link);
+      
+    //       // Trigger a click on the link to start the download
+    //       link.click();
+    //     } catch (error) {
+    //       console.error('Error generating SVG:', error);
+      
+    //       // Reset the dimensions to their original values in case of an error
+    //       node.style.width = null;
+    //       node.style.height = null;
+    //     }
+    //   };
     const handleDownloadSVG = async () => {
-      const node = componentRef.current;
+        const node = componentRef.current;
+      
+        // Set the desired dimensions for resizing
+        const desiredWidth = 900; // Replace with your desired width
+        const desiredHeight = 630; // Replace with your desired height
+      
+        // Resize the SVG element or its content
+        // node.style.width = `${desiredWidth}px`;
+        // node.style.height = `${desiredHeight}px`;
+      
+        try {
+          // Generate the resized SVG data URL
+          const dataUrl = await htmlToImage.toSvg(node);
+      
+          // Decode the URL-encoded SVG data
+          const decodedSvgData = decodeURIComponent(dataUrl);
+      
+          // Reset the dimensions to their original values
+          node.style.width = null;
+          node.style.height = null;
+      
+          // Create a Blob from the SVG data URL
+          const blob = new Blob([decodedSvgData], { type: 'image/svg+xml' });
+      
+          // Create a download link
+          const link = document.createElement('a');
+      
+          // Set the link's href attribute to the SVG data URL
+          link.href = decodedSvgData;
+      
+          // Set the download attribute with the desired file name
+          link.download = 'Label.svg';
+      
+          // Append the link to the document
+          document.body.appendChild(link);
+      
+          // Trigger a click on the link to start the download
+          link.click();
+      
+          // Create a FormData object to send the SVG data to the backend
+          const formData = new FormData();
+          formData.append('document', blob, 'Label.svg');
+          formData.append('companyId', decodedToken?.userInfo?.companyId || ''); // Handle null or undefined
+          formData.append('projectId', projectId);
+      
+          // Make a POST request to the backend to save the SVG document
+          await axios.post('http://localhost:4000/api/v1/project/upload-document', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        } catch (error) {
+          console.error('Error generating SVG:', error);
+      
+          // Reset the dimensions to their original values in case of an error
+          node.style.width = null;
+          node.style.height = null;
+        }
+      };
+
+    const handleDownloadImage = () => {
+        const node = componentRef.current;
     
-      // Set the desired dimensions for resizing
-      const desiredWidth = 900; // Replace with your desired width
-      const desiredHeight = 630; // Replace with your desired height
+        if (!node) {
+          console.error('Content node is undefined');
+          return;
+        }
     
-      // Resize the SVG element or its content
-      // node.style.width = `${desiredWidth}px`;
-      // node.style.height = `${desiredHeight}px`;
-    
-      try {
-        // Generate the resized SVG data URL
-        const dataUrl = await htmlToImage.toSvg(node);
-    
-        // Create a Blob from the SVG data URL
-        const blob = new Blob([dataUrl], { type: 'image/svg+xml' });
-    
-        // Reset the dimensions to their original values
-        node.style.width = null;
-        node.style.height = null;
-    
-        // Create a download link
-        const link = document.createElement('a');
-    
-        // Set the link's href attribute to the SVG data URL
-        link.href = dataUrl;
-    
-        // Set the download attribute with the desired file name
-        link.download = 'Label.svg';
-    
-        // Append the link to the document
-        document.body.appendChild(link);
-    
-        // Trigger a click on the link to start the download
-        link.click();
-      } catch (error) {
-        console.error('Error generating SVG:', error);
-    
-        // Reset the dimensions to their original values in case of an error
-        node.style.width = null;
-        node.style.height = null;
-      }
-    };
+        domtoimage
+          .toPng(node)
+          .then(async(dataUrl) => {
+            // Trigger download
+
+            const formData = new FormData();
+            formData.append('document', dataUrl, 'document.png');
+            formData.append('companyId', decodedToken?.userInfo?.companyId || ''); // Handle null or undefined
+            formData.append('projectId', projectId);
+        
+            // Make a POST request to the backend to save the SVG document
+            await axios.post('http://localhost:4000/api/v1/project/upload-document', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+            saveAs(dataUrl, 'downloaded-image.png');
+          })
+          .catch((error) => {
+            console.error('Error generating image:', error);
+          });
+      };
+      const [loader, setLoader] = useState(false);
+      const downloadPDF = async () => {
+        try {
+          const capture = document.querySelector('.template-1');
+          setLoader(true);
+      
+          html2canvas(capture, { scale: 3,   useCORS: true,}).then(async (canvas) => {
+            const imgData = canvas.toDataURL('image/jpeg');
+       
+            const Width = 16; // with cm
+            const cmToPx = 37.7952755906;
+            const pdfWidth = parseFloat(Width) * cmToPx;
+      
+            const aspectRatio = canvas.width / canvas.height;
+            const pdfHeight = pdfWidth / aspectRatio;
+      
+            const Height = canvas.height * (pdfWidth / canvas.width);
+      
+            const doc = new jsPDF({
+              unit: 'px',
+              format: 'a1',
+              orientation: 'landscape'
+            });
+      
+            const scale = 4;
+            doc.scale(300 * scale);
+      
+            const componentWidth = doc.internal.pageSize.getWidth();
+            const componentHeight = doc.internal.pageSize.getHeight();
+      
+            const pdfHeightInPx = pdfHeight * cmToPx;
+      
+            // Add the image as base64
+            doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, Height);
+      
+            // Add additional image
+            const qrElement = document.querySelector("#qrKIK");
+            if (qrElement) {
+              const qrCanvas = await html2canvas(qrElement, { useCORS: true });
+              const qrImgData = qrCanvas.toDataURL("image/png");
+              doc.addImage(qrImgData, 'PNG', 10, 10, 50, 50); // Adjust position and size accordingly
+            }
+      
+            setLoader(false);
+            doc.save('Label.pdf');
+          });
+        } catch (error) {
+          console.error('Error during PDF generation:', error);
+        } finally {
+          setLoader(false);
+        }
+      };
+      
+      const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+      });
+    // const downloadPDF = async () => {
+    //     try {
+    //       const backendImage = `${process.env.REACT_APP_BASE_URL}/assets/companyImage/${projectInfo.labelData.manufacturerLogo}`;
+      
+    //       // Create an image element and wait for it to load
+    //       const img = new Image();
+    //       img.onload = async () => {
+    //         setLoader(true);
+      
+    //         // Create a container div to include both the dynamically loaded image and your template
+    //         const containerDiv = document.createElement('div');
+    //         containerDiv.appendChild(img);
+      
+    //         // Add your template content to the container
+    //         const templateDiv = componentRef.current;
+    //         if (templateDiv) {
+    //           containerDiv.appendChild(templateDiv.cloneNode(true));
+              
+    //         }
+      
+    //         // Custom code to modify or add content to the container before PDF generation
+    //         // ...
+      
+    //         // Use html2canvas after the image has loaded and the container is populated
+    //         setTimeout(async () => {
+    //         const canvas = await html2canvas(containerDiv, { scale: 3 , useCORS: true });
+    //         const imgData = canvas.toDataURL('img/png');
+      
+    //         // Set a specific width and let the height adjust automatically
+    //         const Width = 16; // with cm
+    //         const cmToPx = 37.7952755906; // 1 cm is approximately 37.8 pixels
+    //         const pdfWidth = parseFloat(Width) * cmToPx;
+      
+    //         // Calculate the height in pixels based on the original aspect ratio
+    //         const aspectRatio = canvas.width / canvas.height;
+    //         const pdfHeight = pdfWidth / aspectRatio;
+      
+    //         // Set custom PDF dimensions
+    //         const Height = canvas.height * (pdfWidth / canvas.width);
+    //         const doc = new jsPDF({
+    //           unit: 'px',
+    //           format: 'a0',
+    //           orientation: 'landscape'
+    //         });
+    //         const scale = 4; // You can experiment with different scale factors
+    //         doc.scale(300 * scale); // Adjust the DPI based on the scale factor
+    //         const componentWidth = doc.internal.pageSize.getWidth();
+    //         const componentHeight = doc.internal.pageSize.getHeight();
+      
+    //         // Convert the height to pixels
+    //         const pdfHeightInPx = pdfHeight * cmToPx;
+    //         doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, Height);
+      
+    //         // Additional code for PDF generation
+    //         // ...
+      
+    //         setLoader(false);
+    //         doc.save('Label.pdf');
+    //     }, 1000);
+    //       };
+      
+    //       img.src = backendImage;
+    //     } catch (error) {
+    //       console.error('Error during PDF generation:', error);
+    //     } finally {
+    //       setLoader(false);
+    //     }
+    //   };
+
+      const downloadImage = async () => {
+        const node = document.getElementById('template-1'); // Replace with your div's actual ID
+        if (!node) {
+          console.error('Element not found');
+          return;
+        }
+        try {
+          const blob = await htmlToImage.toBlob(node, { quality: 100 });
+
+          const formData = new FormData();
+          formData.append('document', blob, 'document.png');
+          formData.append('companyId', decodedToken?.userInfo?.companyId || ''); // Handle null or undefined
+          formData.append('projectId', projectId);
+
+      
+          // Make a POST request to the backend to save the SVG document
+          await dispatch(saveDocumentAction(formData, token))
+        //   download(blob, 'downloaded-image.png'); // You can change the filename as needed
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+
   return (
     <div className='container label-information mb-5'>
         <Link to='/dashboard/project/released' className='label-info-link'><ArrowBackIcon /> Back</Link>
@@ -875,142 +1149,176 @@ const ReleasedProject = () => {
           <div className='label-info-content-item' style={{display:'flex', justifyContent:'space-between', flexWrap:'wrap', gridGap:'10px', alignItems:'flex-start', flexDirection:'row-reverse'}}>
                         {projectInfo && 
                             <div className='label-info-data' style={{flex:'0.6', margin:'auto 0', backgroundColor:''}}>
-                                <div className='template-1' style={{margin:'auto'}}>
-                                    <div className='template-1-content'>
-                                    <div className='template-1-content-top'>
-                                        <div className='template-1-content-top-left'>
-                                        <div className='template-1-content-top-left-header'>
-                                            <div style={{width:'15%'}}>
-                                            {projectInfo && 
-                                                projectInfo.labelData && 
-                                                projectInfo.labelData.productType == "Medical device" &&
-                                                    <img className='symbol-img' src={Medical_deviceSymbol} />
-                                                }
-                                            </div>
-                                            <div style={{width:'70%', textAlign:'center'}}>
-                                            {projectInfo && 
-                                                projectInfo.labelData && 
-                                                projectInfo.labelData.productName &&
-                                                <h5>{projectInfo.labelData.productName}</h5>}
-                                            {projectInfo && 
-                                                projectInfo.labelData && 
-                                                projectInfo.labelData.intendedPurpose &&
-                                            <p>{projectInfo.labelData.intendedPurpose}</p>}
-                                            </div>
-                                            {projectInfo &&
-                                            projectInfo.labelData && 
-                                                projectInfo.labelData.productClass == 'Class I'
-                                                ?(<img style={{width:'8%'}} className='symbol-img' src={CE_mark} />)
-                                    
-                                                :( <div style={{width:'8%'}}  className=''>
-                                                    <img style={{width:'100%'}} className='' src={CE_mark} />
-                                                        {projectInfo &&
-                                                        projectInfo.labelData && 
-                                                        <p style={{fontSize:'60%', marginTop:'3px',  marginRight:'10px'}} >{projectInfo.labelData.notifiedBodyNumber}</p>}
-                                                </div>)}
-                                        </div>
-                                        <ul className='template-1-content-top-left-body'>
-                                        {projectInfo &&
-                                            projectInfo.labelData && 
-                                            projectInfo.labelData.intendedForIntroduction &&
-                                            <>
-                                                {projectInfo.labelData.qualitativeComposition &&
-                                                <li>{projectInfo.labelData.qualitativeComposition}</li>}
-                                            {projectInfo.labelData.quantitativeInformation && 
-                                                <li>{projectInfo.labelData.quantitativeInformation}</li>}
-                                            </>
-                                            }
-                                            {projectInfo &&
-                                            projectInfo.labelData && 
-                                            projectInfo.labelData.containsCMRSubstances &&
-                                            <div className='symbol-content-item'>
-                                                {projectInfo.labelData.cmrSubstancesList &&
-                                                <li>{projectInfo.labelData.cmrSubstancesList}</li>}
-                                            </div>}
-                                            </ul>
-                                        </div>
-
-                                        <div className='template-1-content-top-right'>
-                                        <div className='template-1-content-top-right-top'>
-                                            <div style={{display:'flex', flexDirection:'column'}}>
-                                            {projectInfo &&
-                                                projectInfo.labelData && 
-                                                projectInfo.labelData.quantity && 
-                                            <p style={{flex:'0.95'}}>QTY: {projectInfo.labelData.quantity}</p>}
-                                            <div >
+                                <div ref={componentRef} className='template-1' id='template-1' style={{margin:'auto', border:'0'}}>
+            
+                                        <div className='template-1-content'>
+                                        <div className='template-1-content-top'>
+                                            <div className='template-1-content-top-left'>
+                                            <div className='template-1-content-top-left-header'>
+                                                <div style={{width:'15%'}}>
+                                                {projectInfo && 
+                                                    projectInfo.labelData && 
+                                                    projectInfo.labelData.productType == "Medical device" &&
+                                                        <img  className='symbol-img' src={Medical_deviceSymbol} />
+                                                    }
+                                                </div>
+                                                <div style={{width:'70%', textAlign:'center'}}>
+                                                {projectInfo && 
+                                                    projectInfo.labelData && 
+                                                    projectInfo.labelData.productName &&
+                                                    <h5>{projectInfo.labelData.productName}</h5>}
+                                                {projectInfo && 
+                                                    projectInfo.labelData && 
+                                                    projectInfo.labelData.intendedPurpose &&
+                                                <p>{projectInfo.labelData.intendedPurpose}</p>}
+                                                </div>
                                                 {projectInfo &&
                                                 projectInfo.labelData && 
-                                                (projectInfo.labelData.addManufacturerLogo
-                                                || projectInfo.labelData.addWebsite) &&
-                                                <img style={{width:'25%', marginTop:''}} className='symbol-img' src={Patient_information_website} />}
+                                                    projectInfo.labelData.productClass == 'Class I'
+                                                    ?(<img style={{width:'8%'}} className='symbol-img' src={CE_mark} />)
+                                        
+                                                    :( <div style={{width:'8%'}}  className=''>
+                                                        <img style={{width:'100%'}} className='' src={CE_mark} />
+                                                            {projectInfo &&
+                                                            projectInfo.labelData && 
+                                                            <p style={{fontSize:'60%', marginTop:'3px',  marginRight:'10px'}} >{projectInfo.labelData.notifiedBodyNumber}</p>}
+                                                    </div>)}
                                             </div>
-                                            </div>
+                                            <ul className='template-1-content-top-left-body'>
                                             {projectInfo &&
                                                 projectInfo.labelData && 
-                                                projectInfo.labelData.manufacturerLogo &&
-                                                <img src={`${process.env.REACT_APP_BASE_URL}/assets/companyImage/${projectInfo.labelData.manufacturerLogo}`} alt="" />}
-                                        </div>
-                                        {projectInfo && projectInfo.labelData &&  projectInfo.labelData.addWebsite &&
-                                        projectInfo.labelData.website &&
-                                            <p>{projectInfo.labelData.website}</p>}
-                                        </div>
-                                    </div>
-                                    <div className='template-1-content-mid'>
-                                        <div className='template-1-content-mid-fist-item'>
-                                        {projectInfo && 
-                                            projectInfo.labelData && 
-                                            projectInfo.labelData.packagingContents &&
-                                        <p className='template-1-content-mid-fist-item-top'>
-                                            {projectInfo.labelData.packagingContents}
-                                        </p>}
-                                        <div className='template-1-content-mid-fist-item-bottom'>
-                                        {projectInfo && 
-                                            projectInfo.labelData && 
-                                            projectInfo.labelData.customMadeDevice &&
-                                            <p>custom-made device</p>}
-                                        {projectInfo && 
-                                            projectInfo.labelData && 
-                                            projectInfo.labelData.clinicalInvestigationOnly &&
-                                            <p>exclusively for clinical investigation</p>}
-                                        </div>
-                                        </div>
-                                        <div className='template-1-content-mid-second-item'>
-                                        {projectOwnerInfo()}
-                                        </div>
-                                    </div>
-                                    <div className='template-1-content-bottom'>
-                                        <div className='rest-of-the symbols'>
-                                        {symbolsWithTextBehind()}
-                                        </div>
-                                        <div className="code-bar">
-                                        {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' && handleUDI()}
-                                        {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
-                                            imageSrc &&
-                                            <div style={{display:'flex', alignItems:'center', marginTop:'1%'}}>
-                                            <img style={{width:'15%', height:'auto'}} src={imageSrc} alt={`data matrix from`} />
-                                            <div style={{fontSize:'12px'}}>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.dateOfManufacture}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.useByDate}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.LOTNumber}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.serialNumber}</p>
+                                                projectInfo.labelData.intendedForIntroduction &&
+                                                <>
+                                                    {projectInfo.labelData.qualitativeComposition &&
+                                                    <li>{projectInfo.labelData.qualitativeComposition}</li>}
+                                                {projectInfo.labelData.quantitativeInformation && 
+                                                    <li>{projectInfo.labelData.quantitativeInformation}</li>}
+                                                </>
+                                                }
+                                                {projectInfo &&
+                                                projectInfo.labelData && 
+                                                projectInfo.labelData.containsCMRSubstances &&
+                                                <div className='symbol-content-item'>
+                                                    {projectInfo.labelData.cmrSubstancesList &&
+                                                    <li>{projectInfo.labelData.cmrSubstancesList}</li>}
+                                                </div>}
+                                                </ul>
                                             </div>
-                                            </div>}
+
+                                            <div className='template-1-content-top-right'>
+                                            <div className='template-1-content-top-right-top'>
+                                                <div style={{display:'flex', flexDirection:'column'}}>
+                                                {projectInfo &&
+                                                    projectInfo.labelData && 
+                                                    projectInfo.labelData.quantity && 
+                                                <p style={{flex:'0.95'}}>QTY: {projectInfo.labelData.quantity}</p>}
+                                                <div >
+                                                    {projectInfo &&
+                                                    projectInfo.labelData && 
+                                                    (projectInfo.labelData.addManufacturerLogo
+                                                    || projectInfo.labelData.addWebsite) &&
+                                                    <img style={{width:'25%', marginTop:''}} className='symbol-img' src={Patient_information_website} />}
+                                                </div>
+                                                </div>
+                                                {projectInfo &&
+                                                    projectInfo.labelData && 
+                                                    projectInfo.labelData.manufacturerLogo &&
+                                                    <img src={`${process.env.REACT_APP_BASE_URL}/assets/companyImage/${projectInfo.labelData.manufacturerLogo}`} alt="" />}
+                                                    
+                                                    {/* //  <img src={'../../../../assets/companyImage/'+projectInfo.labelData.manufacturerLogo} alt="" /> */}
+                                            </div>
+                                            {projectInfo && projectInfo.labelData &&  projectInfo.labelData.addWebsite &&
+                                            projectInfo.labelData.website &&
+                                                <p>{projectInfo.labelData.website}</p>}
+                                            </div>
                                         </div>
-                                    </div>
-                                    </div>
+                                        <div className='template-1-content-mid'>
+                                            <div className='template-1-content-mid-fist-item'>
+                                            {projectInfo && 
+                                                projectInfo.labelData && 
+                                                projectInfo.labelData.packagingContents &&
+                                            <p className='template-1-content-mid-fist-item-top'>
+                                                {projectInfo.labelData.packagingContents}
+                                            </p>}
+                                            <div className='template-1-content-mid-fist-item-bottom'>
+                                            {projectInfo && 
+                                                projectInfo.labelData && 
+                                                projectInfo.labelData.customMadeDevice &&
+                                                <p>custom-made device</p>}
+                                            {projectInfo && 
+                                                projectInfo.labelData && 
+                                                projectInfo.labelData.clinicalInvestigationOnly &&
+                                                <p>exclusively for clinical investigation</p>}
+                                            </div>
+                                            </div>
+                                            <div className='template-1-content-mid-second-item'>
+                                            {projectOwnerInfo()}
+                                            </div>
+                                        </div>
+                                        <div className='template-1-content-bottom'>
+                                            <div className='rest-of-the symbols'>
+                                            {symbolsWithTextBehind()}
+                                            </div>
+                                            <div className="code-bar">
+                                            {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' && handleUDI()}
+                                            {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
+                                                imageSrc &&
+                                                <div style={{display:'flex', alignItems:'center', marginTop:'1%'}}>
+                                                <img style={{width:'100px', height:'100px'}} src={imageSrc} alt={`data matrix from`} />
+                                                <div style={{fontSize:'12px'}}>
+                                                    <p style={{margin:'2px 10px'}}>{projectInfo.labelData && dynamicData.manufacturerDate ? dynamicData.manufacturerDate : projectInfo.labelData.dateOfManufacture}</p>
+                                                    <p style={{margin:'2px 10px'}}>{projectInfo.labelData && dynamicData.expirationDate ? dynamicData.expirationDate : projectInfo.labelData.useByDate}</p>
+                                                    <p style={{margin:'2px 10px'}}>{projectInfo.labelData && dynamicData.LotNumber ? dynamicData.LotNumber : projectInfo.labelData.LOTNumber}</p>
+                                                    <p style={{margin:'2px 10px'}}>{projectInfo.labelData &&  dynamicData.serialNumber ? dynamicData.serialNumber :  projectInfo.labelData.serialNumber}</p>
+                                                </div>
+                                                </div>}
+                                            </div>
+                                        </div>
+                                        </div>
+
                                 </div>
+
                             </div>
                         }
 
                         <div className='' style={{flex:'0.4'}}>
                             <h5>Dynamic Data :</h5>
                                 <form  style={{backgroundColor:'#fff', padding:'10px', borderRadius:'4px', border:'1px solid lightGray'}}>
-                                  <div className='form-group' style={{display:'flex', flexDirection:'column'}}>
+                                  {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.LOTNumber && 
+                                  <div className='form-group mb-3' style={{display:'flex', flexDirection:'column'}}>
                                     <label style={{fontWeight:'500'}}>Lot Number:</label>
-                                    <input style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
-                                  </div>
+                                    <input placeholder='Lot Number' value={dynamicData.LotNumber} onChange={(e) => setDynamicData({...dynamicData, LotNumber: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
+                                  </div>}
+
+                                  {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.useByDate && 
+                                  <div className='form-group mb-3' style={{display:'flex', flexDirection:'column'}}>
+                                    <label style={{fontWeight:'500'}}>Expiration Date:</label>
+                                    <input placeholder='mm-dd-yyyy' value={dynamicData.expirationDate} onChange={(e) => setDynamicData({...dynamicData, expirationDate: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
+                                  </div>}
+                                  
+                                  {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.serialNumber && 
+                                  <div className='form-group mb-3' style={{display:'flex', flexDirection:'column'}}>
+                                    <label style={{fontWeight:'500'}}>Serial Number:</label>
+                                    <input placeholder='Serial Number' value={dynamicData.serialNumber} onChange={(e) => setDynamicData({...dynamicData, serialNumber: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
+                                  </div>}
+                                 {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.dateOfManufacture && 
+                                  <div className='form-group mb-3' style={{display:'flex', flexDirection:'column'}}>
+                                    <label style={{fontWeight:'500'}}>Manufacturer Date:</label>
+                                    <input placeholder='mm-dd-yyyy' value={dynamicData.manufacturerDate} onChange={(e) => setDynamicData({...dynamicData, manufacturerDate: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
+                                  </div>}
                             
                                 </form>
+                                <button disabled={documentRequest ? true : false} className='label-info-link' style={{width:'100%', marginTop:'10px'}} 
+                                    onClick={() => downloadImage() }>{documentRequest 
+                                    ? <RotatingLines
+                                    strokeWidth="5"
+                                    animationDuration="0.75"
+                                    width="30"
+                                    strokeColor="#FFFFFF"
+                                    visible={true}
+                                    /> 
+                                    : "Save Document"}
+                                </button>
                         </div>
           </div>
       </div>

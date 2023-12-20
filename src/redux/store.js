@@ -20,12 +20,20 @@ import {createUserReducer,
         updateUserReducer, 
         usersCompanyReducer 
     } from './reducers/userReducers';
-import {IVDDiagnosticReducer, ProjectByRoleIdReducer, ReleaseTheProjectReducer, ReleasedProjectReducer, deleteProjectReducer, getAllProjectsReducer, 
+import {IVDDiagnosticReducer, 
+        ProjectByRoleIdReducer, 
+        ReleaseTheProjectReducer, 
+        ReleasedProjectReducer, 
+        deleteProjectReducer, 
+        documentByIdReducer, 
+        documentsReducer, 
+        getAllProjectsReducer, 
         getProjectReducer, 
         manufacturerInformationReducer, 
         othersReducer, 
         productInformationReducer, 
         safeUseReducer, 
+        saveDocumentReducer, 
         sendingProjectToOtherRoleReducer, 
         startProjectReducer, 
         sterilityReducer, 
@@ -33,7 +41,11 @@ import {IVDDiagnosticReducer, ProjectByRoleIdReducer, ReleaseTheProjectReducer, 
         transfusionInfusionReducer,
         uploadManufacturerLogoReducer
     } from './reducers/projectReducers';
-import { getCompanyInfoReducer, updateCompanyInfoReducer } from './reducers/companyReducers';
+import { getCompanyInfoReducer, 
+        paymentCompanyReducer, 
+        paymentPricesCompanyReducer, 
+        updateCompanyInfoReducer } from './reducers/companyReducers';
+import { companiesReducer, companyByIdReducer, contactByIdReducer, contactsReducer, deleteCompanyReducer, deleteContactReducer, projectsReducer, usersReducer } from './reducers/supperAdminReducers';
 
 
 const reducer = combineReducers({
@@ -42,13 +54,16 @@ const reducer = combineReducers({
     login: loginReducer,
     refresh: refreshTokenReducer,
     logout: logOutReducer,
+
     // OTP Verification and Generator reducers
     GenerateOTP: GenerateOTPReducer,
     VerifyOTP: VerifyOTPReducer,
+
     // reset Password reducers
     EmailCheck: resetUserPasswordEmailCheckReducer,
     OTPVerification: resetPassOTPVerificationReducer,
     resetPassword: resetPasswordReducer,
+
     // users & company reducers
     usersCompany: usersCompanyReducer,
     getUser: getUserReducer,
@@ -58,6 +73,11 @@ const reducer = combineReducers({
     createUser: createUserReducer,
     getCompanyInfo:getCompanyInfoReducer,
     updateCompanyInfo: updateCompanyInfoReducer,
+
+    // payment reducers
+    paymentCompany: paymentCompanyReducer,
+    paymentPricesCompany: paymentPricesCompanyReducer,
+
     // project reducers
     getAllProjects: getAllProjectsReducer,
     getProject: getProjectReducer,
@@ -75,7 +95,22 @@ const reducer = combineReducers({
     sendingProjectToOtherRole: sendingProjectToOtherRoleReducer,
     ProjectByRoleId: ProjectByRoleIdReducer,
     ReleasedProject: ReleasedProjectReducer,
-    ReleaseTheProject: ReleaseTheProjectReducer
+    ReleaseTheProject: ReleaseTheProjectReducer,
+
+    // document reducers
+    saveDocument: saveDocumentReducer,
+    documents: documentsReducer,
+    documentById: documentByIdReducer,
+
+    // supperRoot reducers
+    contacts: contactsReducer,
+    contactById: contactByIdReducer,
+    deleteContact: deleteContactReducer,
+    companies: companiesReducer,
+    companyById: companyByIdReducer,
+    deleteCompany: deleteCompanyReducer,
+    users: usersReducer,
+    projects: projectsReducer
 })
 
 

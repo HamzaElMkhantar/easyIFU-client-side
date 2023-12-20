@@ -26,6 +26,7 @@ import {
         RESET_PASSWORD_SUCCESS,
         RESET_PASSWORD_FAILED, 
       } from '../constants/authConstants';
+import jwtDecode from 'jwt-decode';
 
 
 export const registerAction = (userInfo) => async (dispatch) => {
@@ -110,17 +111,22 @@ export const refreshAction = () => async (dispatch) => {
       credentials: 'include', // Send cookies
     };
 
-    // Send a request to the /api/v1/auth/refresh endpoint using Fetch.
-    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, requestOptions);
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+    const config =    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true, // Include cookies
     }
+    // Send a request to the /api/v1/auth/refresh endpoint using Fetch.
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, {refreshToken}, config);
+    const decodedToken = await jwtDecode( response?.data?.accessToken) || null
+    
+    await Cookies.set('eIfu_ATK', response?.data?.accessToken);
+    await Cookies.set('eIfu_sub',JSON.stringify(decodedToken?.userInfo?.companySubscriptionInfo));
 
-    // Assuming the response is a JSON object, you can parse it.
-    const data = await response.json();
+    console.log(jwtDecode( response?.data?.accessToken))
 
-    await Cookies.set('eIfu_ATK', data.accessToken);
-    dispatch({ type: REFRESH_SUCCESS, payload: data });
+    dispatch({ type: REFRESH_SUCCESS, payload: 'succeed'});
     setTimeout(() =>{
       dispatch({ 
         type: 'REFRESH_RESET'

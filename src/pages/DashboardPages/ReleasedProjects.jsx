@@ -99,7 +99,7 @@ const ReleasedProjects = () => {
                         <th>#</th>
                         <th>Project Name</th>
                         <th>Description</th>
-                        <th>Manage</th>
+                       {decodedToken?.userInfo?.role === "Release" && <th>Manage</th>}
                     </tr>
                     </thead>
                     <tbody style={{ textAlign:'center'}}>
@@ -110,14 +110,14 @@ const ReleasedProjects = () => {
                         <td >{item.projectDescription.length > 20 
                                 ? item.projectDescription.substring(0, 20) + '...' 
                                 : item.projectDescription}</td>
-                        <td ><Link to={`/dashboard/project-released/${item._id}`}
+                        {decodedToken?.userInfo?.role === "Release" &&<td ><Link to={`/dashboard/project-released/${item._id}`}
                             style={{backgroundColor:'#0C458F', 
                               color:"#fff", 
                               padding:'2px 10px', 
                               borderRadius:'4px'
                             }}>
                               <VisibilityIcon style={{paddingBottom:'3px'}} />
-                          </Link></td>
+                          </Link></td>}
                         </tr>
                     ))}
                     </tbody>

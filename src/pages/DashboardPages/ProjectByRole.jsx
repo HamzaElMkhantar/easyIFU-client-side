@@ -113,7 +113,7 @@ const ProjectByRole = () => {
                                 (decodedToken.userInfo.role == "Approver" || decodedToken.userInfo.role == "Release") &&
                                     decodedToken.userInfo.role == "Approver" 
                                     ?`/dashboard/project/review-approver/${item._id}`
-                                    : decodedToken.userInfo.role == "Reviewer" 
+                                    : decodedToken.userInfo.role == "Release" 
                                     ?`/dashboard/project/review-release/${item._id}`
                                     :`/dashboard/project/review-creator/${item._id}`}
                             style={{backgroundColor:'#0C458F', 

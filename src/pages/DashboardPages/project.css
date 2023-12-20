@@ -587,8 +587,9 @@ form div input {
     padding: 10px;
     border: 0.5px solid lightGray;
     width: 700px;
-    font-size:110% !important;
-    font-weight: 500;
+    font-size:115% !important;
+    font-weight: 600;
+    resize: both; /* Allow resizing in both directions */
 }
 .template-1 .template-1-content-top {
     display: flex;
@@ -623,7 +624,7 @@ form div input {
 }
 .template-1  .template-1-content-top-left-body li{
     list-style:disc !important;
-    font-size: 70%;
+    font-size: 80%;
 }
 .template-1 .template-1-content-top-left-header h5 {
     font-weight: 800;
@@ -701,7 +702,7 @@ form div input {
 }
 
 .template-1 .project-owner-info .symbol-content-item  p {
-    font-size: 50%;
+    font-size: 60%;
     padding: 0;
     margin: 0;
 }
@@ -709,7 +710,7 @@ form div input {
     width: 25%;
     max-height: 60px;
     min-width: 35px;
-    height: 80%;
+    height: 90%;
     margin-right: 1%;
     
 }
@@ -749,7 +750,7 @@ form div input {
 
 .template-1 .symbols-with-text-behind .symbol-content-item-range p {
     position: absolute;
-    font-size: 50%;
+    font-size: 60%;
 }
 .template-1 .symbols-with-text-behind .symbol-content-item-range .min{
     bottom: -40%;

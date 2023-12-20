@@ -224,7 +224,7 @@ const ReleaseReview = () => {
 
     const convertDateToYYMMDD = (inputDate) => {
     // Split the input date into day, month, and year
-    const [day, month, year] = inputDate.split('/');
+    const [month, day, year] = inputDate.split('-');
     
     // Ensure the date components are valid
     if (day && month && year) {
@@ -637,40 +637,40 @@ const ReleaseReview = () => {
                 </div>}
 
                 {projectInfo.labelData.hasLowerLimitOfTemperature &&
-                    !projectInfo.labelData.hasUpperLimitOfTemperature &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <p className='min-temperature'>{projectInfo.labelData.lowerTemperatureLimit}</p>
+                  !projectInfo.labelData.hasUpperLimitOfTemperature &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min-temperature p-1 m-1'>{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img' src={lower_limit_temperaure} />
-                </div>}
+                  </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                    !projectInfo.labelData.hasLowerLimitOfTemperature &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <img className='symbol-img' style={{width:'5vw'}}  src={upper_limit_temperaure} />
-                    <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
-                </div>}
+                  !projectInfo.labelData.hasLowerLimitOfTemperature &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                    <img className='symbol-img p-1 m-1' src={upper_limit_temperaure} />
+                      <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
+                  </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                    projectInfo.labelData.hasLowerLimitOfTemperature &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
-                    <img className='symbol-img'  src={temperature} />
-                    <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
-                </div>}
+                  projectInfo.labelData.hasLowerLimitOfTemperature &&
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
+                    <img className='symbol-img p-1 m-1'  src={temperature} />
+                      <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
+                  </div>}
 
                 {projectInfo.labelData.hasHumidityRange &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <p className='min' >{projectInfo.labelData.humidityMin}%</p>
-                    <img className='symbol-img' src={HumidityLimit} />
-                    <p className='max' >{projectInfo.labelData.humidityMax}%</p>
-                </div>}
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min' >{projectInfo.labelData.humidityMin}%</p>
+                    <img className='symbol-img p-2' src={HumidityLimit} />
+                      <p className='max' >{projectInfo.labelData.humidityMax}%</p>
+                  </div>}
 
                 {projectInfo.labelData.hasAtmosphericPressureRange &&
-                <div className='symbol-content-item symbol-content-item-range'>
-                    <p className='min' >{projectInfo.labelData.atmosphericPressureMin}</p>
-                    <img className='symbol-img' src={AtmPressureLimit} />
-                    <p className='max' >{projectInfo.labelData.atmosphericPressureMax}</p>
-                </div>}
+                  <div className='symbol-content-item symbol-content-item-range'>
+                      <p className='min' >{projectInfo.labelData.atmosphericPressureMin}</p>
+                    <img className='symbol-img p-1 m-1' src={AtmPressureLimit} />
+                      <p className='max' >{projectInfo.labelData.atmosphericPressureMax}</p>
+                  </div>}
                 
                 {/* safe use */}
                 

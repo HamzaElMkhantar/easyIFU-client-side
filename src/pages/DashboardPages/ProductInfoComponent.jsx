@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
 import './project.css'
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
@@ -46,7 +46,7 @@ const ProductInfoComponent = () => {
         const { name, value, type, checked } = e.target;
         let newValue = type === 'checkbox' ? checked : value;
 
-        // Handle useByDate separately and format it as "dd/mm/yyyy"
+        // Handle useByDate separately and format it as "mm-dd-yyyy"
         if (name == 'useByDate' && newValue !== '') {
             const monthsToAdd = parseInt(newValue, 10);
     
@@ -58,13 +58,13 @@ const ProductInfoComponent = () => {
             const currentDate = new Date();
             const futureDate = new Date(currentDate.setMonth(currentDate.getMonth() + monthsToAdd));
     
-            // Format the date as "dd/mm/yyyy"
+            // Format the date as "mm-dd-yyyy"
             const day = String(futureDate.getDate()).padStart(2, '0');
             const month = String(futureDate.getMonth() + 1).padStart(2, '0');
             const year = futureDate.getFullYear();
 
-            // Format the date as "dd/mm/yyyy"
-            newValue = `${day}/${month}/${year}`;
+            // Format the date as "mm-dd-yyyy"
+            newValue = `${month}-${day}-${year}`;
         }
         if(name == "manufacturerLogo"){
             newValue = e.target.files[0]
@@ -79,30 +79,23 @@ const ProductInfoComponent = () => {
     }
 
     console.log(formData)
-    console.log(manufacturerLogo)
-
     const dispatch = useDispatch()
     const formDataObject = new FormData();
-    // Object.keys(formData).forEach((key) => {
-    //     formDataObject.append(key, formData[key]);
-    //   });
-
-
     formDataObject.append('manufacturerLogo', formData.manufacturerLogo);
     formDataObject.append('projectId', projectId);
-
-    console.log(formDataObject)
 
     const handleSubmit = async(e) => {
         e.preventDefault();
         console.log(formData)
 
         // Use a regular expression to check for the format dd/mm/yyyy
-        const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/;
+        const dateFormat = /^\d{2}\-\d{2}\-\d{4}$/;
         if (formData.dateOfManufacture !== '' &&!formData.dateOfManufacture.match(dateFormat)) {
-            toast.warning('Please enter a date in the format dd/mm/yyyy.');
+            toast.warning('Please enter a date in the format mm-dd-yyyy.');
             return;
         }
+
+ 
 
        await dispatch(productInformationAction(formData, token))
        await dispatch(uploadManufacturerLogoAction(formDataObject, token))
@@ -122,6 +115,10 @@ const ProductInfoComponent = () => {
 
   return (
     <div className="container productInfo">
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step1/65764c7df80c7c51796e9bda`} className='label-info-link'> Back</Link>
+            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        </div>
         <HorizontalLinearStepper step={1}/>
         <form className='productInfo-form' onSubmit={handleSubmit}>
             <h2>Product Information</h2>            
@@ -264,16 +261,6 @@ const ProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                {/* <div className="form-group">
-                    <label>UDI-PI:</label>
-                    <input
-                    type="text"
-                    className="form-control"
-                    name="udiPI"
-                    value={formData.udiPI}
-                    onChange={handleInputChange}
-                    />
-                </div> */}
                 <div className="form-group">
                     <label>AIDC:</label>
                     <input
@@ -285,7 +272,7 @@ const ProductInfoComponent = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>5- how many month(Use-by Date):</label>
+                    <label>5-how many month(Use-by Date):</label>
                     <input
                     type="number"
                     className="form-control"
@@ -303,7 +290,7 @@ const ProductInfoComponent = () => {
                     type="text"
                     className="form-control"
                     name="dateOfManufacture"
-                    placeholder='dd/mm/yyyy'
+                    placeholder='mm-dd-yyyy'
                     value={formData.dateOfManufacture}
                     onChange={handleInputChange}
                     />
@@ -390,20 +377,6 @@ const ProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                {/* <div className="form-group">
-                    <label>11- What size label are you looking for ? (by selection or without limitation ?)</label>
-                    <select
-                    className="form-control"
-                    name="labelSize"
-                    value={formData.labelSize}
-                    onChange={handleInputChange}
-                    >
-                    <option value="">Select</option>
-                    <option value="Small">Small</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Large">Large</option>
-                    </select>
-                </div> */}
                 <div className="form-group">
                     <label>11- Do you want to add your manufacturer logo in the label ?</label>
                     <div className="form-check">

@@ -7,6 +7,18 @@ import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST,
             DELETE_PROJECT_REQUEST, 
             DELETE_PROJECT_RESET, 
             DELETE_PROJECT_SUCCESS, 
+            DOCUMENTS_FAILED, 
+            DOCUMENTS_REQUEST, 
+            DOCUMENTS_RESET, 
+            DOCUMENTS_SUCCESS, 
+            DOCUMENT_FAILED, 
+            DOCUMENT_REQUEST, 
+            DOCUMENT_RESET, 
+            DOCUMENT_SUCCESS, 
+            GET_DOCUMENT_FAILED, 
+            GET_DOCUMENT_REQUEST, 
+            GET_DOCUMENT_RESET, 
+            GET_DOCUMENT_SUCCESS, 
             GET_PROJECT_FAILED, 
             GET_PROJECT_REQUEST, 
             GET_PROJECT_RESET, 
@@ -679,6 +691,117 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
         setTimeout(() =>{
           dispatch({ 
             type: RELEASE_PROJECT_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const saveDocumentAction = (data, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: DOCUMENT_REQUEST});
+
+      const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/upload-document`, data, config);
+    console.log(response)
+      dispatch({ 
+            type: DOCUMENT_SUCCESS, 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: DOCUMENT_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: DOCUMENT_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: DOCUMENT_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const documentsAction = (companyId, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: DOCUMENTS_REQUEST});
+
+      const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project//documents-company/${companyId}`, config);
+    console.log(response)
+      dispatch({ 
+            type: DOCUMENTS_SUCCESS, 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: DOCUMENTS_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: DOCUMENTS_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: DOCUMENTS_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const documentByIdAction = (documentId, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: GET_DOCUMENT_REQUEST});
+
+      const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/document-by-id/${documentId}`, config);
+    console.log(response)
+      dispatch({ 
+            type: GET_DOCUMENT_SUCCESS, 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: GET_DOCUMENT_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: GET_DOCUMENT_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: GET_DOCUMENT_RESET
           });
         }, 1500)
       }

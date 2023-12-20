@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
 import './project.css';
 import Cookies from 'js-cookie';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { IVDDiagnosticAction } from '../../redux/actions/projectActions';
+import { IVDDiagnosticAction, getProjectAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
 
 const IVDDiagnosticComponent = () => {
@@ -16,6 +16,11 @@ const IVDDiagnosticComponent = () => {
 
   const {IVDDiagnostic} = useSelector(state => state);
   const {IVDDiagnosticRequest, IVDDiagnosticSuccess, IVDDiagnosticFail, projectInfo} = IVDDiagnostic;
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+ 
 
   const [formData, setFormData] = useState({
     projectId,
@@ -41,8 +46,6 @@ const IVDDiagnosticComponent = () => {
     });
   };
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -60,8 +63,14 @@ useEffect(() => {
     }
 }, [IVDDiagnosticSuccess, IVDDiagnosticFail])
 
+
+
   return (
     <div className="container ivd-diagnostic">
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step5/65764c7df80c7c51796e9bda`} className='label-info-link'> Back</Link>
+            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        </div>
       <HorizontalLinearStepper step={5} />
       <form className="ivd-diagnostic-form" onSubmit={handleSubmit}>
         <h2>In Vitro Diagnostic (IVD)</h2>

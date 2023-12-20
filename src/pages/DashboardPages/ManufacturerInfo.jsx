@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './project.css'
 import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { manufacturerInformationAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
@@ -133,7 +133,10 @@ const ManufacturerInfoComponent = () => {
   }, [manufacturerSuccess, manufacturerFail])
 
   return (
-    <div className='manufactureInfo'>
+    <div className='manufactureInfo container'>
+        <div className='mb-2' style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
+            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>Back</Link>
+        </div>
         <HorizontalLinearStepper step={0}/>
         <form onSubmit={handleSubmit}>
             <h2>Manufacturer Information</h2>

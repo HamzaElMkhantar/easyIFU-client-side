@@ -6,6 +6,18 @@ import {ALL_PROJECTS_FAILED,
         DELETE_PROJECT_REQUEST, 
         DELETE_PROJECT_RESET, 
         DELETE_PROJECT_SUCCESS, 
+        DOCUMENTS_FAILED, 
+        DOCUMENTS_REQUEST, 
+        DOCUMENTS_RESET, 
+        DOCUMENTS_SUCCESS, 
+        DOCUMENT_FAILED, 
+        DOCUMENT_REQUEST, 
+        DOCUMENT_RESET, 
+        DOCUMENT_SUCCESS, 
+        GET_DOCUMENT_FAILED, 
+        GET_DOCUMENT_REQUEST, 
+        GET_DOCUMENT_RESET, 
+        GET_DOCUMENT_SUCCESS, 
         GET_PROJECT_FAILED, 
         GET_PROJECT_REQUEST, 
         GET_PROJECT_RESET, 
@@ -177,9 +189,30 @@ const releasedProject = {
 }
 
 const uploadLogo = {
-    uploadLogoRequest : true,
+    uploadLogoRequest : false,
     uploadLogoSuccess :  false,
     uploadLogoFail : null
+}
+
+const saveDocument = {
+    documentRequest : false,
+    documentSuccess :  false,
+    documentFail : null,
+    documentMessage: null
+}
+
+const documents = {
+    documentsRequest : false,
+    documentsSuccess :  false,
+    documentsFail : null,
+    documentsCompany: null
+}
+
+const documentById = {
+    documentByIdRequest : false,
+    documentByIdSuccess :  false,
+    documentByIdFail : null,
+    document: null
 }
 
 export const getAllProjectsReducer = (state = getProjects, action) => {
@@ -699,6 +732,97 @@ export const ReleaseTheProjectReducer = (state = releaseProject, action) => {
             } ;
         case RELEASE_PROJECT_RESET :
             return releaseProject;
+        default :
+            return state ;
+    }
+}
+
+
+export const saveDocumentReducer = (state = saveDocument, action) => {
+    switch(action.type){
+        case DOCUMENT_REQUEST:
+            return {
+                ...state,
+                documentRequest : true,
+                documentSuccess :  false,
+                documentFail : null,
+            } ;
+        case DOCUMENT_SUCCESS :
+            return {
+                ...state,
+                documentRequest : false,
+                documentSuccess : true,
+                documentMessage: action.payload
+            } ;
+        case DOCUMENT_FAILED :
+            return {
+                ...state,
+                documentFail : action.payload,
+                documentSuccess :  false,
+                documentRequest : false
+            } ;
+        case DOCUMENT_RESET :
+            return saveDocument;
+        default :
+            return state ;
+    }
+}
+
+export const documentsReducer = (state = documents, action) => {
+    switch(action.type){
+        case DOCUMENTS_REQUEST:
+            return {
+                ...state,
+                documentsRequest : true,
+                documentsSuccess :  false,
+                documentsFail : null,
+            } ;
+        case DOCUMENTS_SUCCESS :
+            return {
+                ...state,
+                documentsRequest : false,
+                documentsSuccess : true,
+                documentsCompany: action.payload
+            } ;
+        case DOCUMENTS_FAILED :
+            return {
+                ...state,
+                documentsFail : action.payload,
+                documentsSuccess :  false,
+                documentsRequest : false
+            } ;
+        case DOCUMENTS_RESET :
+            return documents;
+        default :
+            return state ;
+    }
+}
+
+export const documentByIdReducer = (state = documentById, action) => {
+    switch(action.type){
+        case GET_DOCUMENT_REQUEST:
+            return {
+                ...state,
+                documentByIdRequest : true,
+                documentByIdSuccess :  false,
+                documentByIdFail : null,
+            } ;
+        case GET_DOCUMENT_SUCCESS :
+            return {
+                ...state,
+                documentByIdRequest : false,
+                documentByIdSuccess : true,
+                document: action.payload
+            } ;
+        case GET_DOCUMENT_FAILED :
+            return {
+                ...state,
+                documentByIdFail : action.payload,
+                documentByIdSuccess :  false,
+                documentByIdRequest : false
+            } ;
+        case GET_DOCUMENT_RESET :
+            return documentById;
         default :
             return state ;
     }

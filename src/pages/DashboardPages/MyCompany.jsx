@@ -11,6 +11,7 @@ import { getCompanyInfoAction, updateCompanyInfoAction } from '../../redux/actio
 import { toast } from 'react-toastify';
 import jwtDecode from 'jwt-decode';
 import Cookies from 'js-cookie';
+import moment from 'moment'
 const MyCompany = () => {
   const [isOpen, setIsOpen] = useState(false);
       
@@ -118,6 +119,14 @@ const MyCompany = () => {
         return formattedDate;
       };
 
+      const formatDate = (date) => {
+        const newDate = new Date(date);
+        const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
+        const formattedDate = newDate.toLocaleDateString('en-GB', options);
+
+        return formattedDate;
+      }
+
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
@@ -180,6 +189,15 @@ const MyCompany = () => {
                     <p style={{fontSize:'14px', color:'gray'}}>City: {companyState && companyState.companyCity} </p>
                     <p style={{fontSize:'14px', color:'gray'}}>Country: {companyState && companyState.companyCountry} </p>
                     <p style={{fontSize:'14px', color:'gray'}}>Phone: {companyState && companyState.companyPhone} </p>
+                    <div>subscription Info: 
+                      <p style={{fontSize:'12px', color:'gray', margin:'0', padding:'0 8px'}}>Start Date :{companyState && companyState.subscription && 
+                        companyState.subscription.startDate}
+                      </p>
+                      <p style={{fontSize:'12px', color:'gray', margin:'0', padding:'0 8px'}}>End Date :{companyState && companyState.subscription && 
+                        companyState.subscription.endDate }
+                      </p>
+                    </div>
+
                     {/* {company && company.createdAt && <p style={{fontSize:'14px', color:'gray'}}>Created: {company && dateFormat(company.createdAt)} </p>} */}
 
                 </div>
@@ -195,7 +213,9 @@ const MyCompany = () => {
 
           </div>
 
-          <div  style={{
+          {decodedToken &&
+                        decodedToken.userInfo &&
+                        decodedToken.userInfo.role == "Admin" &&<div  style={{
                     backgroundColor:'#fff',
                     marginTop:'20px',
                     borderRadius:'10px'
@@ -338,7 +358,7 @@ const MyCompany = () => {
                         </button>
                       </div>
                     </form>
-          </div>
+          </div>}
       </section>
       </main>
     </div>

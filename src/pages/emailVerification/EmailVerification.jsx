@@ -24,20 +24,7 @@ const EmailVerification = () => {
         dispatch(GenerateOTPAction(decodedToken.userInfo._id))
     }    
     
-    useEffect(() => {
-        if(GenerateOTP.OTPRequest){
-            toast.info(
-               <RotatingLines
-                    strokeColor="#FFFFFF"
-                    strokeWidth="5"
-                    animationDuration="0.75"
-                    width="30"
-                     visible={true}
-                /> 
-            );
-        }
-
-    }, [GenerateOTP.OTPRequest])
+    
     useEffect(() => {
         if(VerifyOTP.OTPFail){
             toast.error('Please Try Again');
@@ -67,34 +54,41 @@ const EmailVerification = () => {
     }, [VerifyOTP.OTPVerifySuccess])
 
 
-  // Check if the email is already verified, if yes, navigate away from the verification page
-    //   useEffect(() => {
-    //     if (decodedToken && decodedToken.userInfo && decodedToken.userInfo.OTPVerified) {
-    //       navigate('/dashboard');
-    //     }
-    //   }, [decodedToken.userInfo.OTPVerified]);
-
     if (VerifyOTP.OTPVerifySuccess) {
         return navigate("/dashboard");
       }
+
   return ( 
             <div className='emailVerification'>
-                <div className='form-content'>
-                    <LocalPostOfficeRoundedIcon className='OTP-Icon' />
-                    <h3>Enter OTP</h3>
-                    <p>We have sent you access code via email<br/>  for OTP Verification</p>
-                    <form action="" onSubmit={handleOtpForm}>
-                        <input onChange={(e) => setOtpCode(e.target.value)}
-                                type="text" 
-                                placeholder='Enter OTP'/>
-                        <button type='submit'>Verify</button>
-                    </form>
-                    <div>
-                        <p>Didn't receive the code? <br/>
-                            <span onClick={() => handleBTN()}>Sent code again</span>                    
-                        </p>
+                {VerifyOTP && VerifyOTP?.OTPVerifyRequest &&
+                <div style={{width:'100%', textAlign:'center', position:'absolute', top:'30px'}}>
+                    <RotatingLines
+                        strokeColor="black"
+                        strokeWidth="5"
+                        animationDuration="0.75"
+                        width="50"
+                        visible={true}
+                    /> 
+                </div>}
+
+                    <div className='form-content' style={{backgroundColor:''}}>
+                        <LocalPostOfficeRoundedIcon className='OTP-Icon' />
+                        <h3>Enter OTP</h3>
+                        <p>We have sent you access code via email<br/>  for OTP Verification</p>
+                        <form action="" onSubmit={handleOtpForm}>
+                            <input onChange={(e) => setOtpCode(e.target.value)}
+                                    type="text" 
+                                    placeholder='Enter OTP'/>
+                            <button type='submit'>Verify</button>
+                        </form>
+                        <div>
+                            <p>Didn't receive the code? <br/>
+                                <span onClick={() => handleBTN()}>Sent code again</span>                    
+                            </p>
+                        </div>
                     </div>
-                </div>
+
+       
             </div>
   )
 }

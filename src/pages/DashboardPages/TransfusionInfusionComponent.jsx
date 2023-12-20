@@ -3,10 +3,10 @@ import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
 import './project.css';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
-import { transfusionInfusionAction } from '../../redux/actions/projectActions';
+import { getProjectAction, transfusionInfusionAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
 
 const TransfusionInfusionComponent = () => {
@@ -14,13 +14,26 @@ const TransfusionInfusionComponent = () => {
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {transfusionInfusion} = useSelector(state => state);
+  const {transfusionInfusion, getProject} = useSelector(state => state);
   const {transfusionInfusionRequest, transfusionInfusionSuccess, transfusionInfusionFail, projectInfo} = transfusionInfusion
+  const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
 
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+
+  const [projectInformation, setProjectInformation] = useState({})
+
+  useEffect(() => {
+    dispatch(getProjectAction(projectId))
+  }, [])
+
+  useEffect(() => {
+    if(getProjectSuccess){
+      setProjectInformation(project)
+    }
+  }, [getProjectSuccess])
   const [formData, setFormData] = useState({
     projectId,
     isMedicalDeviceForSampleCollection: false,
@@ -79,6 +92,12 @@ const TransfusionInfusionComponent = () => {
 
   return (
     <div className="container transfusion-infusion">
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
+            <Link style={{height:'35px'}} to={projectInformation && projectInformation.labelData && projectInformation.labelData.productType == "Medical device"
+             ? `/dashboard/create-project/step5/65764c7df80c7c51796e9bda`
+            :`/dashboard/create-project/step6/65764c7df80c7c51796e9bda`} className='label-info-link'> Back</Link>
+            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        </div>
       <HorizontalLinearStepper step={6} />
       <form className="transfusion-infusion-form" onSubmit={handleSubmit}>
         <h2>Transfusion/Infusion</h2>

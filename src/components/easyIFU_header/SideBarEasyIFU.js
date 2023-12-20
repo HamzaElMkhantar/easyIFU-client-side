@@ -18,7 +18,7 @@ import { RotatingLines } from 'react-loader-spinner';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 
-const SideBar = ({isSidebarOpen}) => {
+const SideBarEasyIFU = ({isSidebarOpen}) => {
   const {logout} = useSelector(state => state);
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const dispatch = useDispatch()
@@ -52,23 +52,10 @@ const SideBar = ({isSidebarOpen}) => {
           <div style={{ height:'67vh', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
 
             <div style={{height:'63vh', overflowY:'scroll'}} className='navList' >
-                {<Link to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
-                {<Link to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>create Project</Link>}
-                <Link to="/dashboard/received-project"><CallReceivedIcon style={{color:'#44638C'}}/> received project</Link>
-                <Link to="/dashboard/project/released"><LastPageIcon style={{color:'#9A3B3A'}}/> released project</Link>
-                {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Release" || decodedToken?.userInfo?.role === "Admin" )&&
-                <>
-                  <Link to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/> Documents</Link>
-                </>}
-
-                <Link to="/dashboard/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link>
-
-                {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
-                <Link to="/dashboard/user/create"><GroupRoundedIcon style={{color:'#C08261'}}/> Create User</Link>}
-
-                {<Link to="/dashboard/company"><StoreRoundedIcon style={{color:'#E5D283'}}/>My Company</Link>}
-
-                <Link to="/dashboard/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link>
+                <Link to="/eIFU-admin/companies"><HomeRoundedIcon style={{color:'#9A3B3B'}}/> Companies</Link>
+                <Link to="/eIFU-admin/projects"><InventoryRoundedIcon style={{color:'#088395'}}/> Projects</Link>
+                <Link to="/eIFU-admin/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link>
+                <Link to="/eIFU-admin/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link>
 
             </div>
 
@@ -93,4 +80,4 @@ const SideBar = ({isSidebarOpen}) => {
   );
 };
 
-export default SideBar;
+export default SideBarEasyIFU;

@@ -3,7 +3,7 @@ import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
 import './project.css';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { storageAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
@@ -99,6 +99,10 @@ const StorageComponent = () => {
 
   return (
     <div className="container storage">
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step3/65764c7df80c7c51796e9bda`} className='label-info-link'> Back</Link>
+            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        </div>
       <HorizontalLinearStepper step={3} />
       <form onSubmit={handleSubmit} className="storage-form">
         <h2>Storage</h2>

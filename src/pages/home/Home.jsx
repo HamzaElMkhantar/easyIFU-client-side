@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './home.css'
 import mainPhoto from '../../assets/main-photo.svg'
 import compliancePhoto from '../../assets/compliance-section-photo.svg'
@@ -15,8 +15,83 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { useDispatch, useSelector } from 'react-redux'
+import Cookies from 'js-cookie'
+import jwtDecode from 'jwt-decode'
+import { paymentCompanyAction } from '../../redux/actions/companyAcions'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+import { RotatingLines } from 'react-loader-spinner'
+import axios from 'axios'
 
 const Home = () => {
+
+    const token = Cookies.get("eIfu_ATK") || null;
+    const decodedToken = token ? jwtDecode(token) : null
+
+    const {paymentCompany} = useSelector(state => state)
+    const {paymentCompanyRequest, paymentCompanySuccess, paymentCompanyFail, paymentCompanyInfo} = paymentCompany
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    useEffect(() => {
+        if(paymentCompanySuccess){
+            window.location.href = paymentCompanyInfo.url
+        }
+        if(paymentCompanyFail){
+            toast.warning(`${paymentCompanyFail.message}`)
+        }
+        
+    },[paymentCompanySuccess, paymentCompanyFail, paymentCompanyRequest])
+    const handlePayment = (priceId) => {
+        const data = {
+            priceId, 
+            companyId: decodedToken &&  decodedToken.userInfo && decodedToken.userInfo.companyId
+        }
+        if(token && decodedToken){
+            dispatch(paymentCompanyAction(data, token))
+        }
+
+        if(!token || !decodedToken){
+            toast.info("Should be LoggedIn")
+        }
+    }
+
+    
+    const [contactData, setContactData] = useState({
+        companyId: decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId,
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        email: '',
+        message: ''
+    })
+    const [request, setRequest] = useState(false)
+    const handleContact = async (e) => {
+        e.preventDefault()
+        console.log(contactData)
+        setRequest(true)
+        await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/supper-admin/create-contact`, contactData)
+        .then(res => {
+            console.log(res)
+            toast.success(`${res?.data?.message}`)
+            setRequest(false)
+        })
+        .catch(err => {
+            console.log(err)
+            setRequest(false)
+            toast.warning(`${err?.response?.data?.message}`)
+        })
+
+        setContactData({
+            companyId: decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId,
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
+            email: '',
+            message: ''
+        })
+        setRequest(false)
+    }
 
   return (
     <div className='home'>
@@ -160,12 +235,11 @@ const Home = () => {
 
         </div>
 
-        <div className='pricing-section' id='price'>
+        <div style={{textAlign:'center'}} className='pricing-section' id='price'>
             <h2>Pricing</h2>
             <h5>Save time and simplify Your eIFU Management with Our Efficient Pricing Plans-Quality <br/> Service Guaranteed</h5>
+                   
             <div className='pricing-card-content'>
-   
-                    
                     <div className='pricing-card monthly'>
                         <div className='card-top'>
                                 <h4>Monthly</h4>
@@ -185,13 +259,14 @@ const Home = () => {
                         </div>
                         <div className='card-bottom'>
                             <span><h3>400$/</h3>month</span>
-                            <button>Choose</button>
+                            <button disabled={paymentCompanyRequest ? true : false}
+                                onClick={() => handlePayment("price_1OMdApHVJ5B30zKAG4Nv8UXl")}>{!paymentCompanyRequest ? "Choose" : "Loading..."}</button>
                         </div>
                     </div>
 
                     <div className='pricing-card annualy'>
                         <div className='card-top'>
-                            <h4>Annualy</h4>
+                            <h4>Annually</h4>
                             <p style={{color:'lightGray'}}>What You’ll Get</p>
                             <ul className='pricing-list'>
                                 <li> <CheckCircleIcon style={{marginRight:'10px'}} />
@@ -210,7 +285,8 @@ const Home = () => {
                         <div className='card-bottom'>
                             <span><h3>4320$/</h3>year</span>
                             <h3 style={{color:'#EEBA00', textAlign:'center', fontWeight:'700', margin:'5px 0'}}>You Save 10%</h3>
-                            <button>Choose</button>
+                            <button disabled={paymentCompanyRequest ? true : false}
+                                onClick={() => handlePayment("price_1OMdBjHVJ5B30zKAOdW223p6")}>{!paymentCompanyRequest ? "Choose" : "Loading..."}</button>
                         </div>
 
                     </div>
@@ -243,31 +319,44 @@ const Home = () => {
                 </div>
 
                 <div className='card-right-content'>
-                    <form action="">
+                    <form action="" onSubmit={handleContact}>
                         <input style={{display:'none'}} type="text" name='trap' />
                         <div className='input-content'>
                             <p>First Name</p>
-                            <input type="text" required/>
+                            <input type="text"
+                            value={contactData.firstName}
+                            onChange={(e) => setContactData({...contactData, firstName: e.target.value})} required/>
                         </div>
                         <div className='input-content'>
                             <p>Last Name</p>
-                            <input placeholder='' type="text" required/>
+                            <input placeholder='' type="text"
+                            value={contactData.lastName}
+                            onChange={(e) => setContactData({...contactData, lastName: e.target.value})} required/>
                         </div>
                         <div className='input-content'>
                             <p>Email</p>
-                            <input type="text" required/>
+                            <input type="email"
+                            value={contactData.email}
+                            onChange={(e) => setContactData({...contactData, email: e.target.value})} required/>
                         </div>
                         <div className='input-content'>
                             <p>Phone Number</p>
-                            <input type="text" required/>
+                            <input type="text"
+                            value={contactData.phoneNumber}
+                            onChange={(e) => setContactData({...contactData, phoneNumber: e.target.value})} required/>
                         </div>
 
                         <div className='input-message'>
                             <p>Message</p>
-                            <input type="text" required/>
+                            <input type="text"
+                            value={contactData.message}
+                            onChange={(e) => setContactData({...contactData, message: e.target.value})} required/>
                         </div>
 
-                        <input className='submit-button' type="submit" />
+                        <div>
+                           {request ? "Loading..." : <input className='submit-button' type="submit" />}
+                        </div>
+                            
                     </form>
                 </div>
             </div>

@@ -89,29 +89,77 @@ const Project = () => {
   }, [getAllProjectsSuccess, getAllProjectsFail, deleteProjectFail])
 
 
-
-  // ----
-
   // toggle form 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-
-
+  const [numElements, setNumElements] = useState(0);
+  const [projectSizes, setProjectSizes] = useState(Array(numElements).fill(0));
   const [formData, setFormData] = useState({
     companyId: decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId,
     projectName: '',
-    projectDescription: ''
+    projectDescription: '',
+    labelSizes: projectSizes,
   });
 
+  console.log(formData)
+  
+  // handleNumElementsChange function
+  const handleNumElementsChange = (e) => {
+    const newNumElements = parseInt(e.target.value, 10) || 0;
+    setNumElements(newNumElements);
+  
+    // Update the state with an array of zeros only if the user has started entering data
+    setProjectSizes(Array(newNumElements).fill(Number));
+    
+    // Update formData.labelSizes if needed
+    setFormData((prevData) => ({
+      ...prevData,
+      labelSizes: newNumElements > 0 ? Array(newNumElements).fill(Number) : [],
+    }));
+  };
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+    if (name === 'labelSizes') {
+      // Split the input string into an array using "-" as the delimiter
+      const sizesArray = value.split('-').map((size) => size.trim());
+
+      // Update the state
+      setFormData((prevData) => ({
+        ...prevData,
+        labelSizes: sizesArray,
+      }));
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
+  
+  
+  
+  // console.log(projectSizes)
+  // console.log(formData.labelSizes)
+  console.log(projects)
+  const renderInputFields = () => {
+    return projectSizes.map((size, index) => (
+      <input
+        key={index}
+        type="text"
+        className="form-control"
+        placeholder={`Enter size ${index + 1}`}
+        value={size}
+        onChange={(e) => handleInputChange(index, e.target.value)}
+      />
+    ));
+  };
+  
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -196,7 +244,7 @@ const Project = () => {
                         className="form-control"
                         name="projectName"
                         value={formData.projectName}
-                        onChange={handleInputChange}
+                        onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
                         />
                     </div>
                     <div className="form-group">
@@ -206,7 +254,7 @@ const Project = () => {
                         className="form-control"
                         name="projectDescription"
                         value={formData.projectDescription}
-                        onChange={handleInputChange}
+                        onChange={(e) => setFormData({ ...formData, projectDescription: e.target.value })}
                         />
                     </div>
                     {/* <div className="form-group">
@@ -219,6 +267,36 @@ const Project = () => {
                         onChange={handleInputChange}
                         />
                     </div> */}
+                    {/* <div className="form-group">
+                            <label>Number of elements in the array:</label>
+                          <input
+                            type="number"
+                            className="form-control"
+                            name="numElements"
+                            value={formData.labelSizes.length}
+                            onChange={handleNumElementsChange}
+                          />
+                        </div> */}
+                    <div className="form-group">
+                        {/* <label>4- project sizes (By Centimeter):</label> */}
+                        {/* <input
+                        type=""
+                        className="form-control"
+                        name="labelSizes"
+                        placeholder={`Enter size ${index + 1}`}
+                        value={size}
+                        onChange={renderInputFields()}
+                        /> */}
+                        <label>4- Enter Project Sizes separated by - (By Centimeter):</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="labelSizes"
+                            placeholder="number - number - number ..."
+                            value={formData.labelSizes.join('-')} // Join array values with "-"
+                            onChange={handleInputChange}
+                          />
+                    </div>
                     {!startProjectRequest 
                       ? <div style={{display:'flex', justifyContent:'space-between'}}>
                         <button style={{marginTop:'20px', padding:'5px 20px', fontWeight:'600', fontSize:'18px', borderRadius:'5px', backgroundColor:'#011d41', color:'#fff'}}>Start Creating</button>
@@ -242,7 +320,8 @@ const Project = () => {
           </Modal>
 
           {/* <Link to='/dashboard/create-project/step1'> */}
-            <button onClick={handleOpen}
+           { decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+           <button onClick={handleOpen}
                     style={{
                       padding: "8px 20px",
                       backgroundColor:"#9a3b3a",
@@ -250,7 +329,7 @@ const Project = () => {
                       color: "#ecf0f3",
                       fontWeight:'700'
                     }}>
-                New Project</button>
+                New Project</button>}
           {/* </Link> */}
           <div>
             <table style={{backgroundColor:'#fff'}} className="table table-hover my-1">
@@ -259,8 +338,11 @@ const Project = () => {
                   <th scope="col">#</th>
                   <th scope="col">Project Name</th>
                   <th scope="col">Description</th>
-                  <th scope="col">Manage</th>
-                  <th scope="col">Delete</th>
+                  {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+                  <>
+                    <th scope="col"> Manage</th>
+                    <th scope="col">Delete</th>
+                  </>}
                   </tr>
               </thead>
               <tbody style={{ textAlign:'center'}}>
@@ -271,6 +353,7 @@ const Project = () => {
                         <th scope="row">{index+1}</th>
                         <td>{item.projectName}</td>
                         <td>{item.projectDescription}</td>
+                        {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
                         <td>
                           {item.projectStep < 9 
                           ? <Link to={`/dashboard/create-project/step${item.projectStep}/${item._id}`}
@@ -289,8 +372,9 @@ const Project = () => {
                             }}>
                               <VisibilityIcon style={{paddingBottom:'3px'}} />
                           </Link>}
-                        </td>
-                        <td><button style={{backgroundColor:'#E97472', borderRadius:'5px'}} onClick={() => handleDelete(item._id)}>delete</button></td>
+                        </td>}
+                        {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+                          <td><button style={{backgroundColor:'#E97472', borderRadius:'5px'}} onClick={() => handleDelete(item._id)}>delete</button></td>}
                       </tr>
                     )
                   })

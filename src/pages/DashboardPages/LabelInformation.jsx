@@ -1529,7 +1529,7 @@ const LabelInformation = () => {
 
     const convertDateToYYMMDD = (inputDate) => {
       // Split the input date into day, month, and year
-      const [day, month, year] = inputDate.split('/');
+      const [month, day, year] = inputDate.split('-');
     
       // Ensure the date components are valid
       if (day && month && year) {
@@ -1944,14 +1944,14 @@ const LabelInformation = () => {
                 {projectInfo.labelData.hasLowerLimitOfTemperature &&
                   !projectInfo.labelData.hasUpperLimitOfTemperature &&
                   <div className='symbol-content-item symbol-content-item-range'>
-                      <p className='min-temperature'>{projectInfo.labelData.lowerTemperatureLimit}</p>
+                      <p className='min-temperature p-1 m-1'>{projectInfo.labelData.lowerTemperatureLimit}</p>
                     <img className='symbol-img' src={lower_limit_temperaure} />
                   </div>}
 
                 {projectInfo.labelData.hasUpperLimitOfTemperature &&
                   !projectInfo.labelData.hasLowerLimitOfTemperature &&
                   <div className='symbol-content-item symbol-content-item-range'>
-                    <img className='symbol-img' style={{width:'5vw'}}  src={upper_limit_temperaure} />
+                    <img className='symbol-img p-1 m-1' src={upper_limit_temperaure} />
                       <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
                   </div>}
 
@@ -1959,21 +1959,21 @@ const LabelInformation = () => {
                   projectInfo.labelData.hasLowerLimitOfTemperature &&
                   <div className='symbol-content-item symbol-content-item-range'>
                       <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
-                    <img className='symbol-img'  src={temperature} />
+                    <img className='symbol-img p-1 m-1'  src={temperature} />
                       <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
                   </div>}
 
                 {projectInfo.labelData.hasHumidityRange &&
                   <div className='symbol-content-item symbol-content-item-range'>
                       <p className='min' >{projectInfo.labelData.humidityMin}%</p>
-                    <img className='symbol-img' src={HumidityLimit} />
+                    <img className='symbol-img p-2' src={HumidityLimit} />
                       <p className='max' >{projectInfo.labelData.humidityMax}%</p>
                   </div>}
 
                 {projectInfo.labelData.hasAtmosphericPressureRange &&
                   <div className='symbol-content-item symbol-content-item-range'>
                       <p className='min' >{projectInfo.labelData.atmosphericPressureMin}</p>
-                    <img className='symbol-img' src={AtmPressureLimit} />
+                    <img className='symbol-img p-1 m-1' src={AtmPressureLimit} />
                       <p className='max' >{projectInfo.labelData.atmosphericPressureMax}</p>
                   </div>}
                 
@@ -2300,11 +2300,6 @@ const LabelInformation = () => {
         doc.save('Label.pdf');
       })
     }
-
-    const handleComment = (e) => {
-      e.preventDefault();
-    }
-
  
   return (
     <div className="container label-information" style={{paddingBottom: "20px"}}>
@@ -2455,8 +2450,9 @@ const LabelInformation = () => {
                             <div style={{display:'flex', flexDirection:'column'}}>
                               {projectInfo &&
                                 projectInfo.labelData && 
-                                  projectInfo.labelData.quantity && 
-                              <p style={{flex:'0.95'}}>QTY: {projectInfo.labelData.quantity}</p>}
+                                  projectInfo.labelData.quantity > 0 
+                                ?  <p style={{flex:'0.95'}}>QTY: {projectInfo.labelData.quantity}</p>
+                                : <p style={{flex:'0.95'}}></p>}
                               <div >
                                 {projectInfo &&
                                   projectInfo.labelData && 
@@ -2468,7 +2464,7 @@ const LabelInformation = () => {
                               {projectInfo &&
                                   projectInfo.labelData && 
                                   projectInfo.labelData.manufacturerLogo &&
-                                <img src={`${process.env.REACT_APP_BASE_URL}/assets/companyImage/${projectInfo.labelData.manufacturerLogo}`} alt="" />}
+                                <img src={`${process.env.REACT_APP_BASE_URL}/assets/images/${projectInfo.labelData.manufacturerLogo}`} alt="" />}
                           </div>
                           {projectInfo && projectInfo.labelData &&  projectInfo.labelData.addWebsite &&
                            projectInfo.labelData.website &&
@@ -2507,7 +2503,7 @@ const LabelInformation = () => {
                           {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
                               imageSrc &&
                             <div style={{display:'flex', alignItems:'center', marginTop:'1%'}}>
-                              <img style={{width:'15%', height:'auto'}} src={imageSrc} alt={`data matrix from`} />
+                              <img style={{width:'100px', height:'100px'}} src={imageSrc} alt={`data matrix from`} />
                               <div style={{fontSize:'12px'}}>
                                 <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.dateOfManufacture}</p>
                                 <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.useByDate}</p>

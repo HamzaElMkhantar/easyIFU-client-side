@@ -43,13 +43,38 @@ import ReleaseReview from './pages/DashboardPages/ReleaseReview';
 import CreatorReview from './pages/DashboardPages/CreatorReview';
 import ReleasedProject from './pages/DashboardPages/ReleasedProject';
 import ReleasedProjects from './pages/DashboardPages/ReleasedProjects';
+import PaymentSucceed from './pages/PaymentSucceed';
+import PaymentFailed from './pages/PaymentFailed';
+import CheckSubscription from './pages/CheckSubscription';
+import SubscriptionChecker from './pages/SubscriptionChecker';
+import axios from 'axios';
+import Documents from './pages/DashboardPages/Documents';
+import DocumentInformation from './pages/DashboardPages/DocumentInformation';
+import Companies from './pages/easyIFU_Dashboard/Companies';
+import ProjectsCompanies from './pages/easyIFU_Dashboard/ProjectsCompanies';
+import UsersCompanies from './pages/easyIFU_Dashboard/UsersCompanies';
+import SuperAdminAccount from './pages/easyIFU_Dashboard/SuperAdminAccount';
+import EasyIFULogin from './pages/easyIFU_auth/EasyIFULogin'
+import LabelSizes from './pages/DashboardPages/LabelSizes';
 // import jwtDecode from 'jwt-decode';
 
 function App() {
   const location = useLocation();
+  const dispatch = useDispatch();
+
+  useEffect( () => {
+    const fetch = async() =>{
+      await dispatch(refreshAction());
+    }
+     console.log("ref!")
+     fetch()
+  }, [location.pathname]);
+
+
   const [showNav, setShowNav] = useState(true);
   const [showFooter, setShowFooter] = useState(true);
   const token = Cookies.get('eIfu_ATK') || null;
+  const dateNow = Cookies.get('d_n') || null;
 
   useEffect(() => {
     const pathSegments = location.pathname.split('/');
@@ -59,25 +84,36 @@ function App() {
     if (currentPage === 'login' 
         || currentPage === 'register' 
         || currentPage === 'dashboard' 
-        || currentPage === 'verify') {
+        || currentPage === 'verify' 
+        || currentPage === 'payment-succeed' 
+        || currentPage === 'payment-failed'
+        || currentPage === 'check-subscription'
+        || currentPage === 'eIFU-admin') {
       setShowNav(false);
     } else {
       setShowNav(true);
     }
 
-    if(currentPage === 'dashboard' || currentPage === 'verify'){
+    if(currentPage === 'dashboard' || currentPage === 'eIFU-admin' || currentPage === 'verify' || currentPage === 'payment-succeed' || currentPage === 'payment-failed'|| currentPage === 'check-subscription' ){
       setShowFooter(false)
     }else{
       setShowFooter(true)
     }
   }, [location]);
+
+  const dashboardRoutes = (
+                <>
+  
+                </>
+  )
   
   const R_Token = Cookies.get('eIfu_RTK') || null;
   const A_Token = Cookies.get('eIfu_ATK') || null;
   const decodedToken = A_Token ? jwtDecode(A_Token) : null
 
+
+
   const intervalRef = useRef(null);
-  const dispatch = useDispatch();
 
    // Memoize the interval setup function to prevent re-renders
   //  const setupInterval = useMemo(() => {
@@ -148,65 +184,97 @@ function App() {
     };
   }, [dispatch]);
 
-  useEffect(() => {
-   dispatch(refreshAction());
-  }, [location.pathname]);
 
 
+console.log(decodedToken?.userInfo?.isSubscripted)
   return (
     <div className="App">
       {showNav && <Header />}
         <ScrollToTop />
       <Routes>
         <Route path='/' element={<Home />} />
+        {/*  */}
         <Route element={<ProtectedRoute />}>
           <Route path='/login' element={<Login />} /> 
           <Route path='/register' element={<Register />} /> 
           <Route path='/resetPassword/verified/:email/:token/:id' element={<ResetPassword />} />
           <Route path='/resetPassword' element={<EmailCheckForResetPassword />} />
+
+          {/* easyIFU Admin routes */}
+          <Route path='/eIFU-admin' element={<EasyIFULogin />} />
         </Route>
 
         <Route element={<RequireAuth />}>
-          <Route element={<IsVerified /> }>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/dashboard/project' element={<Project />} />
-            <Route path='/dashboard/users' element={<Users />} />
-            <Route path='/dashboard/company' element={<MyCompany />} />
-            <Route path='/dashboard/account' element={<Account />} />
+          {/* <Route element={<IsVerified /> }>
+            <Route element={<SubscriptionChecker  /> }> */}
 
-            {/* routes for creator */}
-            <Route path='/dashboard/create-project/step1/:projectId' element={<ManufacturerInfoComponent />} />
-            <Route path='/dashboard/create-project/step2/:projectId' element={<ProductInfoComponent />} />
-            <Route path='/dashboard/create-project/step3/:projectId' element={<SterilityComponent />} />
-            <Route path='/dashboard/create-project/step4/:projectId' element={<StorageComponent />} />
-            <Route path='/dashboard/create-project/step5/:projectId' element={<SafeUseComponent />} />
-            <Route path='/dashboard/create-project/step6/:projectId' element={<IVDDiagnosticComponent />} />
-            <Route path='/dashboard/create-project/step7/:projectId' element={<TransfusionInfusionComponent />} />
-            <Route path='/dashboard/create-project/step8/:projectId' element={<OthersComponent />} />
-            <Route path='/dashboard/project-information/:projectId' element={<LabelInformation />} />
-            <Route path='/dashboard/project/review-creator/:projectId' element={<CreatorReview />} />
+              {/* routes for creator */}
+              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+                <>
+                  <Route path='/dashboard/create-project/step1/:projectId' element={<ManufacturerInfoComponent />} />
+                  <Route path='/dashboard/create-project/step2/:projectId' element={<ProductInfoComponent />} />
+                  <Route path='/dashboard/create-project/step3/:projectId' element={<SterilityComponent />} />
+                  <Route path='/dashboard/create-project/step4/:projectId' element={<StorageComponent />} />
+                  <Route path='/dashboard/create-project/step5/:projectId' element={<SafeUseComponent />} />
+                  <Route path='/dashboard/create-project/step6/:projectId' element={<IVDDiagnosticComponent />} />
+                  <Route path='/dashboard/create-project/step7/:projectId' element={<TransfusionInfusionComponent />} />
+                  <Route path='/dashboard/create-project/step8/:projectId' element={<OthersComponent />} />
+                  <Route path='/dashboard/project-information/:projectId' element={<LabelInformation />} />
+                  <Route path='/dashboard/project/review-creator/:projectId' element={<CreatorReview />} />
+              </>}
 
-            {/* routes for Approver */}
-            <Route path='/dashboard/project/review-approver/:projectId' element={<ApproverReview />} />
+              {/* routes for Approver */}
+              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Approver") &&
+                <>
+                <Route path='/dashboard/project/review-approver/:projectId' element={<ApproverReview />} />
+              </>}
 
-            {/* routes for Release */}
-            <Route path='/dashboard/project/review-release/:projectId' element={<ReleaseReview />} />
-            <Route path='/dashboard/project-released/:projectId' element={<ReleasedProject />} />
+              {/* routes for Release */}
+              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Release") &&
+                <>
+                <Route path='/dashboard/project/review-release/:projectId' element={<ReleaseReview />} />
+                <Route path='/dashboard/documents' element={<Documents />} />
+                <Route path='/dashboard/document/:documentId/:size' element={<DocumentInformation />} />
+                <Route path='/dashboard/document-sizes/:documentId' element={<LabelSizes />} />
+                <Route path='/dashboard/project-released/:projectId' element={<ReleasedProject />} />
 
-            {/* this routes for admin users */}
-            <Route path='/dashboard/user/:userId' element={<ManageUser />} />
-            <Route path='/dashboard/user/create' element={<CreateUser />} />
+              </>}
 
-            {/* route for all roles */}
-            <Route path='/dashboard/received-project' element={<ProjectByRole />} />
-            <Route path='/dashboard/project/released' element={<ReleasedProjects />} />
-          </Route>
-          {decodedToken && 
-              decodedToken.userInfo && 
-                decodedToken.userInfo.OTPVerified == false &&
-            <Route path='/verify' element={<EmailVerification />} />}
+              {/* this routes for admin users */}
+              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin") &&
+                <>
+                  <Route path='/dashboard/user/:userId' element={<ManageUser />} />
+                  <Route path='/dashboard/user/create' element={<CreateUser />} />
+              </>}
+           
+                <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='/dashboard/project' element={<Project />} />
+                <Route path='/dashboard/users' element={<Users />} />
+                <Route path='/dashboard/company' element={<MyCompany />} />
+                <Route path='/dashboard/account' element={<Account />} />
+
+                {/* route for all roles */}
+                <Route path='/dashboard/received-project' element={<ProjectByRole />} />
+                <Route path='/dashboard/project/released' element={<ReleasedProjects />} />
+
+            {/* </Route>
+          </Route> */}
+
+            {/* easyIFU Admin routes */}
+            {decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.role === "superAdmin" &&
+              <>
+              <Route path='/eIFU-admin/companies' element={<Companies />} />
+              <Route path='/eIFU-admin/projects' element={<ProjectsCompanies />} />
+              <Route path='/eIFU-admin/users' element={<UsersCompanies />} />
+              <Route path='/eIFU-admin/account' element={<SuperAdminAccount />} />
+            </>}
+
+            <Route path='/verify' element={<EmailVerification />} />
         </Route>
-
+        
+        <Route path='/payment-succeed' element={<PaymentSucceed />} />
+        <Route path='/payment-failed' element={<PaymentFailed />} />
+       <Route path='/check-subscription' element={<CheckSubscription />} />
         <Route path='*' element={<NoFoundPage />} />
       </Routes>
 
