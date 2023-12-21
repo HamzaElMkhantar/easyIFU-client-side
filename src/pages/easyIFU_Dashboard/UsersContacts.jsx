@@ -132,13 +132,13 @@ console.log(contactsRequest, contactsSuccess, contactsFail, AllContacts)
                       <th scope="col">Details</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody style={{fontSize:'14px'}}>
                     {data && data?.length > 0 &&
                       data?.map((item, index) => {
                         return (
                           <tr key={index}>
                             <th scope="row">{index + 1}</th>
-                            <td>{item?.firstName}, {item?.lastName}</td>
+                            <td>{item?.firstName} {item?.lastName}</td>
                             <td>{item?.email}</td>
                             <td>{item?.companyEmail}</td>
                             <td>{item?.phoneNumber}</td>
