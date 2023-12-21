@@ -131,17 +131,17 @@ console.log(companiesRequest, companiesSuccess, companiesFailed, allCompanies)
                     </tr>
                   </thead>
                   <tbody>
-                    {data &&
+                    {data && data?.length > 0 &&
                       data?.map((item, index) => {
                         return (
                           <tr key={index}>
                             <th scope="row">{index + 1}</th>
-                            <td>{item.companyName}</td>
-                            <td>{item.companyCountry}, {item.companyCity}</td>
-                            <td>{item.subscription.status}</td>
-                            <td>{item.subscription.endDate}</td>
-                            <td>{item.companyUsers.length}</td>
-                            <td>{dateFormat(item.createdAt)}</td>
+                            <td>{item?.companyName}</td>
+                            <td>{item?.companyCountry}, {item?.companyCity}</td>
+                            <td>{item?.subscription?.status}</td>
+                            <td>{item?.subscription?.endDate}</td>
+                            <td>{item?.companyUsers?.length}</td>
+                            <td>{dateFormat(item?.createdAt)}</td>
                           </tr>
                         );
                       })}

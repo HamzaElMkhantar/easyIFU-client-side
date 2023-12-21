@@ -745,7 +745,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project//documents-company/${companyId}`, config);
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/documents-company/${companyId}`, config);
     console.log(response)
       dispatch({ 
             type: DOCUMENTS_SUCCESS, 

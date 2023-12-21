@@ -13,6 +13,7 @@ import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded
 import CollectionsIcon from '@mui/icons-material/Collections';
 import { useDispatch, useSelector } from 'react-redux';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 import { logoutAction } from '../../redux/actions/authActions';
 import { RotatingLines } from 'react-loader-spinner';
 import Cookies from 'js-cookie';
@@ -55,6 +56,7 @@ const SideBarEasyIFU = ({isSidebarOpen}) => {
                 <Link to="/eIFU-admin/companies"><HomeRoundedIcon style={{color:'#9A3B3B'}}/> Companies</Link>
                 <Link to="/eIFU-admin/projects"><InventoryRoundedIcon style={{color:'#088395'}}/> Projects</Link>
                 <Link to="/eIFU-admin/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link>
+                <Link to="/eIFU-admin/contacts"><ContactMailIcon style={{color:'#1D5466'}}/> Contacts</Link>
                 <Link to="/eIFU-admin/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link>
 
             </div>

@@ -377,7 +377,7 @@ const ProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                     <label>11- Do you want to add your manufacturer logo in the label ?</label>
                     <div className="form-check">
                     <input
@@ -389,7 +389,7 @@ const ProductInfoComponent = () => {
                     />
                     <label className="form-check-label">Yes</label>
                     </div>
-                </div>
+                </div> */}
                 {formData.addManufacturerLogo && (
                     <div className="form-group">
                     <label>Insert your logo:</label>

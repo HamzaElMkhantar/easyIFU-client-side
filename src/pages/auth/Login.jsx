@@ -60,7 +60,7 @@ const Login = () => {
 
   if (loginSuccess || token) {
     toast.success('Code OTP sent to your email');
-    return <Navigate to="/verify" />;
+    return <Navigate to="/dashboard" />;
   }
 
   return (

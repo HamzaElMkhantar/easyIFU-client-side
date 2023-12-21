@@ -34,14 +34,14 @@ const contacts = {
     contactsRequest : false,
     contactsSuccess : false,
     contactsFail : null,
-    contacts: null
+    AllContacts: null
 }
 
 const contactById = {
     contactByIdRequest : false,
     contactByIdSuccess :  false,
     contactByIdFail : null,
-    contactById : null
+    contactByIdInfo : null
 }
 
 const deleteContact = {
@@ -101,7 +101,7 @@ export const contactsReducer = (state = contacts, action) => {
                 ...state,
                 contactsRequest : false,
                 contactsSuccess : true,
-                contacts: action.payload
+                AllContacts: action.payload
             } ;
         case CONTACTS_SUPPER_ADMIN_FAILED :
             return {
@@ -132,7 +132,7 @@ export const contactByIdReducer = (state = contactById, action) => {
                 ...state,
                 contactByIdRequest : false,
                 contactByIdSuccess : true,
-                contactById: action.payload
+                contactByIdInfo: action.payload
             } ;
         case GET_CONTACT_SUPPER_ADMIN_FAILED :
             return {

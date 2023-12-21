@@ -115,11 +115,11 @@ console.log(projectsRequest, projectsSuccess, projectsFail)
         <section className='' style={{marginTop:'20px'}}>
           <div style={{ padding: '20px' }} className="col-md-12">
             <div className='container'>
-              <h6>total projects: {data && data?.length > 0 ? data.length : <>No company</>}</h6>
+              <h6>total projects: {data && data?.length > 0 ? data.length : <>No Project</>}</h6>
               <div className="table-responsive">
 
                 <table style={{ backgroundColor: '#fff', textAlign:'center' }} className="table table-hover my-1">
-                  <thead style={{ backgroundColor: '#9a3b3a' }} className="thead-dark">
+                  <thead style={{ backgroundColor: '#046b81' }} className="thead-dark">
                     <tr style={{ color: '#fff' }}>
                       <th scope="col">#</th>
                       <th scope="col">Project Name</th>

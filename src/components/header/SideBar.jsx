@@ -63,7 +63,7 @@ const SideBar = ({isSidebarOpen}) => {
 
                 <Link to="/dashboard/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link>
 
-                {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+                {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" )&&
                 <Link to="/dashboard/user/create"><GroupRoundedIcon style={{color:'#C08261'}}/> Create User</Link>}
 
                 {<Link to="/dashboard/company"><StoreRoundedIcon style={{color:'#E5D283'}}/>My Company</Link>}

@@ -45,7 +45,7 @@ const Documents = () => {
     const {documents} = useSelector(state => state)
     const {documentsRequest, documentsSuccess, documentsFail, documentsCompany} = documents
 
-    const {companyId} = decodedToken ? decodedToken?.userInfo : null
+    const companyId = decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId
     const dispatch = useDispatch()
     useEffect(() => {
       dispatch(documentsAction(companyId, token))

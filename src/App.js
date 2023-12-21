@@ -56,6 +56,8 @@ import UsersCompanies from './pages/easyIFU_Dashboard/UsersCompanies';
 import SuperAdminAccount from './pages/easyIFU_Dashboard/SuperAdminAccount';
 import EasyIFULogin from './pages/easyIFU_auth/EasyIFULogin'
 import LabelSizes from './pages/DashboardPages/LabelSizes';
+import UsersContacts from './pages/easyIFU_Dashboard/UsersContacts';
+import ContactDetails from './pages/easyIFU_Dashboard/ContactDetails';
 // import jwtDecode from 'jwt-decode';
 
 function App() {
@@ -205,8 +207,8 @@ console.log(decodedToken?.userInfo?.isSubscripted)
         </Route>
 
         <Route element={<RequireAuth />}>
-          {/* <Route element={<IsVerified /> }>
-            <Route element={<SubscriptionChecker  /> }> */}
+          {/* <Route element={<IsVerified /> }> */}
+            <Route element={<SubscriptionChecker  /> }>
 
               {/* routes for creator */}
               {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
@@ -257,8 +259,8 @@ console.log(decodedToken?.userInfo?.isSubscripted)
                 <Route path='/dashboard/received-project' element={<ProjectByRole />} />
                 <Route path='/dashboard/project/released' element={<ReleasedProjects />} />
 
-            {/* </Route>
-          </Route> */}
+            </Route>
+          {/* </Route> */}
 
             {/* easyIFU Admin routes */}
             {decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.role === "superAdmin" &&
@@ -266,6 +268,8 @@ console.log(decodedToken?.userInfo?.isSubscripted)
               <Route path='/eIFU-admin/companies' element={<Companies />} />
               <Route path='/eIFU-admin/projects' element={<ProjectsCompanies />} />
               <Route path='/eIFU-admin/users' element={<UsersCompanies />} />
+              <Route path='/eIFU-admin/contacts' element={<UsersContacts />} />
+              <Route path='/eIFU-admin/contact/:contactId' element={<ContactDetails />} />
               <Route path='/eIFU-admin/account' element={<SuperAdminAccount />} />
             </>}
 
