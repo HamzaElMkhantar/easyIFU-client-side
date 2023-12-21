@@ -208,7 +208,7 @@ console.log(decodedToken?.userInfo?.isSubscripted)
 
         <Route element={<RequireAuth />}>
           {/* <Route element={<IsVerified /> }> */}
-            <Route element={<SubscriptionChecker  /> }>
+            {/* <Route element={<SubscriptionChecker  /> }> */}
 
               {/* routes for creator */}
               {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
@@ -259,7 +259,7 @@ console.log(decodedToken?.userInfo?.isSubscripted)
                 <Route path='/dashboard/received-project' element={<ProjectByRole />} />
                 <Route path='/dashboard/project/released' element={<ReleasedProjects />} />
 
-            </Route>
+            {/* </Route> */}
           {/* </Route> */}
 
             {/* easyIFU Admin routes */}
