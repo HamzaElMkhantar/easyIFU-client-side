@@ -145,7 +145,7 @@ console.log(contactsRequest, contactsSuccess, contactsFail, AllContacts)
 
                             <td>{item.message.length > 20 ? item.message.slice(0, 17) + "..." : item.message}</td>
                             <td>{dateFormat(item?.createdAt)}</td>
-                            <td><Link to={`/dashboard/project-information/${item._id}`}
+                            <td><Link to={`/eIFU-admin/contact/${item._id}`}
                             style={{backgroundColor:'#0C458F', 
                               color:"#fff", 
                               padding:'2px 10px', 

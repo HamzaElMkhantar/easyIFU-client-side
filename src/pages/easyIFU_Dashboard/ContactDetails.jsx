@@ -65,7 +65,7 @@ const ContactDetails = () => {
         </div>
             <div className='contact-message' style={{backgroundColor:'#fff', borderRadius:'5px', padding:'10px', border:'0.5px solid lightGray'}}>
                 <p style={{fontSize:'20px', fontWeight:'700'}}>Message :</p>
-                <p style={{fontSize:'17px'}}>{contactInfo?.message}</p>
+                <p style={{fontSize:'17px', paddingLeft:'10px'}}>{contactInfo?.message}</p>
             </div>
     </div>
   )
