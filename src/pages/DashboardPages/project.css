@@ -579,6 +579,29 @@ form div input {
 }
 
 
+
+/* collapse */
+
+.collapsible-content ul p {
+    background-color:#02295c !important;
+    color: #fff !important;
+    padding-left: 5px !important;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight:600;
+    border: 2px solid #02295c;
+
+    transition:  0.2s all ease;
+}
+
+.collapsible-content ul p:hover {
+    background-color:#fff !important;
+    color:  #02295c  !important;
+    border: 2px solid lightGray;
+}
+
+
 /* ------ new design ------- */
 
 /* Template-1 */
@@ -587,7 +610,7 @@ form div input {
     padding: 10px;
     border: 0.5px solid lightGray;
     width: 700px;
-    font-size:115% !important;
+    font-size:105% !important;
     font-weight: 600;
     resize: both; /* Allow resizing in both directions */
 }
@@ -707,14 +730,26 @@ form div input {
     margin: 0;
 }
 .template-1 .project-owner-info .symbol-content-item img {
-    width: 25%;
+    width: 29%;
     max-height: 60px;
     min-width: 35px;
-    height: 90%;
+    height: 80%;
     margin-right: 1%;
     
 }
 
+.template-1 .sterileSymbol-img {
+    width: 120% !important;
+}
+
+.template-1 .sm-img {
+    width: 30% !important;
+}
+
+.template-1 .Authorized_Representative{
+    width: 70% !important;
+    min-height: 170% !important;
+}
 /* rest of the symbols */
 .template-1 .symbols-with-text-behind{
     /* border: 1px solid black; */
@@ -750,16 +785,16 @@ form div input {
 
 .template-1 .symbols-with-text-behind .symbol-content-item-range p {
     position: absolute;
-    font-size: 60%;
+    font-size: 55%;
 }
 .template-1 .symbols-with-text-behind .symbol-content-item-range .min{
-    bottom: -40%;
-    left: -13%;
+    bottom: -35%;
+    left: -24%;
 }
 
 .template-1 .symbols-with-text-behind .symbol-content-item-range .max {
     top: -23%;
-    right: -15%;
+    right: -25%;
 }
 
 .template-1 .symbols-with-text-behind .symbol-content-item-range .min-temperature{
@@ -789,6 +824,11 @@ form div input {
 .template-1 .symbols-with-text-behind .symbol-content-item-with-text img {
     width: 20%;
     height: auto;
+}
+
+.symbol-content-item.symbol-content-item-with-text p {
+    font-size: 64% !important;
+
 }
 
 /* UDI */

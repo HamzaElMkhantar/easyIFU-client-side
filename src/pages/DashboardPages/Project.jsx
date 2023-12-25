@@ -51,6 +51,7 @@ const Project = () => {
   // -- component logic --
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
+  const companyId = decodedToken && decodedToken?.userInfo?.companyId
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
@@ -63,12 +64,12 @@ const Project = () => {
 
   // get all projects
   useEffect(() => {
-    dispatch(getAllProjectsAction(token))
+    dispatch(getAllProjectsAction(companyId, token))
   }, [])
 
   useEffect(() => {
     if(deleteProjectSuccess){
-      dispatch(getAllProjectsAction(token))
+      dispatch(getAllProjectsAction(companyId, token))
     }
   }, [deleteProjectSuccess])
 
@@ -97,7 +98,8 @@ const Project = () => {
   const [numElements, setNumElements] = useState(0);
   const [projectSizes, setProjectSizes] = useState(Array(numElements).fill(0));
   const [formData, setFormData] = useState({
-    companyId: decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId,
+    companyId: decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId,
+    createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id ,
     projectName: '',
     projectDescription: '',
     labelSizes: projectSizes,
@@ -320,7 +322,7 @@ const Project = () => {
           </Modal>
 
           {/* <Link to='/dashboard/create-project/step1'> */}
-           { decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+           { decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
            <button onClick={handleOpen}
                     style={{
                       padding: "8px 20px",
@@ -338,7 +340,7 @@ const Project = () => {
                   <th scope="col">#</th>
                   <th scope="col">Project Name</th>
                   <th scope="col">Description</th>
-                  {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+                  {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
                   <>
                     <th scope="col"> Manage</th>
                     <th scope="col">Delete</th>
@@ -355,7 +357,7 @@ const Project = () => {
                         <td >{item.projectDescription.length > 20 
                                 ? item.projectDescription.substring(0, 20) + '...' 
                                 : item.projectDescription}</td>
-                        {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+                        {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
                         <td>
                           {item.projectStep < 9 
                           ? <Link to={`/dashboard/create-project/step${item.projectStep}/${item._id}`}
@@ -375,7 +377,7 @@ const Project = () => {
                               <VisibilityIcon style={{paddingBottom:'3px'}} />
                           </Link>}
                         </td>}
-                        {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+                        {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
                           <td><button style={{backgroundColor:'#E97472', borderRadius:'5px'}} onClick={() => handleDelete(item._id)}>delete</button></td>}
                       </tr>
                     )

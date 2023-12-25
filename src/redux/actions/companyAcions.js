@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { BaseUrl } from '../../config';
-import { GET_COMPANY_FAILED, 
+import { DASHBOARD_COMPANY_FAILED, 
+        DASHBOARD_COMPANY_REQUEST, 
+        DASHBOARD_COMPANY_RESET, 
+        DASHBOARD_COMPANY_SUCCESS, 
+        GET_COMPANY_FAILED, 
         GET_COMPANY_REQUEST, 
         GET_COMPANY_RESET, 
         GET_COMPANY_SUCCESS, 
@@ -51,6 +55,45 @@ export const getCompanyInfoAction = (companyId, token) => async (dispatch) => {
         setTimeout(() =>{
             dispatch({ 
             type: GET_COMPANY_RESET
+            });
+        }, 1500)
+        }
+};
+
+export const dashboardCompanyInfoAction = (companyId, token) => async (dispatch) => {
+    try {
+    
+        dispatch({ 
+            type: DASHBOARD_COMPANY_REQUEST
+        });
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/company/dashboard/${companyId}`, config);
+
+        dispatch({ 
+            type: DASHBOARD_COMPANY_SUCCESS, 
+            payload: response.data
+        });
+        setTimeout(() =>{
+        dispatch({ 
+            type: DASHBOARD_COMPANY_RESET
+        });
+        }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: DASHBOARD_COMPANY_FAILED, 
+            payload: error?.response?.data 
+        });
+
+        setTimeout(() =>{
+            dispatch({ 
+            type: DASHBOARD_COMPANY_RESET
             });
         }, 1500)
         }

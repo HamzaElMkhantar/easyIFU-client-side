@@ -41,17 +41,29 @@ const CreateUser = () => {
         lastName: '',
         password: '',
         email: '',
-        role: ''
+        role: []
       })
+
+      console.log(userInfo)
     
       const dispatch = useDispatch();
+    
+      const handleCheckboxChange = (newRole) => {
+        const updatedRoles = userInfo.role.includes(newRole)
+          ? userInfo.role.filter((r) => r !== newRole) // Remove role if already present
+          : [...userInfo.role, newRole]; // Add role if not present
+        setUserInfo({
+          ...userInfo,
+          role: updatedRoles
+        });
+      };
     
       const handleInput = (e) => {
         setUserInfo({
           ...userInfo,
           [e.target.id]: e.target.value
-        })
-      }
+        });
+      };
     
       const handleSubmit = async (e) => {
         e.preventDefault();
@@ -136,7 +148,7 @@ const CreateUser = () => {
                         <div className="row">
                         {decodedToken &&
                                 decodedToken.userInfo &&
-                                decodedToken.userInfo.role == "Admin" &&
+                                decodedToken.userInfo.role.includes("Admin") &&
                                 <div className="col-md-12">
                             <div className="form-outline mb-2">
                                 <label className="form-label" htmlFor="firstName">
@@ -155,7 +167,7 @@ const CreateUser = () => {
 
                             {decodedToken &&
                             decodedToken.userInfo &&
-                            decodedToken.userInfo.role == "Admin" &&
+                            decodedToken.userInfo.role.includes("Admin") &&
                                 <div className="col-md-12">
                                     <div className="form-outline mb-2">
                                         <label className="form-label" htmlFor="lastName">
@@ -176,7 +188,7 @@ const CreateUser = () => {
                         <div className="row">
                             {decodedToken &&
                             decodedToken.userInfo &&
-                            decodedToken.userInfo.role == "Admin" &&
+                            decodedToken.userInfo.role.includes("Admin") &&
                                 <div className="col-md-12">
                                 <div className="form-outline mb-2">
                                     <label className="form-label" htmlFor="email">
@@ -209,23 +221,49 @@ const CreateUser = () => {
                                 </div>
                             </div>
                             <div className="col-md-12">
-                                <div className="form-outline mb-2">
-                                    <label className="form-label" htmlFor="role">
-                                    User Role
-                                    </label>
-                                    <div>
-                                    <select id='role'
-                                    value={userInfo.role}
-                                        onChange={(e) => handleInput(e)}
-                                        style={{backgroundColor:'lightGray', padding:'2px 15px', borderRadius:'10px', cursor:'pointer'}}>
-                                        <option>choose role</option>
-                                        <option value="Admin">Admin</option>
-                                        <option value="Creator">Creator</option>
-                                        <option value="Approver">Approver</option>
-                                        <option value="Release">Release</option>
-                                    </select>
-                                    </div>
+                              <div className="form-outline mb-2">
+                                <label className="form-label" htmlFor="roles">
+                                  User Roles
+                                </label>
+                                <div>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Admin"
+                                      checked={userInfo.role.includes('Admin')}
+                                      onChange={() => handleCheckboxChange('Admin')}
+                                    />
+                                    Admin
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Creator"
+                                      checked={userInfo.role.includes('Creator')}
+                                      onChange={() => handleCheckboxChange('Creator')}
+                                    />
+                                    Creator
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Approver"
+                                      checked={userInfo.role.includes('Approver')}
+                                      onChange={() => handleCheckboxChange('Approver')}
+                                    />
+                                    Approver
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Release"
+                                      checked={userInfo.role.includes('Release')}
+                                      onChange={() => handleCheckboxChange('Release')}
+                                    />
+                                    Release
+                                  </label>
                                 </div>
+                              </div>
                             </div>
                         </div>
                         <div className="text-center pt-1 mb-4 pb-1">

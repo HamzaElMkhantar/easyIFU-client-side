@@ -186,7 +186,7 @@ const ManufacturerInfoComponent = () => {
                             />
                     </div>
                     }
-                    {formData.isOutsideEU && (
+                    {!formData.isOutsideEU && (
                         <div>
                         <label>European Authorized Representative Name:</label>
                         <input

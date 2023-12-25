@@ -161,11 +161,40 @@ useEffect(() => {
         manufacturerDate: ''
     })
 
+    const [dateValidation, setDateValidation] = useState(true)
+     const handleManufacturerDateChange = (event) => {
+        const inputDate = event.target.value;
+    
+        // Regular expression for the "yyyy-mm-dd" format
+        const dateFormatRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+        if (!dateFormatRegex.test(inputDate)) {
+            // Update the state only if the input is in the correct format
+            setDynamicData({
+              ...dynamicData,
+              manufacturerDate: inputDate
+            });
+            console.error('Invalid date format');
+            setDateValidation(false)
+          }
+    
+       
+          // Update the state only if the input is in the correct format
+          setDynamicData({
+            ...dynamicData,
+            manufacturerDate: inputDate
+          });
+
+          if (dateFormatRegex.test(inputDate)) {
+            setDateValidation(true)
+          }
+    
+      };
+
     // ---- UDI handler functions ----
 
   const convertDateToYYMMDD = (inputDate) => {
     // Split the input date into day, month, and year
-    const [month, day, year] = inputDate.split('-');
+    const [year, month, day ] = inputDate.split('-');
     
     // Ensure the date components are valid
     if (day && month && year) {
@@ -186,634 +215,751 @@ useEffect(() => {
         return null;
     }
     };
+
+    function formatSumDateToYYYYMMDD(date) {
+        if (!date || isNaN(date.getTime())) {
+            console.log("Invalid date");
+            return ''; // or return some default value
+        }
+    
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+    
+    function addDates(date1Str, date2Str) {
+        const dateFormatRegex = /^\d{4}-\d{2}-\d{2}$/;
+    
+        if (!dateFormatRegex.test(date1Str) || !dateFormatRegex.test(date2Str)) {
+            console.log("Both dates are not valid");
+            return;
+        }
+    
+        // Parse date strings into Date objects
+        const date1 = new Date(date1Str);
+        const date2 = new Date(date2Str);
+    
+        if (isNaN(date1.getTime()) || isNaN(date2.getTime())) {
+            console.log("Invalid date format");
+            return;
+        }
+    
+        // Perform addition
+        const resultMilliseconds = date1.getTime() + date2.getTime();
+    
+        return new Date(resultMilliseconds);
+    }
     
     const handleUDI = () => {
-    
-    if(projectInfo && projectInfo.labelData){
-        let {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc} = projectInfo.labelData
-        dateOfManufacture = dynamicData.manufacturerDate ? dynamicData.manufacturerDate : dateOfManufacture
-        useByDate = dynamicData.expirationDate ? dynamicData.expirationDate : useByDate
-        serialNumber = dynamicData.serialNumber ? dynamicData.serialNumber : serialNumber
-        LOTNumber = dynamicData.LotNumber ? dynamicData.LotNumber : LOTNumber
+      
+        if(projectInfo && projectInfo.labelData){
+          const {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc, haDateOfManufacture, hasLotNumber, haSerialNumber} = projectInfo.labelData
+          let useByDateData = null
 
-        let udiData = (udiDI && udiDI !== '' ? "(01)" + udiDI : '') +
-                    (dateOfManufacture && dateOfManufacture !== '' ? "(11)" +  convertDateToYYMMDD(dateOfManufacture) : '') +
-                    (useByDate && useByDate !== '' ? "(17)" + convertDateToYYMMDD(useByDate) : '') +
-                    (LOTNumber && LOTNumber !== '' ? "(10)" + LOTNumber : '') +
-                    (serialNumber && serialNumber !== '' ? "(21)" + serialNumber : '');
+          if(haDateOfManufacture){
+            if(dynamicData.manufacturerDate!== ''){
+              useByDateData = "(17)" +  convertDateToYYMMDD(formatSumDateToYYYYMMDD(addDates(dynamicData?.manufacturerDate,projectInfo?.labelData?.useByDate)))
+            }else{
+              useByDateData = "(17)" +  convertDateToYYMMDD(useByDate)
+            }
+          }else{
 
-        let udiPI =
-                (dateOfManufacture && dateOfManufacture !== '' ? "(11)" + convertDateToYYMMDD(dateOfManufacture) : '') +
-                (useByDate && useByDate !== '' ? "(17)" + convertDateToYYMMDD(useByDate) : '') +
-                (LOTNumber && LOTNumber !== '' ? "(10)" + LOTNumber : '') +
-                (serialNumber && serialNumber !== '' ? "(21)" + serialNumber : '');
+            if(dynamicData.expirationDate == ''){
+              useByDateData = "(17)" +  convertDateToYYMMDD(useByDate)
+            }else{
+              useByDateData = "(17)" +  convertDateToYYMMDD(dynamicData.expirationDate)
+            }
+          }
 
+          let udiData = (udiDI && udiDI !== '' ? "(01)" + udiDI : '') +
+                            (haDateOfManufacture ? (dynamicData.manufacturerDate!== '' ? "(11)" + convertDateToYYMMDD(dynamicData.manufacturerDate) :  "yyyy-mm-dd") : '') +
+                            (useByDateData) +
+                            (hasLotNumber ? (dynamicData.LotNumber !== '' ? "(10)" + dynamicData.LotNumber : 'XXXXXXXX') : '') +
+                            (haSerialNumber ?  (dynamicData.serialNumber !== '' ? "(21)" + dynamicData.serialNumber : 'XXXXXXXX'): '');
+       
+        
+          let udiPI =
+                        (haDateOfManufacture ? (dynamicData.manufacturerDate!== '' ? "(11)" + convertDateToYYMMDD(dynamicData.manufacturerDate) :  "yyyy-mm-dd") : '') +
+                        (useByDateData) +
+                        (hasLotNumber ? (dynamicData.LotNumber !== '' ? "(10)" + dynamicData.LotNumber : 'XXXXXXXX') : '') +
+                        (haSerialNumber ?  (dynamicData.serialNumber !== '' ? "(21)" + dynamicData.serialNumber : 'XXXXXXXX'): '');
+  
+  
+          if(projectInfo.labelData.udiFormat == 'GS1'){
+            if(projectInfo.labelData.udiType == 'GS1 (1D Bar Code)'){
+              JsBarcode('#gs1-barcode', udiData, { 
+                format: 'CODE128',
+                width: 0.9, // Set the width of the bars
+                height: 40, // Set the height of the bars
+                displayValue: false, // Show the human-readable value below the barcode
+                background: 'white', // Set the background color of the SVG
+                lineColor: 'black', // Set the color of the bars });
+                fontSize: 10
+                  });
+  
 
-        if(projectInfo.labelData.udiFormat == 'GS1'){
-        if(projectInfo.labelData.udiType == 'GS1 (1D Bar Code)'){
-            JsBarcode('#gs1-barcode', aidc, { 
-            format: 'CODE128',
-            width: 1.5, // Set the width of the bars
-            height: 40, // Set the height of the bars
-            displayValue: false, // Show the human-readable value below the barcode
-            background: 'white', // Set the background color of the SVG
-            lineColor: 'black', // Set the color of the bars });
-            fontSize: 10
-                });
-
-                // console.log(udiData, udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc)
-            return (
-            <div style={{textAlign:'center', width:'100%'}}>
-                <svg id='gs1-barcode' style={{ width: '100%' }}></svg>
-                <p style={{fontSize:'12px', fontWidth:'20px'}}>{udiData}</p>
-            </div>
-            )
-        }
-        if(projectInfo.labelData.udiType == 'GS1 (Separate Bar Code)'){
-            JsBarcode('#gs1-barcode-udiDI', udiDI, { 
-            format: 'CODE128',
-            width: 1.5, // Set the width of the bars
-            height: 40, // Set the height of the bars
-            displayValue: false, // Show the human-readable value below the barcode
-            background: 'white', // Set the background color of the SVG
-            lineColor: 'black', // Set the color of the bars });
-            fontSize: 10
-                });
-
-            JsBarcode('#gs1-barcode-udiPI', udiPI, { 
-            format: 'CODE128',
-            width: 1.5, // Set the width of the bars
-            height: 40, // Set the height of the bars
-            displayValue: false, // Show the human-readable value below the barcode
-            background: 'white', // Set the background color of the SVG
-            lineColor: 'black', // Set the color of the bars });
-            fontSize: 10
-                });
-            return (
-            <div style={{display:'flex', justifyContent:'', alignItems:'center', flexWrap:'wrap', gridGap:'5px', width: '100%' }}>
-                <div style={{textAlign:'center', margin:'0'}}>
-                <svg id='gs1-barcode-udiDI' style={{ width: '100%' }}></svg>
-                <p style={{fontSize:'12px', fontWeight:'500', margin:'0'}}>(01){udiDI}</p>
+              return (
+                <div style={{textAlign:'center', width:'100%'}}>
+                  <svg id='gs1-barcode' style={{ width: '100%' }}></svg>
+                  <p style={{fontSize:'12px', fontWidth:'20px'}}>{udiData}</p>
                 </div>
-                <div style={{textAlign:'center', margin:'0'}}>
-                <svg id='gs1-barcode-udiPI' style={{ width: '100%' }}></svg>
-                <p style={{fontSize:'12px', fontWeight:'500', margin:'0'}}>{udiPI}</p>
+                )
+            }
+            if(projectInfo.labelData.udiType == 'GS1 (Separate Bar Code)'){
+              JsBarcode('#gs1-barcode-udiDI', udiDI, { 
+                format: 'CODE128',
+                width: 0.9, // Set the width of the bars
+                height: 40, // Set the height of the bars
+                displayValue: false, // Show the human-readable value below the barcode
+                background: 'white', // Set the background color of the SVG
+                lineColor: 'black', // Set the color of the bars });
+                fontSize: 10
+                  });
+  
+              JsBarcode('#gs1-barcode-udiPI', udiPI, { 
+                format: 'CODE128',
+                width: 0.9, // Set the width of the bars
+                height: 40, // Set the height of the bars
+                displayValue: false, // Show the human-readable value below the barcode
+                background: 'white', // Set the background color of the SVG
+                lineColor: 'black', // Set the color of the bars });
+                fontSize: 10
+                  });
+              return (
+                <div style={{display:'flex', justifyContent:'', alignItems:'center', flexWrap:'wrap', gridGap:'5px', width: '100%' }}>
+                  <div style={{textAlign:'center', margin:'0'}}>
+                    <svg id='gs1-barcode-udiDI' style={{ width: '100%' }}></svg>
+                    <p style={{fontSize:'12px', fontWeight:'500', margin:'0'}}>(01){udiDI}</p>
+                  </div>
+                  <div style={{textAlign:'center', margin:'0'}}>
+                    <svg id='gs1-barcode-udiPI' style={{ width: '100%' }}></svg>
+                    <p style={{fontSize:'12px', fontWeight:'500', margin:'0'}}>{udiPI}</p>
+                  </div>
                 </div>
-            </div>
-            )
+              )
+            }
+            // if(projectInfo.labelData.udiType == 'GS1 (Data Matrix)'){
+            //     let canvas = document.createElement("canvas");
+            //      bwipjs.toCanvas(canvas, {
+            //       bcid: "datamatrix", // Barcode type
+            //       text: aidc, // Text to encode
+            //       scale: 5, // 3x scaling factor
+            //       height: 10, // Bar height, in millimeters
+            //       includetext: true, // Show human-readable text
+            //       textxalign: "center" // Always good to set this
+            //     });
+            //     setImageSrc(canvas.toDataURL("image/png"));
+            //   return (
+            //     <div style={{display:'flex', alignItems:'center'}}>
+            //       {imageSrc &&
+            //         <>
+            //         <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
+            //         <div style={{fontSize:'12px'}}>
+            //           {dateOfManufacture !== '' && <p style={{margin:'2px 10px'}}>{"(11)" + convertDateToYYMMDD(projectInfo.labelData.dateOfManufacture)}</p>}
+            //           {useByDate !== '' && <p style={{margin:'2px 10px'}}>{"(17)" + convertDateToYYMMDD(projectInfo.labelData.useByDate)}</p>}
+            //           {LOTNumber !== '' && <p style={{margin:'2px 10px'}}>{"(10)" + projectInfo.labelData.LOTNumber}</p>}
+            //           {serialNumber !== '' && <p style={{margin:'2px 10px'}}>{"(21)" + projectInfo.labelData.serialNumber}</p>}
+            //           </div>
+            //         </>
+            //       }
+            //     </div>
+            //   )
+            // }
+          }
+  
+          if(projectInfo.labelData.udiFormat == 'HIBCC'){
+            JsBarcode('#hibcc-barcode', udiData, { 
+              format: 'CODE128',
+              width: 0.9, // Set the width of the bars
+              height: 40, // Set the height of the bars
+              displayValue: false, // Show the human-readable value below the barcode
+              background: 'white', // Set the background color of the SVG
+              lineColor: 'black', // Set the color of the bars });
+              fontSize: 10
+                });
+            return(
+              <div style={{textAlign:'center', width: '100%' }}>
+                <svg id='hibcc-barcode' style={{ width: '100%' }}></svg>
+                <p style={{fontSize:'12px', fontWeight:'500'}}>{udiData}</p>
+              </div>
+              )
+          }
+          if(projectInfo.labelData.udiFormat == 'ICCBBA'){
+            JsBarcode('#iccbba-barcode', udiData, { 
+              format: 'CODE128',
+              width: 0.9, // Set the width of the bars
+              height: 40, // Set the height of the bars
+              displayValue: false, // Show the human-readable value below the barcode
+              background: 'white', // Set the background color of the SVG
+              lineColor: 'black', // Set the color of the bars });
+              fontSize: 10
+                });
+            return (
+              <div style={{textAlign:'center', width: '100%' }}>
+                <svg id='iccbba-barcode' style={{ width: '100%' }}></svg>
+                <p style={{fontSize:'12px', fontWeight:'500'}}>{udiData}</p>
+              </div>
+              )
+          }
+          if(projectInfo.labelData.udiFormat == 'IFA'){
+            JsBarcode('#ifa-barcode', udiData, { 
+              format: 'CODE128',
+              width: 0.9, // Set the width of the bars
+              height: 40, // Set the height of the bars
+              displayValue: false, // Show the human-readable value below the barcode
+              background: 'white', // Set the background color of the SVG
+              lineColor: 'black', // Set the color of the bars });
+              fontSize: 10
+                });
+            return(
+              <div style={{textAlign:'center', width: '100%' }}>
+                <svg id='ifa-barcode' style={{ width: '100%' }}></svg>
+                <p style={{fontSize:'12px', fontWeight:'500'}}>{udiData}</p>
+              </div>
+              )
+          }
         }
-        }
+        return null;
+      }
 
-        if(projectInfo.labelData.udiFormat == 'HIBCC'){
-        JsBarcode('#hibcc-barcode', aidc, { 
-            format: 'CODE128',
-            width: 1.5, // Set the width of the bars
-            height: 40, // Set the height of the bars
-            displayValue: false, // Show the human-readable value below the barcode
-            background: 'white', // Set the background color of the SVG
-            lineColor: 'black', // Set the color of the bars });
-            fontSize: 10
-            });
-        return(
-            <div style={{textAlign:'center', width: '100%' }}>
-            <svg id='hibcc-barcode' style={{ width: '100%' }}></svg>
-            <p style={{fontSize:'12px', fontWeight:'500'}}>{udiData}</p>
-            </div>
-            )
-        }
-        if(projectInfo.labelData.udiFormat == 'ICCBBA'){
-        JsBarcode('#iccbba-barcode', aidc, { 
-            format: 'CODE128',
-            width: 1.5, // Set the width of the bars
-            height: 40, // Set the height of the bars
-            displayValue: false, // Show the human-readable value below the barcode
-            background: 'white', // Set the background color of the SVG
-            lineColor: 'black', // Set the color of the bars });
-            fontSize: 10
-            });
-        return (
-            <div style={{textAlign:'center', width: '100%' }}>
-            <svg id='iccbba-barcode' style={{ width: '100%' }}></svg>
-            <p style={{fontSize:'12px', fontWeight:'500'}}>{udiData}</p>
-            </div>
-            )
-        }
-        if(projectInfo.labelData.udiFormat == 'IFA'){
-        JsBarcode('#ifa-barcode', aidc, { 
-            format: 'CODE128',
-            width: 1.5, // Set the width of the bars
-            height: 40, // Set the height of the bars
-            displayValue: false, // Show the human-readable value below the barcode
-            background: 'white', // Set the background color of the SVG
-            lineColor: 'black', // Set the color of the bars });
-            fontSize: 10
-            });
-        return(
-            <div style={{textAlign:'center', width: '100%' }}>
-            <svg id='ifa-barcode' style={{ width: '100%' }}></svg>
-            <p style={{fontSize:'12px', fontWeight:'500'}}>{udiData}</p>
-            </div>
-            )
-        }
-    }
-    return null;
-    }
-    useEffect(() => {
-        handleUDI() 
-    }, [projectInfo])
+      const [dataMatrixValue, setDataMatrixValue] = useState(null);
+      const [useByDateDataLabel, setUseByDateDataLabel] = useState(null);
 
-      // data matrix
-      const [dataMatrixValue, setDataMatrixValue] = useState('61297564251294350845');
+      console.log(dataMatrixValue)
       useEffect(() => {
-      let canvas = document.createElement("canvas");
-      bwipjs.toCanvas(canvas, {
+          handleUDI() 
+          if(projectInfo && projectInfo.labelData){
+            const {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc, haDateOfManufacture, hasLotNumber, haSerialNumber} = projectInfo.labelData
+
+            let useByDateData = null
+            if(haDateOfManufacture){
+              if(dynamicData.manufacturerDate!== ''){
+                useByDateData = "(17)" +  convertDateToYYMMDD(formatSumDateToYYYYMMDD(addDates(dynamicData?.manufacturerDate,projectInfo?.labelData?.useByDate)))
+                setUseByDateDataLabel(formatSumDateToYYYYMMDD(addDates(dynamicData?.manufacturerDate,projectInfo?.labelData?.useByDate)))
+              }else{
+                useByDateData = "(17)" +  convertDateToYYMMDD(useByDate)
+                setUseByDateDataLabel(useByDate)
+              }
+            }else{
+
+              if(dynamicData.expirationDate == ''){
+                useByDateData = "(17)" +  convertDateToYYMMDD(useByDate)
+                setUseByDateDataLabel(useByDate)
+              }else{
+                useByDateData = "(17)" +  convertDateToYYMMDD(dynamicData.expirationDate)
+                setUseByDateDataLabel(dynamicData.expirationDate)
+              }
+            }
+
+            let udiData = (udiDI && udiDI !== '' ? "(01)" + udiDI : '') +
+                              (haDateOfManufacture ? (dynamicData.manufacturerDate!== '' ? "(11)" + convertDateToYYMMDD(dynamicData.manufacturerDate) :  "yyyy-mm-dd") : '') +
+                              (useByDateData) +
+                              (hasLotNumber ? (dynamicData.LotNumber !== '' ? "(10)" + dynamicData.LotNumber : 'XXXXXXXX') : '') +
+                              (haSerialNumber ?  (dynamicData.serialNumber !== '' ? "(21)" + dynamicData.serialNumber : 'XXXXXXXX'): '');
+                  setDataMatrixValue(udiData)
+          }
+      }, [projectInfo, dynamicData])
+  
+      // data matrix
+      useEffect(() => {
+        let canvas = document.createElement("canvas");
+        bwipjs.toCanvas(canvas, {
           bcid: "datamatrix", // Barcode type
-          text: dataMatrixValue, // Text to encode
+          text: dataMatrixValue ? dataMatrixValue : '612975642512', // Text to encode
           scale: 10, // 3x scaling factor
           height: 15, // Bar height, in millimeters
           includetext: true, // Show human-readable text
           textxalign: "center" // Always good to set this
-      });
-      setImageSrc(canvas.toDataURL("image/png"));
+        });
+        setImageSrc(canvas.toDataURL("image/png"));
       }, [dataMatrixValue]);
-
-
-// --------- new label design ----------
-  const symbolsWithTextBehind = () => {
-    if(projectInfo && projectInfo.labelData){
-        return (
-        <div className='symbols-with-text-behind'>
-                {projectInfo.labelData.associatedWithIndividualPatient &&
-                    ( projectInfo.labelData.healthCareCentreName == ''
-                    || projectInfo.labelData.healthCareCentreAddress == ''
-                    || projectInfo.labelData.doctorName == ''
-                    ) &&
-                <div className='symbol-content-item symbol-content-item-with-text'>
-                    <img className='symbol-img' src={Health_care_centre_or_doctor} />
-                    <div>
-                    {projectInfo.labelData.healthCareCentreName && 
-                        <p>{projectInfo.labelData.healthCareCentreName}</p>
-                    }
-                    {projectInfo.labelData.healthCareCentreAddress && 
-                        <p>{projectInfo.labelData.healthCareCentreAddress}</p>
-                    }
-                    {projectInfo.labelData.doctorName && 
-                        <p>{projectInfo.labelData.doctorName}</p>
-                    }
-                    </div>
-                </div>}
-
-
-                {projectInfo.labelData.translationActivity &&
+      
+   // --------- new label design ----------
+      const symbolsWithTextBehind = () => {
+        if(projectInfo && projectInfo.labelData){
+          return (
+            <div className='symbols-with-text-behind'>
+                  {projectInfo.labelData.associatedWithIndividualPatient &&
+                      ( projectInfo.labelData.healthCareCentreName == ''
+                        || projectInfo.labelData.healthCareCentreAddress == ''
+                        || projectInfo.labelData.doctorName == ''
+                      ) &&
                     <div className='symbol-content-item symbol-content-item-with-text'>
-                    <img className='symbol-img' src={Translation} />
-                    <div>
-                        {projectInfo.labelData.translationEntityName &&
-                        <p>{projectInfo.labelData.translationEntityName}</p>}
-                        {projectInfo.labelData.translationEntityAddress &&
-                        <p>{projectInfo.labelData.translationEntityAddress}</p>}
-                    </div>
+                      <img className='symbol-img' src={Health_care_centre_or_doctor} />
+                      <div>
+                        {projectInfo.labelData.healthCareCentreName && 
+                          <p>{projectInfo.labelData.healthCareCentreName}</p>
+                        }
+                        {projectInfo.labelData.healthCareCentreAddress && 
+                          <p>{projectInfo.labelData.healthCareCentreAddress}</p>
+                        }
+                        {projectInfo.labelData.doctorName && 
+                          <p>{projectInfo.labelData.doctorName}</p>
+                        }
+                      </div>
                     </div>}
-
-                {projectInfo.labelData.modificationToPackaging &&
-                    <div className='symbol-content-item symbol-content-item-with-text'>
-                    <img className='symbol-img' src={Repackaging} />
-                    <div>
-                        {projectInfo.labelData.repackagingEntityName &&
-                        <p>{projectInfo.labelData.repackagingEntityName}</p>}
-                        {projectInfo.labelData.repackagingEntityAddress &&
-                        <p>{projectInfo.labelData.repackagingEntityAddress}</p>}
-                    </div>
-                    </div>}
-                {projectInfo.labelData.associatedWithIndividualPatient &&
-                (projectInfo.labelData.patientName || projectInfo.labelData.patientNumber) &&
-                <div className='symbol-content-item symbol-content-item-with-text'>
-                    <img className='symbol-img' src={patient_identification} />
-                    <div>
-                    <p>{projectInfo.labelData.patientName}</p>
-                    <p>{projectInfo.labelData.patientNumber}</p>
-                    </div>
-                </div>}
-
-
-            {/* sterility */}
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess &&
-
-                (projectInfo.labelData.hasVaporizedHydrogenPeroxide  == true
-                || projectInfo.labelData.hasAsepticProcessing  == true
-                || projectInfo.labelData.hasEthyleneOxide  == true
-                || projectInfo.labelData.hasIrradiation  == true
-                || projectInfo.labelData.hasSteamOrDryHeat  == true
-                ) 
-                ?null
-                :<div className='symbol-content-item sterileSymbol'>
-                <img className='symbol-img sterileSymbol-img' src={sterileSymbol} />
-                </div>
-            }
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess &&
-
-                    projectInfo.labelData.hasAsepticProcessing &&
-                    <div className='symbol-content-item sterileSymbol'>
-                        <img className='symbol-img sterileSymbol-img' src={sterile_ASymbol} />
-                    </div>
-            }
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess &&
-
-                    projectInfo.labelData.hasEthyleneOxide &&
-                    <div className='symbol-content-item sterileSymbol'>
-                        <img className='symbol-img sterileSymbol-img' src={Sterile_EOSymbol} />
-                    </div>
-            }
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess &&
-
-                    projectInfo.labelData.hasIrradiation &&
-                    <div className='symbol-content-item sterileSymbol'>
-                        <img className='symbol-img sterileSymbol-img' src={Sterile_RSymbol} />
-                    </div>
-            }
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess &&
-
-                    projectInfo.labelData.hasSteamOrDryHeat &&
-                    <div className='symbol-content-item sterileSymbol'>
-                        <img className='symbol-img sterileSymbol-img' src={Sterilized_usings_team_or_dry_heatSymbol} />
-                    </div>
-            }
-
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess &&
-
-                    projectInfo.labelData.isIntendedToBeResterilized &&
-                        <div className='symbol-content-item'>
-                        <img className='symbol-img' src={do_not_resterilizeSymbol} />
+  
+  
+                    {projectInfo.labelData.translationActivity &&
+                      <div className='symbol-content-item symbol-content-item-with-text'>
+                        <img className='symbol-img sm-img' src={Translation} />
+                        <div>
+                          {projectInfo.labelData.translationEntityName &&
+                            <p>{projectInfo.labelData.translationEntityName}</p>}
+                          {projectInfo.labelData.translationEntityAddress &&
+                            <p>{projectInfo.labelData.translationEntityAddress}</p>}
                         </div>
-            }
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
-
-                <div className='symbol-content-item'>
-                <img className='symbol-img' src={nonSterileSymbol} />
-                </div>
-            }
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
-
-                projectInfo.labelData.canBeUsedIfDamaged &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={package_is_damageSymbol} />
-                </div>}
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
-
-                projectInfo.labelData.hasSterileFluidPath &&
-                <div className='symbol-content-item'>
-                <img className='symbol-img' src={sterile_fluid_pathSymbol} />
-            </div>}
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
-            
-                projectInfo.labelData.hasVaporizedHydrogenPeroxide &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={VaporizedHydrogenPeroxideSymbol} />
-                </div>}
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
-                
-                projectInfo.labelData.hasSingleSterileBarrierSystem &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={single_S_B_S} />
-                </div>}
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
-                
-                projectInfo.labelData.hasTwoSterileBarrierSystems &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={double_S_B_S} />
-                </div>}
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
-                
-                projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveInside &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={double_S_B_S_inside} />
-                </div>}
-
-            {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
-                
-                projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveOutside &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={double_S_B_S_outside} />
-                </div>}
-
-            {projectInfo.labelData.needInstructionsForUse &&
-                !projectInfo.labelData.eIFULink &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={consult_instruction_for_use} />
-                    {projectInfo.labelData.eIFULink &&
-                    <div className=''>
-                        <p>{projectInfo.labelData.eIFULink}</p>
-                    </div>
-                    }
-                </div>}
-
-                {/* storage */}
-
-                {projectInfo.labelData.requiresCarefulHandling &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={fragile_handle_with_care} />
-                </div>}
-
-                {projectInfo.labelData.requiresProtectionFromLight &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={keep_away_from_sunlight} />
-                </div>}
-
-                {projectInfo.labelData.requiresProtectionFromHeatAndRadioactiveSources &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={protect_from_heat_and_radioactive_soures} />
-                </div>}
-
-                {projectInfo.labelData.requiresProtectionFromMoisture &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={keep_dry} />
-                </div>}
-
-                {projectInfo.labelData.hasLowerLimitOfTemperature &&
-                  !projectInfo.labelData.hasUpperLimitOfTemperature &&
-                  <div className='symbol-content-item symbol-content-item-range'>
-                      <p className='min-temperature p-1 m-1'>{projectInfo.labelData.lowerTemperatureLimit}</p>
-                    <img className='symbol-img' src={lower_limit_temperaure} />
-                  </div>}
-
-                {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                  !projectInfo.labelData.hasLowerLimitOfTemperature &&
-                  <div className='symbol-content-item symbol-content-item-range'>
-                    <img className='symbol-img p-1 m-1' src={upper_limit_temperaure} />
-                      <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
-                  </div>}
-
-                {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                  projectInfo.labelData.hasLowerLimitOfTemperature &&
-                  <div className='symbol-content-item symbol-content-item-range'>
-                      <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
-                    <img className='symbol-img p-1 m-1'  src={temperature} />
-                      <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
-                  </div>}
-
-                {projectInfo.labelData.hasHumidityRange &&
-                  <div className='symbol-content-item symbol-content-item-range'>
-                      <p className='min' >{projectInfo.labelData.humidityMin}%</p>
-                    <img className='symbol-img p-2' src={HumidityLimit} />
-                      <p className='max' >{projectInfo.labelData.humidityMax}%</p>
-                  </div>}
-
-                {projectInfo.labelData.hasAtmosphericPressureRange &&
-                  <div className='symbol-content-item symbol-content-item-range'>
-                      <p className='min' >{projectInfo.labelData.atmosphericPressureMin}</p>
-                    <img className='symbol-img p-1 m-1' src={AtmPressureLimit} />
-                      <p className='max' >{projectInfo.labelData.atmosphericPressureMax}</p>
-                  </div>}
-                
-                {/* safe use */}
-                
-                {projectInfo.labelData.hasBiologicalRisks &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={biological_risks} />
-                </div>}
-
-                {projectInfo.labelData.isIntendedForSingleUse &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={do_not_re_use} />
-                </div>}
-
-                {projectInfo.labelData.needCaution &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={caution} />
-                </div>}
-
-                {projectInfo.labelData.containsRubberLatex &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={contains_or_presence_of_natural_rubber_latex} />
-                </div>}
-
-                {projectInfo.labelData.containsBloodDerivatives &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={contains_human_blood} />
-                </div>}
-
-                {projectInfo.labelData.containsMedicinalSubstance &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Contains_a_medicinal_substance} />
-                </div>}
-
-                {projectInfo.labelData.containsAnimalOriginMaterial &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Contains_biological_material_of_animal_origin} />
-                </div>}
-
-                {projectInfo.labelData.containsHumanOriginMaterial &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Contains_human_origin} />
-                </div>}
-
-                {projectInfo.labelData.containsHazardousSubstances &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Contains_hazardous_substances} />
-                </div>}
-
-                {projectInfo.labelData.containsNanoMaterials &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Contains_nano_materials} />
-                </div>}
-
-                {projectInfo.labelData.multipleUsesOnSinglePatient &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Single_patient_multiple_use} />
-                </div>}
-
-                {/* Diagnostic IVD */}
-
-                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
-                projectInfo.labelData.isControlMaterial &&
-                    <div className='symbol-content-item'>
-                    <img className='symbol-img' src={control} />
-                    </div>
+                      </div>}
+  
+                    {projectInfo.labelData.modificationToPackaging &&
+                      <div className='symbol-content-item symbol-content-item-with-text'>
+                        <img className='symbol-img sm-img' src={Repackaging} />
+                        <div>
+                          {projectInfo.labelData.repackagingEntityName &&
+                            <p>{projectInfo.labelData.repackagingEntityName}</p>}
+                          {projectInfo.labelData.repackagingEntityAddress &&
+                            <p>{projectInfo.labelData.repackagingEntityAddress}</p>}
+                        </div>
+                      </div>}
+                  {projectInfo.labelData.associatedWithIndividualPatient &&
+                    (projectInfo.labelData.patientName || projectInfo.labelData.patientNumber) &&
+                    <div className='symbol-content-item symbol-content-item-with-text'>
+                      <img className='symbol-img' src={patient_identification} />
+                      <div>
+                        <p>{projectInfo.labelData.patientName}</p>
+                        <p>{projectInfo.labelData.patientNumber}</p>
+                      </div>
+                    </div>}
+  
+  
+              {/* sterility */}
+                {projectInfo.labelData.isSterile ?
+                  (projectInfo.labelData.hasSterilizationProcess &&
+  
+                  (projectInfo.labelData.hasVaporizedHydrogenPeroxide  == true
+                    || projectInfo.labelData.hasAsepticProcessing  == true
+                    || projectInfo.labelData.hasEthyleneOxide  == true
+                    || projectInfo.labelData.hasIrradiation  == true
+                    || projectInfo.labelData.hasSteamOrDryHeat  == true
+                  ) 
+                  ?null
+                  :<div className='symbol-content-item sterileSymbol'>
+                    <img className='symbol-img sterileSymbol-img' src={sterileSymbol} />
+                  </div>)
+                : null}
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess &&
+  
+                      projectInfo.labelData.hasAsepticProcessing &&
+                        <div className='symbol-content-item sterileSymbol'>
+                          <img className='symbol-img sterileSymbol-img' src={sterile_ASymbol} />
+                        </div>
                 }
-
-                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
-                projectInfo.labelData.isControlMaterialForNegativeRange &&
-                    <div className='symbol-content-item'>
-                    <img className='symbol-img' src={control_negative} />
-                    </div>
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess &&
+  
+                      projectInfo.labelData.hasEthyleneOxide &&
+                        <div className='symbol-content-item sterileSymbol'>
+                          <img className='symbol-img sterileSymbol-img' src={Sterile_EOSymbol} />
+                        </div>
                 }
-
-                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
-                projectInfo.labelData.isControlMaterialForPositiveRange &&
-                    <div className='symbol-content-item'>
-                    <img className='symbol-img' src={control_positive} />
-                    </div>
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess &&
+  
+                      projectInfo.labelData.hasIrradiation &&
+                        <div className='symbol-content-item sterileSymbol'>
+                          <img className='symbol-img sterileSymbol-img' src={Sterile_RSymbol} />
+                        </div>
                 }
-
-                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
-                projectInfo.labelData.isIVDForPerformanceEvaluation &&
-                    <div className='symbol-content-item'>
-                    <img className='symbol-img' src={for_IVD_performance_evaluation_only} />
-                    </div>
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess &&
+  
+                      projectInfo.labelData.hasSteamOrDryHeat &&
+                        <div className='symbol-content-item sterileSymbol'>
+                          <img className='symbol-img sterileSymbol-img' src={Sterilized_usings_team_or_dry_heatSymbol} />
+                        </div>
                 }
-
-                {projectInfo.labelData.isMedicalDeviceForSampleCollection &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={sampling_site} />
+  
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess &&
+  
+                      projectInfo.labelData.isIntendedToBeResterilized &&
+                          <div className='symbol-content-item'>
+                            <img className='symbol-img' src={do_not_resterilizeSymbol} />
+                          </div>
+                }
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess == false &&
+  
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={nonSterileSymbol} />
+                  </div>
+                }
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess == false &&
+  
+                    projectInfo.labelData.canBeUsedIfDamaged &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={package_is_damageSymbol} />
+                  </div>}
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess == false &&
+  
+                    projectInfo.labelData.hasSterileFluidPath &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={sterile_fluid_pathSymbol} />
                 </div>}
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess == false &&
+              
+                  projectInfo.labelData.hasVaporizedHydrogenPeroxide &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={VaporizedHydrogenPeroxideSymbol} />
+                    </div>}
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess == false &&
+                  
+                    projectInfo.labelData.hasSingleSterileBarrierSystem &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={single_S_B_S} />
+                    </div>}
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess == false &&
+                  
+                    projectInfo.labelData.hasTwoSterileBarrierSystems &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={double_S_B_S} />
+                    </div>}
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess == false &&
+                  
+                    projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveInside &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={double_S_B_S_inside} />
+                    </div>}
+  
+                {projectInfo.labelData.isSterile == true &&
+                  projectInfo.labelData.hasSterilizationProcess == false &&
+                  
+                    projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveOutside &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={double_S_B_S_outside} />
+                    </div>}
+  
 
-                {projectInfo.labelData.hasFluidPath &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={fluid_path} />
-                </div>}
-
-                {projectInfo.labelData.isNonPyrogenic &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Non_pyrogenic} />
-                </div>}
-
-                {projectInfo.labelData.hasOneWayValve &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={one_way_valve} />
-                </div>}
-
-                {projectInfo.labelData.numberOfDropsPerMilliliter !== "Not applicable" &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Drops_per_millilitre} />
-                    <div>
-                        <p>{projectInfo.labelData.numberOfDropsPerMilliliter}</p>
-                    </div>
-                </div>}
-
-                {projectInfo.labelData.liquidFilterPoreSize !== "Not applicable" &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Liquid_filter_with_pore_size} />
-                    <div>
-                        <p>{projectInfo.labelData.liquidFilterPoreSize}</p>
-                    </div>
-                </div>}
-        </div>
-        )
-    }
-    return ;
-    }
-
-    const projectOwnerInfo = () => {
-    if(projectInfo && projectInfo.labelData){
-        return (
-        <div className='project-owner-info'>
-
-            <div className='symbol-content-item' style={{width:''}}>
-                <img className='symbol-img' src={Manufacturer} />
-                <div className=''>
-                    <p>{projectInfo.labelData.manufacturerName}</p>
-                    <p>{projectInfo.labelData.manufacturerAddress}</p>
-                </div>
-                </div>
-
-            {projectInfo.labelData.hasDistributor &&
+  
+                    {/* storage */}
+  
+                  {projectInfo.labelData.requiresCarefulHandling &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={fragile_handle_with_care} />
+                    </div>}
+  
+                  {projectInfo.labelData.requiresProtectionFromLight &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={keep_away_from_sunlight} />
+                    </div>}
+  
+                  {projectInfo.labelData.requiresProtectionFromHeatAndRadioactiveSources &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={protect_from_heat_and_radioactive_soures} />
+                    </div>}
+  
+                  {projectInfo.labelData.requiresProtectionFromMoisture &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={keep_dry} />
+                    </div>}
+  
+                  {projectInfo.labelData.hasLowerLimitOfTemperature &&
+                    !projectInfo.labelData.hasUpperLimitOfTemperature &&
+                    <div className='symbol-content-item symbol-content-item-range'>
+                        <p className='min-temperature p-1 m-1'>{projectInfo.labelData.lowerTemperatureLimit}</p>
+                      <img className='symbol-img' src={lower_limit_temperaure} />
+                    </div>}
+  
+                  {projectInfo.labelData.hasUpperLimitOfTemperature &&
+                    !projectInfo.labelData.hasLowerLimitOfTemperature &&
+                    <div className='symbol-content-item symbol-content-item-range'>
+                      <img className='symbol-img p-1 m-1' src={upper_limit_temperaure} />
+                        <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
+                    </div>}
+  
+                  {projectInfo.labelData.hasUpperLimitOfTemperature &&
+                    projectInfo.labelData.hasLowerLimitOfTemperature &&
+                    <div className='symbol-content-item symbol-content-item-range'>
+                        <p className='min-temperature' >{projectInfo.labelData.lowerTemperatureLimit}</p>
+                      <img className='symbol-img p-1 m-1'  src={temperature} />
+                        <p className='max-temperature' >{projectInfo.labelData.upperTemperatureLimit}</p>
+                    </div>}
+  
+                  {projectInfo.labelData.hasHumidityRange &&
+                    <div className='symbol-content-item symbol-content-item-range'>
+                        <p className='min mt-1' >{projectInfo.labelData.humidityMin}%</p>
+                      <img className='symbol-img p' src={HumidityLimit} />
+                        <p className='max ' >{projectInfo.labelData.humidityMax}%</p>
+                    </div>}
+  
+                  {projectInfo.labelData.hasAtmosphericPressureRange &&
+                    <div className='symbol-content-item symbol-content-item-range'>
+                        <p className='min' >{projectInfo.labelData.atmosphericPressureMin}</p>
+                      <img className='symbol-img' src={AtmPressureLimit} />
+                        <p className='max' >{projectInfo.labelData.atmosphericPressureMax}</p>
+                    </div>}
+                  
+                    {/* safe use */}
+                  
+                  {projectInfo.labelData.hasBiologicalRisks &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={biological_risks} />
+                    </div>}
+  
+                  {projectInfo.labelData.isIntendedForSingleUse &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={do_not_re_use} />
+                    </div>}
+  
+                  {projectInfo.labelData.needCaution &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={caution} />
+                    </div>}
+  
+                  {projectInfo.labelData.containsRubberLatex &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={contains_or_presence_of_natural_rubber_latex} />
+                    </div>}
+  
+                  {projectInfo.labelData.containsBloodDerivatives &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={contains_human_blood} />
+                    </div>}
+  
+                  {projectInfo.labelData.containsMedicinalSubstance &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Contains_a_medicinal_substance} />
+                    </div>}
+  
+                  {projectInfo.labelData.containsAnimalOriginMaterial &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Contains_biological_material_of_animal_origin} />
+                    </div>}
+  
+                  {projectInfo.labelData.containsHumanOriginMaterial &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Contains_human_origin} />
+                    </div>}
+  
+                  {projectInfo.labelData.containsHazardousSubstances &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Contains_hazardous_substances} />
+                    </div>}
+  
+                  {projectInfo.labelData.containsNanoMaterials &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Contains_nano_materials} />
+                    </div>}
+  
+                  {projectInfo.labelData.multipleUsesOnSinglePatient &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Single_patient_multiple_use} />
+                    </div>}
+  
+                    {/* Diagnostic IVD */}
+  
+                  {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                    projectInfo.labelData.isControlMaterial &&
+                      <div className='symbol-content-item'>
+                        <img className='symbol-img sterileSymbol-img' src={control} />
+                      </div>
+                  }
+  
+                  {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                    projectInfo.labelData.isControlMaterialForNegativeRange &&
+                      <div className='symbol-content-item'>
+                        <img className='symbol-img sterileSymbol-img' src={control_negative} />
+                      </div>
+                  }
+  
+                  {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                    projectInfo.labelData.isControlMaterialForPositiveRange &&
+                      <div className='symbol-content-item'>
+                        <img className='symbol-img sterileSymbol-img' src={control_positive} />
+                      </div>
+                  }
+  
+                  {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                    projectInfo.labelData.isIVDForPerformanceEvaluation &&
+                      <div className='symbol-content-item'>
+                        <img className='symbol-img' src={for_IVD_performance_evaluation_only} />
+                      </div>
+                  }
+  
+                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                      projectInfo.labelData.hasSpecificNumberOfTests &&
+                        <div className='symbol-content-item' style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:"column"}}>
+                            <img style={{width:'80%', height:'40px', marginBottom:'-0px', marginTop:'5px'}} className='symbol-img' src={contains_suffient_for_n_tests} />
+                            {projectInfo.labelData.numberOfTests && 
+                              <div className=''>
+                                <p style={{marginTop:"0px", marginLeft:'-5px'}}>{projectInfo.labelData.numberOfTests}</p>
+                              </div>}
+                        </div>}
+  
+                  {projectInfo.labelData.isMedicalDeviceForSampleCollection &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={sampling_site} />
+                    </div>}
+  
+                  {projectInfo.labelData.hasFluidPath &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={fluid_path} />
+                    </div>}
+  
+                  {projectInfo.labelData.isNonPyrogenic &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Non_pyrogenic} />
+                    </div>}
+  
+                  {projectInfo.labelData.hasOneWayValve &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={one_way_valve} />
+                    </div>}
+  
+                    {projectInfo.labelData.numberOfDropsPerMilliliter !== "Not applicable" &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Drops_per_millilitre} />
+                        <div>
+                          <p>{projectInfo.labelData.numberOfDropsPerMilliliter}</p>
+                        </div>
+                    </div>}
+  
+                  {projectInfo.labelData.liquidFilterPoreSize !== "Not applicable" &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Liquid_filter_with_pore_size} />
+                        <div>
+                          <p>{projectInfo.labelData.liquidFilterPoreSize}</p>
+                        </div>
+                    </div>}
+                    {projectInfo.labelData.needInstructionsForUse &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={consult_instruction_for_use} />
+                      {projectInfo.labelData.eIFULink &&
+                        <div className=''>
+                          <p>{projectInfo.labelData.eIFULink}</p>
+                        </div>
+                      }
+                    </div>}
+            </div>
+          )
+        }
+        return ;
+      }
+      const projectOwnerInfo = () => {
+        if(projectInfo && projectInfo.labelData){
+          return (
+            <div className='project-owner-info'>
                 <div className='symbol-content-item' style={{width:''}}>
-                    <img className='symbol-img' src={Distributor} />
+                    <img className='symbol-img' src={Manufacturer} />
                     <div className=''>
-                    <p>{projectInfo.labelData.distributorAddress}</p>
-                    <p>{projectInfo.labelData.distributorAddress}</p> 
+                      <p>{projectInfo?.labelData?.manufacturerName}</p>
+                      <p>{projectInfo?.labelData?.manufacturerAddress}</p>
+                      <p>{projectInfo?.labelData?.manufacturerCity}</p>
+                      <p>{projectInfo?.labelData?.manufacturerCountry}</p>
                     </div>
-                </div>
-                }
-            {projectInfo.labelData.useByDate &&
-                <div className='symbol-content-item'>
-                <img className='symbol-img' src={Use_by_date} />
-                <div className=''>
-                    <p>{dynamicData.expirationDate ? dynamicData.expirationDate : projectInfo.labelData.useByDate}</p>
-                </div>
-                </div>}
-
-            {projectInfo.labelData.dateOfManufacture &&
-                <div className='symbol-content-item'>
-                <img className='symbol-img' src={Date_of_manufactureSymbol} />
-                <div className=''>
-                    <p>{ dynamicData.manufacturerDate ? dynamicData.manufacturerDate : projectInfo.labelData.dateOfManufacture}</p>
-                </div>
-                </div>}
-
-            {projectInfo.labelData.LOTNumber &&
-                <div className='symbol-content-item'>
-                <img className='symbol-img' src={Batch_codeSymbol} />
-                <div className=''>
-                    <p>{dynamicData.LotNumber ? dynamicData.LotNumber : projectInfo.labelData.LOTNumber}</p>
-                </div>
-                </div>}
-
-            {projectInfo.labelData.serialNumber &&
-                <div className='symbol-content-item'>
-                <img className='symbol-img' src={Serial_numberSymbol} />
-                <div className=''>
-                    <p>{dynamicData.serialNumber ? dynamicData.serialNumber :  projectInfo.labelData.serialNumber}</p>
-                </div>
-                </div>}
-
-            {(projectInfo.labelData.catalogueNumber || projectInfo.labelData.modelNumber)&&
+                  </div>
+  
+                {projectInfo.labelData.hasDistributor &&
+                    <div className='symbol-content-item' style={{width:''}}>
+                      <img className='symbol-img' src={Distributor} />
+                      <div className=''>
+                        <p>{projectInfo.labelData.distributorAddress}</p>
+                        <p>{projectInfo.labelData.distributorAddress}</p> 
+                      </div>
+                    </div>
+                  }
+                {projectInfo.labelData.useByDate &&
+                  <div className='symbol-content-item'>
+                    
+                    <img className='symbol-img' src={Use_by_date} /> 
+                    <div className=''>
+                      <p>{useByDateDataLabel}</p>
+                    </div>
+                  </div>}
+  
+                {projectInfo.labelData.haDateOfManufacture &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Date_of_manufactureSymbol} />
+                    <div className=''>
+                      <p>{dynamicData.manufacturerDate ? dynamicData.manufacturerDate : projectInfo.labelData.dateOfManufacture}</p>
+                    </div>
+                  </div>}
+  
+                {projectInfo.labelData.hasLotNumber &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Batch_codeSymbol} />
+                    <div className=''>
+                      <p>{projectInfo.labelData && projectInfo.labelData.hasLotNumber && dynamicData.LotNumber ? dynamicData.LotNumber : projectInfo.labelData.LOTNumber}</p>
+                    </div>
+                  </div>}
+  
+                {projectInfo.labelData.haSerialNumber &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Serial_numberSymbol} />
+                    <div className=''>
+                      <p>{projectInfo.labelData && projectInfo.labelData.haSerialNumber && dynamicData.serialNumber ? dynamicData.serialNumber : projectInfo.labelData.serialNumber}</p>
+                    </div>
+                  </div>}
+  
+                {(projectInfo.labelData.catalogueNumber || projectInfo.labelData.modelNumber)&&
+                      <div className='symbol-content-item'>
+                        <img className='symbol-img' src={catalogueNumberSymbol} />
+                        <div className=''>
+                          <p>{projectInfo.labelData.catalogueNumber}</p>
+                        </div>
+                      </div>}
+  
+                {projectInfo.labelData.modelNumber &&
+                      <div className='symbol-content-item'>
+                        <img className='symbol-img' src={modelNumberSymbol} />
+                        <div className=''>
+                          <p>{projectInfo.labelData.modelNumber}</p>
+                        </div>
+                      </div>}
+                  
+  
+                  {/* if outside of EUROPE */}
+                {projectInfo.labelData.isOutsideEU &&
                     <div className='symbol-content-item'>
-                    <img className='symbol-img' src={catalogueNumberSymbol} />
-                    <div className=''>
-                        <p>{projectInfo.labelData.catalogueNumber}</p>
+                      <img className='symbol-img Authorized_Representative' src={Authorized_Representative} />
+                      <div className=''>
+                        <p>{projectInfo.labelData.europeanAuthorizedRepName}</p>
+                        <p>{projectInfo.labelData.europeanAuthorizedRepAddress}</p> 
+                      </div>
                     </div>
-                    </div>}
-
-            {projectInfo.labelData.modelNumber &&
+                  }
+                {projectInfo.labelData.isOutsideEU &&
                     <div className='symbol-content-item'>
-                    <img className='symbol-img' src={modelNumberSymbol} />
-                    <div className=''>
-                        <p>{projectInfo.labelData.modelNumber}</p>
+                      <img className='symbol-img' src={Importer} />
+                      <div className=''>
+                        <p>{projectInfo.labelData.importerName}</p>
+                        <p>{projectInfo.labelData.importerAddress}</p> 
+                      </div>
                     </div>
-                    </div>}
-                
-
-                {/* if outside of EUROPE */}
-            {projectInfo.labelData.isOutsideEU &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Authorized_Representative} />
-                    <div className=''>
-                    <p>{projectInfo.labelData.europeanAuthorizedRepName}</p>
-                    <p>{projectInfo.labelData.europeanAuthorizedRepAddress}</p> 
-                    </div>
-                </div>
-                }
-            {projectInfo.labelData.isOutsideEU &&
-                <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Importer} />
-                    <div className=''>
-                    <p>{projectInfo.labelData.importerName}</p>
-                    <p>{projectInfo.labelData.importerAddress}</p> 
-                    </div>
-                </div>
-                }
-
-
-        </div>
-        )
-    }
-    }
+                  }
+            </div>
+          )
+        }
+      }
     
     const formatDate = (createdAt) => {
         const options = {
@@ -1106,9 +1252,9 @@ useEffect(() => {
           formData.append('projectId', projectId);
 
       
-          // Make a POST request to the backend to save the SVG document
+          // Make a POST request to the backend to save the image document
           await dispatch(saveDocumentAction(formData, token))
-        //   download(blob, 'downloaded-image.png'); // You can change the filename as needed
+          // download(blob, 'downloaded-image.png'); // You can change the filename as needed
         } catch (error) {
           console.error('Error:', error);
         }
@@ -1248,28 +1394,42 @@ useEffect(() => {
                                             {projectInfo && 
                                                 projectInfo.labelData && 
                                                 projectInfo.labelData.clinicalInvestigationOnly &&
-                                                <p>exclusively for clinical investigation</p>}
+                                                <p className='mx-4'>exclusively for clinical investigation</p>}
                                             </div>
                                             </div>
-                                            <div className='template-1-content-mid-second-item'>
+                                            <div className='template-1-content-mid-second-item' >
                                             {projectOwnerInfo()}
                                             </div>
                                         </div>
-                                        <div className='template-1-content-bottom'>
+                                        <div className='template-1-content-bottom' >
                                             <div className='rest-of-the symbols'>
                                             {symbolsWithTextBehind()}
                                             </div>
-                                            <div className="code-bar">
+                                          <div className="code-bar">
                                             {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' && handleUDI()}
                                             {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
                                                 imageSrc &&
-                                                <div style={{display:'flex', alignItems:'center', marginTop:'1%'}}>
+                                                <div style={{display:'flex', alignItems:'center', marginTop:'2%'}}>
                                                 <img style={{width:'100px', height:'100px'}} src={imageSrc} alt={`data matrix from`} />
                                                 <div style={{fontSize:'12px'}}>
-                                                    <p style={{margin:'2px 10px'}}>{projectInfo.labelData && dynamicData.manufacturerDate ? dynamicData.manufacturerDate : projectInfo.labelData.dateOfManufacture}</p>
-                                                    <p style={{margin:'2px 10px'}}>{projectInfo.labelData && dynamicData.expirationDate ? dynamicData.expirationDate : projectInfo.labelData.useByDate}</p>
-                                                    <p style={{margin:'2px 10px'}}>{projectInfo.labelData && dynamicData.LotNumber ? dynamicData.LotNumber : projectInfo.labelData.LOTNumber}</p>
-                                                    <p style={{margin:'2px 10px'}}>{projectInfo.labelData &&  dynamicData.serialNumber ? dynamicData.serialNumber :  projectInfo.labelData.serialNumber}</p>
+                                                    {projectInfo.labelData && projectInfo.labelData.haDateOfManufacture && 
+                                                      <p style={{margin:'2px 10px'}}>
+                                                        {dynamicData.manufacturerDate ? dynamicData.manufacturerDate : projectInfo.labelData.dateOfManufacture}
+                                                      </p>}
+                                                    {projectInfo.labelData.useByDate &&
+                                                    <p style={{margin:'2px 10px'}}>
+                                                          <p style={{margin:'0px'}}>
+                                                           {useByDateDataLabel}</p>
+                                                      </p>
+                                                      }
+                                                    {projectInfo.labelData && projectInfo.labelData.hasLotNumber &&
+                                                      <p style={{margin:'2px 10px'}}>
+                                                      { dynamicData.LotNumber ? dynamicData.LotNumber : projectInfo.labelData.LOTNumber}
+                                                      </p>}
+                                                    {projectInfo.labelData && projectInfo.labelData.haSerialNumber &&
+                                                      <p style={{margin:'2px 10px'}}>
+                                                      { dynamicData.serialNumber ? dynamicData.serialNumber : projectInfo.labelData.serialNumber}
+                                                      </p>}
                                                 </div>
                                                 </div>}
                                             </div>
@@ -1284,27 +1444,27 @@ useEffect(() => {
                         <div className='' style={{flex:'0.4'}}>
                             <h5>Dynamic Data :</h5>
                                 <form  style={{backgroundColor:'#fff', padding:'10px', borderRadius:'4px', border:'1px solid lightGray'}}>
-                                  {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.LOTNumber && 
+                                  {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.hasLotNumber && projectInfo?.labelData?.LOTNumber && 
                                   <div className='form-group mb-3' style={{display:'flex', flexDirection:'column'}}>
                                     <label style={{fontWeight:'500'}}>Lot Number:</label>
                                     <input placeholder='Lot Number' value={dynamicData.LotNumber} onChange={(e) => setDynamicData({...dynamicData, LotNumber: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
                                   </div>}
 
-                                  {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.useByDate && 
+                                  {projectInfo && projectInfo?.labelData && !projectInfo?.labelData?.haDateOfManufacture && projectInfo?.labelData?.useByDate && 
                                   <div className='form-group mb-3' style={{display:'flex', flexDirection:'column'}}>
                                     <label style={{fontWeight:'500'}}>Expiration Date:</label>
-                                    <input placeholder='mm-dd-yyyy' value={dynamicData.expirationDate} onChange={(e) => setDynamicData({...dynamicData, expirationDate: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
+                                    <input placeholder='yyyy-mm-dd' value={dynamicData.expirationDate} onChange={(e) => setDynamicData({...dynamicData, expirationDate: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
                                   </div>}
                                   
-                                  {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.serialNumber && 
+                                  {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.haSerialNumber && projectInfo?.labelData?.serialNumber && 
                                   <div className='form-group mb-3' style={{display:'flex', flexDirection:'column'}}>
                                     <label style={{fontWeight:'500'}}>Serial Number:</label>
                                     <input placeholder='Serial Number' value={dynamicData.serialNumber} onChange={(e) => setDynamicData({...dynamicData, serialNumber: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
                                   </div>}
-                                 {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.dateOfManufacture && 
+                                 {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.haDateOfManufacture && projectInfo?.labelData?.dateOfManufacture && 
                                   <div className='form-group mb-3' style={{display:'flex', flexDirection:'column'}}>
-                                    <label style={{fontWeight:'500'}}>Manufacturer Date:</label>
-                                    <input placeholder='mm-dd-yyyy' value={dynamicData.manufacturerDate} onChange={(e) => setDynamicData({...dynamicData, manufacturerDate: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
+                                    <label style={{fontWeight:'500'}}>Manufacturer Date: {dateValidation ? '' : <p style={{color:'red'}}>Date not Valid</p>}</label>
+                                    <input placeholder='yyyy-mm-dd' value={dynamicData.manufacturerDate} onChange={(e) => handleManufacturerDateChange(e)} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
                                   </div>}
                             
                                 </form>

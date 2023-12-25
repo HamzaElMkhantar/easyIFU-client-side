@@ -1,4 +1,8 @@
-import {GET_COMPANY_FAILED, 
+import {DASHBOARD_COMPANY_FAILED, 
+        DASHBOARD_COMPANY_REQUEST, 
+        DASHBOARD_COMPANY_RESET, 
+        DASHBOARD_COMPANY_SUCCESS, 
+        GET_COMPANY_FAILED, 
         GET_COMPANY_REQUEST, 
         GET_COMPANY_RESET, 
         GET_COMPANY_SUCCESS, 
@@ -21,6 +25,14 @@ const companyInfo = {
     companyFail : null,
     companyInfo: null
 }
+
+const dashboardCompanyInfo = {
+    dashboardCompanyRequest : false,
+    dashboardCompanySuccess :  false,
+    dashboardCompanyFail : null,
+    dashboardCompanyData: null
+}
+
 const updatedCompanyInfo = {
     updatedCompanyRequest : false,
     updatedCompanySuccess : false,
@@ -71,6 +83,37 @@ export const getCompanyInfoReducer = (state = companyInfo, action) => {
             return state ;
     }
 }
+export const dashboardCompanyInfoReducer = (state = dashboardCompanyInfo, action) => {
+
+    switch(action.type){
+        case DASHBOARD_COMPANY_REQUEST:
+            return {
+                ...state,
+                dashboardCompanyRequest : true,
+                dashboardCompanySuccess :  false,
+                dashboardCompanyFail : null,
+            } ;
+        case DASHBOARD_COMPANY_SUCCESS :
+            return {
+                ...state,
+                dashboardCompanyRequest : false,
+                dashboardCompanySuccess : true,
+                dashboardCompanyData: action.payload
+            } ;
+        case DASHBOARD_COMPANY_FAILED :
+            return {
+                ...state,
+                dashboardCompanyFail : action.payload,
+                dashboardCompanySuccess :  false,
+                dashboardCompanyRequest : false
+            } ;
+        case DASHBOARD_COMPANY_RESET :
+            return dashboardCompanyInfo;
+        default :
+            return state ;
+    }
+}
+
 export const updateCompanyInfoReducer = (state = updatedCompanyInfo, action) => {
 
     switch(action.type){

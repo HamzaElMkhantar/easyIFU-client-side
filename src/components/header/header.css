@@ -78,12 +78,12 @@
 
 #wrapper .sidebar-nav .navList a{
   color: #ffffffb2;
-  padding: 10px 0px;
+  padding: 5px 0px;
   border-radius: 10px;
   /* height: 70% ; */
   width: 100%;
-  margin:2px 0;
-  font-size: 18px;
+  margin:0px 0;
+  font-size: 16px !important;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -113,7 +113,6 @@
   font-size: 24px;
   color: rgb(233, 233, 233);
 }
-
 
 /* togglee */
 

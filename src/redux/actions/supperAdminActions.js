@@ -39,6 +39,10 @@ import { COMPANIES_SUPPER_ADMIN_FAILED,
         GET_USER_SUPPER_ADMIN_REQUEST,
         GET_USER_SUPPER_ADMIN_RESET,
         GET_USER_SUPPER_ADMIN_SUCCESS,
+        PERMISSION_COMPANY_SUPPER_ADMIN_FAILED,
+        PERMISSION_COMPANY_SUPPER_ADMIN_REQUEST,
+        PERMISSION_COMPANY_SUPPER_ADMIN_RESET,
+        PERMISSION_COMPANY_SUPPER_ADMIN_SUCCESS,
         PROJECTS_SUPPER_ADMIN_FAILED,
         PROJECTS_SUPPER_ADMIN_REQUEST,
         PROJECTS_SUPPER_ADMIN_RESET,
@@ -295,6 +299,43 @@ export const companiesAction = (token) => async (dispatch) => {
         setTimeout(() =>{
           dispatch({ 
             type: GET_COMPANY_SUPPER_ADMIN_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const changeCompanyPermissionAction = (companyId, token) => async (dispatch) => {
+    try {
+      dispatch({ 
+          type: PERMISSION_COMPANY_SUPPER_ADMIN_REQUEST 
+      });
+  
+      const config = {
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      }
+  
+          const {data} = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/supper-admin/company-permission/${companyId}`, config);
+  
+      dispatch({ 
+          type: PERMISSION_COMPANY_SUPPER_ADMIN_SUCCESS, 
+          payload: data 
+      });
+      setTimeout(() =>{
+        dispatch({ 
+          type: PERMISSION_COMPANY_SUPPER_ADMIN_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: PERMISSION_COMPANY_SUPPER_ADMIN_FAILED, 
+            payload: error?.response?.data 
+          });
+        setTimeout(() =>{
+          dispatch({ 
+            type: PERMISSION_COMPANY_SUPPER_ADMIN_RESET
           });
         }, 1500)
       }

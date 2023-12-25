@@ -578,7 +578,7 @@ const OthersComponent = () => {
         )}
 
           <div className="form-group">
-            <label>- Quantity:</label>
+            <label>- Quantity of product per packaging:</label>
             <input
               type="number"
               className="form-control"

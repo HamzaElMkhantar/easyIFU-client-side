@@ -58,6 +58,14 @@ import EasyIFULogin from './pages/easyIFU_auth/EasyIFULogin'
 import LabelSizes from './pages/DashboardPages/LabelSizes';
 import UsersContacts from './pages/easyIFU_Dashboard/UsersContacts';
 import ContactDetails from './pages/easyIFU_Dashboard/ContactDetails';
+import UpdateManufacturerInfoComponent from './pages/DashboardPages/UpdateManufacturerInfoComponent';
+import UpdateProductInfoComponent from './pages/DashboardPages/UpdateProductInfoComponent';
+import UpdateSterilityComponent from './pages/DashboardPages/UpdateSterilityComponent';
+import UpdateStorageComponent from './pages/DashboardPages/UpdateStorageComponent';
+import UpdateSafeUseComponent from './pages/DashboardPages/UpdateSafeUseComponent';
+import UpdateIVDDiagnosticComponent from './pages/DashboardPages/UpdateIVDDiagnosticComponent';
+import UpdateTransfusionInfusionComponent from './pages/DashboardPages/UpdateTransfusionInfusionComponent';
+import UpdateOthersComponent from './pages/DashboardPages/UpdateOthersComponent';
 // import jwtDecode from 'jwt-decode';
 
 function App() {
@@ -208,10 +216,10 @@ console.log(decodedToken?.userInfo?.isSubscripted)
 
         <Route element={<RequireAuth />}>
           {/* <Route element={<IsVerified /> }> */}
-            {/* <Route element={<SubscriptionChecker  /> }> */}
+            <Route element={<SubscriptionChecker  /> }>
 
               {/* routes for creator */}
-              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Creator") &&
+              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
                 <>
                   <Route path='/dashboard/create-project/step1/:projectId' element={<ManufacturerInfoComponent />} />
                   <Route path='/dashboard/create-project/step2/:projectId' element={<ProductInfoComponent />} />
@@ -221,33 +229,49 @@ console.log(decodedToken?.userInfo?.isSubscripted)
                   <Route path='/dashboard/create-project/step6/:projectId' element={<IVDDiagnosticComponent />} />
                   <Route path='/dashboard/create-project/step7/:projectId' element={<TransfusionInfusionComponent />} />
                   <Route path='/dashboard/create-project/step8/:projectId' element={<OthersComponent />} />
+
                   <Route path='/dashboard/project-information/:projectId' element={<LabelInformation />} />
                   <Route path='/dashboard/project/review-creator/:projectId' element={<CreatorReview />} />
+
+                  {/* update projects */}
+
+                  {/* isUpdate: true, */}
+                  {/* toast.success(`updated success`) */}
+
+                  <Route path='/dashboard/update-project/step1/:projectId' element={<UpdateManufacturerInfoComponent />} />
+                  <Route path='/dashboard/update-project/step2/:projectId' element={<UpdateProductInfoComponent />} />
+                  <Route path='/dashboard/update-project/step3/:projectId' element={<UpdateSterilityComponent />} />
+                  <Route path='/dashboard/update-project/step4/:projectId' element={<UpdateStorageComponent />} />
+                  <Route path='/dashboard/update-project/step5/:projectId' element={<UpdateSafeUseComponent />} />
+                  <Route path='/dashboard/update-project/step6/:projectId' element={<UpdateIVDDiagnosticComponent />} />
+                  <Route path='/dashboard/update-project/step7/:projectId' element={<UpdateTransfusionInfusionComponent />} />
+                  <Route path='/dashboard/update-project/step8/:projectId' element={<UpdateOthersComponent />} />
+                  {/* 
+                   */}
               </>}
 
               {/* routes for Approver */}
-              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Approver") &&
+              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Approver")) &&
                 <>
                 <Route path='/dashboard/project/review-approver/:projectId' element={<ApproverReview />} />
               </>}
 
               {/* routes for Release */}
-              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" || decodedToken?.userInfo?.role === "Release") &&
+              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Release")) &&
                 <>
-                <Route path='/dashboard/project/review-release/:projectId' element={<ReleaseReview />} />
-                <Route path='/dashboard/documents' element={<Documents />} />
-                <Route path='/dashboard/document/:documentId/:size' element={<DocumentInformation />} />
-                <Route path='/dashboard/document-sizes/:documentId' element={<LabelSizes />} />
-                <Route path='/dashboard/project-released/:projectId' element={<ReleasedProject />} />
-
-              </>}
+                  <Route path='/dashboard/project/review-release/:projectId' element={<ReleaseReview />} />
+                  <Route path='/dashboard/documents' element={<Documents />} />
+                  <Route path='/dashboard/document/:documentId/:size' element={<DocumentInformation />} />
+                  <Route path='/dashboard/document-sizes/:documentId' element={<LabelSizes />} />
+                  <Route path='/dashboard/project-released/:projectId' element={<ReleasedProject />} />
+                </>}
 
               {/* this routes for admin users */}
-              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin") &&
+              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin")) &&
                 <>
-                  <Route path='/dashboard/user/:userId' element={<ManageUser />} />
-                  <Route path='/dashboard/user/create' element={<CreateUser />} />
-              </>}
+                    <Route path='/dashboard/user/:userId' element={<ManageUser />} />
+                    <Route path='/dashboard/user/create' element={<CreateUser />} />
+                </>}
            
                 <Route path='/dashboard' element={<Dashboard />} />
                 <Route path='/dashboard/project' element={<Project />} />
@@ -260,10 +284,10 @@ console.log(decodedToken?.userInfo?.isSubscripted)
                 <Route path='/dashboard/project/released' element={<ReleasedProjects />} />
 
             {/* </Route> */}
-          {/* </Route> */}
+          </Route>
 
             {/* easyIFU Admin routes */}
-            {decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.role === "superAdmin" &&
+            {decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.role.includes("superAdmin") &&
               <>
               <Route path='/eIFU-admin/companies' element={<Companies />} />
               <Route path='/eIFU-admin/projects' element={<ProjectsCompanies />} />

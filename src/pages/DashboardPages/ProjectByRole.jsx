@@ -26,6 +26,7 @@ const ProjectByRole = () => {
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
+
     
     // -- component logic --
     const token = Cookies.get("eIfu_ATK") || null;
@@ -35,6 +36,7 @@ const ProjectByRole = () => {
     const [projectsRole, setProjectsRole] = useState([])
     const {ProjectByRoleId} = useSelector(state => state)
     const {roleProjectRequest, roleProjectSuccess, roleProjectFail, roleProjects} = ProjectByRoleId;
+    console.log(roleProjects)
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -110,10 +112,10 @@ const ProjectByRole = () => {
                                 ? item.projectDescription.substring(0, 20) + '...' 
                                 : item.projectDescription}</td>
                         <td ><Link to={token && decodedToken && decodedToken.userInfo &&
-                                (decodedToken.userInfo.role == "Approver" || decodedToken.userInfo.role == "Release") &&
-                                    decodedToken.userInfo.role == "Approver" 
+                                (decodedToken.userInfo.role.includes("Approver") || decodedToken.userInfo.role.includes("Release")) &&
+                                    decodedToken.userInfo.role.includes("Approver") 
                                     ?`/dashboard/project/review-approver/${item._id}`
-                                    : decodedToken.userInfo.role == "Release" 
+                                    : decodedToken.userInfo.role.includes("Release") 
                                     ?`/dashboard/project/review-release/${item._id}`
                                     :`/dashboard/project/review-creator/${item._id}`}
                             style={{backgroundColor:'#0C458F', 

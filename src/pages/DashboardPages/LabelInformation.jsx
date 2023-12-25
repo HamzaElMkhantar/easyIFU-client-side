@@ -883,6 +883,8 @@ const LabelInformation = () => {
       return null;
     }
 
+    console.log(projectInfo)
+
     const symbolsWithImageAndParagraph = () => {
       if(projectInfo && projectInfo.labelData){
         return (
@@ -928,7 +930,6 @@ const LabelInformation = () => {
                 </div>}
 
                 {projectInfo.labelData.needInstructionsForUse &&
-                  projectInfo.labelData.eIFULink &&
                   <div className='symbol-content-item'>
                     <img className='symbol-img' src={consult_instruction_for_use} />
                     {projectInfo.labelData.eIFULink &&
@@ -982,7 +983,7 @@ const LabelInformation = () => {
                 </div>}
 
             {/* sterility */}
-              {projectInfo.labelData.isSterile == true &&
+              {projectInfo.labelData.isSterile &&
                 projectInfo.labelData.hasSterilizationProcess &&
 
                 (projectInfo.labelData.hasVaporizedHydrogenPeroxide  == true
@@ -993,37 +994,37 @@ const LabelInformation = () => {
                 ) 
                 ?null
                 :<div className='symbol-content-item sterileSymbol'>
-                  <img className='symbol-img sterileSymbol-img' src={sterileSymbol} />
+                  <img className='symbol-img sterileSymbol-img sm-img' src={sterileSymbol} />
                 </div>
               }
 
-              {projectInfo.labelData.isSterile == true &&
+              {projectInfo.labelData.isSterile &&
                 projectInfo.labelData.hasSterilizationProcess &&
 
                     projectInfo.labelData.hasAsepticProcessing &&
                       <div className='symbol-content-item sterileSymbol'>
-                        <img className='symbol-img sterileSymbol-img' src={sterile_ASymbol} />
+                        <img className='symbol-img sterileSymbol-img sm-img' src={sterile_ASymbol} />
                       </div>
               }
 
-              {projectInfo.labelData.isSterile == true &&
+              {projectInfo.labelData.isSterile &&
                 projectInfo.labelData.hasSterilizationProcess &&
 
                     projectInfo.labelData.hasEthyleneOxide &&
                       <div className='symbol-content-item sterileSymbol'>
-                        <img className='symbol-img sterileSymbol-img' src={Sterile_EOSymbol} />
+                        <img className='symbol-img sterileSymbol-img sm-img' src={Sterile_EOSymbol} />
                       </div>
               }
 
-              {projectInfo.labelData.isSterile == true &&
+              {projectInfo.labelData.isSterile &&
                 projectInfo.labelData.hasSterilizationProcess &&
 
                     projectInfo.labelData.hasIrradiation &&
                       <div className='symbol-content-item sterileSymbol'>
-                        <img className='symbol-img sterileSymbol-img' src={Sterile_RSymbol} />
+                        <img className='symbol-img sterileSymbol-img sm-img' src={Sterile_RSymbol} />
                       </div>
               }
-              {projectInfo.labelData.isSterile == true &&
+              {projectInfo.labelData.isSterile &&
                 projectInfo.labelData.hasSterilizationProcess &&
 
                     projectInfo.labelData.hasSteamOrDryHeat &&
@@ -1033,7 +1034,7 @@ const LabelInformation = () => {
               }
 
 
-              {projectInfo.labelData.isSterile == true &&
+              {projectInfo.labelData.isSterile &&
                 projectInfo.labelData.hasSterilizationProcess &&
 
                     projectInfo.labelData.isIntendedToBeResterilized &&
@@ -1042,64 +1043,64 @@ const LabelInformation = () => {
                         </div>
               }
 
-              {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
+              {projectInfo.labelData.isSterile &&
+                !projectInfo.labelData.hasSterilizationProcess &&
 
                 <div className='symbol-content-item'>
                   <img className='symbol-img' src={nonSterileSymbol} />
                 </div>
               }
 
-              {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
+              {projectInfo.labelData.isSterile &&
+                !projectInfo.labelData.hasSterilizationProcess &&
 
                   projectInfo.labelData.canBeUsedIfDamaged &&
                   <div className='symbol-content-item'>
                     <img className='symbol-img' src={package_is_damageSymbol} />
                 </div>}
 
-              {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
+              {projectInfo.labelData.isSterile  &&
+                !projectInfo.labelData.hasSterilizationProcess &&
 
                   projectInfo.labelData.hasSterileFluidPath &&
                 <div className='symbol-content-item'>
                   <img className='symbol-img' src={sterile_fluid_pathSymbol} />
               </div>}
 
-              {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
+              {projectInfo.labelData.isSterile &&
+                !projectInfo.labelData.hasSterilizationProcess &&
             
                 projectInfo.labelData.hasVaporizedHydrogenPeroxide &&
                   <div className='symbol-content-item'>
                     <img className='symbol-img' src={VaporizedHydrogenPeroxideSymbol} />
                   </div>}
 
-              {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
+              {projectInfo.labelData.isSterile &&
+                !projectInfo.labelData.hasSterilizationProcess &&
                 
                   projectInfo.labelData.hasSingleSterileBarrierSystem &&
                   <div className='symbol-content-item'>
                     <img className='symbol-img' src={single_S_B_S} />
                   </div>}
 
-              {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
+              {projectInfo.labelData.isSterile &&
+                !projectInfo.labelData.hasSterilizationProcess &&
                 
                   projectInfo.labelData.hasTwoSterileBarrierSystems &&
                   <div className='symbol-content-item'>
                     <img className='symbol-img' src={double_S_B_S} />
                   </div>}
 
-              {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
+              {projectInfo.labelData.isSterile &&
+                !projectInfo.labelData.hasSterilizationProcess &&
                 
                   projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveInside &&
                   <div className='symbol-content-item'>
                     <img className='symbol-img' src={double_S_B_S_inside} />
                   </div>}
 
-              {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess == false &&
+              {projectInfo.labelData.isSterile &&
+                !projectInfo.labelData.hasSterilizationProcess &&
                 
                   projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveOutside &&
                   <div className='symbol-content-item'>
@@ -1523,13 +1524,12 @@ const LabelInformation = () => {
       return null;
     }
 
-    console.log(projectInfo)
 
     // ---- UDI handler functions ----
 
     const convertDateToYYMMDD = (inputDate) => {
       // Split the input date into day, month, and year
-      const [month, day, year] = inputDate.split('-');
+      const [year, month, day ] = inputDate.split('-');
     
       // Ensure the date components are valid
       if (day && month && year) {
@@ -1550,30 +1550,30 @@ const LabelInformation = () => {
         return null;
       }
     };
-    
+
+    //  ---- update ----
     const handleUDI = () => {
       
       if(projectInfo && projectInfo.labelData){
-        const {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc} = projectInfo.labelData
+        const {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc, haDateOfManufacture, hasLotNumber, haSerialNumber} = projectInfo.labelData
 
         let udiData = (udiDI && udiDI !== '' ? "(01)" + udiDI : '') +
-                      (dateOfManufacture && dateOfManufacture !== '' ? "(11)" + convertDateToYYMMDD(dateOfManufacture) : '') +
+                      (haDateOfManufacture && dateOfManufacture && dateOfManufacture !== '' ? "(11)" + "XXXXXXXX" : '') +
                       (useByDate && useByDate !== '' ? "(17)" + convertDateToYYMMDD(useByDate) : '') +
-                      (LOTNumber && LOTNumber !== '' ? "(10)" + LOTNumber : '') +
-                      (serialNumber && serialNumber !== '' ? "(21)" + serialNumber : '');
-
+                      (hasLotNumber &&  LOTNumber && LOTNumber !== '' ? "(10)" + "XXXXXXXX" : '') +
+                      (haSerialNumber && serialNumber && serialNumber !== '' ? "(21)" + "XXXXXXXX" : '');
         let udiPI =
-                  (dateOfManufacture && dateOfManufacture !== '' ? "(11)" + convertDateToYYMMDD(dateOfManufacture) : '') +
+                  (haDateOfManufacture && dateOfManufacture && dateOfManufacture !== '' ? "(11)" + "XXXXXXXX" : '') +
                   (useByDate && useByDate !== '' ? "(17)" + convertDateToYYMMDD(useByDate) : '') +
-                  (LOTNumber && LOTNumber !== '' ? "(10)" + LOTNumber : '') +
-                  (serialNumber && serialNumber !== '' ? "(21)" + serialNumber : '');
+                  (hasLotNumber && LOTNumber && LOTNumber !== '' ? "(10)" + "XXXXXXXX" : '') +
+                  (haSerialNumber && serialNumber && serialNumber !== '' ? "(21)" + "XXXXXXXX" : '');
 
 
         if(projectInfo.labelData.udiFormat == 'GS1'){
           if(projectInfo.labelData.udiType == 'GS1 (1D Bar Code)'){
-            JsBarcode('#gs1-barcode', aidc, { 
+            JsBarcode('#gs1-barcode', udiData, { 
               format: 'CODE128',
-              width: 1.5, // Set the width of the bars
+              width: 0.9, // Set the width of the bars
               height: 40, // Set the height of the bars
               displayValue: false, // Show the human-readable value below the barcode
               background: 'white', // Set the background color of the SVG
@@ -1592,7 +1592,7 @@ const LabelInformation = () => {
           if(projectInfo.labelData.udiType == 'GS1 (Separate Bar Code)'){
             JsBarcode('#gs1-barcode-udiDI', udiDI, { 
               format: 'CODE128',
-              width: 1.5, // Set the width of the bars
+              width: 0.9, // Set the width of the bars
               height: 40, // Set the height of the bars
               displayValue: false, // Show the human-readable value below the barcode
               background: 'white', // Set the background color of the SVG
@@ -1602,7 +1602,7 @@ const LabelInformation = () => {
 
             JsBarcode('#gs1-barcode-udiPI', udiPI, { 
               format: 'CODE128',
-              width: 1.5, // Set the width of the bars
+              width: 0.9, // Set the width of the bars
               height: 40, // Set the height of the bars
               displayValue: false, // Show the human-readable value below the barcode
               background: 'white', // Set the background color of the SVG
@@ -1652,9 +1652,9 @@ const LabelInformation = () => {
         }
 
         if(projectInfo.labelData.udiFormat == 'HIBCC'){
-          JsBarcode('#hibcc-barcode', aidc, { 
+          JsBarcode('#hibcc-barcode', udiData, { 
             format: 'CODE128',
-            width: 1.5, // Set the width of the bars
+            width: 0.9, // Set the width of the bars
             height: 40, // Set the height of the bars
             displayValue: false, // Show the human-readable value below the barcode
             background: 'white', // Set the background color of the SVG
@@ -1669,9 +1669,9 @@ const LabelInformation = () => {
             )
         }
         if(projectInfo.labelData.udiFormat == 'ICCBBA'){
-          JsBarcode('#iccbba-barcode', aidc, { 
+          JsBarcode('#iccbba-barcode', udiData, { 
             format: 'CODE128',
-            width: 1.5, // Set the width of the bars
+            width: 0.9, // Set the width of the bars
             height: 40, // Set the height of the bars
             displayValue: false, // Show the human-readable value below the barcode
             background: 'white', // Set the background color of the SVG
@@ -1686,9 +1686,9 @@ const LabelInformation = () => {
             )
         }
         if(projectInfo.labelData.udiFormat == 'IFA'){
-          JsBarcode('#ifa-barcode', aidc, { 
+          JsBarcode('#ifa-barcode', udiData, { 
             format: 'CODE128',
-            width: 1.5, // Set the width of the bars
+            width: 0.9, // Set the width of the bars
             height: 40, // Set the height of the bars
             displayValue: false, // Show the human-readable value below the barcode
             background: 'white', // Set the background color of the SVG
@@ -1707,6 +1707,15 @@ const LabelInformation = () => {
     }
     useEffect(() => {
         handleUDI() 
+        if(projectInfo && projectInfo.labelData){
+          const {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc, haDateOfManufacture, haLOTNumber, haSerialNumber} = projectInfo.labelData
+  
+          let udiData = (udiDI && udiDI !== '' ? "(01)" + udiDI : '') +
+                        (haDateOfManufacture && dateOfManufacture && dateOfManufacture !== '' ? "(11)" + "XXXXXXXX" : '') +
+                        (useByDate && useByDate !== '' ? "(17)" + convertDateToYYMMDD(useByDate) : '') +
+                        (haLOTNumber &&  LOTNumber && LOTNumber !== '' ? "(10)" + "XXXXXXXX" : '') +
+                        (haSerialNumber && serialNumber && serialNumber !== '' ? "(21)" + "XXXXXXXX" : '');
+                      }
     }, [projectInfo])
 
     // data matrix
@@ -1724,7 +1733,6 @@ const LabelInformation = () => {
       setImageSrc(canvas.toDataURL("image/png"));
     }, [dataMatrixValue]);
     
-
  // --------- new label design ----------
     const symbolsWithTextBehind = () => {
       if(projectInfo && projectInfo.labelData){
@@ -1753,7 +1761,7 @@ const LabelInformation = () => {
 
                   {projectInfo.labelData.translationActivity &&
                     <div className='symbol-content-item symbol-content-item-with-text'>
-                      <img className='symbol-img' src={Translation} />
+                      <img className='symbol-img sm-img' src={Translation} />
                       <div>
                         {projectInfo.labelData.translationEntityName &&
                           <p>{projectInfo.labelData.translationEntityName}</p>}
@@ -1764,7 +1772,7 @@ const LabelInformation = () => {
 
                   {projectInfo.labelData.modificationToPackaging &&
                     <div className='symbol-content-item symbol-content-item-with-text'>
-                      <img className='symbol-img' src={Repackaging} />
+                      <img className='symbol-img sm-img' src={Repackaging} />
                       <div>
                         {projectInfo.labelData.repackagingEntityName &&
                           <p>{projectInfo.labelData.repackagingEntityName}</p>}
@@ -1784,8 +1792,8 @@ const LabelInformation = () => {
 
 
             {/* sterility */}
-              {projectInfo.labelData.isSterile == true &&
-                projectInfo.labelData.hasSterilizationProcess &&
+              {projectInfo.labelData.isSterile ?
+                (projectInfo.labelData.hasSterilizationProcess &&
 
                 (projectInfo.labelData.hasVaporizedHydrogenPeroxide  == true
                   || projectInfo.labelData.hasAsepticProcessing  == true
@@ -1796,8 +1804,8 @@ const LabelInformation = () => {
                 ?null
                 :<div className='symbol-content-item sterileSymbol'>
                   <img className='symbol-img sterileSymbol-img' src={sterileSymbol} />
-                </div>
-              }
+                </div>)
+              : null}
 
               {projectInfo.labelData.isSterile == true &&
                 projectInfo.labelData.hasSterilizationProcess &&
@@ -1965,15 +1973,15 @@ const LabelInformation = () => {
 
                 {projectInfo.labelData.hasHumidityRange &&
                   <div className='symbol-content-item symbol-content-item-range'>
-                      <p className='min' >{projectInfo.labelData.humidityMin}%</p>
-                    <img className='symbol-img p-2' src={HumidityLimit} />
-                      <p className='max' >{projectInfo.labelData.humidityMax}%</p>
+                      <p className='min mt-1' >{projectInfo.labelData.humidityMin}%</p>
+                    <img className='symbol-img p' src={HumidityLimit} />
+                      <p className='max ' >{projectInfo.labelData.humidityMax}%</p>
                   </div>}
 
                 {projectInfo.labelData.hasAtmosphericPressureRange &&
                   <div className='symbol-content-item symbol-content-item-range'>
                       <p className='min' >{projectInfo.labelData.atmosphericPressureMin}</p>
-                    <img className='symbol-img p-1 m-1' src={AtmPressureLimit} />
+                    <img className='symbol-img' src={AtmPressureLimit} />
                       <p className='max' >{projectInfo.labelData.atmosphericPressureMax}</p>
                   </div>}
                 
@@ -2039,21 +2047,21 @@ const LabelInformation = () => {
                 {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
                   projectInfo.labelData.isControlMaterial &&
                     <div className='symbol-content-item'>
-                      <img className='symbol-img' src={control} />
+                      <img className='symbol-img sterileSymbol-img' src={control} />
                     </div>
                 }
 
                 {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
                   projectInfo.labelData.isControlMaterialForNegativeRange &&
                     <div className='symbol-content-item'>
-                      <img className='symbol-img' src={control_negative} />
+                      <img className='symbol-img sterileSymbol-img' src={control_negative} />
                     </div>
                 }
 
                 {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
                   projectInfo.labelData.isControlMaterialForPositiveRange &&
                     <div className='symbol-content-item'>
-                      <img className='symbol-img' src={control_positive} />
+                      <img className='symbol-img sterileSymbol-img' src={control_positive} />
                     </div>
                 }
 
@@ -2063,6 +2071,16 @@ const LabelInformation = () => {
                       <img className='symbol-img' src={for_IVD_performance_evaluation_only} />
                     </div>
                 }
+
+              {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
+                    projectInfo.labelData.hasSpecificNumberOfTests &&
+                      <div className='symbol-content-item' style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:"column"}}>
+                          <img style={{width:'80%', height:'40px', marginBottom:'-0px', marginTop:'5px'}} className='symbol-img' src={contains_suffient_for_n_tests} />
+                          {projectInfo.labelData.numberOfTests && 
+                            <div className=''>
+                              <p style={{marginTop:"0px", marginLeft:'-5px'}}>{projectInfo.labelData.numberOfTests}</p>
+                            </div>}
+                      </div>}
 
                 {projectInfo.labelData.isMedicalDeviceForSampleCollection &&
                   <div className='symbol-content-item'>
@@ -2099,12 +2117,21 @@ const LabelInformation = () => {
                         <p>{projectInfo.labelData.liquidFilterPoreSize}</p>
                       </div>
                   </div>}
+
+                  {projectInfo.labelData.needInstructionsForUse &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={consult_instruction_for_use} />
+                    {projectInfo.labelData.eIFULink &&
+                      <div className=''>
+                        <p>{projectInfo.labelData.eIFULink}</p>
+                      </div>
+                    }
+                  </div>}
           </div>
         )
       }
       return ;
     }
-
     const projectOwnerInfo = () => {
       if(projectInfo && projectInfo.labelData){
         return (
@@ -2113,8 +2140,10 @@ const LabelInformation = () => {
               <div className='symbol-content-item' style={{width:''}}>
                   <img className='symbol-img' src={Manufacturer} />
                   <div className=''>
-                    <p>{projectInfo.labelData.manufacturerName}</p>
-                    <p>{projectInfo.labelData.manufacturerAddress}</p>
+                    <p>{projectInfo?.labelData?.manufacturerName}</p>
+                    <p>{projectInfo?.labelData?.manufacturerAddress}</p>
+                    <p>{projectInfo?.labelData?.manufacturerCity}</p>
+                    <p>{projectInfo?.labelData?.manufacturerCountry}</p>
                   </div>
                 </div>
 
@@ -2135,7 +2164,7 @@ const LabelInformation = () => {
                   </div>
                 </div>}
 
-              {projectInfo.labelData.dateOfManufacture &&
+              {projectInfo.labelData.haDateOfManufacture &&
                 <div className='symbol-content-item'>
                   <img className='symbol-img' src={Date_of_manufactureSymbol} />
                   <div className=''>
@@ -2143,7 +2172,7 @@ const LabelInformation = () => {
                   </div>
                 </div>}
 
-              {projectInfo.labelData.LOTNumber &&
+              {projectInfo.labelData.hasLotNumber &&
                 <div className='symbol-content-item'>
                   <img className='symbol-img' src={Batch_codeSymbol} />
                   <div className=''>
@@ -2151,7 +2180,7 @@ const LabelInformation = () => {
                   </div>
                 </div>}
 
-              {projectInfo.labelData.serialNumber &&
+              {projectInfo.labelData.haSerialNumber &&
                 <div className='symbol-content-item'>
                   <img className='symbol-img' src={Serial_numberSymbol} />
                   <div className=''>
@@ -2179,7 +2208,7 @@ const LabelInformation = () => {
                 {/* if outside of EUROPE */}
               {projectInfo.labelData.isOutsideEU &&
                   <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Authorized_Representative} />
+                    <img className='symbol-img Authorized_Representative' src={Authorized_Representative} />
                     <div className=''>
                       <p>{projectInfo.labelData.europeanAuthorizedRepName}</p>
                       <p>{projectInfo.labelData.europeanAuthorizedRepAddress}</p> 
@@ -2195,12 +2224,13 @@ const LabelInformation = () => {
                     </div>
                   </div>
                 }
-
-
           </div>
         )
       }
     }
+
+    //  ---- end update ----
+
 
 //  ----------- download functions ---------------
     const componentRef = useRef();
@@ -2300,6 +2330,15 @@ const LabelInformation = () => {
         doc.save('Label.pdf');
       })
     }
+
+
+
+    // collapse
+
+    const [collapsed, setCollapsed] = useState(false);
+    const toggleCollapse = () => {
+      setCollapsed(!collapsed);
+    };
  
   return (
     <div className="container label-information" style={{paddingBottom: "20px"}}>
@@ -2386,11 +2425,11 @@ const LabelInformation = () => {
           {/* label */}
           <div className='col-lg-12'>
 
-            <div style={{borderRadius:'5px'}} className='label-info-content-item'>
+            <div  className='label-info-content-item' style={{borderRadius:'5px', display:"flex", justifyContent:'space-between'}}>
               {projectInfo && 
                 <div className='label-info-data' style={{display:'flex', justifyContent:'center'}} >
 
-                  <div className='template-1' >
+                  <div className='template-1'>
                     <div className='template-1-content'>
                       <div className='template-1-content-top'>
                         <div className='template-1-content-top-left'>
@@ -2487,7 +2526,7 @@ const LabelInformation = () => {
                           {projectInfo && 
                             projectInfo.labelData && 
                               projectInfo.labelData.clinicalInvestigationOnly &&
-                              <p>exclusively for clinical investigation</p>}
+                              <p className='mx-4'>exclusively for clinical investigation</p>}
                           </div>
                         </div>
                         <div className='template-1-content-mid-second-item'>
@@ -2505,10 +2544,10 @@ const LabelInformation = () => {
                             <div style={{display:'flex', alignItems:'center', marginTop:'1%'}}>
                               <img style={{width:'100px', height:'100px'}} src={imageSrc} alt={`data matrix from`} />
                               <div style={{fontSize:'12px'}}>
-                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.dateOfManufacture}</p>
+                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.haDateOfManufacture && projectInfo.labelData.dateOfManufacture}</p>
                                 <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.useByDate}</p>
-                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.LOTNumber}</p>
-                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.serialNumber}</p>
+                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.hasLotNumber && projectInfo.labelData.LOTNumber}</p>
+                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.haSerialNumber && projectInfo.labelData.serialNumber}</p>
                               </div>
                             </div>}
                         </div>
@@ -2517,6 +2556,45 @@ const LabelInformation = () => {
                   </div>
                 </div>
               }
+              {projectInfo && <div style={{display:'flex', flexDirection:'column', width:'200px'}}>
+                    {/* Collapsible header with button */}
+                    <button onClick={toggleCollapse} style={{ backgroundColor: '#C08261', color: '#fff', fontWeight: '700', padding: '5px 15px', borderRadius: '5px', width:'100p%' }}>
+                      Update Project
+                    </button>
+                  {/* Collapsible content */}
+                  {collapsed && 
+                  <div className={`collapsible-content`}>
+                    {/* Links */}
+                    <ul style={{backgroundColor:'#ffff', padding:'5px', margin:'0', marginTop:'10px', borderRadius:'5px'}}>
+                    <Link to={`/dashboard/update-project/step1/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0'}}>Manufacturer Info</p>
+                      </Link>
+                      <Link to={`/dashboard/update-project/step2/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0'}}>Product Info</p>
+                      </Link>
+                      <Link to={`/dashboard/update-project/step3/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0'}}>Sterility</p>
+                      </Link>
+                      <Link to={`/dashboard/update-project/step4/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0'}}>Storage</p>
+                      </Link>
+                      <Link to={`/dashboard/update-project/step5/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0'}}>Safe Use</p>
+                      </Link>
+                      {projectInfo?.labelData && projectInfo?.labelData?.productType === "In Vitro Diagnostic (IVD) Medical Device" && 
+                      <Link to={`/dashboard/update-project/step6/${projectId}`} style={{backgroundColor:'rd', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0'}}>IVD Diagnostic</p>
+                      </Link>}
+                      <Link to={`/dashboard/update-project/step7/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0'}}>Transfusion-Infusion</p>
+                      </Link>
+                      <Link to={`/dashboard/update-project/step8/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0'}}>Others</p>
+                      </Link>          
+                    </ul>
+                  </div>}
+              </div>}
+
             </div>
 
           </div>

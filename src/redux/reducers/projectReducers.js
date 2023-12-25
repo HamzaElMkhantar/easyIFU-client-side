@@ -2,6 +2,10 @@ import {ALL_PROJECTS_FAILED,
         ALL_PROJECTS_REQUEST, 
         ALL_PROJECTS_RESET, 
         ALL_PROJECTS_SUCCESS, 
+        DELETE_DOCUMENTS_FAILED, 
+        DELETE_DOCUMENTS_REQUEST, 
+        DELETE_DOCUMENTS_RESET, 
+        DELETE_DOCUMENTS_SUCCESS, 
         DELETE_PROJECT_FAILED, 
         DELETE_PROJECT_REQUEST, 
         DELETE_PROJECT_RESET, 
@@ -206,6 +210,13 @@ const documents = {
     documentsSuccess :  false,
     documentsFail : null,
     documentsCompany: null
+}
+
+const deleteDocument = {
+    deleteDocumentsRequest : false,
+    deleteDocumentsSuccess :  false,
+    deleteDocumentsFail : null,
+    deleteDocumentMessage : null
 }
 
 const documentById = {
@@ -797,6 +808,38 @@ export const documentsReducer = (state = documents, action) => {
             return state ;
     }
 }
+
+
+export const deleteDocumentReducer = (state = deleteDocument, action) => {
+    switch(action.type){
+        case DELETE_DOCUMENTS_REQUEST:
+            return {
+                ...state,
+                deleteDocumentsRequest : true,
+                deleteDocumentsSuccess :  false,
+                deleteDocumentsFail : null,
+            } ;
+        case DELETE_DOCUMENTS_SUCCESS :
+            return {
+                ...state,
+                deleteDocumentsRequest : false,
+                deleteDocumentsSuccess : true,
+                deleteDocumentMessage: action.payload
+            } ;
+        case DELETE_DOCUMENTS_FAILED :
+            return {
+                ...state,
+                deleteDocumentsFail : action.payload,
+                deleteDocumentsSuccess :  false,
+                deleteDocumentsRequest : false
+            } ;
+        case DELETE_DOCUMENTS_RESET :
+            return deleteDocument;
+        default :
+            return state ;
+    }
+}
+
 
 export const documentByIdReducer = (state = documentById, action) => {
     switch(action.type){

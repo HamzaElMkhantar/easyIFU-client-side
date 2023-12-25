@@ -215,7 +215,7 @@ const MyCompany = () => {
 
           {decodedToken &&
                         decodedToken.userInfo &&
-                        decodedToken.userInfo.role == "Admin" &&<div  style={{
+                        decodedToken.userInfo.role.includes("Admin") &&<div  style={{
                     backgroundColor:'#fff',
                     marginTop:'20px',
                     borderRadius:'10px'
@@ -226,7 +226,7 @@ const MyCompany = () => {
                       <div className="row">
                        {decodedToken &&
                             decodedToken.userInfo &&
-                            decodedToken.userInfo.role == "Admin" &&
+                            decodedToken.userInfo.role.includes("Admin") &&
                             <div className="col-md-6">
                           <div className="form-outline mb-2">
                             <label className="form-label" htmlFor="companyName">
@@ -245,7 +245,7 @@ const MyCompany = () => {
 
                         {decodedToken &&
                         decodedToken.userInfo &&
-                        decodedToken.userInfo.role == "Admin" &&
+                        decodedToken.userInfo.role.includes("Admin") &&
                             <div className="col-md-6">
                                 <div className="form-outline mb-2">
                                     <label className="form-label" htmlFor="companyAddress">
@@ -267,7 +267,7 @@ const MyCompany = () => {
                       <div className="row">
                         {decodedToken &&
                         decodedToken.userInfo &&
-                        decodedToken.userInfo.role == "Admin" &&
+                        decodedToken.userInfo.role.includes("Admin") &&
                             <div className="col-md-6">
                             <div className="form-outline mb-2">
                                 <label className="form-label" htmlFor="companyCity">
@@ -303,7 +303,7 @@ const MyCompany = () => {
                       <div className="row">
                         {decodedToken &&
                         decodedToken.userInfo &&
-                        decodedToken.userInfo.role == "Admin" &&
+                        decodedToken.userInfo.role.includes("Admin") &&
                             <div className="col-md-6">
                             <div className="form-outline mb-2">
                                 <label className="form-label" htmlFor="companyZip">

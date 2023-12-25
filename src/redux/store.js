@@ -24,6 +24,7 @@ import {IVDDiagnosticReducer,
         ProjectByRoleIdReducer, 
         ReleaseTheProjectReducer, 
         ReleasedProjectReducer, 
+        deleteDocumentReducer, 
         deleteProjectReducer, 
         documentByIdReducer, 
         documentsReducer, 
@@ -41,11 +42,11 @@ import {IVDDiagnosticReducer,
         transfusionInfusionReducer,
         uploadManufacturerLogoReducer
     } from './reducers/projectReducers';
-import { getCompanyInfoReducer, 
+import { dashboardCompanyInfoReducer, getCompanyInfoReducer, 
         paymentCompanyReducer, 
         paymentPricesCompanyReducer, 
         updateCompanyInfoReducer } from './reducers/companyReducers';
-import { companiesReducer, companyByIdReducer, contactByIdReducer, contactsReducer, deleteCompanyReducer, deleteContactReducer, projectsReducer, usersReducer } from './reducers/supperAdminReducers';
+import { changeCompanyPermissionReducer, companiesReducer, companyByIdReducer, contactByIdReducer, contactsReducer, deleteCompanyReducer, deleteContactReducer, projectsReducer, usersReducer } from './reducers/supperAdminReducers';
 
 
 const reducer = combineReducers({
@@ -73,6 +74,8 @@ const reducer = combineReducers({
     createUser: createUserReducer,
     getCompanyInfo:getCompanyInfoReducer,
     updateCompanyInfo: updateCompanyInfoReducer,
+    dashboardCompanyInfo: dashboardCompanyInfoReducer,
+
 
     // payment reducers
     paymentCompany: paymentCompanyReducer,
@@ -101,6 +104,7 @@ const reducer = combineReducers({
     saveDocument: saveDocumentReducer,
     documents: documentsReducer,
     documentById: documentByIdReducer,
+    deleteDocument: deleteDocumentReducer,
 
     // supperRoot reducers
     contacts: contactsReducer,
@@ -110,7 +114,8 @@ const reducer = combineReducers({
     companyById: companyByIdReducer,
     deleteCompany: deleteCompanyReducer,
     users: usersReducer,
-    projects: projectsReducer
+    projects: projectsReducer,
+    changeCompanyPermission: changeCompanyPermissionReducer
 })
 
 

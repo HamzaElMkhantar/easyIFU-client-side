@@ -21,6 +21,10 @@ import { COMPANIES_SUPPER_ADMIN_FAILED, COMPANIES_SUPPER_ADMIN_REQUEST,
         GET_CONTACT_SUPPER_ADMIN_REQUEST,
         GET_CONTACT_SUPPER_ADMIN_RESET,
         GET_CONTACT_SUPPER_ADMIN_SUCCESS,
+        PERMISSION_COMPANY_SUPPER_ADMIN_FAILED,
+        PERMISSION_COMPANY_SUPPER_ADMIN_REQUEST,
+        PERMISSION_COMPANY_SUPPER_ADMIN_RESET,
+        PERMISSION_COMPANY_SUPPER_ADMIN_SUCCESS,
         PROJECTS_SUPPER_ADMIN_FAILED,
         PROJECTS_SUPPER_ADMIN_REQUEST,
         PROJECTS_SUPPER_ADMIN_RESET,
@@ -243,6 +247,45 @@ export const companyByIdReducer = (state = companyById, action) => {
     }
 
 }
+
+const changeCompanyPermission = {
+    changeCompanyPermissionRequest : false,
+    changeCompanyPermissionSuccess :  false,
+    changeCompanyPermissionFail : null,
+    changeCompanyPermissionMessage: null
+}
+
+export const changeCompanyPermissionReducer = (state = changeCompanyPermission, action) => {
+    switch(action.type){
+        case PERMISSION_COMPANY_SUPPER_ADMIN_REQUEST:
+            return {
+                ...state,
+                changeCompanyPermissionRequest : true,
+                changeCompanyPermissionSuccess :  false,
+                changeCompanyPermissionFail : null,
+            } ;
+        case PERMISSION_COMPANY_SUPPER_ADMIN_SUCCESS :
+            return {
+                ...state,
+                changeCompanyPermissionRequest : false,
+                changeCompanyPermissionSuccess : true,
+                changeCompanyPermissionMessage: action.payload
+            } ;
+        case PERMISSION_COMPANY_SUPPER_ADMIN_FAILED :
+            return {
+                ...state,
+                changeCompanyPermissionFail : action.payload,
+                changeCompanyPermissionSuccess :  false,
+                changeCompanyPermissionRequest : false
+            } ;
+        case PERMISSION_COMPANY_SUPPER_ADMIN_RESET :
+            return changeCompanyPermission;
+        default :
+            return state ;
+    }
+
+}
+
 
 
 export const deleteCompanyReducer = (state = deleteCompany, action) => {

@@ -14,7 +14,9 @@ import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRound
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import SideBarEasyIFU from '../../components/easyIFU_header/SideBarEasyIFU';
-import { companiesAction } from '../../redux/actions/supperAdminActions';
+import { changeCompanyPermissionAction, companiesAction } from '../../redux/actions/supperAdminActions';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 const Companies = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,14 +42,25 @@ const Companies = () => {
 
   console.log(decodedToken)
 
-  const {companies} = useSelector(state => state)
+  const {companies, changeCompanyPermission} = useSelector(state => state)
   const {companiesRequest, companiesSuccess, companiesFailed, allCompanies} = companies;
+  const {changeCompanyPermissionRequest, changeCompanyPermissionSuccess, changeCompanyPermissionFail, changeCompanyPermissionMessage} = changeCompanyPermission;
 
 
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(companiesAction(token))
   },[])
+
+  useEffect(() => {
+    if(changeCompanyPermissionSuccess){
+      dispatch(companiesAction(token))
+      toast.success(`${changeCompanyPermissionMessage.message}`)
+    }
+    if(changeCompanyPermissionFail){
+      toast.warning(`${changeCompanyPermissionFail.message}`)
+    }
+  },[changeCompanyPermissionSuccess, changeCompanyPermissionFail])
 
 console.log(companiesRequest, companiesSuccess, companiesFailed, allCompanies)
 
@@ -71,6 +84,11 @@ console.log(companiesRequest, companiesSuccess, companiesFailed, allCompanies)
     return formattedDate;
   };
   
+  const [loader, setLoader] = useState('')
+  const handleChangePermission = async (companyId) => {
+    setLoader(companyId)
+    await dispatch(changeCompanyPermissionAction(companyId))
+  }
 
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
@@ -118,7 +136,7 @@ console.log(companiesRequest, companiesSuccess, companiesFailed, allCompanies)
               <h6>total companies: {data && data?.length > 0 ? data.length : <>No company</>}</h6>
               <div className="table-responsive">
 
-                <table style={{ backgroundColor: '#fff', textAlign:'center' }} className="table table-hover my-1">
+                <table style={{ backgroundColor: '#fff', textAlign:'center', fontSize:'14px' }} className="table table-hover my-1">
                   <thead style={{ backgroundColor: '#9a3b3a' }} className="thead-dark">
                     <tr style={{ color: '#fff' }}>
                       <th scope="col">#</th>
@@ -127,7 +145,9 @@ console.log(companiesRequest, companiesSuccess, companiesFailed, allCompanies)
                       <th scope="col">Subscription Status</th>
                       <th scope="col">Subscription expiration date</th>
                       <th scope="col">users</th>
+                      <th scope="col">status</th>
                       <th scope="col">Created</th>
+                      <th scope="col">change Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -141,7 +161,20 @@ console.log(companiesRequest, companiesSuccess, companiesFailed, allCompanies)
                             <td>{item?.subscription?.status}</td>
                             <td>{item?.subscription?.endDate}</td>
                             <td>{item?.companyUsers?.length}</td>
+                            <td>{item?.isActive ? "active" : "not active"}</td>
                             <td>{dateFormat(item?.createdAt)}</td>
+                            <td>{changeCompanyPermissionRequest && (loader == item._id) 
+                                  ? <RotatingLines
+                                      strokeColor="black"
+                                      strokeWidth="5"
+                                      animationDuration="0.75"
+                                      width="26"
+                                      visible={true}
+                                      /> 
+                                  : item?.isActive 
+                                        ? <button onClick={() => handleChangePermission(item._id)} style={{borderRadius:'4px'}}><ToggleOnIcon style={{color:'green'}}/> </button> 
+                                        : <button onClick={() => handleChangePermission(item._id)} style={{borderRadius:'4px'}}><ToggleOffIcon style={{color:'red'}}/> </button>}
+                            </td>
                           </tr>
                         );
                       })}

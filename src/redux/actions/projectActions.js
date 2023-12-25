@@ -3,6 +3,10 @@ import { BaseUrl } from '../../config';
 import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST, 
             ALL_PROJECTS_RESET, 
             ALL_PROJECTS_SUCCESS, 
+            DELETE_DOCUMENTS_FAILED, 
+            DELETE_DOCUMENTS_REQUEST, 
+            DELETE_DOCUMENTS_RESET, 
+            DELETE_DOCUMENTS_SUCCESS, 
             DELETE_PROJECT_FAILED, 
             DELETE_PROJECT_REQUEST, 
             DELETE_PROJECT_RESET, 
@@ -77,7 +81,7 @@ import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST,
             TRANSFUSION_INFUSION_SUCCESS} from '../constants/projectConstants';
 
 
-export const getAllProjectsAction = ( token) => async (dispatch) => {
+export const getAllProjectsAction = (companyId, token) => async (dispatch) => {
     try {
     
         dispatch({ 
@@ -90,7 +94,7 @@ export const getAllProjectsAction = ( token) => async (dispatch) => {
             }
         }
     
-        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project`, config);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/project-company/${companyId}`, config);
 
         dispatch({ 
             type: ALL_PROJECTS_SUCCESS, 
@@ -765,6 +769,43 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
         setTimeout(() =>{
           dispatch({ 
             type: DOCUMENTS_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const deleteDocumentsAction = (documentId, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: DELETE_DOCUMENTS_REQUEST});
+
+      const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/api/v1/project/document-delete/${documentId}`, config);
+    console.log(response)
+      dispatch({ 
+            type: DELETE_DOCUMENTS_SUCCESS, 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: DELETE_DOCUMENTS_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: DELETE_DOCUMENTS_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: DELETE_DOCUMENTS_RESET
           });
         }, 1500)
       }

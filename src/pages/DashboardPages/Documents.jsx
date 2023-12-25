@@ -13,10 +13,12 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { documentsAction } from '../../redux/actions/projectActions';
+import { deleteDocumentsAction, documentsAction } from '../../redux/actions/projectActions';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
+import DeleteIcon from '@mui/icons-material/Delete';
 import './documentInformation.css'
+import { RotatingLines } from 'react-loader-spinner';
 
 
 
@@ -42,14 +44,17 @@ const Documents = () => {
 
     const [companyDocument, setCompanyDocument] = useState([])
 
-    const {documents} = useSelector(state => state)
+    const {documents, deleteDocument } = useSelector(state => state)
     const {documentsRequest, documentsSuccess, documentsFail, documentsCompany} = documents
+    const {deleteDocumentsRequest, deleteDocumentsSuccess, deleteDocumentsFail, deleteDocumentMessage} = deleteDocument
 
     const companyId = decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId
     const dispatch = useDispatch()
     useEffect(() => {
       dispatch(documentsAction(companyId, token))
     }, [])
+
+
 
     useEffect(() => {
       if(documentsSuccess){
@@ -59,10 +64,21 @@ const Documents = () => {
         toast.warning(`${documentsFail.message}`)
       }
     }, [documentsSuccess, documentsFail])
-        console.log(companyDocument)
+
+    useEffect(() => {
+      if(deleteDocumentsSuccess){
+        dispatch(documentsAction(companyId, token))
+        toast.success(`Document deleted`)
+      }
+      if(deleteDocumentsFail && deleteDocumentsFail.message !== "didn't found any document"){
+        toast.warning(`${deleteDocumentsFail.message}`)
+      }
+    }, [deleteDocumentsSuccess, deleteDocumentsFail])
 
           
-    
+    const handleDeleteDocument = (documentId) => {
+      dispatch(deleteDocumentsAction(documentId))
+    }
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>      
     <SideBar isSidebarOpen={isSidebarOpen} />
@@ -109,7 +125,18 @@ const Documents = () => {
           <h4>didn,t found any document</h4>
         </div>}
         {companyDocument?.map((document, index) => (
-          <div  key={index} className="col-lg-4 col-md-6 col-sm-6 card-wrapper">
+          <div  key={index} style={{position:'relative'}} className="col-lg-4 col-md-6 col-sm-6 card-wrapper">
+            <button onClick={() => handleDeleteDocument(document._id)} style={{position:'absolute', top:'0', right:'0', zIndex:'999', backgroundColor:'#FAC9C3', padding:'3px', margin:'2px', borderRadius:'5px'}}>
+              {deleteDocumentsRequest 
+              ? <RotatingLines
+                  strokeColor="#011d41"
+                  strokeWidth="5"
+                  animationDuration="0.75"
+                  width="20"
+                  visible={true}
+                  /> 
+               :<DeleteIcon/>}
+              </button>
             <Link to={`/dashboard/document-sizes/${document._id}`} 
                   className="card mb-3 card-document">
                 <div className="image__wrapper" style={{borderBottom:'.1px solid lightGray'}}>

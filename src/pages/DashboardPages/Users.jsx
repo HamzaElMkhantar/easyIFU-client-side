@@ -141,7 +141,7 @@ const Users = () => {
                       <th scope="col">Status</th>
                       {decodedToken &&
                       decodedToken?.userInfo &&
-                      decodedToken?.userInfo.role == "Admin" &&
+                      decodedToken?.userInfo.role.includes("Admin") &&
                       <th scope="col">Manage</th>}
                     </tr>
                   </thead>
@@ -152,13 +152,13 @@ const Users = () => {
                           <tr key={index}>
                             <th scope="row">{index + 1}</th>
                             <td>{item.firstName} {item.lastName}</td>
-                            <td>{item.role}</td>
+                            <td ><p style={{display:'flex', padding:'0', margin:'0'}}>{item.role.length > 1 ? item.role.map((item) => (<p className='mx-1'>{item},</p>)) : item.role.map((item) => (<p className='mx-1'>{item}</p>))} </p></td>
                             <td>{dateFormat(item.createdAt)}</td>
                             <td>{item.email}</td>
                             <td>{item.isActive ? 'Active' : 'Not Active'}</td>
                             {decodedToken &&
                             decodedToken?.userInfo &&
-                            decodedToken?.userInfo.role == "Admin" &&
+                            decodedToken?.userInfo.role.includes("Admin") &&
                             <td>
                               <div style={{display:'flex'}}>
                                 <Link to={`/dashboard/user/${item._id}`}

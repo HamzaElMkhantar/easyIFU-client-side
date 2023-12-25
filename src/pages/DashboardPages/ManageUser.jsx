@@ -259,7 +259,7 @@ const ManageUser = () => {
                       <div className="row">
                        {decodedToken &&
                             decodedToken.userInfo &&
-                            decodedToken.userInfo.role == "Admin" &&
+                            decodedToken.userInfo.role.includes("Admin")&&
                             <div className="col-md-6">
                           <div className="form-outline mb-2">
                             <label className="form-label" htmlFor="firstName">
@@ -278,7 +278,7 @@ const ManageUser = () => {
 
                         {decodedToken &&
                         decodedToken.userInfo &&
-                        decodedToken.userInfo.role == "Admin" &&
+                        decodedToken.userInfo.role.includes("Admin") &&
                             <div className="col-md-6">
                                 <div className="form-outline mb-2">
                                     <label className="form-label" htmlFor="lastName">
@@ -299,7 +299,7 @@ const ManageUser = () => {
                       <div className="row">
                         {decodedToken &&
                         decodedToken.userInfo &&
-                        decodedToken.userInfo.role == "Admin" &&
+                        decodedToken.userInfo.role.includes("Admin") &&
                             <div className="col-md-6">
                             <div className="form-outline mb-2">
                                 <label className="form-label" htmlFor="email">

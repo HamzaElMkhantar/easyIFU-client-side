@@ -47,28 +47,27 @@ const SideBar = ({isSidebarOpen}) => {
           <div className='sideBrd-user-info'>
             <h4>{decodedToken && decodedToken.userInfo && `${decodedToken && decodedToken.userInfo && decodedToken.userInfo.firstName} ${decodedToken && decodedToken.userInfo && decodedToken.userInfo.lastName}`}</h4>
             <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.email}</p>
-            {/* <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.role}</p> */}
           </div>
           <div style={{ height:'67vh', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
 
             <div style={{height:'63vh', overflowY:'scroll'}} className='navList' >
-                {<Link to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
-                {<Link to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>create Project</Link>}
-                <Link to="/dashboard/received-project"><CallReceivedIcon style={{color:'#44638C'}}/> received project</Link>
-                <Link to="/dashboard/project/released"><LastPageIcon style={{color:'#9A3B3A'}}/> released project</Link>
-                {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Release" || decodedToken?.userInfo?.role === "Admin" )&&
+                {<Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
+                {<Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>create Project</Link>}
+                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/received-project"><CallReceivedIcon style={{color:'#44638C'}}/> received project</Link>
+                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/project/released"><LastPageIcon style={{color:'#9A3B3A'}}/> released project</Link>
+                {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Release") || decodedToken?.userInfo?.role.includes("Admin") )&&
                 <>
-                  <Link to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/> Documents</Link>
+                  <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/> Documents</Link>
                 </>}
 
-                <Link to="/dashboard/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link>
+                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link>
 
-                {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role === "Admin" )&&
-                <Link to="/dashboard/user/create"><GroupRoundedIcon style={{color:'#C08261'}}/> Create User</Link>}
+                {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") )&&
+                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/user/create"><GroupRoundedIcon style={{color:'#C08261'}}/> Create User</Link>}
 
-                {<Link to="/dashboard/company"><StoreRoundedIcon style={{color:'#E5D283'}}/>My Company</Link>}
+                {<Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/company"><StoreRoundedIcon style={{color:'#E5D283'}}/>My Company</Link>}
 
-                <Link to="/dashboard/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link>
+                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link>
 
             </div>
 

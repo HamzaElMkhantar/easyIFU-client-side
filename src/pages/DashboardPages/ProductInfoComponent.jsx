@@ -18,23 +18,23 @@ const ProductInfoComponent = () => {
     const {productRequest, productSuccess, productFail, projectInfo} = productInformation;
     const {uploadLogoRequest, uploadLogoSuccess, uploadLogoFail} = uploadManufacturerLogo;
 
+
     const [numbersData, setNumbersData] = useState('')
     const [manufacturerLogo, setManufacturerLogo] = useState('')
 
     const [formData, setFormData] = useState({
         projectId,
-        productName: '',
+        productName: '' ,
         intendedPurpose: '',
         productType: '',
         udiDI: '',
-        udiPI: '',
-        aidc: '',
         udiFormat: '',
         udiType: '',
         useByDate: '',
-        dateOfManufacture: '',
-        serialNumber: '',
-        LOTNumber: '',
+        hasUseByDate: false,
+        haDateOfManufacture: false,
+        haSerialNumber: false,
+        hasLotNumber: false ,
         catalogueNumber: '',
         modelNumber: '',
         packagingContents: '',
@@ -64,7 +64,7 @@ const ProductInfoComponent = () => {
             const year = futureDate.getFullYear();
 
             // Format the date as "mm-dd-yyyy"
-            newValue = `${month}-${day}-${year}`;
+            newValue = `${year}-${month}-${day}`;
         }
         if(name == "manufacturerLogo"){
             newValue = e.target.files[0]
@@ -89,11 +89,11 @@ const ProductInfoComponent = () => {
         console.log(formData)
 
         // Use a regular expression to check for the format dd/mm/yyyy
-        const dateFormat = /^\d{2}\-\d{2}\-\d{4}$/;
-        if (formData.dateOfManufacture !== '' &&!formData.dateOfManufacture.match(dateFormat)) {
-            toast.warning('Please enter a date in the format mm-dd-yyyy.');
-            return;
-        }
+        // const dateFormat = /^\d{2}\-\d{2}\-\d{4}$/;
+        // if (formData.dateOfManufacture !== '' &&!formData.dateOfManufacture.match(dateFormat)) {
+        //     toast.warning('Please enter a date in the format mm-dd-yyyy.');
+        //     return;
+        // }
 
  
 
@@ -261,7 +261,7 @@ const ProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                     <label>AIDC:</label>
                     <input
                     type="text"
@@ -270,7 +270,7 @@ const ProductInfoComponent = () => {
                     value={formData.aidc}
                     onChange={handleInputChange}
                     />
-                </div>
+                </div> */}
                 <div className="form-group">
                     <label>5-how many month(Use-by Date):</label>
                     <input
@@ -285,15 +285,37 @@ const ProductInfoComponent = () => {
                 <div className="col-md-6">
                 
                 <div className="form-group">
-                    <label>6- Date of Manufacture(Optional):</label>
-                    <input
+                    <label>6- Has Date of Manufacture ? (Optional):</label>
+                    <div className="form-group">
+                    <div style={{display:'flex'}}>
+                        <input style={{width:''}}
+                        type="CheckBox"
+                        className="form-check-input"
+                        checked={formData.haDateOfManufacture ? true : false}
+                        onClick={() => setFormData({...formData, haDateOfManufacture: true})}
+                        />
+                        <label className="form-check-label mx-3">Yes</label>
+                    </div>
+                    <div style={{display:'flex'}}>
+                     <input style={{width:''}}
+                        type="CheckBox"
+                        required={formData.haDateOfManufacture ? false : true}
+                        className="form-check-input"
+                        checked={formData.haDateOfManufacture ? false : true}
+                        onClick={() => setFormData({...formData, haDateOfManufacture: false})}
+                        />
+                    <label className="form-check-label mx-3">No</label>
+
+                    </div>
+                </div>
+                    {/* <input
                     type="text"
                     className="form-control"
                     name="dateOfManufacture"
                     placeholder='mm-dd-yyyy'
                     value={formData.dateOfManufacture}
                     onChange={handleInputChange}
-                    />
+                    /> */}
                 </div>
                 <p className='form-group-paragraph'>In case where there is no specified expiration date, you can add the manufacture date*</p>
                 <div className="form-group">
@@ -303,8 +325,8 @@ const ProductInfoComponent = () => {
                         type="CheckBox"
                         required={numbersData == "" ? true : false}
                         className="form-check-input"
-                        checked={numbersData == "LOT" ? true : false}
-                        onClick={() => setNumbersData("LOT")}
+                        checked={formData.hasLotNumber}
+                        onClick={() => setFormData({...formData, hasLotNumber: !formData.hasLotNumber})}
                         />
                         <label className="form-check-label mx-3">LOT Number</label>
                     </div>
@@ -313,14 +335,14 @@ const ProductInfoComponent = () => {
                         type="CheckBox"
                         required={numbersData == "" ? true : false}
                         className="form-check-input"
-                        checked={numbersData == "Serial" ? true : false}
-                        onClick={() => setNumbersData("Serial")}
+                        checked={formData.haSerialNumber}
+                        onClick={() => setFormData({...formData, haSerialNumber: !formData.haSerialNumber})}
                         />
                     <label className="form-check-label mx-3">Serial Number</label>
 
                     </div>
                 </div>
-                {numbersData == "Serial" &&
+                {/* {numbersData == "Serial" &&
                 <div className="form-group">
                     <label>Serial Number*:</label>
                     <input
@@ -344,7 +366,7 @@ const ProductInfoComponent = () => {
                     value={formData.LOTNumber}
                     onChange={handleInputChange}
                     />
-                </div>}
+                </div>} */}
 
 
                 <div className="form-group">
@@ -390,7 +412,7 @@ const ProductInfoComponent = () => {
                     <label className="form-check-label">Yes</label>
                     </div>
                 </div> */}
-                {formData.addManufacturerLogo && (
+                {/* {formData.addManufacturerLogo && (
                     <div className="form-group">
                     <label>Insert your logo:</label>
                     <input
@@ -401,7 +423,7 @@ const ProductInfoComponent = () => {
                         onChange={handleInputChange}
                     />
                     </div>
-                )}
+                )} */}
                 </div>
             </div>
            {!productRequest 
