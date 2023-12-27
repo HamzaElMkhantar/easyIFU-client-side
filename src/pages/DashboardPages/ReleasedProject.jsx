@@ -867,7 +867,7 @@ useEffect(() => {
         }
         return ;
       }
-      const projectOwnerInfo = () => {
+      const  projectOwnerInfo = () => {
         if(projectInfo && projectInfo.labelData){
           return (
             <div className='project-owner-info'>
@@ -942,7 +942,7 @@ useEffect(() => {
                   
   
                   {/* if outside of EUROPE */}
-                {projectInfo.labelData.isOutsideEU &&
+                {!projectInfo.labelData.isOutsideEU &&
                     <div className='symbol-content-item'>
                       <img className='symbol-img Authorized_Representative' src={Authorized_Representative} />
                       <div className=''>
@@ -951,7 +951,7 @@ useEffect(() => {
                       </div>
                     </div>
                   }
-                {projectInfo.labelData.isOutsideEU &&
+                {!projectInfo.labelData.isOutsideEU &&
                     <div className='symbol-content-item'>
                       <img className='symbol-img' src={Importer} />
                       <div className=''>
@@ -1805,7 +1805,7 @@ useEffect(() => {
                   
   
                   {/* if outside of EUROPE */}
-                {projectInfo?.labelData?.isOutsideEU &&
+                {!projectInfo?.labelData?.isOutsideEU &&
                     <div className='symbol-content-item'>
                       <img className='symbol-img Authorized_Representative' src={Authorized_Representative} />
                       <div className=''>
@@ -1814,7 +1814,7 @@ useEffect(() => {
                       </div>
                     </div>
                   }
-                {projectInfo?.labelData?.isOutsideEU &&
+                {!projectInfo?.labelData?.isOutsideEU &&
                     <div className='symbol-content-item'>
                       <img className='symbol-img' src={Importer} />
                       <div className=''>

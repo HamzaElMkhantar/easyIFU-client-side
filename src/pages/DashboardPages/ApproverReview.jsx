@@ -922,7 +922,7 @@ useEffect(() => {
                 
 
                 {/* if outside of EUROPE */}
-              {projectInfo.labelData.isOutsideEU &&
+              {!projectInfo.labelData.isOutsideEU &&
                   <div className='symbol-content-item'>
                     <img className='symbol-img Authorized_Representative' src={Authorized_Representative} />
                     <div className=''>
@@ -931,7 +931,7 @@ useEffect(() => {
                     </div>
                   </div>
                 }
-              {projectInfo.labelData.isOutsideEU &&
+              {!projectInfo.labelData.isOutsideEU &&
                   <div className='symbol-content-item'>
                     <img className='symbol-img' src={Importer} />
                     <div className=''>
