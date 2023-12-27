@@ -12,6 +12,7 @@ import InventoryRoundedIcon from '@mui/icons-material/InventoryRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import { useDispatch, useSelector } from 'react-redux';
+import ContactsIcon from '@mui/icons-material/Contacts';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import { logoutAction } from '../../redux/actions/authActions';
 import { RotatingLines } from 'react-loader-spinner';
@@ -51,23 +52,25 @@ const SideBar = ({isSidebarOpen}) => {
           <div style={{ height:'67vh', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
 
             <div style={{height:'63vh', overflowY:'scroll'}} className='navList' >
-                {<Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
-                {<Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>create Project</Link>}
-                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/received-project"><CallReceivedIcon style={{color:'#44638C'}}/> received project</Link>
-                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/project/released"><LastPageIcon style={{color:'#9A3B3A'}}/> released project</Link>
+                {<Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
+                {<Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>create Project</Link>}
+                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/received-project"><CallReceivedIcon style={{color:'#44638C'}}/> received project</Link>
+                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/project/released"><LastPageIcon style={{color:'#9A3B3A'}}/> released project</Link>
                 {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Release") || decodedToken?.userInfo?.role.includes("Admin") )&&
                 <>
-                  <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/> Documents</Link>
+                  <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/> Documents</Link>
                 </>}
 
-                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link>
+                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link>
 
                 {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") )&&
-                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/user/create"><GroupRoundedIcon style={{color:'#C08261'}}/> Create User</Link>}
+                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/user/create"><GroupRoundedIcon style={{color:'#C08261'}}/> Create User</Link>}
 
-                {<Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/company"><StoreRoundedIcon style={{color:'#E5D283'}}/>My Company</Link>}
+                {<Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/company"><StoreRoundedIcon style={{color:'#E5D283'}}/>My Company</Link>}
 
-                <Link style={{fontSize:"", padding:'8px 3px'}} to="/dashboard/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link>
+                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link>
+                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/contact"><ContactsIcon style={{color:'#3992B0'}}/> contact Us</Link>
+
 
             </div>
 

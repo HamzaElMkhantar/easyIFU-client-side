@@ -323,7 +323,7 @@ const ProductInfoComponent = () => {
                     <div style={{display:'flex'}}>
                         <input style={{width:''}}
                         type="CheckBox"
-                        required={numbersData == "" ? true : false}
+                        required={(!formData.haSerialNumber && !formData.hasLotNumber) ? true : false}
                         className="form-check-input"
                         checked={formData.hasLotNumber}
                         onClick={() => setFormData({...formData, hasLotNumber: !formData.hasLotNumber})}
@@ -333,7 +333,7 @@ const ProductInfoComponent = () => {
                     <div style={{display:'flex'}}>
                      <input style={{width:''}}
                         type="CheckBox"
-                        required={numbersData == "" ? true : false}
+                        required={(!formData.haSerialNumber && !formData.hasLotNumber) ? true : false}
                         className="form-check-input"
                         checked={formData.haSerialNumber}
                         onClick={() => setFormData({...formData, haSerialNumber: !formData.haSerialNumber})}

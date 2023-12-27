@@ -66,6 +66,7 @@ import UpdateSafeUseComponent from './pages/DashboardPages/UpdateSafeUseComponen
 import UpdateIVDDiagnosticComponent from './pages/DashboardPages/UpdateIVDDiagnosticComponent';
 import UpdateTransfusionInfusionComponent from './pages/DashboardPages/UpdateTransfusionInfusionComponent';
 import UpdateOthersComponent from './pages/DashboardPages/UpdateOthersComponent';
+import Contact from './pages/DashboardPages/Contact';
 // import jwtDecode from 'jwt-decode';
 
 function App() {
@@ -275,6 +276,7 @@ console.log(decodedToken?.userInfo?.isSubscripted)
            
                 <Route path='/dashboard' element={<Dashboard />} />
                 <Route path='/dashboard/project' element={<Project />} />
+                <Route path='/dashboard/contact' element={<Contact />} />
                 <Route path='/dashboard/users' element={<Users />} />
                 <Route path='/dashboard/company' element={<MyCompany />} />
                 <Route path='/dashboard/account' element={<Account />} />

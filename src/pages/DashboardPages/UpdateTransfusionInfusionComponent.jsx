@@ -54,9 +54,9 @@ const UpdateTransfusionInfusionComponent = () => {
       isMedicalDeviceForSampleCollection: projectInformation?.labelData?.isMedicalDeviceForSampleCollection ||  false,
       hasFluidPath: projectInformation?.labelData?.hasFluidPath ||  false,
       isNonPyrogenic: projectInformation?.labelData?.isNonPyrogenic ||  false,
-      numberOfDropsPerMilliliter: projectInformation?.labelData?.numberOfDropsPerMilliliter ||  '',
+      numberOfDropsPerMilliliter: projectInformation?.labelData?.isNonPyrogenic ||  '',
       liquidFilterPoreSize: projectInformation?.labelData?.liquidFilterPoreSize ||  '',
-      hasOneWayValve: projectInformation?.labelData?.hasOneWayValve ||  false,
+      hasOneWayValve: projectInformation?.labelData?.isIVDForPerformanceEvaluation ||  false,
     });
   }, [projectInformation])
 

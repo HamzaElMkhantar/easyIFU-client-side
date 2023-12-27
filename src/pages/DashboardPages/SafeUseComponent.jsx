@@ -171,7 +171,7 @@ const SafeUseComponent = () => {
           </div>
         </div>
 
-        {formData.needInstructionsForUse && (
+        {/* {formData.needInstructionsForUse && (
           <div className="form-group">
             <label>Add the link for eIFU (If available):</label>
             <input
@@ -183,7 +183,7 @@ const SafeUseComponent = () => {
               onChange={(e) => handleInputChange('eIFULink', e.target.value)}
             />
           </div>
-         )} 
+         )}  */}
 
         <div className="form-group">
           <label>4- Is caution necessary when operating the device?</label>

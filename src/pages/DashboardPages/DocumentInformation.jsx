@@ -68,8 +68,8 @@ const DocumentInformation = () => {
            {[...Array(parseInt(labelCount))].map((_, index) => (
              <img
                key={index}
-               style={{ width: `${size}`, height: '', border: '1px solid black' }}
-               className="card-img-top p-1 m-1"
+               style={{ width: `${size}`, height: '', border: '0.1px solid lightGray', borderRadius:'0' }}
+               className="card-img-top"
                src={`${process.env.REACT_APP_BASE_URL}/assets/documents/${documentInfo && documentInfo?.imageUrl}`}
                alt={documentInfo && documentInfo?.projectName}
              />

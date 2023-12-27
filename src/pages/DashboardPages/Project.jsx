@@ -340,7 +340,9 @@ const Project = () => {
                   <th scope="col">#</th>
                   <th scope="col">Project Name</th>
                   <th scope="col">Description</th>
+                  <th scope="col">Status</th>
                   {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
+                  
                   <>
                     <th scope="col"> Manage</th>
                     <th scope="col">Delete</th>
@@ -357,7 +359,9 @@ const Project = () => {
                         <td >{item.projectDescription.length > 20 
                                 ? item.projectDescription.substring(0, 20) + '...' 
                                 : item.projectDescription}</td>
+                  <td scope="col">{item.released ? "Released": "processing..."}</td>
                         {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
+                        
                         <td>
                           {item.projectStep < 9 
                           ? <Link to={`/dashboard/create-project/step${item.projectStep}/${item._id}`}
