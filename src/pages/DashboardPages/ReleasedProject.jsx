@@ -890,6 +890,7 @@ useEffect(() => {
                       </div>
                     </div>
                   }
+
                 {projectInfo.labelData.useByDate &&
                   <div className='symbol-content-item'>
                     
@@ -1753,80 +1754,81 @@ useEffect(() => {
                               <p className='mx-'>exclusively for clinical investigation</p>}
                       </div>
                       <div className='template-3-content-mid-second-item'>
-                      {projectInfo?.labelData?.useByDate &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={Use_by_date} />
-                            <div className=''>
-                              <p>{projectInfo?.labelData?.useByDate}</p>
-                            </div>
-                          </div>}
-
-                        {projectInfo?.labelData?.haDateOfManufacture &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={Date_of_manufactureSymbol} />
-                            <div className=''>
-                              <p>{projectInfo?.labelData?.dateOfManufacture}</p>
-                            </div>
-                          </div>}
-
-                        {projectInfo?.labelData?.hasLotNumber &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={Batch_codeSymbol} />
-                            <div className=''>
-                              <p>{projectInfo?.labelData?.LOTNumber}</p>
-                            </div>
-                          </div>}
-
-                        {projectInfo?.labelData?.haSerialNumber &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={Serial_numberSymbol} />
-                            <div className=''>
-                              <p>{projectInfo?.labelData?.serialNumber}</p>
-                            </div>
-                          </div>}
-
-                        {(projectInfo?.labelData?.catalogueNumber || projectInfo?.labelData?.modelNumber)&&
-                              <div className='symbol-content-item'>
-                                <img className='symbol-img' src={catalogueNumberSymbol} />
-                                <div className=''>
-                                  <p>{projectInfo?.labelData?.catalogueNumber}</p>
-                                </div>
-                              </div>}
-
-                        {projectInfo?.labelData?.modelNumber &&
-                              <div className='symbol-content-item'>
-                                <img className='symbol-img' src={modelNumberSymbol} />
-                                <div className=''>
-                                  <p>{projectInfo?.labelData?.modelNumber}</p>
-                                </div>
-                              </div>}
-                          
-
-                          {/* if outside of EUROPE */}
-                        {!projectInfo?.labelData?.isOutsideEU &&
-                            <div className='symbol-content-item'>
-                              <img className='symbol-img Authorized_Representative' src={Authorized_Representative} />
-                              <div className=''>
-                                <p>{projectInfo?.labelData?.europeanAuthorizedRepName}</p>
-                                <p>{projectInfo?.labelData?.europeanAuthorizedRepAddress}</p> 
-                              </div>
-                            </div>
-                          }
-                        {!projectInfo?.labelData?.isOutsideEU &&
-                            <div className='symbol-content-item'>
-                              <img className='symbol-img' src={Importer} />
-                              <div className=''>
-                                <p>{projectInfo?.labelData?.importerName}</p>
-                                <p>{projectInfo?.labelData?.importerAddress}</p> 
-                              </div>
-                            </div>
-                          }
+                {projectInfo?.labelData?.useByDate &&
+                  <div className='symbol-content-item'>
+                    
+                    <img className='symbol-img' src={Use_by_date} /> 
+                    <div className=''>
+                      <p>{useByDateDataLabel}</p>
+                    </div>
+                  </div>}
+  
+                {projectInfo?.labelData?.haDateOfManufacture &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Date_of_manufactureSymbol} />
+                    <div className=''>
+                      <p>{dynamicData?.manufacturerDate ? dynamicData?.manufacturerDate : projectInfo?.labelData.dateOfManufacture}</p>
+                    </div>
+                  </div>}
+  
+                {projectInfo?.labelData?.hasLotNumber &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Batch_codeSymbol} />
+                    <div className=''>
+                      <p>{projectInfo?.labelData && projectInfo?.labelData?.hasLotNumber && dynamicData?.LotNumber ? dynamicData?.LotNumber : projectInfo.labelData.LOTNumber}</p>
+                    </div>
+                  </div>}
+  
+                {projectInfo?.labelData?.haSerialNumber &&
+                  <div className='symbol-content-item'>
+                    <img className='symbol-img' src={Serial_numberSymbol} />
+                    <div className=''>
+                      <p>{projectInfo?.labelData && projectInfo?.labelData?.haSerialNumber && dynamicData?.serialNumber ? dynamicData?.serialNumber : projectInfo.labelData.serialNumber}</p>
+                    </div>
+                  </div>}
+  
+                {(projectInfo?.labelData?.catalogueNumber || projectInfo?.labelData?.modelNumber)&&
+                      <div className='symbol-content-item'>
+                        <img className='symbol-img' src={catalogueNumberSymbol} />
+                        <div className=''>
+                          <p>{projectInfo?.labelData?.catalogueNumber}</p>
+                        </div>
+                      </div>}
+  
+                {projectInfo?.labelData?.modelNumber &&
+                      <div className='symbol-content-item'>
+                        <img className='symbol-img' src={modelNumberSymbol} />
+                        <div className=''>
+                          <p>{projectInfo?.labelData?.modelNumber}</p>
+                        </div>
+                      </div>}
+                  
+  
+                  {/* if outside of EUROPE */}
+                {projectInfo?.labelData?.isOutsideEU &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img Authorized_Representative' src={Authorized_Representative} />
+                      <div className=''>
+                        <p>{projectInfo?.labelData?.europeanAuthorizedRepName}</p>
+                        <p>{projectInfo?.labelData?.europeanAuthorizedRepAddress}</p> 
+                      </div>
+                    </div>
+                  }
+                {projectInfo?.labelData?.isOutsideEU &&
+                    <div className='symbol-content-item'>
+                      <img className='symbol-img' src={Importer} />
+                      <div className=''>
+                        <p>{projectInfo?.labelData?.importerName}</p>
+                        <p>{projectInfo?.labelData?.importerAddress}</p> 
+                      </div>
+                    </div>
+                  }
                       </div>
                       {projectInfo && 
                             projectInfo.labelData && 
                               projectInfo.labelData.packagingContents &&
                           <p className='template-3-content-mid-fist-item-top'>
-                            {projectInfo.labelData.packagingContents}
+                            {projectInfo?.labelData?.packagingContents}
                           </p>}
                     </div>
 

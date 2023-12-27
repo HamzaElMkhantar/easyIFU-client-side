@@ -1153,6 +1153,11 @@ form div input {
     width: 35%;
 }
 
+.template-3 .symbol-content-item div p{
+    padding: 0;
+    margin: 0;
+}
+
 .template-3 .template-3-content-mid-fist-item {
     display: flex;
     justify-content: space-between;
@@ -1195,7 +1200,7 @@ form div input {
     font-size: 50%;
 }
 .template-3 .symbols-with-text-behind .symbol-content-item-range .min{
-    bottom: -35%;
+    bottom: -40%;
     left: -24%;
 }
 
@@ -1205,7 +1210,7 @@ form div input {
 }
 
 .template-3 .symbols-with-text-behind .symbol-content-item-range .min-temperature{
-    bottom: -5%;
+    bottom: -28%;
     /* left: 0%; */
 }
 
@@ -1254,6 +1259,7 @@ form div input {
 
 .template-3 .symbols-with-text-behind .symbol-content-item p{
     font-size: 70%;
+
 }
 
 .template-3 .symbols-with-text-behind .symbol-content-item  img {

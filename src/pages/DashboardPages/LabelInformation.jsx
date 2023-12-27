@@ -2667,7 +2667,7 @@ const LabelInformation = () => {
                       </div>
                     </div>
                     <div className='template-2-content-bottom'>
-                    <div className="code-bar">
+                    <div className="code-bar" style={{ width:'100%'}}>
                         {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' && handleUDI()}
                           {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
                               imageSrc &&
