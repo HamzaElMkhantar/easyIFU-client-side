@@ -166,7 +166,7 @@ const UpdateManufacturerInfoComponent = () => {
   return (
     <div className='manufactureInfo container'>
         <div className='mb-2' style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>Back</Link>
+            <Link style={{height:'35px'}} to={`/dashboard/project-information/${projectId}`} className='label-info-link'>Back</Link>
         </div>
         {/* <HorizontalLinearStepper step={0}/> */}
         <form onSubmit={handleSubmit}>

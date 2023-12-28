@@ -106,7 +106,7 @@ const UpdateSafeUseComponent = () => {
     <div className="container safe-use">
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
             {/* <Link style={{height:'35px'}} to={`/dashboard/create-project/step4/65764c7df80c7c51796e9bda`} className='label-info-link'> Back</Link> */}
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>Back</Link>
+            <Link style={{height:'35px'}} to={`/dashboard/project-information/${projectId}`} className='label-info-link'>Back</Link>
         </div>
       {/* <HorizontalLinearStepper step={4} /> */}
       <form className="safe-use-form" onSubmit={handleSubmit}>
@@ -196,7 +196,7 @@ const UpdateSafeUseComponent = () => {
           </div>
         </div>
 
-        {formData.needInstructionsForUse && (
+        {/* {formData.needInstructionsForUse && (
           <div className="form-group">
             <label>Add the link for eIFU (If available):</label>
             <input
@@ -208,7 +208,7 @@ const UpdateSafeUseComponent = () => {
               onChange={(e) => handleInputChange('eIFULink', e.target.value)}
             />
           </div>
-         )} 
+         )}  */}
 
         <div className="form-group">
           <label>4- Is caution necessary when operating the device?</label>

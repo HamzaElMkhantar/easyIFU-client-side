@@ -1016,7 +1016,7 @@ form div input {
 }
 
 .template-2 .symbols-with-text-behind-content .symbols-with-text-behind .symbol-content-item {
-    width: 10%;
+    width: 11%;
     text-align: center;
     margin-bottom: 5%;
 }
@@ -1026,9 +1026,11 @@ form div input {
 }
 
 .template-2 .symbols-with-text-behind-content .symbols-with-text-behind .symbol-content-item  img {
-    width: 90%;
+    width: 100%;
     min-width: 30px;
     min-height: 30px;
+    /* width: 40px;
+    height: 40px; */
     
 }
 
@@ -1051,8 +1053,8 @@ form div input {
 }
 
 .template-2 .symbols-with-text-behind-content .symbols-with-text-behind .symbol-content-item-range .min-temperature{
-    bottom: -43%;
-    left: -17%;
+    bottom: -0%;
+    left: -10%;
 }
 
 .template-2 .symbols-with-text-behind-content .symbols-with-text-behind .symbol-content-item-range .max-temperature{
@@ -1181,8 +1183,8 @@ form div input {
 }
 
 .template-3 .template-3-content-mid-second-item .symbol-content-item img{
-    width: 25%;
-    height: 70%;
+    width: 45px;
+    height: 40px;
     margin-right: 1%;
 }
 
@@ -1226,10 +1228,10 @@ form div input {
     width: 30% !important;
 }
 
-.template-3 .Authorized_Representative{
+/* .template-3 .Authorized_Representative{
     width: 27% !important;
     min-height: 150% !important;
-}
+} */
 
 .template-3 .template-3-content-mid-fist-item-top {
     text-align: center;
@@ -1291,4 +1293,34 @@ form div input {
 .template-3 .symbol-content-item.symbol-content-item-with-text p {
     font-size: 64% !important;
 
+}
+
+.template-1 .project-owner-info img{
+    width: 45px !important;
+    height: 40px !important;
+}
+
+.template-2 .project-owner-info img{
+    width: 40px !important;
+    height: 36px !important;
+}
+
+.template-3 .template-3-content-mid-fist-item.symbols-with-text-behind .symbol-img {
+    width: 45px !important;
+    height: 40px !important;
+}
+
+
+/* representative symbol */
+.template-1 .project-owner-info .Authorized_Representative{
+    width: 60px !important;
+    height: 50px !important;
+}
+.template-2 .project-owner-info .Authorized_Representative{
+    width: 60px !important;
+    height: 50px !important;
+}
+.template-3 .symbol-content-item .Authorized_Representative{
+    width: 45px !important;
+    height: 65px !important;
 }

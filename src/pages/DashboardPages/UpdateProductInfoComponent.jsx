@@ -159,7 +159,7 @@ const UpdateProductInfoComponent = () => {
     <div className="container productInfo">
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
             {/* <Link style={{height:'35px'}} to={`/dashboard/create-project/step1/65764c7df80c7c51796e9bda`} className='label-info-link'> Back</Link> */}
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>Back</Link>
+            <Link style={{height:'35px'}} to={`/dashboard/project-information/${projectId}`} className='label-info-link'>Back</Link>
         </div>
         {/* <HorizontalLinearStepper step={1}/> */}
         <form className='productInfo-form' onSubmit={handleSubmit}>

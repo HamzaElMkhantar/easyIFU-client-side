@@ -153,7 +153,7 @@ const UpdateOthersComponent = () => {
     <div className="container others">
       {/* <HorizontalLinearStepper step={10} /> */}
       <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>Back</Link>
+      <Link style={{height:'35px'}} to={`/dashboard/project-information/${projectId}`} className='label-info-link'>Back</Link>
         </div>
       <form className="others-form" onSubmit={handleSubmit}>
         <h2>Others</h2>

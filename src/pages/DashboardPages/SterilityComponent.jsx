@@ -66,7 +66,7 @@ const SterilityComponent = () => {
   return (
     <div className="container sterility">
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to={`/dashboard/create-project/step2/65764c7df80c7c51796e9bda`} className='label-info-link'> Back</Link>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step2/${projectId}`} className='label-info-link'> Back</Link>
             <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
         <HorizontalLinearStepper step={2}/>

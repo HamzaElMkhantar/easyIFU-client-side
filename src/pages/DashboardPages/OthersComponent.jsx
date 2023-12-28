@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
 import './project.css';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
@@ -104,6 +104,10 @@ const OthersComponent = () => {
 
   return (
     <div className="container others">
+       <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step7/${projectId}`} className='label-info-link'> Back</Link>
+            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        </div>
       <HorizontalLinearStepper step={10} />
       <form className="others-form" onSubmit={handleSubmit}>
         <h2>Others</h2>

@@ -113,7 +113,7 @@ const UpdateTransfusionInfusionComponent = () => {
             {/* <Link style={{height:'35px'}} to={projectInformation && projectInformation.labelData && projectInformation.labelData.productType == "Medical device"
              ? `/dashboard/create-project/step5/65764c7df80c7c51796e9bda`
             :`/dashboard/create-project/step6/65764c7df80c7c51796e9bda`} className='label-info-link'> Back</Link> */}
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>Back</Link>
+                        <Link style={{height:'35px'}} to={`/dashboard/project-information/${projectId}`} className='label-info-link'>Back</Link>
         </div>
       {/* <HorizontalLinearStepper step={6} /> */}
       <form className="transfusion-infusion-form" onSubmit={handleSubmit}>
