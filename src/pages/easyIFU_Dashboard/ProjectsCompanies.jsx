@@ -134,9 +134,9 @@ console.log(projectsRequest, projectsSuccess, projectsFail)
                         return (
                           <tr key={index}>
                             <th scope="row">{index + 1}</th>
-                            <td>{item.projectName}</td>
-                            <td>{item.projectDescription.length > 20 ? item.projectDescription.slice(0, 17) + "..." : item.projectDescription}</td>
-                            <td>{item.companyId.companyName}</td>
+                            <td>{item?.projectName}</td>
+                            <td>{item?.projectDescription?.length > 20 ? item.projectDescription.slice(0, 17) + "..." : item.projectDescription}</td>
+                            <td>{item?.companyId?.companyName}</td>
                             <td>{dateFormat(item.createdAt)}</td>
                           </tr>
                         );
