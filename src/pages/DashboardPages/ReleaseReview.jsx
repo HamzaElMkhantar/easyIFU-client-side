@@ -1232,7 +1232,7 @@ const ReleaseReview = () => {
                         <div className='template-1-content-mid-fist-item'>
                           {projectInfo && 
                             projectInfo.labelData && 
-                              (projectInfo.labelData.packagingContents || projectInfo.labelData.packagingContents.length > 0)&&
+                            (projectInfo.labelData.packagingContents || projectInfo.labelData.packagingContents.length !== 0)&& projectInfo.labelData.packagingContents[0] !== '' &&
                           <ul className='template-1-content-mid-fist-item-top' style={{ display:'flex', flexWrap:'wrap', gridGap:'2%', padding:'5px  0px', justifyContent:'center', borderTop:'0.1px solid lightGray' , borderBottom:'0.1px solid lightGray', fontSize:'10px'}}>
                             {projectInfo?.labelData?.packagingContents?.map((item => {
                               return (
@@ -1327,7 +1327,7 @@ const ReleaseReview = () => {
                       <div className='template-2-content-top-rest-content'>
                       {projectInfo && 
                             projectInfo.labelData && 
-                              (projectInfo.labelData.packagingContents || projectInfo.labelData.packagingContents.length > 0)&&
+                            (projectInfo.labelData.packagingContents || projectInfo.labelData.packagingContents.length !== 0)&& projectInfo.labelData.packagingContents[0] !== '' &&
                           <ul className='template-1-content-mid-fist-item-top' style={{ display:'flex', flexWrap:'wrap', gridGap:'2%', padding:'5px  0px', justifyContent:'center', borderTop:'0.1px solid lightGray' , borderBottom:'0.1px solid lightGray', fontSize:'10px'}}>
                             {projectInfo?.labelData?.packagingContents?.map((item => {
                               return (
@@ -1574,7 +1574,7 @@ const ReleaseReview = () => {
                       </div>
                       {projectInfo && 
                             projectInfo.labelData && 
-                              (projectInfo.labelData.packagingContents || projectInfo.labelData.packagingContents.length > 0)&&
+                            (projectInfo.labelData.packagingContents || projectInfo.labelData.packagingContents.length !== 0)&& projectInfo.labelData.packagingContents[0] !== '' &&
                           <ul className='template-3-content-mid-fist-item-top' style={{ display:'flex', flexWrap:'wrap', gridGap:'2%', padding:'5px  0px', justifyContent:'center',fontSize:'10px', marginBottom:'0'}}>
                             {projectInfo?.labelData?.packagingContents?.map((item => {
                               return (
