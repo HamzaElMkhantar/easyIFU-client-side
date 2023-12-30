@@ -14,7 +14,7 @@ const IVDDiagnosticComponent = () => {
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {IVDDiagnostic} = useSelector(state => state);
+  const {IVDDiagnostic, getProject} = useSelector(state => state);
   const {IVDDiagnosticRequest, IVDDiagnosticSuccess, IVDDiagnosticFail, projectInfo} = IVDDiagnostic;
 
   const dispatch = useDispatch();
@@ -24,6 +24,7 @@ const IVDDiagnosticComponent = () => {
 
   const [formData, setFormData] = useState({
     projectId,
+    isUpdate: false,
     isControlMaterial: false,
     isControlMaterialForNegativeRange: false,
     isControlMaterialForPositiveRange: false,
@@ -31,6 +32,32 @@ const IVDDiagnosticComponent = () => {
     numberOfTests: '',
     isIVDForPerformanceEvaluation: false,
   });
+
+    // get prev project info
+    const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+    const [projectInformation, setProjectInformation] = useState({});
+    useEffect(() =>{
+      dispatch(getProjectAction(projectId, token))
+    }, [])
+    useEffect(() =>{
+      if(getProjectSuccess){
+        setProjectInformation(project)
+      }
+    }, [getProjectSuccess])
+
+  useEffect(() => {
+    // Set formData with existing project information
+    setFormData({
+      isUpdate: false,
+      projectId,
+      isControlMaterial: projectInformation?.labelData?.isControlMaterial || false,
+      isControlMaterialForNegativeRange: projectInformation?.labelData?.isControlMaterialForNegativeRange || false,
+      isControlMaterialForPositiveRange: projectInformation?.labelData?.isControlMaterialForPositiveRange || false,
+      hasSpecificNumberOfTests: projectInformation?.labelData?.hasSpecificNumberOfTests || false,
+      numberOfTests: projectInformation?.labelData?.numberOfTests || '',
+      isIVDForPerformanceEvaluation: projectInformation?.labelData?.isIVDForPerformanceEvaluation || false,
+    });
+  }, [projectInformation])
 
   const handleCheckboxChange = (name, value) => {
     setFormData({

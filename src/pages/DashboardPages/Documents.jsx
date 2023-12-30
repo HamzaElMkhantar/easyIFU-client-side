@@ -55,13 +55,16 @@ const Documents = () => {
     }, [])
 
 
-
+console.log(documentsCompany && documentsCompany)
+console.log(documentsCompany && documentsCompany.length)
     useEffect(() => {
       if(documentsSuccess){
         setCompanyDocument(documentsCompany)
+       
       }
-      if(documentsFail && documentsFail.message !== "didn't found any document"){
-        toast.warning(`${documentsFail.message}`)
+     
+      if(documentsFail && documentsFail.message == "didn't found any document"){
+        setCompanyDocument([])
       }
     }, [documentsSuccess, documentsFail])
 

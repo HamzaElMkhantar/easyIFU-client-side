@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
 import { RotatingLines } from 'react-loader-spinner';
-import { othersAction } from '../../redux/actions/projectActions';
+import { getProjectAction, othersAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 
 const OthersComponent = () => {
@@ -14,7 +14,7 @@ const OthersComponent = () => {
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {others} = useSelector(state => state);
+  const {others, getProject} = useSelector(state => state);
   const {othersRequest, othersSuccess, othersFail, projectInfo} = others;
 
 
@@ -40,6 +40,7 @@ const OthersComponent = () => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     projectId,
+    isUpdate: false,
     associatedWithIndividualPatient: false,
     patientNumber: '',
     patientName: '',
@@ -68,6 +69,51 @@ const OthersComponent = () => {
     quantity: 0,
   });
 
+     // get prev project info
+     const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+     const [projectInformation, setProjectInformation] = useState({});
+     useEffect(() =>{
+       dispatch(getProjectAction(projectId, token))
+     }, [])
+     useEffect(() =>{
+       if(getProjectSuccess){
+         setProjectInformation(project)
+       }
+     }, [getProjectSuccess])
+
+  useEffect(() => {
+    // Set formData with existing project information
+    setFormData({
+      isUpdate: false,
+      projectId,
+      associatedWithIndividualPatient: projectInformation?.labelData?.associatedWithIndividualPatient || false,
+      patientNumber:projectInformation?.labelData?.patientNumber || '',
+      patientName: projectInformation?.labelData?.patientName || '',
+      healthCareCentreName: projectInformation?.labelData?.healthCareCentreName || '',
+      healthCareCentreAddress: projectInformation?.labelData?.healthCareCentreAddress || '',
+      doctorName:  projectInformation?.labelData?.doctorName || '',
+      date: projectInformation?.labelData?.date || (new Date(Date.now())).toLocaleDateString('en-GB'),
+      addWebsite: projectInformation?.labelData?.addWebsite || false,
+      website: projectInformation?.labelData?.website || '',
+      translationActivity: projectInformation?.labelData?.translationActivity || false,
+      translationEntityName: projectInformation?.labelData?.translationEntityName || '',
+      translationEntityAddress: projectInformation?.labelData?.translationEntityAddress || '',
+      modificationToPackaging: projectInformation?.labelData?.modificationToPackaging || false,
+      repackagingEntityName: projectInformation?.labelData?.repackagingEntityName || '',
+      repackagingEntityAddress: projectInformation?.labelData?.repackagingEntityAddress || '',
+      reprocessedDevice: projectInformation?.labelData?.reprocessedDevice || false,
+      reprocessingCycles: projectInformation?.labelData?.reprocessingCycles || 0,
+      reprocessingLimitation: projectInformation?.labelData?.reprocessingLimitation || '',
+      customMadeDevice: projectInformation?.labelData?.customMadeDevice || false,
+      clinicalInvestigationOnly: projectInformation?.labelData?.clinicalInvestigationOnly || false,
+      containsCMRSubstances: projectInformation?.labelData?.containsCMRSubstances || false,
+      cmrSubstancesList: projectInformation?.labelData?.cmrSubstancesList || '',
+      intendedForIntroduction: projectInformation?.labelData?.intendedForIntroduction || false,
+      qualitativeComposition: projectInformation?.labelData?.qualitativeComposition || '',
+      quantitativeInformation: projectInformation?.labelData?.quantitativeInformation || '',
+      quantity: projectInformation?.labelData?.quantity || 0,
+    });
+  }, [projectInformation])
   const handleCheckboxChange = (name, value) => {
     setFormData({
       ...formData,

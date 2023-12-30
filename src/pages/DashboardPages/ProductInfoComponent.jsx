@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
-import { productInformationAction, uploadManufacturerLogoAction } from '../../redux/actions/projectActions';
+import { getProjectAction, productInformationAction, uploadManufacturerLogoAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 
@@ -14,16 +14,16 @@ const ProductInfoComponent = () => {
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {productInformation, uploadManufacturerLogo} = useSelector(state => state);
+    const {productInformation, uploadManufacturerLogo, getProject} = useSelector(state => state);
     const {productRequest, productSuccess, productFail, projectInfo} = productInformation;
     const {uploadLogoRequest, uploadLogoSuccess, uploadLogoFail} = uploadManufacturerLogo;
 
 
     const [numbersData, setNumbersData] = useState('')
     const [manufacturerLogo, setManufacturerLogo] = useState('')
-
     const [formData, setFormData] = useState({
         projectId,
+        isUpdate: false,
         productName: '' ,
         intendedPurpose: '',
         productType: '',
@@ -37,10 +37,47 @@ const ProductInfoComponent = () => {
         hasLotNumber: false ,
         catalogueNumber: '',
         modelNumber: '',
-        packagingContents: '',
+        packagingContents: '' ,
         addManufacturerLogo: false,
     });
 
+         // get prev project info
+         const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+         const [projectInformation, setProjectInformation] = useState({});
+         useEffect(() =>{
+             dispatch(getProjectAction(projectId, token))
+         }, [])
+         useEffect(() =>{
+             if(getProjectSuccess){
+             setProjectInformation(project)
+             }
+         }, [getProjectSuccess])
+         console.log(projectInformation)
+
+         useEffect(() =>{
+            setFormData({
+                isUpdate: false,
+                projectId,
+                productName: projectInformation?.labelData?.productName ||'',
+                intendedPurpose: projectInformation?.labelData?.intendedPurpose || '',
+                productType: projectInformation?.labelData?.productType || '',
+                udiDI: projectInformation?.labelData?.udiDI || '',
+                udiFormat: projectInformation?.labelData?.udiFormat || '',
+                udiType: projectInformation?.labelData?.udiType || '',
+                useByDate: projectInformation?.labelData?.useByDate || '',
+                hasUseByDate: projectInformation?.labelData?.hasUseByDate || false,
+                dateOfManufacture: projectInformation?.labelData?.dateOfManufacture || '',
+                haDateOfManufacture: projectInformation?.labelData?.haDateOfManufacture || false,
+                serialNumber: projectInformation?.labelData?.serialNumber || '',
+                haSerialNumber: projectInformation?.labelData?.haSerialNumber || false,
+                LOTNumber: projectInformation?.labelData?.LOTNumber || '',
+                hasLotNumber: projectInformation?.labelData?.hasLotNumber || false ,
+                catalogueNumber: projectInformation?.labelData?.catalogueNumber || '',
+                modelNumber: projectInformation?.labelData?.modelNumber || '',
+                // packagingContents: projectInformation?.labelData?.packagingContents || [''],
+                addManufacturerLogo: projectInformation?.labelData?.addManufacturerLogo || false,
+            })
+        }, [projectInformation])
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -70,35 +107,55 @@ const ProductInfoComponent = () => {
             newValue = e.target.files[0]
         }
 
+        if (name === 'packagingContents') {
+            // Update the state
+            setFormData((prevData) => ({
+              ...prevData,
+              [name]: value,
+            }));
+
+        
+            return;
+          }
+
         setFormData({
             ...formData,
             [name]: newValue,
         });
-
-        
     }
-
+    const handleRadioButtonChange = (name) => {
+        setFormData({
+          ...formData,
+          hasLotNumber: name === 'lotNumber' ? true : false,
+          haSerialNumber: name === 'serialNumber' ? true : false,
+        });
+      };
     console.log(formData)
     const dispatch = useDispatch()
-    const formDataObject = new FormData();
-    formDataObject.append('manufacturerLogo', formData.manufacturerLogo);
-    formDataObject.append('projectId', projectId);
+    // const formDataObject = new FormData();
+    // formDataObject.append('manufacturerLogo', formData.manufacturerLogo);
+    // formDataObject.append('projectId', projectId);
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-        console.log(formData)
 
-        // Use a regular expression to check for the format dd/mm/yyyy
-        // const dateFormat = /^\d{2}\-\d{2}\-\d{4}$/;
-        // if (formData.dateOfManufacture !== '' &&!formData.dateOfManufacture.match(dateFormat)) {
-        //     toast.warning('Please enter a date in the format mm-dd-yyyy.');
-        //     return;
-        // }
-
- 
+        if (formData.packagingContents) {
+            // Split the input string into an array using "-" as the delimiter
+            const packagingContentsArray = formData.packagingContents
+              .split('-')
+              .map((val) => val.trim())
+              .filter((val) => val !== ''); // Remove empty values
+        
+            // Update the state
+            setFormData({
+                ...formData,
+                packagingContents: packagingContentsArray
+              });
+          }
 
        await dispatch(productInformationAction(formData, token))
-       await dispatch(uploadManufacturerLogoAction(formDataObject, token))
+
+    //    await dispatch(uploadManufacturerLogoAction(formDataObject, token))
 
     }
 
@@ -319,27 +376,32 @@ const ProductInfoComponent = () => {
                 </div>
                 <p className='form-group-paragraph'>In case where there is no specified expiration date, you can add the manufacture date*</p>
                 <div className="form-group">
-                    <label>7- choose one :</label>
-                    <div style={{display:'flex'}}>
-                        <input style={{width:''}}
+                    <label>7- Choose one :</label>
+                    <div style={{ display: 'flex' }}>
+                    <input
                         type="CheckBox"
-                        required={(!formData.haSerialNumber && !formData.hasLotNumber) ? true : false}
+                        id="lotNumber"
+                        name="lotNumber"
                         className="form-check-input"
                         checked={formData.hasLotNumber}
-                        onClick={() => setFormData({...formData, hasLotNumber: !formData.hasLotNumber})}
-                        />
-                        <label className="form-check-label mx-3">LOT Number</label>
+                        onChange={() => handleRadioButtonChange('lotNumber')}
+                    />
+                    <label className="form-check-label mx-3" htmlFor="lotNumber">
+                        LOT Number
+                    </label>
                     </div>
-                    <div style={{display:'flex'}}>
-                     <input style={{width:''}}
+                    <div style={{ display: 'flex' }}>
+                    <input
                         type="CheckBox"
-                        required={(!formData.haSerialNumber && !formData.hasLotNumber) ? true : false}
+                        id="serialNumber"
+                        name="serialNumber"
                         className="form-check-input"
                         checked={formData.haSerialNumber}
-                        onClick={() => setFormData({...formData, haSerialNumber: !formData.haSerialNumber})}
-                        />
-                    <label className="form-check-label mx-3">Serial Number</label>
-
+                        onChange={() => handleRadioButtonChange('serialNumber')}
+                    />
+                    <label className="form-check-label mx-3" htmlFor="serialNumber">
+                        Serial Number
+                    </label>
                     </div>
                 </div>
                 {/* {numbersData == "Serial" &&
@@ -389,15 +451,23 @@ const ProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-0">
                     <label>10- Packaging contents (if necessary):</label>
                     <input
                     type="text"
                     className="form-control"
+                    placeholder='content1 - content2 - ....'
                     name="packagingContents"
                     value={formData.packagingContents}
                     onChange={handleInputChange}
                     />
+                </div>
+                <div className='px-2'>
+                {projectInformation?.labelData?.packagingContents.map((item, index) => {
+                    return (
+                        <p style={{color:'black', fontSize:'14px'}}>{index = projectInformation?.labelData?.packagingContents.length ? item  : item + " - " }</p>
+                    )
+                })}
                 </div>
                 {/* <div className="form-group">
                     <label>11- Do you want to add your manufacturer logo in the label ?</label>

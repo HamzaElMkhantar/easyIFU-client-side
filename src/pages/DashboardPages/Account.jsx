@@ -27,6 +27,7 @@ const Account = () => {
           setIsOpen(!isOpen);
         };
 
+        const [updateInfo, setUpdateInfo] = useState(false);
 
       const {getUser, updateUser} = useSelector(state => state);
       const {userRequest, userSuccess, user, userFailed} = getUser;
@@ -36,21 +37,36 @@ const Account = () => {
       const decodedToken = token ? jwtDecode(token) : null
   
       const [userState, setUserState] = useState(null);
-      const [update_User, setUpdateUser] = useState({
-        updateFirstName: false,
-        updateLastName: false,
-        updatePassword: false,
-        updateEmail: false,
-      })
-
+  
       const [userInfo, setUserInfo] = useState({
           adminId: decodedToken ? decodedToken.userInfo._id : null,
           userId: decodedToken ? decodedToken.userInfo._id : null,
           firstName: '',
           lastName: '',
           password: '',
-          email:'',
+          role: []
         })
+
+        useEffect(() => {
+              setUserInfo({
+                adminId: decodedToken ? decodedToken.userInfo._id : null,
+                userId: decodedToken ? decodedToken.userInfo._id : null,
+                firstName: userState?.firstName || '',
+                lastName: userState?.lastName || '',
+                password: '',
+                role: userState?.role ||[]
+              })
+        }, [userSuccess])
+
+        const handleCheckboxChange = (newRole) => {
+          const updatedRoles = userInfo.role.includes(newRole)
+            ? userInfo.role.filter((r) => r !== newRole) // Remove role if already present
+            : [...userInfo.role, newRole]; // Add role if not present
+          setUserInfo({
+            ...userInfo,
+            role: updatedRoles
+          });
+        };
       
         const dispatch = useDispatch();
       
@@ -89,6 +105,7 @@ const Account = () => {
         useEffect(() => {
             if(updateUserSuccess){
                 dispatch(getUserAction(decodedToken.userInfo._id, token))
+                setUpdateInfo(false)
             }
         }, [updateUserSuccess])
  
@@ -165,19 +182,27 @@ const Account = () => {
                         display:'flex',
                         marginTop:'10px'
                         }} className='col-12 manage-user-card'>
-                <div className='col-lg-2'>
+                <div className='col-lg-2'  style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <Avatar 
                         sx={{ width: 130, height: 130, fontSize:'90px'}}
                         style={{backgroundColor:'black', color:"#ecf0f3", marginBottom:'15px'}}>
                         {userState && userState.firstName[0].toUpperCase()}
                     </Avatar>
-                    
+                    <button onClick={() => setUpdateInfo(!updateInfo)}
+                          style={{ backgroundColor: '#08408b', border: '0', fontSize: '18px' , fontWeight:'600'}}
+                          className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
+                          type="submit"
+                        >
+                         {!updateInfo ?
+                              "Update"
+                         :"Hide Form"}
+                        </button>
                 </div>
                 <div className='manage-user-card-content px-3 col-lg-8'>
                     <p style={{fontSize:'14px', color:'gray'}}>FirstName: {userState && userState.firstName} </p>
                     <p style={{fontSize:'14px', color:'gray'}}>LastName: {userState && userState.lastName} </p>
                     <p style={{fontSize:'14px', color:'gray'}}>Email: {userState && userState.email} </p>
-                    <p style={{fontSize:'14px', color:'gray', display:'flex'}}>Role: {userState && userState.role.length > 1 ? userState?.role?.map((item) => (<p className='mx-1'> {item},</p>))  : userState?.role?.map((item) => (<p> {item} </p>))}  </p>
+                    <p style={{fontSize:'14px', color:'gray', display:'flex', margin:'0'}}>Role: {userState && userState.role.length > 1 ? userState?.role?.map((item) => (<p className='mx-1'> {item},</p>))  : userState?.role?.map((item) => (<p> {item} </p>))}  </p>
                     <p style={{fontSize:'14px', color:'gray'}}>Status: {userState && userState.isActive ? "active" : "not Active"} </p>
                     {userState && userState.createdAt && <p style={{fontSize:'14px', color:'gray'}}>Created: {userState && dateFormat(userState.createdAt)} </p>}
 
@@ -194,95 +219,18 @@ const Account = () => {
 
           </div>
 
-          <div  style={{
+         {updateInfo && <div  style={{
                     backgroundColor:'#fff',
                     marginTop:'20px',
                     borderRadius:'10px'
                 }}
             className="card-body col-md-12">
-              <div style={{display:'flex'}}>
-                     {decodedToken &&
-                        decodedToken.userInfo &&
-                        decodedToken.userInfo.role.includes("Admin") &&
-                         <div className="form-outline mb-2 d-flex mx-2" style={{alignItems:'center'}}>
-                            <label className="form-label" htmlFor="firstNam">
-                              First Name
-                            </label>
-                            <input style={{width:'15px', height:'19px', padding:'0'}}
-                                type="checkbox"
-                                className="form-check-input"
-                                name="firstNam"
-                                value={update_User.updateFirstName ? true : false}
-                                checked={update_User.updateFirstName ? true : false}
-                                onChange={(e) => setUpdateUser({
-                                  ...update_User,
-                                  updateFirstName : !update_User.updateFirstName
-                                })}
-                            />
-                          </div>}
-                         {decodedToken &&
-                        decodedToken.userInfo &&
-                        decodedToken.userInfo.role.includes("Admin") &&
-                         <div className="form-outline mb-2 d-flex mx-2" style={{alignItems:'center'}}>
-                            <label className="form-label" htmlFor="lastNam">
-                              Last Name
-                            </label>
-                            <input style={{width:'15px', height:'19px', padding:'0'}}
-                                type="checkbox"
-                                id="lastNam"
-                                value={update_User.updateLastName ? true : false}
-                                className="form-check-input mb-2"
-                                checked={update_User.updateLastName ? true : false}
-
-                                onChange={(e) => setUpdateUser({
-                                  ...update_User,
-                                  updateLastName : !update_User.updateLastName
-                                })}
-                            />
-                          </div>}
-                          <div className="form-outline mb-2 d-flex mx-2" style={{alignItems:'center'}}>
-                            <label className="form-label" htmlFor="pass">
-                              Password
-                            </label>
-                            <input style={{width:'15px', height:'19px', padding:'0'}}
-                                type="checkbox"
-                                id="pass"
-                                className="form-check-input mb-2"
-                                value={update_User.updatePassword ? true : false}
-                                checked={update_User.updatePassword ? true : false}
-                                onChange={(e) => setUpdateUser({
-                                  ...update_User,
-                                  updatePassword : !update_User.updatePassword
-                                })}
-                            />
-                          </div>
-                          {decodedToken &&
-                        decodedToken.userInfo &&
-                        decodedToken.userInfo.role.includes("Admin") &&
-                        <div className="form-outline mb-2 d-flex mx-2" style={{alignItems:'center'}}>
-                            <label className="form-label" htmlFor="email-update">
-                              Email
-                            </label>
-                            <input style={{width:'15px', height:'19px', padding:'0'}}
-                                type="checkbox"
-                                id="email-update"
-                                className="form-check-input mb-2"
-                                onChange={(e) => setUpdateUser({
-                                  ...update_User,
-                                  updateEmail : !update_User.updateEmail
-                                })}
-                                checked={update_User.updateEmail ? true : false}
-                                value={update_User.updateEmail ? true : false}
-                            />
-                          </div>}
-                      </div>
   
                     <form style={{ marginTop: '20px' }} onSubmit={handleSubmit}>
                       <div className="row">
                        {decodedToken &&
                             decodedToken.userInfo &&
                             decodedToken.userInfo.role.includes("Admin") &&
-                            update_User.updateFirstName == true &&
                             <div className="col-md-6">
                           <div className="form-outline mb-2">
                             <label className="form-label" htmlFor="firstName">
@@ -302,7 +250,6 @@ const Account = () => {
                         {decodedToken &&
                         decodedToken.userInfo &&
                         decodedToken.userInfo.role.includes("Admin") &&
-                        update_User.updateLastName == true &&
                             <div className="col-md-6">
                                 <div className="form-outline mb-2">
                                     <label className="form-label" htmlFor="lastName">
@@ -321,27 +268,7 @@ const Account = () => {
 
                       </div>
                       <div className="row">
-                        {decodedToken &&
-                        decodedToken.userInfo &&
-                        decodedToken.userInfo.role.includes("Admin") &&
-                        update_User.updateEmail == true &&
-                            <div className="col-md-6">
-                            <div className="form-outline mb-2">
-                                <label className="form-label" htmlFor="email">
-                                E-mail
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    onChange={(e) => handleInput(e)}
-                                    className="form-control"
-                                    placeholder="E-mail"
-                                    value={userInfo.email}
-                                />
-                            </div>
-                            </div>}
-
-                        {update_User.updatePassword == true &&<div className="col-md-6">
+                        <div className="col-md-6">
                           <div className="form-outline mb-2">
                             <label className="form-label" htmlFor="password">
                               Password
@@ -355,13 +282,54 @@ const Account = () => {
                                 placeholder="Password"
                             />
                           </div>
-                        </div>}
+                        </div>
+                        <div className="col-md-6 mt-3">
+                              <div className="form-outline mb-2">
+                                <label className="form-label" htmlFor="roles">
+                                  User Roles
+                                </label>
+                                <div>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Admin"
+                                      checked={userInfo.role.includes('Admin')}
+                                      onChange={() => handleCheckboxChange('Admin')}
+                                    />
+                                    Admin
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Creator"
+                                      checked={userInfo.role.includes('Creator')}
+                                      onChange={() => handleCheckboxChange('Creator')}
+                                    />
+                                    Creator
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Approver"
+                                      checked={userInfo.role.includes('Approver')}
+                                      onChange={() => handleCheckboxChange('Approver')}
+                                    />
+                                    Approver
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Release"
+                                      checked={userInfo.role.includes('Release')}
+                                      onChange={() => handleCheckboxChange('Release')}
+                                    />
+                                    Release
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
                       </div>
                       <div className="text-center pt-1 mb-4 pb-1">
-                      { (update_User.updateFirstName == true
-                        || update_User.updateLastName == true
-                        || update_User.updatePassword == true
-                        || update_User.updateEmail == true) &&
                           <button disabled={updateUserRequest ? true : false}
                           style={{ width: '100%', backgroundColor: '#08408b', border: '0', fontSize: '18px' , fontWeight:'600'}}
                           className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
@@ -378,10 +346,10 @@ const Account = () => {
                                 /> 
                               </div>
                          :"Update"}
-                        </button>}
+                        </button>
                       </div>
                     </form>
-          </div>
+          </div>}
       </section>
       </main>
     </div>

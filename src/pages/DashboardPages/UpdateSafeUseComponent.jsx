@@ -94,6 +94,7 @@ const UpdateSafeUseComponent = () => {
 
   useEffect(() => {
     if(safeUseSuccess){
+        navigate(`/dashboard/project-information/${projectInfo._id}`)
         toast.success(`updated success`) 
     }
 

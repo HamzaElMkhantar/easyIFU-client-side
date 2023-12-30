@@ -1199,7 +1199,7 @@ form div input {
 
 .template-3 .symbols-with-text-behind .symbol-content-item-range p {
     position: absolute;
-    font-size: 50%;
+    font-size: 50% !important;
 }
 .template-3 .symbols-with-text-behind .symbol-content-item-range .min{
     bottom: -40%;
@@ -1223,6 +1223,8 @@ form div input {
 .template-3 .sterileSymbol-img {
     width: 120% !important;
 }
+
+
 
 .template-3 .sm-img {
     width: 30% !important;
@@ -1294,6 +1296,7 @@ form div input {
     font-size: 64% !important;
 
 }
+/* ----------- last modification for images --------- */
 
 .template-1 .project-owner-info img{
     width: 45px !important;
@@ -1324,3 +1327,19 @@ form div input {
     width: 45px !important;
     height: 65px !important;
 }
+
+.template-1 .symbol-content-item .symbol-img.manufacture-img, .template-2 .symbol-content-item .symbol-img.manufacture-img{
+    width:30px !important;
+    height: 35px !important;
+}
+
+.template-3 .symbol-content-item .symbol-img.manufacture-img{
+    width:33px !important;
+    height: 32px !important;
+}
+
+
+
+
+
+/* manufacture-img */

@@ -77,7 +77,7 @@ const UpdateProductInfoComponent = () => {
             hasLotNumber: projectInformation?.labelData?.hasLotNumber || false ,
             catalogueNumber: projectInformation?.labelData?.catalogueNumber || '',
             modelNumber: projectInformation?.labelData?.modelNumber || '',
-            packagingContents: projectInformation?.labelData?.packagingContents || '',
+            // packagingContents: projectInformation?.labelData?.packagingContents || '',
             addManufacturerLogo: projectInformation?.labelData?.addManufacturerLogo || false,
         })
     }, [projectInformation])
@@ -110,7 +110,14 @@ const UpdateProductInfoComponent = () => {
         if(name == "manufacturerLogo"){
             newValue = e.target.files[0]
         }
-
+        if (name === 'packagingContents') {
+            // Update the state
+            setFormData((prevData) => ({
+              ...prevData,
+              [name]: value,
+            }));
+            return;
+        }
         setFormData({
             ...formData,
             [name]: newValue,
@@ -129,25 +136,45 @@ const UpdateProductInfoComponent = () => {
         e.preventDefault();
         console.log(formData)
 
-        // Use a regular expression to check for the format dd/mm/yyyy
-        // const dateFormat = /^\d{2}\-\d{2}\-\d{4}$/;
-        // if (formData.dateOfManufacture !== '' &&!formData.dateOfManufacture.match(dateFormat)) {
-        //     toast.warning('Please enter a date in the format mm-dd-yyyy.');
-        //     return;
-        // }
+        if (formData.packagingContents) {
+            // Split the input string into an array using "-" as the delimiter
+            const packagingContentsArray = formData.packagingContents.split('-').map((val) => val.trim());
+        
+            // Update the state
+            setFormData({
+                ...formData,
+                packagingContents: packagingContentsArray
+              });
+          }
+
+          if (formData.packagingContents) {
+            // Split the input string into an array using "-" as the delimiter
+            const packagingContentsArray = formData.packagingContents
+              .split('-')
+              .map((val) => val.trim())
+              .filter((val) => val !== ''); // Remove empty values
+        
+            // Update the state
+
+            setFormData({
+                ...formData,
+                packagingContents: packagingContentsArray
+              });
+          }
 
  
 
        await dispatch(productInformationAction(formData, token))
-       await dispatch(uploadManufacturerLogoAction(formDataObject, token))
+    //    await dispatch(uploadManufacturerLogoAction(formDataObject, token))
 
     }
 
     const navigate = useNavigate()
     useEffect(() => {
         if(productSuccess){
-            // navigate(`/dashboard/create-project/step3/${projectInfo._id}`)
+            navigate(`/dashboard/project-information/${projectInfo._id}`)
             toast.success(`updated success`)
+            setFormData({...formData, packagingContents: ''})
         }
 
         if(productFail){
@@ -421,15 +448,23 @@ const UpdateProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-0">
                     <label>10- Packaging contents (if necessary):</label>
                     <input
                     type="text"
                     className="form-control"
                     name="packagingContents"
+                    placeholder='content1 - content2 - ....'
                     value={formData.packagingContents}
                     onChange={handleInputChange}
                     />
+                </div>
+                <div className='px-2'>
+                {projectInformation?.labelData?.packagingContents.map((item, index) => {
+                    return (
+                        <p style={{color:'black', fontSize:'14px'}}>{index = projectInformation?.labelData?.packagingContents.length ? item  : item + " - " }</p>
+                    )
+                })}
                 </div>
                 {/* <div className="form-group">
                     <label>11- Do you want to add your manufacturer logo in the label ?</label>
@@ -444,7 +479,7 @@ const UpdateProductInfoComponent = () => {
                     <label className="form-check-label">Yes</label>
                     </div>
                 </div> */}
-                {formData.addManufacturerLogo && (
+                {/* {formData.addManufacturerLogo && (
                     <div className="form-group">
                     <label>Insert your logo:</label>
                     <input
@@ -454,7 +489,7 @@ const UpdateProductInfoComponent = () => {
                         onChange={handleInputChange}
                     />
                     </div>
-                )}
+                )} */}
                 </div>
             </div>
            {!productRequest 

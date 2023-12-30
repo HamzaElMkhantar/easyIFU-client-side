@@ -56,7 +56,7 @@ const UpdateTransfusionInfusionComponent = () => {
       isNonPyrogenic: projectInformation?.labelData?.isNonPyrogenic ||  false,
       numberOfDropsPerMilliliter: projectInformation?.labelData?.isNonPyrogenic ||  '',
       liquidFilterPoreSize: projectInformation?.labelData?.liquidFilterPoreSize ||  '',
-      hasOneWayValve: projectInformation?.labelData?.isIVDForPerformanceEvaluation ||  false,
+      hasOneWayValve: projectInformation?.labelData?.hasOneWayValve ||  false,
     });
   }, [projectInformation])
 
@@ -98,7 +98,7 @@ const UpdateTransfusionInfusionComponent = () => {
 
   useEffect(() => {
     if(transfusionInfusionSuccess){
-        // navigate(`/dashboard/create-project/step8/${projectInfo._id}`)
+        navigate(`/dashboard/project-information/${projectInfo._id}`)
         toast.success(`updated success`)
     }
 

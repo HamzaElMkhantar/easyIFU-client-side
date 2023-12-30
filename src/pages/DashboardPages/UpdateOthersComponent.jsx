@@ -92,7 +92,7 @@ const UpdateOthersComponent = () => {
       healthCareCentreName: projectInformation?.labelData?.healthCareCentreName || '',
       healthCareCentreAddress: projectInformation?.labelData?.healthCareCentreAddress || '',
       doctorName:  projectInformation?.labelData?.doctorName || '',
-      date: currentDate || (new Date(Date.now())).toLocaleDateString('en-GB'),
+      date: projectInformation?.labelData?.date  || (new Date(Date.now())).toLocaleDateString('en-GB'),
       addWebsite: projectInformation?.labelData?.addWebsite || false,
       website: projectInformation?.labelData?.website || '',
       translationActivity: projectInformation?.labelData?.translationActivity || false,
@@ -140,7 +140,7 @@ const UpdateOthersComponent = () => {
 
   useEffect(() => {
     if(othersSuccess){
-        // navigate(`/dashboard/project-information/${projectInfo._id}`)
+      navigate(`/dashboard/project-information/${projectInfo._id}`)
         toast.success(`updated success`)
     }
 

@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
-import { safeUseAction } from '../../redux/actions/projectActions';
+import { getProjectAction, safeUseAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 
@@ -14,7 +14,7 @@ const SafeUseComponent = () => {
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {safeUse} = useSelector(state => state);
+  const {safeUse, getProject} = useSelector(state => state);
   const {safeUseRequest, safeUseSuccess, safeUseFail, projectInfo} = safeUse;
 
 
@@ -23,6 +23,7 @@ const SafeUseComponent = () => {
 
   const [formData, setFormData] = useState({
     projectId,
+    isUpdate: false,
     hasBiologicalRisks: false,
     isIntendedForSingleUse: false,
     needInstructionsForUse: false,
@@ -37,6 +38,40 @@ const SafeUseComponent = () => {
     containsNanoMaterials: false,
     multipleUsesOnSinglePatient: false,
   });
+
+   // get prev project info
+ const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+ const [projectInformation, setProjectInformation] = useState({});
+ useEffect(() =>{
+   dispatch(getProjectAction(projectId, token))
+ }, [])
+ useEffect(() =>{
+   if(getProjectSuccess){
+     setProjectInformation(project)
+   }
+ }, [getProjectSuccess])
+
+  useEffect(() => {
+    // Set formData with existing project information
+    setFormData({
+      isUpdate: false,
+      projectId,
+      hasBiologicalRisks: projectInformation?.labelData?.hasBiologicalRisks || false,
+      isIntendedForSingleUse: projectInformation?.labelData?.isIntendedForSingleUse || false,
+      needInstructionsForUse: projectInformation?.labelData?.needInstructionsForUse || false,
+      eIFULink: projectInformation?.labelData?.eIFULink || '',
+      needCaution: projectInformation?.labelData?.needCaution || false,
+      containsRubberLatex: projectInformation?.labelData?.containsRubberLatex || false,
+      containsBloodDerivatives: projectInformation?.labelData?.containsBloodDerivatives || false,
+      containsMedicinalSubstance: projectInformation?.labelData?.containsMedicinalSubstance || false,
+      containsAnimalOriginMaterial: projectInformation?.labelData?.containsAnimalOriginMaterial || false,
+      containsHumanOriginMaterial: projectInformation?.labelData?.containsHumanOriginMaterial || false,
+      containsHazardousSubstances: projectInformation?.labelData?.containsHazardousSubstances || false,
+      containsNanoMaterials: projectInformation?.labelData?.containsNanoMaterials || false,
+      multipleUsesOnSinglePatient: projectInformation?.labelData?.multipleUsesOnSinglePatient || false,
+    });
+  }, [projectInformation])
+
 
   const handleCheckboxChange = (name, value) => {
     setFormData({

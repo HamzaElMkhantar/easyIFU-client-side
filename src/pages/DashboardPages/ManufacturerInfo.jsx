@@ -3,7 +3,7 @@ import './project.css'
 import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { manufacturerInformationAction } from '../../redux/actions/projectActions';
+import { getProjectAction, manufacturerInformationAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import Cookies from 'js-cookie';
@@ -17,12 +17,13 @@ const ManufacturerInfoComponent = () => {
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {manufacturerInformation, getCompanyInfo} = useSelector(state => state)
+    const {manufacturerInformation, getCompanyInfo, getProject} = useSelector(state => state)
     const {manufacturerRequest, manufacturerSuccess, manufacturerFail, projectInfo} = manufacturerInformation;
     const {companyRequest, companySuccess, companyFail, companyInfo} = getCompanyInfo;
 
   const [formData, setFormData] = useState({
     projectId,
+    isUpdate: false,
     companyId: decodedToken && decodedToken.userInfo ? decodedToken.userInfo.companyId : null,
     hasDistributor: false,
     distributorName: '',
@@ -36,32 +37,54 @@ const ManufacturerInfoComponent = () => {
     notifiedBodyNumber: '',
   });
 
+      // get prev project info
+      const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+      const [projectInformation, setProjectInformation] = useState({});
+      useEffect(() =>{
+        dispatch(getProjectAction(projectId, token))
+      }, [])
+      useEffect(() =>{
+        if(getProjectSuccess){
+          setProjectInformation(project)
+        }
+      }, [getProjectSuccess])
+  useEffect(() => {
+    // Set formData with existing project information
+    setFormData({
+        isUpdate: false,
+        projectId,
+        companyId: decodedToken && decodedToken.userInfo ? decodedToken.userInfo.companyId : null,
+        hasDistributor:projectInformation?.labelData?.hasDistributor || false,
+        distributorName: projectInformation?.labelData?.distributorName || '',
+        distributorAddress: projectInformation?.labelData?.distributorAddress || '',
+        isOutsideEU: projectInformation?.labelData?.isOutsideEU || false,
+        europeanAuthorizedRepName: projectInformation?.labelData?.europeanAuthorizedRepName || '',
+        europeanAuthorizedRepAddress: projectInformation?.labelData?.europeanAuthorizedRepAddress || '',
+        importerName: projectInformation?.labelData?.importerName || '',
+        importerAddress: projectInformation?.labelData?.importerAddress || '',
+        productClass: projectInformation?.labelData?.productClass || 'Class I',
+        notifiedBodyNumber: projectInformation?.labelData?.notifiedBodyNumber || '',
+    });
+  }, [projectInformation])
 
 // function to check if an address is in Europe
 
     const [userCountry, setUserCountry] = useState('');
 
     const europeanCountries = [
-        'albania', 'andorra', 'armenia', 'austria', 'azerbaijan', 'belarus', 'belgium', 'bosnia and herzegovina',
-        'bulgaria', 'croatia', 'cyprus', 'czech republic', 'denmark', 'estonia', 'finland', 'france', 'georgia',
-        'germany', 'greece', 'hungary', 'iceland', 'ireland', 'italy', 'kazakhstan', 'kosovo', 'latvia', 'liechtenstein',
-        'lithuania', 'luxembourg', 'malta', 'moldova', 'monaco', 'montenegro', 'netherlands', 'north macedonia', 'norway',
-        'poland', 'portugal', 'romania', 'russia', 'san marino', 'serbia', 'slovakia', 'slovenia', 'spain', 'sweden',
-        'switzerland', 'turkey', 'ukraine', 'united kingdom', 'vatican city'
-    ];
+      'austria', 'belgium', 'bulgaria', 'croatia', 'cyprus', 'czech republic', 'denmark', 'estonia', 'finland',
+      'france', 'germany', 'greece', 'hungary', 'ireland', 'italy', 'latvia', 'lithuania', 'luxembourg', 'malta',
+      'netherlands', 'poland', 'portugal', 'romania', 'slovakia', 'slovenia', 'spain', 'sweden'
+  ];
 
 
     const isCountryInEurope = () => {
-        // console.log("User Input:", userCountry);
-
         // Capitalize the first letter and lowercase the rest
         const normalizedUserCountry = userCountry.toLowerCase();
         // console.log("Normalized Input:", normalizedUserCountry);
 
         const isIncluded = europeanCountries.includes(normalizedUserCountry);
         // console.log("Is Included:", isIncluded);
-
-    
         return isIncluded;
     };
     

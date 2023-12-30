@@ -82,7 +82,7 @@ const UpdateIVDDiagnosticComponent = () => {
 
 useEffect(() => {
     if(IVDDiagnosticSuccess){
-        // navigate(`/dashboard/create-project/step7/${projectInfo._id}`)
+        navigate(`/dashboard/project-information/${projectInfo._id}`)
         toast.success(`updated success`)
     }
 

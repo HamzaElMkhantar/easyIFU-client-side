@@ -291,8 +291,8 @@ const Dashboard = () => {
                         
                 </div>: null}
 
-                <div   className="row mt-4">
-                    <div  className="col-md-6"> 
+                <div   className="" style={{display:'flex', flexWrap:'wrap', gridGap:'10px', justifyContent:"", flexDirection:'row', alignItems:'flex-start'}}>
+                    <div  className="" style={{width:'49.5%', minWidth:'300px', margin:'auto'}}> 
                     <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
                         <h6>projects:</h6>  
                         <Link to="/dashboard/project" style={{display:'flex', alignItems:'center', color:'black', backgroundColor:'#fff', borderRadius:'5px', padding:'0 5px'}}>
@@ -300,7 +300,7 @@ const Dashboard = () => {
                             <PlayArrowRoundedIcon/>
                         </Link>                     
                     </div>
-                        <table style={{backgroundColor:'#fff', textAlign:'center', fontSize:'13px'}} className="table table-hover my-1">
+                        <table style={{backgroundColor:'#fff', textAlign:'center', fontSize:'13px', width:'100%'}} className="table table-hover my-1 ">
                         <thead style={{backgroundColor:'#075670'}} className="thead-dark">
                             <tr style={{color:'#fff'}}>
                             <th scope="col">#</th>
@@ -331,7 +331,7 @@ const Dashboard = () => {
                     </div>
 
 
-                    <div  className="col-md-6"> 
+                    <div  className="" style={{width:'49.5%', minWidth:'300px', margin:'0 auto'}}> 
                         <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
                             <h6>users:</h6>  
                             <Link to="/dashboard/users" style={{display:'flex', alignItems:'center', color:'black', backgroundColor:'#fff', borderRadius:'5px', padding:'0 5px'}}>
@@ -339,12 +339,12 @@ const Dashboard = () => {
                                 <PlayArrowRoundedIcon/>
                             </Link>                     
                         </div>
-                        <table style={{backgroundColor:'#fff', fontSize:'13px'}} className="table table-hover my-1">
+                        <table style={{backgroundColor:'#fff', fontSize:'13px', width:'100%'}} className="table table-hover my-1">
                         <thead style={{backgroundColor:'#c08260'}} className="thead-dark">
                             <tr style={{color:'#fff'}}>
                             <th scope="col">#</th>
-                            <th scope="col">Full Name</th>
-                            <th scope="col">Role</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
                             <th scope="col">Status</th>
                             <th scope="col">CreatedAt</th>
                             </tr>
@@ -355,8 +355,8 @@ const Dashboard = () => {
                                 return (
                                     <tr>
                                         <th scope="row">{index + 1}</th>
-                                        <td>{`${item.firstName} ${item.lastName}`}</td>
-                                        <td ><p style={{display:'flex', padding:'0', margin:'0'}}>{item.role.length > 1 ? item.role.map((item) => (<p className='mx-1' style={{padding:'0', margin:'0'}}>{item},</p>)) : item.role.map((item) => (<p className='mx-1' style={{padding:'0', margin:'0'}}>{item}</p>))} </p></td>
+                                        <td>{`${item.firstName}`}</td>
+                                        <td>{` ${item.lastName}`}</td>
                                         <td>{item.isActive ? "Active" : "Not Active"}</td>
                                         <td>{formatDate(item.createdAt)}</td>
                                     </tr>

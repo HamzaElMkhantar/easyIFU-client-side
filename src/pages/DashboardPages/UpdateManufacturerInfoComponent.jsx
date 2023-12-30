@@ -154,7 +154,7 @@ const UpdateManufacturerInfoComponent = () => {
   const navigate = useNavigate()
   useEffect(() => {
     if(manufacturerSuccess){
-        // navigate(`/dashboard/create-project/step2/${projectInfo._id}`)
+      navigate(`/dashboard/project-information/${projectInfo._id}`)
         toast.success(`updated success`)
     }
 

@@ -39,6 +39,7 @@ const MyCompany = () => {
     const decodedToken = token ? jwtDecode(token) : null
 
     const [companyState, setCompanyState] = useState(null);
+    const [updateInfo, setUpdateInfo] = useState(false);
 
     const [company, setCompany] = useState({
         companyId: decodedToken ? decodedToken.userInfo.companyId : null,
@@ -49,6 +50,18 @@ const MyCompany = () => {
         companyCountry: '',
         companyPhone: ''
       })
+
+      useEffect(() => {
+        setCompany({
+          companyId: decodedToken ? decodedToken.userInfo.companyId : null,
+          companyName:companyState?.companyName || '',
+          companyAddress:companyState?.companyAddress || '',
+          companyZip:companyState?.companyZip || '',
+          companyCity:companyState?.companyCity || '',
+          companyCountry:companyState?.companyCountry || '',
+          companyPhone:companyState?.companyPhone || ''
+        })
+      }, [companySuccess])
   
 
       const dispatch = useDispatch();
@@ -103,6 +116,7 @@ const MyCompany = () => {
       useEffect(() => {
         if(updatedCompanySuccess){
             toast.success("Updated successfully")
+            setUpdateInfo(false)
         }
         if(companyFail){
             toast.warning(`${companyFail.updatedCompanyFail}`)
@@ -174,12 +188,21 @@ const MyCompany = () => {
                         display:'flex',
                         marginTop:'10px'
                         }} className='col-12 manage-user-card'>
-                <div className='col-lg-2'>
+                <div className='col-lg-2' style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <Avatar 
                         sx={{ width: 130, height: 130, fontSize:'90px'}}
                         style={{backgroundColor:'black', color:"#ecf0f3", marginBottom:'15px'}}>
                         {companyState && companyState.companyName[0].toUpperCase()}
                     </Avatar>
+                    <button onClick={() => setUpdateInfo(!updateInfo)}
+                          style={{ backgroundColor: '#08408b', border: '0', fontSize: '18px' , fontWeight:'600'}}
+                          className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
+                          type="submit"
+                        >
+                         {!updateInfo ?
+                              "Update"
+                         :"Hide Form"}
+                        </button>
                     
                 </div>
                 <div className='manage-user-card-content px-3 col-lg-8'>
@@ -213,16 +236,20 @@ const MyCompany = () => {
 
           </div>
 
+ 
+
           {decodedToken &&
                         decodedToken.userInfo &&
-                        decodedToken.userInfo.role.includes("Admin") &&<div  style={{
+                        decodedToken.userInfo.role.includes("Admin") 
+          &&<div  style={!updateInfo ? {}: {
                     backgroundColor:'#fff',
                     marginTop:'20px',
                     borderRadius:'10px'
                 }}
             className="card-body col-md-12">
+    
   
-                    <form style={{ marginTop: '20px' }} onSubmit={handleSubmit}>
+                   {updateInfo && <form style={{ marginTop: '20px' }} onSubmit={handleSubmit}>
                       <div className="row">
                        {decodedToken &&
                             decodedToken.userInfo &&
@@ -354,10 +381,10 @@ const MyCompany = () => {
                                   visible={true}
                                 /> 
                               </div>
-                         :"Update"}
+                         :"Save"}
                         </button>
                       </div>
-                    </form>
+                    </form>}
           </div>}
       </section>
       </main>

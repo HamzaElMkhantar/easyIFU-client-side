@@ -33,6 +33,7 @@ const UpdateStorageComponent = () => {
   const [formData, setFormData] = useState({
     isUpdate: true,
     projectId,
+    temperatureUnite: '°C',
     requiresCarefulHandling: false,
     requiresProtectionFromLight: false,
     requiresProtectionFromHeatAndRadioactiveSources: false,
@@ -54,6 +55,7 @@ const UpdateStorageComponent = () => {
     setFormData({
       isUpdate: true,
       projectId,
+      temperatureUnite : projectInformation?.labelData?.requiresCarefulHandling || '°C',
       requiresCarefulHandling: projectInformation?.labelData?.requiresCarefulHandling || false,
       requiresProtectionFromLight: projectInformation?.labelData?.requiresProtectionFromLight || false,
       requiresProtectionFromHeatAndRadioactiveSources: projectInformation?.labelData?.requiresProtectionFromHeatAndRadioactiveSources || false,
@@ -72,11 +74,20 @@ const UpdateStorageComponent = () => {
   }, [projectInformation])
 
   const handleCheckboxChange = (name, value) => {
+
+    if(name === "Temperature-Celsius" || name === "Temperature-Fahrenheit"){
+      setFormData({
+        ...formData,
+        temperatureUnite: value,
+      });
+
+      return
+    }
     setFormData({
       ...formData,
       [name]: value === 'Yes',
     });
-    console.log(formData)
+
   };
 
   const handleInputChange = (name, value) => {
@@ -121,8 +132,7 @@ const UpdateStorageComponent = () => {
 
   useEffect(() => {
       if(storageSuccess){
-        //   navigate(`/dashboard/create-project/step5/${projectInfo._id}`)
-        //   console.log(projectInfo)
+        navigate(`/dashboard/project-information/${projectInfo._id}`)
         toast.success(`updated success`) 
       }
 
@@ -340,6 +350,35 @@ const UpdateStorageComponent = () => {
             />
           </div>
         )}
+
+{(formData.hasUpperLimitOfTemperature || formData.hasLowerLimitOfTemperature) &&
+         <div className="form-group">
+          <label>choose unit of Temperature:</label>
+          <div>
+            <div className="form-check">
+              <label className="form-check-label">Fahrenheit (°F)</label>
+              <input
+                type="checkbox"
+                className="form-check-input"
+                name="Temperature-Fahrenheit"
+                value={formData.temperatureUnite}
+                checked={formData.temperatureUnite === '°F'}
+                onChange={() => handleCheckboxChange('Temperature-Fahrenheit','°F')}
+              />
+            </div>
+            <div className="form-check">
+              <label className="form-check-label">Celsius (°C)</label>
+              <input
+                type="checkbox"
+                className="form-check-input"
+                name="Temperature-Celsius"
+                value={formData.temperatureUnite}
+                checked={formData.temperatureUnite === '°C'}
+                onChange={() => handleCheckboxChange('Temperature-Celsius','°C')}
+              />
+            </div>
+          </div>
+        </div>}
 
         <div className="form-group">
           <label>7- Is there a range of humidity that your product must not exceed to operate safely?</label>

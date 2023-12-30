@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { storageAction } from '../../redux/actions/projectActions';
+import { getProjectAction, storageAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 
@@ -14,11 +14,14 @@ const StorageComponent = () => {
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {storage} = useSelector(state => state);
+  const {storage, getProject} = useSelector(state => state);
   const {storageRequest, storageSuccess, storageFail, projectInfo} = storage
 
+  // °F
   const [formData, setFormData] = useState({
     projectId,
+    isUpdate: false,
+    temperatureUnite: '°C',
     requiresCarefulHandling: false,
     requiresProtectionFromLight: false,
     requiresProtectionFromHeatAndRadioactiveSources: false,
@@ -35,23 +38,67 @@ const StorageComponent = () => {
     atmosphericPressureMax: '',
   });
 
+    // get prev project info
+    const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+    const [projectInformation, setProjectInformation] = useState({});
+    useEffect(() =>{
+      dispatch(getProjectAction(projectId, token))
+    }, [])
+    useEffect(() =>{
+      if(getProjectSuccess){
+        setProjectInformation(project)
+      }
+    }, [getProjectSuccess])
+  useEffect(() => {
+    // Set formData with existing project information
+    setFormData({
+      isUpdate: false,
+      projectId,
+      temperatureUnite : projectInformation?.labelData?.temperatureUnite || '°C',
+      requiresCarefulHandling: projectInformation?.labelData?.requiresCarefulHandling || false,
+      requiresProtectionFromLight: projectInformation?.labelData?.requiresProtectionFromLight || false,
+      requiresProtectionFromHeatAndRadioactiveSources: projectInformation?.labelData?.requiresProtectionFromHeatAndRadioactiveSources || false,
+      requiresProtectionFromMoisture: projectInformation?.labelData?.requiresProtectionFromMoisture || false,
+      hasLowerLimitOfTemperature: projectInformation?.labelData?.hasLowerLimitOfTemperature || false,
+      lowerTemperatureLimit: projectInformation?.labelData?.lowerTemperatureLimit || '',
+      hasUpperLimitOfTemperature: projectInformation?.labelData?.hasUpperLimitOfTemperature || false,
+      upperTemperatureLimit: projectInformation?.labelData?.upperTemperatureLimit || '',
+      hasHumidityRange: projectInformation?.labelData?.hasHumidityRange || false,
+      humidityMin: projectInformation?.labelData?.humidityMin || '',
+      humidityMax: projectInformation?.labelData?.humidityMax || '',
+      hasAtmosphericPressureRange: projectInformation?.labelData?.hasAtmosphericPressureRange || false,
+      atmosphericPressureMin: projectInformation?.labelData?.atmosphericPressureMin || '',
+      atmosphericPressureMax: projectInformation?.labelData?.atmosphericPressureMax || '',
+    });
+  }, [projectInformation])
 
   const handleCheckboxChange = (name, value) => {
+
+    if(name === "Temperature-Celsius" || name === "Temperature-Fahrenheit"){
+      setFormData({
+        ...formData,
+        temperatureUnite: value,
+      });
+
+      return
+    }
     setFormData({
       ...formData,
       [name]: value === 'Yes',
     });
-    console.log(formData)
+
   };
 
   const handleInputChange = (name, value) => {
+
     setFormData({
       ...formData,
       [name]: value,
     });
     console.log(formData)
-
   };
+  
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,28 +106,38 @@ const StorageComponent = () => {
   const handleSubmit = e => {
       e.preventDefault();
       console.log(formData)
-      
-      if(formData.lowerTemperatureLimit != '' && formData.upperTemperatureLimit != ''){
-        if(formData.lowerTemperatureLimit >= formData.upperTemperatureLimit){
-          return toast.warning("Lower Temperature grater than or equal upper Temperature")
 
-        }
-      }
+        // Convert temperature values to numbers
+          const lowerTemperature = parseFloat(formData.lowerTemperatureLimit);
+          const upperTemperature = parseFloat(formData.upperTemperatureLimit);
 
-      if(formData.humidityMin != '' && formData.humidityMax != ''){
-        if(formData.humidityMin >= formData.humidityMax){
-          return toast.warning("Min humidity grater than or equal Max humidity")
+          if (!isNaN(lowerTemperature) && !isNaN(upperTemperature)) {
+            if (lowerTemperature >= upperTemperature) {
+              return toast.warning("Lower Temperature greater than or equal to Upper Temperature");
+            }
+          }
 
-        }
-      }
+          // Convert humidity values to numbers
+          const humidityMin = parseFloat(formData.humidityMin);
+          const humidityMax = parseFloat(formData.humidityMax);
 
-      if(formData.atmosphericPressureMin != '' && formData.atmosphericPressureMax != ''){
-        if(formData.atmosphericPressureMin >= formData.atmosphericPressureMax){
-          return toast.warning("Min Atmospheric Pressure grater than or equal Max Atmospheric Pressure")
+          if (!isNaN(humidityMin) && !isNaN(humidityMax)) {
+            if (humidityMin >= humidityMax) {
+              return toast.warning("Min humidity greater than or equal to Max humidity");
+            }
+          }
 
-        }
-      }
+          // Convert atmospheric pressure values to numbers
+          const atmosphericPressureMin = parseFloat(formData.atmosphericPressureMin);
+          const atmosphericPressureMax = parseFloat(formData.atmosphericPressureMax);
 
+          if (!isNaN(atmosphericPressureMin) && !isNaN(atmosphericPressureMax)) {
+            if (atmosphericPressureMin >= atmosphericPressureMax) {
+              return toast.warning("Min Atmospheric Pressure greater than or equal to Max Atmospheric Pressure");
+            }
+          }
+
+          console.log("formData : ", formData)
       dispatch(storageAction(formData, token))
   }
 
@@ -218,6 +275,7 @@ const StorageComponent = () => {
             </div>
           </div>
         </div>
+  
 
         <div className="form-group">
           <label>5- Is there a lower limit of temperature that your product must not exceed to operate safely?</label>
@@ -254,7 +312,7 @@ const StorageComponent = () => {
               type="text"
               className="form-control"
               name="lowerTemperatureLimit"
-              placeholder='number + unit'
+              placeholder='number'
               value={formData.lowerTemperatureLimit}
               required={formData.hasLowerLimitOfTemperature ? true : false}
               onChange={(e) => handleInputChange('lowerTemperatureLimit', e.target.value)}
@@ -297,13 +355,42 @@ const StorageComponent = () => {
               type="text"
               className="form-control"
               name="upperTemperatureLimit"
-              placeholder='umber + unit'
+              placeholder='number'
               value={formData.upperTemperatureLimit}
               required={formData.hasUpperLimitOfTemperature ? true : false}
               onChange={(e) => handleInputChange('upperTemperatureLimit', e.target.value)}
             />
           </div>
         )}
+
+       {(formData.hasUpperLimitOfTemperature || formData.hasLowerLimitOfTemperature) &&
+         <div className="form-group">
+          <label>choose unit of Temperature:</label>
+          <div>
+            <div className="form-check">
+              <label className="form-check-label">Fahrenheit (°F)</label>
+              <input
+                type="checkbox"
+                className="form-check-input"
+                name="Temperature-Fahrenheit"
+                value={formData.temperatureUnite}
+                checked={formData.temperatureUnite === '°F'}
+                onChange={() => handleCheckboxChange('Temperature-Fahrenheit','°F')}
+              />
+            </div>
+            <div className="form-check">
+              <label className="form-check-label">Celsius (°C)</label>
+              <input
+                type="checkbox"
+                className="form-check-input"
+                name="Temperature-Celsius"
+                value={formData.temperatureUnite}
+                checked={formData.temperatureUnite === '°C'}
+                onChange={() => handleCheckboxChange('Temperature-Celsius','°C')}
+              />
+            </div>
+          </div>
+        </div>}
 
         <div className="form-group">
           <label>7- Is there a range of humidity that your product must not exceed to operate safely?</label>

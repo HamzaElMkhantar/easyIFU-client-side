@@ -36,6 +36,7 @@ const TransfusionInfusionComponent = () => {
   }, [getProjectSuccess])
   const [formData, setFormData] = useState({
     projectId,
+    isUpdate: false,
     isMedicalDeviceForSampleCollection: false,
     hasFluidPath: false,
     isNonPyrogenic: false,
@@ -43,6 +44,22 @@ const TransfusionInfusionComponent = () => {
     liquidFilterPoreSize: '',
     hasOneWayValve: false,
   });
+
+  
+
+  useEffect(() => {
+    // Set formData with existing project information
+    setFormData({
+      isUpdate: false,
+      projectId,
+      isMedicalDeviceForSampleCollection: projectInformation?.labelData?.isMedicalDeviceForSampleCollection ||  false,
+      hasFluidPath: projectInformation?.labelData?.hasFluidPath ||  false,
+      isNonPyrogenic: projectInformation?.labelData?.isNonPyrogenic ||  false,
+      numberOfDropsPerMilliliter: projectInformation?.labelData?.isNonPyrogenic ||  '',
+      liquidFilterPoreSize: projectInformation?.labelData?.liquidFilterPoreSize ||  '',
+      hasOneWayValve: projectInformation?.labelData?.hasOneWayValve ||  false,
+    });
+  }, [projectInformation])
 
   const handleCheckboxChange = (name, value) => {
     let newValue = null
