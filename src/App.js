@@ -69,6 +69,8 @@ import UpdateOthersComponent from './pages/DashboardPages/UpdateOthersComponent'
 import Contact from './pages/DashboardPages/Contact';
 // import jwtDecode from 'jwt-decode';
 
+import jwt_decode from 'jwt-decode';
+
 function App() {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -121,8 +123,17 @@ function App() {
   const R_Token = Cookies.get('eIfu_RTK') || null;
   const A_Token = Cookies.get('eIfu_ATK') || null;
   const decodedToken = A_Token ? jwtDecode(A_Token) : null
+  const decodedrToken = A_Token ? jwtDecode(R_Token) : null
 
+  console.log("decodedToken:",decodedToken)
+  console.log("decodedrToken: ",decodedrToken)
 
+// Assuming you have a cookie named 'accessToken'
+const accessTokenCookie = Cookies.get('eIfu_ATK');
+
+// Decode the JWT (you may need to use a library like jwt-decode)
+const decodedToke = accessTokenCookie ? jwt_decode(accessTokenCookie) : null;
+console.log('Decoded Token:', decodedToke);
 
   const intervalRef = useRef(null);
 
@@ -217,7 +228,7 @@ console.log(decodedToken?.userInfo?.isSubscripted)
 
         <Route element={<RequireAuth />}>
           {/* <Route element={<IsVerified /> }> */}
-            {/* <Route element={<SubscriptionChecker  /> }> */}
+            <Route element={<SubscriptionChecker  /> }>
 
               {/* routes for creator */}
               {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
@@ -285,7 +296,7 @@ console.log(decodedToken?.userInfo?.isSubscripted)
                 <Route path='/dashboard/received-project' element={<ProjectByRole />} />
                 <Route path='/dashboard/project/released' element={<ReleasedProjects />} />
 
-            {/* </Route> */}
+            </Route>
           {/* </Route> */}
 
             {/* easyIFU Admin routes */}

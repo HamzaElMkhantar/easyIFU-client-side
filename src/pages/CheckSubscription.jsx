@@ -12,6 +12,7 @@ const CheckSubscription = () => {
 
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
+    console.log(decodedToken)
     const {paymentCompany} = useSelector(state => state)
     const {paymentCompanyRequest, paymentCompanySuccess, paymentCompanyFail, paymentCompanyInfo} = paymentCompany
     const dispatch = useDispatch()

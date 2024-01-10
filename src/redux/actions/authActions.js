@@ -62,10 +62,21 @@ export const loginAction = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: LOGIN_REQUEST });
 
+    const config =    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true, // Include cookies
+      credentials: 'include', 
+      responseType: 'json'
+    }
+
     const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/login`, {
           email,
           password,
-        });
+        }, config);
+
+  
 
     // Store the access token and refresh token in cookies
     Cookies.set('eIfu_ATK', response.data.accessToken);
@@ -116,13 +127,16 @@ export const refreshAction = () => async (dispatch) => {
         'Content-Type': 'application/json',
       },
       withCredentials: true, // Include cookies
+      credentials: 'include', 
+      responseType: 'json'
     }
+
     // Send a request to the /api/v1/auth/refresh endpoint using Fetch.
     const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, {refreshToken}, config);
     const decodedToken = await jwtDecode( response?.data?.accessToken) || null
     
     await Cookies.set('eIfu_ATK', response?.data?.accessToken);
-    await Cookies.set('eIfu_sub',JSON.stringify(decodedToken?.userInfo?.companySubscriptionInfo));
+    // await Cookies.set('eIfu_sub',JSON.stringify(decodedToken?.userInfo?.companySubscriptionInfo));
 
     console.log(jwtDecode( response?.data?.accessToken))
 
@@ -148,8 +162,16 @@ export const logoutAction = () => async (dispatch) => {
     try {
   
       dispatch({ type: LOGOUT_REQUEST });
+      const config =    {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+        credentials: 'include', 
+        responseType: 'json'
+      }
 
-      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout')
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout',{}, config)
       // console.log(data)
       // window.location.reload();
       

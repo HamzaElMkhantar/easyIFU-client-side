@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import LogoutModal from '../utilities/LogoutModal';
 import { useState } from 'react';
 
+
 const RequireAuth = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -17,6 +18,9 @@ const RequireAuth = () => {
     const checkTokenExpiration = () => {
       const accessToken = Cookies.get('eIfu_ATK') || null;
       const refreshToken = Cookies.get('eIfu_RTK') || null;
+
+      console.log("accessToken",accessToken)
+      console.log("refreshToken",refreshToken)
 
 
       try {
@@ -90,12 +94,13 @@ const RequireAuth = () => {
   }, [dispatch]);
 
   const accessToken = Cookies.get('eIfu_ATK') || null;
+  const refreshToken = Cookies.get('eIfu_RTK') || null;
 
   // return accessToken ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />;
   return (
     <>
       {/* {showLogoutModal && <LogoutModal />} */}
-      { accessToken ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />}
+      { refreshToken ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />}
       {/* <Outlet /> */}
       {(showLogoutModal) && <LogoutModal />}
     </>

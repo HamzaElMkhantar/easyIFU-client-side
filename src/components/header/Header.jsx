@@ -62,7 +62,7 @@ const Header = () => {
             </li>
            
           </ul>
-          <div to="/dashboard" onClick={() => setMenuOpen(false)} className='d-lg-none ml-auto m-0'>
+          <div to={decodedToken && decodedToken?.userInfo?.role.includes("superAdmin") ?  "/eIFU-admin/companies" : "/dashboard"} onClick={() => setMenuOpen(false)} className='d-lg-none ml-auto m-0'>
             {!token 
             ? <Link to='/login' className='btn' style={{backgroundColor:'#ecf0f3'}}>
                 <button style={{backgroundColor:'#0E2F78', color:'#fff', borderRadius:'10px', padding:'2px 10px'}}>
@@ -70,7 +70,7 @@ const Header = () => {
                 </button>
             </Link>
             :( <li style={{display:''}} className='nav-item'>
-                <Link to="/dashboard" onClick={() => setMenuOpen(false)} className='nav-link px-0 mx-0' href='#price'>
+                <Link to={decodedToken && decodedToken?.userInfo?.role.includes("superAdmin") ?  "/eIFU-admin/companies" : "/dashboard"} onClick={() => setMenuOpen(false)} className='nav-link px-0 mx-0' href='#price'>
                   dashboard
                 </Link>
                 
@@ -117,7 +117,7 @@ const Header = () => {
                     padding:'0',
                   }}
               >
-                  <Link to="/dashboard" style={{width:'150px', padding:'5px 20px'}} onClick={() => setMenuOpen(false)} className='nav-link' href='#price'>
+                  <Link to={decodedToken && decodedToken?.userInfo?.role.includes("superAdmin") ? "/eIFU-admin/companies" : "/dashboard"} style={{width:'150px', padding:'5px 20px'}} onClick={() => setMenuOpen(false)} className='nav-link' href='#price'>
                     dashboard
                   </Link>
                   <Link style={{width:'150px', padding:'5px 20px'}} onClick={() => dispatch(logoutAction())} className='nav-link' href='#price'>
