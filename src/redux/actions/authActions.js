@@ -31,7 +31,6 @@ import jwtDecode from 'jwt-decode';
 
 export const registerAction = (userInfo) => async (dispatch) => {
   try {
-    console.log(userInfo)
 
     dispatch({ type: REGISTER_REQUEST });
 
