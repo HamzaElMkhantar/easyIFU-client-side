@@ -30,6 +30,7 @@ import {IVDDiagnosticReducer,
         documentsReducer, 
         getAllProjectsReducer, 
         getProjectReducer, 
+        legislationReducer, 
         manufacturerInformationReducer, 
         othersReducer, 
         productInformationReducer, 
@@ -76,7 +77,6 @@ const reducer = combineReducers({
     updateCompanyInfo: updateCompanyInfoReducer,
     dashboardCompanyInfo: dashboardCompanyInfoReducer,
 
-
     // payment reducers
     paymentCompany: paymentCompanyReducer,
     paymentPricesCompany: paymentPricesCompanyReducer,
@@ -87,6 +87,7 @@ const reducer = combineReducers({
     startProject: startProjectReducer,
     deleteProject: deleteProjectReducer,
     manufacturerInformation: manufacturerInformationReducer,
+    legislation: legislationReducer,
     productInformation: productInformationReducer,
     uploadManufacturerLogo: uploadManufacturerLogoReducer,
     sterility: sterilityReducer,

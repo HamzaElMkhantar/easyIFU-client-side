@@ -70,6 +70,7 @@ import Contact from './pages/DashboardPages/Contact';
 // import jwtDecode from 'jwt-decode';
 
 import jwt_decode from 'jwt-decode';
+import LegislationComponent from './pages/DashboardPages/LegislationComponent';
 
 function App() {
   const location = useLocation();
@@ -234,13 +235,14 @@ console.log(decodedToken?.userInfo?.isSubscripted)
               {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
                 <>
                   <Route path='/dashboard/create-project/step1/:projectId' element={<ManufacturerInfoComponent />} />
-                  <Route path='/dashboard/create-project/step2/:projectId' element={<ProductInfoComponent />} />
-                  <Route path='/dashboard/create-project/step3/:projectId' element={<SterilityComponent />} />
-                  <Route path='/dashboard/create-project/step4/:projectId' element={<StorageComponent />} />
-                  <Route path='/dashboard/create-project/step5/:projectId' element={<SafeUseComponent />} />
-                  <Route path='/dashboard/create-project/step6/:projectId' element={<IVDDiagnosticComponent />} />
-                  <Route path='/dashboard/create-project/step7/:projectId' element={<TransfusionInfusionComponent />} />
-                  <Route path='/dashboard/create-project/step8/:projectId' element={<OthersComponent />} />
+                  <Route path='/dashboard/create-project/step2/:projectId' element={<LegislationComponent />} />
+                  <Route path='/dashboard/create-project/step3/:projectId' element={<ProductInfoComponent />} />
+                  <Route path='/dashboard/create-project/step4/:projectId' element={<SterilityComponent />} />
+                  <Route path='/dashboard/create-project/step5/:projectId' element={<StorageComponent />} />
+                  <Route path='/dashboard/create-project/step6/:projectId' element={<SafeUseComponent />} />
+                  <Route path='/dashboard/create-project/step7/:projectId' element={<IVDDiagnosticComponent />} />
+                  <Route path='/dashboard/create-project/step8/:projectId' element={<TransfusionInfusionComponent />} />
+                  <Route path='/dashboard/create-project/step9/:projectId' element={<OthersComponent />} />
 
                   <Route path='/dashboard/project-information/:projectId' element={<LabelInformation />} />
                   <Route path='/dashboard/project/review-creator/:projectId' element={<CreatorReview />} />
@@ -251,13 +253,13 @@ console.log(decodedToken?.userInfo?.isSubscripted)
                   {/* toast.success(`updated success`) */}
 
                   <Route path='/dashboard/update-project/step1/:projectId' element={<UpdateManufacturerInfoComponent />} />
-                  <Route path='/dashboard/update-project/step2/:projectId' element={<UpdateProductInfoComponent />} />
-                  <Route path='/dashboard/update-project/step3/:projectId' element={<UpdateSterilityComponent />} />
-                  <Route path='/dashboard/update-project/step4/:projectId' element={<UpdateStorageComponent />} />
-                  <Route path='/dashboard/update-project/step5/:projectId' element={<UpdateSafeUseComponent />} />
-                  <Route path='/dashboard/update-project/step6/:projectId' element={<UpdateIVDDiagnosticComponent />} />
-                  <Route path='/dashboard/update-project/step7/:projectId' element={<UpdateTransfusionInfusionComponent />} />
-                  <Route path='/dashboard/update-project/step8/:projectId' element={<UpdateOthersComponent />} />
+                  <Route path='/dashboard/update-project/step3/:projectId' element={<UpdateProductInfoComponent />} />
+                  <Route path='/dashboard/update-project/step4/:projectId' element={<UpdateSterilityComponent />} />
+                  <Route path='/dashboard/update-project/step5/:projectId' element={<UpdateStorageComponent />} />
+                  <Route path='/dashboard/update-project/step6/:projectId' element={<UpdateSafeUseComponent />} />
+                  <Route path='/dashboard/update-project/step7/:projectId' element={<UpdateIVDDiagnosticComponent />} />
+                  <Route path='/dashboard/update-project/step8/:projectId' element={<UpdateTransfusionInfusionComponent />} />
+                  <Route path='/dashboard/update-project/step9/:projectId' element={<UpdateOthersComponent />} />
                   {/* 
                    */}
               </>}

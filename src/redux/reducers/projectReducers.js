@@ -30,6 +30,10 @@ import {ALL_PROJECTS_FAILED,
         IVD_DIAGNOSTIC_REQUEST, 
         IVD_DIAGNOSTIC_RESET, 
         IVD_DIAGNOSTIC_SUCCESS, 
+        LEGISLATION_FAILED, 
+        LEGISLATION_REQUEST, 
+        LEGISLATION_RESET, 
+        LEGISLATION_SUCCESS, 
         MANUFACTURER_INFORMATION_FAILED, 
         MANUFACTURER_INFORMATION_REQUEST,
         MANUFACTURER_INFORMATION_RESET,
@@ -112,6 +116,13 @@ const manufacturer = {
     manufacturerSuccess :  false,
     manufacturerFail : null,
     projectInfo: null
+}
+
+const legislation = {
+    legislationRequest : false,
+    legislationSuccess :  false,
+    legislationFail : null,
+    legislationInfo: null
 }
 
 const productInfo = {
@@ -378,6 +389,38 @@ export const manufacturerInformationReducer = (state = manufacturer, action) => 
             } ;
         case MANUFACTURER_INFORMATION_RESET :
             return manufacturer;
+        default :
+            return state ;
+    }
+}
+
+
+
+export const legislationReducer = (state = legislation, action) => {
+    switch(action.type){
+        case LEGISLATION_REQUEST:
+            return {
+                ...state,
+                legislationRequest : true,
+                legislationSuccess :  false,
+                legislationFail : null,
+            } ;
+        case LEGISLATION_SUCCESS :
+            return {
+                ...state,
+                legislationRequest : false,
+                legislationSuccess : true,
+                legislationInfo: action.payload
+            } ;
+        case LEGISLATION_FAILED :
+            return {
+                ...state,
+                legislationFail : action.payload,
+                legislationSuccess :  false,
+                legislationRequest : false
+            } ;
+        case LEGISLATION_RESET :
+            return legislation;
         default :
             return state ;
     }

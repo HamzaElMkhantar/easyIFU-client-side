@@ -33,8 +33,8 @@ const ManufacturerInfoComponent = () => {
     europeanAuthorizedRepAddress: '',
     importerName: '',
     importerAddress: '',
-    productClass: 'Class I',
-    notifiedBodyNumber: '',
+    // productClass: 'Class I',
+    // notifiedBodyNumber: '',
   });
 
       // get prev project info
@@ -62,8 +62,8 @@ const ManufacturerInfoComponent = () => {
         europeanAuthorizedRepAddress: projectInformation?.labelData?.europeanAuthorizedRepAddress || '',
         importerName: projectInformation?.labelData?.importerName || '',
         importerAddress: projectInformation?.labelData?.importerAddress || '',
-        productClass: projectInformation?.labelData?.productClass || 'Class I',
-        notifiedBodyNumber: projectInformation?.labelData?.notifiedBodyNumber || '',
+        // productClass: projectInformation?.labelData?.productClass || 'Class I',
+        // notifiedBodyNumber: projectInformation?.labelData?.notifiedBodyNumber || '',
     });
   }, [projectInformation])
 
@@ -118,8 +118,8 @@ const ManufacturerInfoComponent = () => {
         europeanAuthorizedRepAddress: '',
         importerName: '',
         importerAddress: '',
-        productClass: 'Class I',
-        notifiedBodyNumber: '',
+        // productClass: 'Class I',
+        // notifiedBodyNumber: '',
     })
   }
 
@@ -191,22 +191,22 @@ const ManufacturerInfoComponent = () => {
                     </div>
                 {formData.hasDistributor &&
                     <div>
-                            <label>Distributor Name:</label>
-                            <input
-                            type="text"
-                            name="distributorName"
-                            value={formData.distributorName}
-                            onChange={handleInputChange}
-                            required
-                            />
-                            <label>Distributor Address:</label>
-                            <input
-                            type="text"
-                            name="distributorAddress"
-                            value={formData.distributorAddress}
-                            required
-                            onChange={handleInputChange}
-                            />
+                        <label>Distributor Name:</label>
+                        <input
+                          type="text"
+                          name="distributorName"
+                          value={formData.distributorName}
+                          onChange={handleInputChange}
+                          required
+                        />
+                        <label>Distributor Address:</label>
+                        <input
+                          type="text"
+                          name="distributorAddress"
+                          value={formData.distributorAddress}
+                          required
+                          onChange={handleInputChange}
+                        />
                     </div>
                     }
                     {!formData.isOutsideEU && (
@@ -244,7 +244,7 @@ const ManufacturerInfoComponent = () => {
                         />
                         </div>
                     )}
-                    <div>
+                    {/* <div>
                         <label>What is the class of your product?</label>
                         <select
                         name="productClass"
@@ -259,8 +259,8 @@ const ManufacturerInfoComponent = () => {
                         <option value="Class IIb">Class IIb</option>
                         <option value="Class III">Class III</option>
                         </select>
-                    </div>
-                    {formData.productClass !== 'Class I' && (
+                    </div> */}
+                    {/* {formData.productClass !== 'Class I' && (
                         <div>
                         <label>Notified Body Number*:</label>
                         <input
@@ -271,7 +271,7 @@ const ManufacturerInfoComponent = () => {
                             required={formData.productClass !== 'Class I' ? true : false}
                         />
                         </div>
-                    )}
+                    )} */}
                 {!manufacturerRequest
                 ? <div style={{width:"100%", display:'flex', justifyContent:"center", alignItems:'center', marginTop:"30px"}}>
                         <button style={{padding:'4px 20px', borderRadius:'4px', backgroundColor:'#011D41', color:'#fff', fontWeight:"600"}}>Save</button>

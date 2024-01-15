@@ -31,6 +31,10 @@ import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST,
             IVD_DIAGNOSTIC_REQUEST, 
             IVD_DIAGNOSTIC_RESET, 
             IVD_DIAGNOSTIC_SUCCESS, 
+            LEGISLATION_FAILED, 
+            LEGISLATION_REQUEST, 
+            LEGISLATION_RESET, 
+            LEGISLATION_SUCCESS, 
             MANUFACTURER_INFORMATION_FAILED, 
             MANUFACTURER_INFORMATION_REQUEST,
             MANUFACTURER_INFORMATION_RESET,
@@ -261,6 +265,41 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
         setTimeout(() =>{
           dispatch({ 
             type: MANUFACTURER_INFORMATION_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const legislationAction = (formData, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: LEGISLATION_REQUEST});
+
+      const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/legislation`, formData, config);
+  
+      dispatch({ 
+            type: LEGISLATION_SUCCESS, 
+            payload: response.data
+        });
+      setTimeout(() =>{
+        dispatch({ 
+          type: LEGISLATION_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: LEGISLATION_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: LEGISLATION_RESET
           });
         }, 1500)
       }
