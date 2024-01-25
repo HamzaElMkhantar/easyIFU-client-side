@@ -27,10 +27,13 @@ const SterilityComponent = () => {
         hasEthyleneOxide: false,
         hasIrradiation: false,
         hasSteamOrDryHeat: false,
+        hasEthyleneOxideFluid: false,
+        hasIrradiationFluid: false,
+        hasSteamOrDryHeatFluid: false,
         isIntendedToBeResterilized: false,
-        canBeUsedIfDamaged: false,
         hasSterileFluidPath: false,
         hasVaporizedHydrogenPeroxide: false,
+        hasSterileBarrierSystem: false,
         hasSingleSterileBarrierSystem: false,
         hasTwoSterileBarrierSystems: false,
         hasSingleSterileBarrierSystemWithProtectiveInside: false,
@@ -60,10 +63,14 @@ const SterilityComponent = () => {
             hasEthyleneOxide: projectInformation?.labelData?.hasEthyleneOxide || false,
             hasIrradiation: projectInformation?.labelData?.hasIrradiation || false,
             hasSteamOrDryHeat: projectInformation?.labelData?.hasSteamOrDryHeat || false,
+            hasEthyleneOxideFluid: projectInformation?.labelData?.hasEthyleneOxideFluid || false,
+            hasIrradiationFluid: projectInformation?.labelData?.hasIrradiationFluid || false,
+            hasSteamOrDryHeatFluid: projectInformation?.labelData?.hasSteamOrDryHeatFluid || false,
             isIntendedToBeResterilized: projectInformation?.labelData?.isIntendedToBeResterilized || false,
             canBeUsedIfDamaged: projectInformation?.labelData?.canBeUsedIfDamaged || false,
             hasSterileFluidPath: projectInformation?.labelData?.hasSterileFluidPath || false,
             hasVaporizedHydrogenPeroxide: projectInformation?.labelData?.hasVaporizedHydrogenPeroxide || false,
+            hasSterileBarrierSystem: projectInformation?.labelData?.hasSterileBarrierSystem || false,
             hasSingleSterileBarrierSystem: projectInformation?.labelData?.hasSingleSterileBarrierSystem || false,
             hasTwoSterileBarrierSystems: projectInformation?.labelData?.hasTwoSterileBarrierSystems || false,
             hasSingleSterileBarrierSystemWithProtectiveInside: projectInformation?.labelData?.hasSingleSterileBarrierSystemWithProtectiveInside || false,
@@ -87,9 +94,21 @@ const SterilityComponent = () => {
           'hasEthyleneOxide',
           'hasIrradiation',
           'hasSteamOrDryHeat',
-          'isIntendedToBeResterilized',
           'hasVaporizedHydrogenPeroxide',
         ];
+
+        const exclusiveCheckboxesFluid = [
+            'hasEthyleneOxideFluid',
+            'hasIrradiationFluid',
+            'hasSteamOrDryHeatFluid'
+          ];
+
+        const sterileBarrierSystem = [
+            'hasSingleSterileBarrierSystem',
+            'hasTwoSterileBarrierSystems',
+            'hasSingleSterileBarrierSystemWithProtectiveInside',
+            'hasSingleSterileBarrierSystemWithProtectiveOutside'
+          ];
       
         if (exclusiveCheckboxes.includes(name)) {
           // If the checkbox is in the exclusive list, set its value to true and others to false
@@ -106,13 +125,51 @@ const SterilityComponent = () => {
       
             return updatedFormData;
           });
-        } else {
+
+          return;
+        } 
+        if (exclusiveCheckboxesFluid.includes(name)) {
+            // If the checkbox is in the exclusive list, set its value to true and others to false
+            setFormData((prevFormData) => {
+              const updatedFormData = { ...prevFormData };
+        
+              exclusiveCheckboxesFluid.forEach((checkbox) => {
+                if (checkbox !== name) {
+                  updatedFormData[checkbox] = false;
+                }
+              });
+        
+              updatedFormData[name] = value === 'Yes';
+        
+              return updatedFormData;
+            });
+  
+            return;
+          } 
+          if (sterileBarrierSystem.includes(name)) {
+            // If the checkbox is in the exclusive list, set its value to true and others to false
+            setFormData((prevFormData) => {
+              const updatedFormData = { ...prevFormData };
+        
+              sterileBarrierSystem.forEach((checkbox) => {
+                if (checkbox !== name) {
+                  updatedFormData[checkbox] = false;
+                }
+              });
+        
+              updatedFormData[name] = value === 'Yes';
+        
+              return updatedFormData;
+            });
+  
+            return;
+          } 
           // Handle other checkboxes that shouldn't follow the exclusive behavior
           setFormData({
             ...formData,
             [name]: value === 'Yes',
           });
-        }
+        
       };
 
     const dispatch = useDispatch();
@@ -126,7 +183,7 @@ const SterilityComponent = () => {
 
     useEffect(() => {
         if(sterilitySuccess){
-            navigate(`/dashboard/create-project/step4/${projectInfo._id}`)
+            navigate(`/dashboard/create-project/step5/${projectInfo._id}`)
         }
 
         if(sterilityFail){
@@ -140,12 +197,12 @@ const SterilityComponent = () => {
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step2/${projectId}`} className='label-info-link'> Back</Link>
             <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-        <HorizontalLinearStepper step={2}/>
+        <HorizontalLinearStepper step={3}/>
         <form onSubmit={handleSubmit} className='sterility-form'>
             <h2>Sterility</h2>
            
                 <div style={{textAlign:'center', display:'flex', flexDirection:'column', alignItems:'center'}} className="form-group">
-                    <label>- the Product is Sterile?</label>
+                    <label>-Is the Product delivered Sterile?</label>
                     <div>
                         <div className="form-check">
                             <label className="form-check-label">Yes</label>
@@ -316,33 +373,6 @@ const SterilityComponent = () => {
                     </div>
 
                     <div className="form-group">
-                            <label>- Is your product intended to be resterilized?</label>
-                            <div>
-                                <div className="form-check">
-                                <label className="form-check-label">Yes</label>
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="isIntendedToBeResterilized"
-                                    value="Yes"
-                                    checked={formData.isIntendedToBeResterilized}
-                                    onChange={handleCheckboxChange}
-                                />
-                                </div>
-                                <div className="form-check">
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="isIntendedToBeResterilized"
-                                    value="No"
-                                    checked={!formData.isIntendedToBeResterilized}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <label className="form-check-label">No</label>
-                                </div>
-                            </div>
-                    </div>
-                    <div className="form-group">
                             <label>- Has your product been sterilized using vaporized hydrogen peroxide ?</label>
                             <div>
                                 <div className="form-check">
@@ -372,7 +402,7 @@ const SterilityComponent = () => {
                 </div>
                 )}
 
-                    <div className="form-group">
+                    {/* <div className="form-group">
                             <label>2- Can your product be used if the package has been damaged or opened ?</label>
                             <div>
                                 <div className="form-check">
@@ -393,6 +423,34 @@ const SterilityComponent = () => {
                                     name="canBeUsedIfDamaged"
                                     value="No"
                                     checked={!formData.canBeUsedIfDamaged}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <label className="form-check-label">No</label>
+                                </div>
+                            </div>
+                    </div> */}
+
+                    <div className="form-group">
+                            <label>2- Is your product intended to be resterilized?</label>
+                            <div>
+                                <div className="form-check">
+                                <label className="form-check-label">Yes</label>
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="isIntendedToBeResterilized"
+                                    value="Yes"
+                                    checked={formData.isIntendedToBeResterilized}
+                                    onChange={handleCheckboxChange}
+                                />
+                                </div>
+                                <div className="form-check">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="isIntendedToBeResterilized"
+                                    value="No"
+                                    checked={!formData.isIntendedToBeResterilized}
                                     onChange={handleCheckboxChange}
                                 />
                                 <label className="form-check-label">No</label>
@@ -429,18 +487,19 @@ const SterilityComponent = () => {
                                 </div>
                             </div>
                     </div>
-
-                    <div className="form-group">
-                            <label>4- Is there a single sterile barrier system ?</label>
+                    {formData.hasSterileFluidPath && 
+                    <>
+                        <div className="form-group">
+                            <label>- Has your product been sterilized fluid using ethylene oxide?</label>
                             <div>
                                 <div className="form-check">
                                 <label className="form-check-label">Yes</label>
                                 <input
                                     type="checkbox"
                                     className="form-check-input"
-                                    name="hasSingleSterileBarrierSystem"
+                                    name="hasEthyleneOxideFluid"
                                     value="Yes"
-                                    checked={formData.hasSingleSterileBarrierSystem}
+                                    checked={formData.hasEthyleneOxideFluid}
                                     onChange={handleCheckboxChange}
                                 />
                                 </div>
@@ -448,27 +507,26 @@ const SterilityComponent = () => {
                                 <input
                                     type="checkbox"
                                     className="form-check-input"
-                                    name="hasSingleSterileBarrierSystem"
+                                    name="hasEthyleneOxideFluid"
                                     value="No"
-                                    checked={!formData.hasSingleSterileBarrierSystem}
+                                    checked={!formData.hasEthyleneOxideFluid}
                                     onChange={handleCheckboxChange}
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
                             </div>
-                    </div>
-
-                    <div className="form-group">
-                            <label>5- Is there two sterile barrier systems ?</label>
+                        </div>
+                        <div className="form-group">
+                            <label>- Has your product been sterilized fluid using irradiation?</label>
                             <div>
                                 <div className="form-check">
                                 <label className="form-check-label">Yes</label>
                                 <input
                                     type="checkbox"
                                     className="form-check-input"
-                                    name="hasTwoSterileBarrierSystems"
+                                    name="hasIrradiationFluid"
                                     value="Yes"
-                                    checked={formData.hasTwoSterileBarrierSystems}
+                                    checked={formData.hasIrradiationFluid}
                                     onChange={handleCheckboxChange}
                                 />
                                 </div>
@@ -476,27 +534,26 @@ const SterilityComponent = () => {
                                 <input
                                     type="checkbox"
                                     className="form-check-input"
-                                    name="hasTwoSterileBarrierSystems"
+                                    name="hasIrradiationFluid"
                                     value="No"
-                                    checked={!formData.hasTwoSterileBarrierSystems }
+                                    checked={!formData.hasIrradiationFluid}
                                     onChange={handleCheckboxChange}
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
                             </div>
-                    </div>
-
-                    <div className="form-group">
-                            <label>6- Is there a single sterile barrier system with protective packaging inside ?</label>
+                        </div>
+                        <div className="form-group">
+                            <label>- Has your product been sterilized fluid using steam or dry heat?</label>
                             <div>
                                 <div className="form-check">
                                 <label className="form-check-label">Yes</label>
                                 <input
                                     type="checkbox"
                                     className="form-check-input"
-                                    name="hasSingleSterileBarrierSystemWithProtectiveInside"
+                                    name="hasSteamOrDryHeatFluid"
                                     value="Yes"
-                                    checked={formData.hasSingleSterileBarrierSystemWithProtectiveInside}
+                                    checked={formData.hasSteamOrDryHeatFluid}
                                     onChange={handleCheckboxChange}
                                 />
                                 </div>
@@ -504,43 +561,158 @@ const SterilityComponent = () => {
                                 <input
                                     type="checkbox"
                                     className="form-check-input"
-                                    name="hasSingleSterileBarrierSystemWithProtectiveInside"
+                                    name="hasSteamOrDryHeatFluid"
                                     value="No"
-                                    checked={!formData.hasSingleSterileBarrierSystemWithProtectiveInside}
+                                    checked={!formData.hasSteamOrDryHeatFluid}
                                     onChange={handleCheckboxChange}
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
                             </div>
-                    </div>
-
+                        </div>
+                    </>
+                    }
                     <div className="form-group">
-                            <label>7- Is there a single sterile barrier system with protective packaging outside ?</label>
-                            <div>
-                                <div className="form-check">
-                                <label className="form-check-label">Yes</label>
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="hasSingleSterileBarrierSystemWithProtectiveOutside"
-                                    value="Yes"
-                                    checked={formData.hasSingleSterileBarrierSystemWithProtectiveOutside}
-                                    onChange={handleCheckboxChange}
-                                />
+                                <label>4- Is there a sterile barrier system ?</label>
+                                <div>
+                                    <div className="form-check">
+                                    <label className="form-check-label">Yes</label>
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasSterileBarrierSystem"
+                                        value="Yes"
+                                        checked={formData.hasSterileBarrierSystem}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    </div>
+                                    <div className="form-check">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasSterileBarrierSystem"
+                                        value="No"
+                                        checked={!formData.hasSterileBarrierSystem}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    <label className="form-check-label">No</label>
+                                    </div>
                                 </div>
-                                <div className="form-check">
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="hasSingleSterileBarrierSystemWithProtectiveOutside"
-                                    value="No"
-                                    checked={!formData.hasSingleSterileBarrierSystemWithProtectiveOutside}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <label className="form-check-label">No</label>
+                        </div>
+                   {formData.hasSterileBarrierSystem && 
+                   <>
+                        <div className="form-group">
+                                <label>- Is there a single sterile barrier system ?</label>
+                                <div>
+                                    <div className="form-check">
+                                    <label className="form-check-label">Yes</label>
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasSingleSterileBarrierSystem"
+                                        value="Yes"
+                                        checked={formData.hasSingleSterileBarrierSystem}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    </div>
+                                    <div className="form-check">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasSingleSterileBarrierSystem"
+                                        value="No"
+                                        checked={!formData.hasSingleSterileBarrierSystem}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    <label className="form-check-label">No</label>
+                                    </div>
                                 </div>
-                            </div>
-                    </div>
+                        </div>
+
+                        <div className="form-group">
+                                <label>- Is there two sterile barrier systems ?</label>
+                                <div>
+                                    <div className="form-check">
+                                    <label className="form-check-label">Yes</label>
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasTwoSterileBarrierSystems"
+                                        value="Yes"
+                                        checked={formData.hasTwoSterileBarrierSystems}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    </div>
+                                    <div className="form-check">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasTwoSterileBarrierSystems"
+                                        value="No"
+                                        checked={!formData.hasTwoSterileBarrierSystems }
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    <label className="form-check-label">No</label>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div className="form-group">
+                                <label>- Is there a single sterile barrier system with protective packaging inside ?</label>
+                                <div>
+                                    <div className="form-check">
+                                    <label className="form-check-label">Yes</label>
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasSingleSterileBarrierSystemWithProtectiveInside"
+                                        value="Yes"
+                                        checked={formData.hasSingleSterileBarrierSystemWithProtectiveInside}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    </div>
+                                    <div className="form-check">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasSingleSterileBarrierSystemWithProtectiveInside"
+                                        value="No"
+                                        checked={!formData.hasSingleSterileBarrierSystemWithProtectiveInside}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    <label className="form-check-label">No</label>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div className="form-group">
+                                <label>- Is there a single sterile barrier system with protective packaging outside ?</label>
+                                <div>
+                                    <div className="form-check">
+                                    <label className="form-check-label">Yes</label>
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasSingleSterileBarrierSystemWithProtectiveOutside"
+                                        value="Yes"
+                                        checked={formData.hasSingleSterileBarrierSystemWithProtectiveOutside}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    </div>
+                                    <div className="form-check">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name="hasSingleSterileBarrierSystemWithProtectiveOutside"
+                                        value="No"
+                                        checked={!formData.hasSingleSterileBarrierSystemWithProtectiveOutside}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    <label className="form-check-label">No</label>
+                                    </div>
+                                </div>
+                        </div>
+                    </>}
             </div>
                 }
 

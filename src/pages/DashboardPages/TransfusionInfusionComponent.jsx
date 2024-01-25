@@ -99,7 +99,7 @@ const TransfusionInfusionComponent = () => {
 
   useEffect(() => {
     if(transfusionInfusionSuccess){
-        navigate(`/dashboard/create-project/step8/${projectInfo._id}`)
+        navigate(`/dashboard/create-project/step9/${projectInfo._id}`)
     }
 
     if(transfusionInfusionFail){
@@ -115,7 +115,7 @@ const TransfusionInfusionComponent = () => {
             :`/dashboard/create-project/step6/${projectId}`} className='label-info-link'> Back</Link>
             <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={6} />
+      <HorizontalLinearStepper step={7} />
       <form className="transfusion-infusion-form" onSubmit={handleSubmit}>
         <h2>Transfusion/Infusion</h2>
 
@@ -204,7 +204,7 @@ const TransfusionInfusionComponent = () => {
         </div>
 
           <div className="form-group">
-            <label>4- How many drops are there per milliliter?</label>
+            <label>4- Is there an indication of number of drops per milliliter?</label>
             <div style={{margin:'10px 0'}}>
               <label style={{marginRight:'10px '}} >Not applicable : </label>
                   <input
@@ -228,7 +228,7 @@ const TransfusionInfusionComponent = () => {
           </div>
 
           <div className="form-group">
-            <label>5- What is the pore size of the liquid filter?</label>
+            <label>5- Is the medical device contains a filter of a particular nominal pore size for infusion or transfusion?</label>
             <div style={{margin:'10px 0'}}>
               <label style={{marginRight:'10px '}} >Not applicable : </label>
                   <input
@@ -252,7 +252,7 @@ const TransfusionInfusionComponent = () => {
           </div>
 
         <div className="form-group">
-          <label>6- Is your product a medical device with a valve that allows flow in only one direction?</label>
+          <label>6- Is your product contains a valve that allows flow in only one way?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>

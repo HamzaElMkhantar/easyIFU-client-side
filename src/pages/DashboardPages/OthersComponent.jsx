@@ -59,14 +59,12 @@ const OthersComponent = () => {
     reprocessedDevice: false,
     reprocessingCycles: 0,
     reprocessingLimitation: '',
-    customMadeDevice: false,
-    clinicalInvestigationOnly: false,
     containsCMRSubstances: false,
     cmrSubstancesList: '',
     intendedForIntroduction: false,
     qualitativeComposition: '',
     quantitativeInformation: '',
-    quantity: 0,
+    // quantity: 0,
   });
 
      // get prev project info
@@ -104,8 +102,6 @@ const OthersComponent = () => {
       reprocessedDevice: projectInformation?.labelData?.reprocessedDevice || false,
       reprocessingCycles: projectInformation?.labelData?.reprocessingCycles || 0,
       reprocessingLimitation: projectInformation?.labelData?.reprocessingLimitation || '',
-      customMadeDevice: projectInformation?.labelData?.customMadeDevice || false,
-      clinicalInvestigationOnly: projectInformation?.labelData?.clinicalInvestigationOnly || false,
       containsCMRSubstances: projectInformation?.labelData?.containsCMRSubstances || false,
       cmrSubstancesList: projectInformation?.labelData?.cmrSubstancesList || '',
       intendedForIntroduction: projectInformation?.labelData?.intendedForIntroduction || false,
@@ -140,7 +136,7 @@ const OthersComponent = () => {
 
   useEffect(() => {
     if(othersSuccess){
-        navigate(`/dashboard/project-information/${projectInfo._id}`)
+        navigate(`/dashboard/create-project/step10/${projectInfo._id}`)
     }
 
     if(othersFail){
@@ -154,7 +150,7 @@ const OthersComponent = () => {
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step7/${projectId}`} className='label-info-link'> Back</Link>
             <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={10} />
+      <HorizontalLinearStepper step={8} />
       <form className="others-form" onSubmit={handleSubmit}>
         <h2>Others</h2>
 
@@ -475,7 +471,7 @@ const OthersComponent = () => {
             </div>
           </div>
         )}
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>- Is your product a Custom made device?</label>
           <div>
             <div className="form-check">
@@ -529,7 +525,7 @@ const OthersComponent = () => {
               />
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="form-group">
           <label>- Does your medical device contain CMR (Carcinogenic, Mutagenic or Reprotoxic) substances of category 1A or 1B or substances having endocrine-disrupting properties in a concentration above 0.1 % (w/w)?</label>
@@ -627,7 +623,7 @@ const OthersComponent = () => {
           </div>
         )}
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>- Quantity of product per packaging:</label>
             <input
               type="number"
@@ -636,7 +632,7 @@ const OthersComponent = () => {
               value={formData.quantity}
               onChange={(e) => handleInputChange('quantity', e.target.value)}
             />
-          </div>
+          </div> */}
           {!othersRequest 
            ? <div style={{width:"100%", display:'flex', justifyContent:"center", alignItems:'center', marginTop:"30px"}}>
                 <button type='submit' style={{padding:'4px 20px', borderRadius:'4px', backgroundColor:'#011D41', color:'#fff', fontWeight:"600"}}>Save</button>

@@ -6,7 +6,8 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-const steps = ["Step1", "Step2", "Step3", "Step4", "Step5", "Step6", "Step7", "Step8"];
+
+const steps = ["Step1", "Step2", "Step3", "Step4", "Step5", "Step6", "Step7", "Step8", "Step9", "Step10"];
 
 export default function ResponsiveStepper({ step }) {
   const activeStep = Math.min(step, steps.length - 1);
@@ -21,10 +22,10 @@ export default function ResponsiveStepper({ step }) {
         width:'100%',
         overflowX: 'scroll'
     }} sx={{ width: '100%' }}>
-      <Stepper style={{color:"#fff"}} activeStep={activeStep}>
+      <Stepper style={{color:"#fff"}} activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel sx={{color: '#fff'}} ><div style={{color:"#fff !important"}}>{label}</div></StepLabel>
+          <Step key={label}  >
+            <StepLabel style={{fontSize:'12px'}} sx={{color: '#fff'}} > <div style={{color:"#fff !important", fontSize:'12px'}}>{label}</div></StepLabel>
           </Step>
         ))}
       </Stepper>
@@ -41,10 +42,10 @@ export default function ResponsiveStepper({ step }) {
         <React.Fragment>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
-            
           </Box>
         </React.Fragment>
       )}
     </Box>
+      
   );
 }

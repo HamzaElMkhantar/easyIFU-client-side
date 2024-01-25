@@ -27,16 +27,18 @@ const StorageComponent = () => {
     requiresProtectionFromHeatAndRadioactiveSources: false,
     requiresProtectionFromMoisture: false,
     hasLowerLimitOfTemperature: false,
-    lowerTemperatureLimit: '',
+    lowerTemperatureLimit: 0,
     hasUpperLimitOfTemperature: false,
-    upperTemperatureLimit: '',
+    upperTemperatureLimit: 0,
     hasHumidityRange: false,
-    humidityMin: '',
-    humidityMax: '',
+    humidityMin: 0,
+    humidityMax: 0,
     hasAtmosphericPressureRange: false,
-    atmosphericPressureMin: '',
-    atmosphericPressureMax: '',
+    atmosphericPressureMin: 0,
+    atmosphericPressureMax: 0,
   });
+
+  console.log(formData)
 
     // get prev project info
     const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
@@ -143,7 +145,7 @@ const StorageComponent = () => {
 
   useEffect(() => {
       if(storageSuccess){
-          navigate(`/dashboard/create-project/step5/${projectInfo._id}`)
+          navigate(`/dashboard/create-project/step6/${projectInfo._id}`)
           console.log(projectInfo)
       }
 
@@ -160,7 +162,7 @@ const StorageComponent = () => {
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step3/${projectId}`} className='label-info-link'> Back</Link>
             <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={3} />
+      <HorizontalLinearStepper step={4} />
       <form onSubmit={handleSubmit} className="storage-form">
         <h2>Storage</h2>
 
@@ -309,10 +311,11 @@ const StorageComponent = () => {
           <div className="form-group">
             <label>Lower limit of temperature:</label>
             <input
-              type="text"
+              type="number"
+              // min='0'
               className="form-control"
               name="lowerTemperatureLimit"
-              placeholder='number'
+              placeholder='Min'
               value={formData.lowerTemperatureLimit}
               required={formData.hasLowerLimitOfTemperature ? true : false}
               onChange={(e) => handleInputChange('lowerTemperatureLimit', e.target.value)}
@@ -352,10 +355,11 @@ const StorageComponent = () => {
           <div className="form-group">
             <label>Upper limit of temperature:</label>
             <input
-              type="text"
+              type="number"
+              // min='0'
               className="form-control"
               name="upperTemperatureLimit"
-              placeholder='number'
+              placeholder='Max'
               value={formData.upperTemperatureLimit}
               required={formData.hasUpperLimitOfTemperature ? true : false}
               onChange={(e) => handleInputChange('upperTemperatureLimit', e.target.value)}
@@ -426,7 +430,8 @@ const StorageComponent = () => {
             <div className="row">
               <div className="col">
                 <input
-                  type="text"
+                  type="number"
+                  // min='0'
                   className="form-control"
                   name="humidityMin"
                   placeholder="Min"
@@ -437,7 +442,8 @@ const StorageComponent = () => {
               </div>
               <div className="col">
                 <input
-                  type="text"
+                  type="number"
+                  // min='0'
                   className="form-control"
                   name="humidityMax"
                   placeholder="Max"
@@ -484,10 +490,11 @@ const StorageComponent = () => {
             <div className="row">
               <div className="col">
                 <input
-                  type="text"
+                  type="number"
+                  // min='0'
                   className="form-control"
                   name="atmosphericPressureMin"
-                  placeholder="Min (number + unit)"
+                  placeholder="Min"
                   required={formData.hasAtmosphericPressureRange ? true : false}
                   value={formData.atmosphericPressureMin}
                   onChange={(e) => handleInputChange('atmosphericPressureMin', e.target.value)}
@@ -495,11 +502,12 @@ const StorageComponent = () => {
               </div>
               <div className="col">
                 <input
-                  type="text"
+                  type="number"
+                  // min='0'
                   className="form-control"
                   name="atmosphericPressureMax"
                   required={formData.hasAtmosphericPressureRange ? true : false}
-                  placeholder="Max (number + unit)"
+                  placeholder="Max"
                   value={formData.atmosphericPressureMax}
                   onChange={(e) => handleInputChange('atmosphericPressureMax', e.target.value)}
                 />

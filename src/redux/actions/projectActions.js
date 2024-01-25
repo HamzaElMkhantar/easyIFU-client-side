@@ -82,7 +82,11 @@ import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST,
             TRANSFUSION_INFUSION_FAILED,
             TRANSFUSION_INFUSION_REQUEST,
             TRANSFUSION_INFUSION_RESET,
-            TRANSFUSION_INFUSION_SUCCESS} from '../constants/projectConstants';
+            TRANSFUSION_INFUSION_SUCCESS,
+            TRANSLATION_REPACKAGING_FAILED,
+            TRANSLATION_REPACKAGING_REQUEST,
+            TRANSLATION_REPACKAGING_RESET,
+            TRANSLATION_REPACKAGING_SUCCESS} from '../constants/projectConstants';
 
 
 export const getAllProjectsAction = (companyId, token) => async (dispatch) => {
@@ -536,6 +540,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
         }
   
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/transfusion-infusion`, data, config);
+      console.log(response)
   
       dispatch({ 
             type: TRANSFUSION_INFUSION_SUCCESS, 
@@ -591,6 +596,42 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
         setTimeout(() =>{
           dispatch({ 
             type: OTHERS_RESET
+          });
+        }, 1500)
+      }
+  };
+
+  export const translationAndRepackagingAction = (data, token) => async (dispatch) => {
+    try {
+  
+      dispatch({ type: TRANSLATION_REPACKAGING_REQUEST});
+
+      const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+  
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/translation-repackaging`, data, config);
+  
+      dispatch({ 
+            type: TRANSLATION_REPACKAGING_SUCCESS, 
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: TRANSLATION_REPACKAGING_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: TRANSLATION_REPACKAGING_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: TRANSLATION_REPACKAGING_RESET
           });
         }, 1500)
       }

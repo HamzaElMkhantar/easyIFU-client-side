@@ -1845,9 +1845,8 @@ const LabelInformation = () => {
 
 
           {projectInfo.labelData.isSterile == true &&
-            projectInfo.labelData.hasSterilizationProcess &&
-
-                projectInfo.labelData.isIntendedToBeResterilized &&
+            // projectInfo.labelData.hasSterilizationProcess &&
+                !projectInfo.labelData.isIntendedToBeResterilized &&
                     <div className='symbol-content-item'>
                       <img className='symbol-img' src={do_not_resterilizeSymbol} />
                     </div>
@@ -2118,16 +2117,17 @@ const LabelInformation = () => {
                     <p>{projectInfo.labelData.liquidFilterPoreSize}</p>
                   </div>
               </div>}
+              
               {/* {projectInfo.labelData.reprocessedDevice &&
-          <div className='symbol-content-item'>
-            <img className='symbol-img' src={Repackaging} />
-            <div>
-              {projectInfo.labelData.reprocessingCycles &&
-                <p>number of reprocessing cycles: {projectInfo.labelData.reprocessingCycles}</p>}
-              {projectInfo.labelData.reprocessingLimitation &&
-                <p>{projectInfo.labelData.reprocessingLimitation}</p>}
-            </div>
-          </div>}  */}
+                <div className='symbol-content-item'>
+                  <img className='symbol-img' src={Repackaging} />
+                  <div>
+                    {projectInfo.labelData.reprocessingCycles &&
+                      <p>number of reprocessing cycles: {projectInfo.labelData.reprocessingCycles}</p>}
+                    {projectInfo.labelData.reprocessingLimitation &&
+                      <p>{projectInfo.labelData.reprocessingLimitation}</p>}
+                  </div>
+                </div>}  */}
 
               {projectInfo.labelData.needInstructionsForUse &&
               <div className='symbol-content-item'>

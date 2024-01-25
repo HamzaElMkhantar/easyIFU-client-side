@@ -20,6 +20,7 @@ import { RotatingLines } from 'react-loader-spinner';
 
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
+import BarLinks from '../../utilities/BarLinks';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(
@@ -194,10 +195,11 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* <BarLinks /> */}
+
         {/* Dashboard  content   */}
-        <section  className='container' style={{paddingTop:'20px', overflowY:'scroll', height:'94.3vh'}}>
-            <div className=" mt-4">
- 
+        <section  className='container' style={{paddingTop:'20px', overflowY:'scroll', height:'87.3vh'}}>
+            <div className=" mt-4" style={{overflowY:'scroll', height:''}}>
                 <div  className="row mt-4">
                     <div className="col-12 col-md-6 col-lg-4 my-1">
                         <Card>

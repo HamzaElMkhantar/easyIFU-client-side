@@ -39,11 +39,21 @@ const ManageUser = () => {
         firstName: '',
         lastName: '',
         password: '',
-        email: '',
+        role: []
       })
     
       const dispatch = useDispatch();
-    
+
+      const handleCheckboxChange = (newRole) => {
+        const updatedRoles = userInfo.role.includes(newRole)
+          ? userInfo.role.filter((r) => r !== newRole) // Remove role if already present
+          : [...userInfo.role, newRole]; // Add role if not present
+        setUserInfo({
+          ...userInfo,
+          role: updatedRoles
+        });
+      };
+
       const handleInput = (e) => {
         setUserInfo({
           ...userInfo,
@@ -67,7 +77,6 @@ const ManageUser = () => {
           ...userInfo,
           firstName: '',
           lastName: '',
-          email: '',
           password: '',
         });
       }
@@ -297,24 +306,7 @@ const ManageUser = () => {
 
                       </div>
                       <div className="row">
-                        {decodedToken &&
-                        decodedToken.userInfo &&
-                        decodedToken.userInfo.role.includes("Admin") &&
-                            <div className="col-md-6">
-                            <div className="form-outline mb-2">
-                                <label className="form-label" htmlFor="email">
-                                E-mail
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    onChange={(e) => handleInput(e)}
-                                    className="form-control"
-                                    placeholder="E-mail"
-                                    value={userInfo.email}
-                                />
-                            </div>
-                            </div>}
+
 
                         <div className="col-md-6">
                           <div className="form-outline mb-2">
@@ -331,6 +323,51 @@ const ManageUser = () => {
                             />
                           </div>
                         </div>
+                        <div className="col-md-6 mt-2">
+                              <div className="form-outline mb-2">
+                                <label className="form-label" htmlFor="roles">
+                                  User Roles
+                                </label>
+                                <div>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Admin"
+                                      checked={userInfo.role.includes('Admin')}
+                                      onChange={() => handleCheckboxChange('Admin')}
+                                    />
+                                    Admin
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Creator"
+                                      checked={userInfo.role.includes('Creator')}
+                                      onChange={() => handleCheckboxChange('Creator')}
+                                    />
+                                    Creator
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Approver"
+                                      checked={userInfo.role.includes('Approver')}
+                                      onChange={() => handleCheckboxChange('Approver')}
+                                    />
+                                    Approver
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Release"
+                                      checked={userInfo.role.includes('Release')}
+                                      onChange={() => handleCheckboxChange('Release')}
+                                    />
+                                    Release
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
                       </div>
                       <div className="text-center pt-1 mb-4 pb-1">
                         <button disabled={updateUserRequest ? true : false}

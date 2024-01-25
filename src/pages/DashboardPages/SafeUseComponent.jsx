@@ -96,12 +96,12 @@ const SafeUseComponent = () => {
   useEffect(() => {
     if(safeUseSuccess){
       if(projectInfo.labelData.productType === "In Vitro Diagnostic (IVD) Medical Device"){
-        navigate(`/dashboard/create-project/step6/${projectInfo._id}`)
+        navigate(`/dashboard/create-project/step7/${projectInfo._id}`)
         console.log(projectInfo.labelData.productType)
       }
 
       if(projectInfo.labelData.productType === "Medical device"){
-        navigate(`/dashboard/create-project/step7/${projectInfo._id}`)
+        navigate(`/dashboard/create-project/step8/${projectInfo._id}`)
         console.log(projectInfo.labelData.productType)
       }
 
@@ -118,7 +118,7 @@ const SafeUseComponent = () => {
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step4/${projectId}`} className='label-info-link'> Back</Link>
             <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={4} />
+      <HorizontalLinearStepper step={5} />
       <form className="safe-use-form" onSubmit={handleSubmit}>
         <h2>Safe Use</h2>
 
@@ -206,7 +206,7 @@ const SafeUseComponent = () => {
           </div>
         </div>
 
-        {/* {formData.needInstructionsForUse && (
+        {formData.needInstructionsForUse && (
           <div className="form-group">
             <label>Add the link for eIFU (If available):</label>
             <input
@@ -218,7 +218,7 @@ const SafeUseComponent = () => {
               onChange={(e) => handleInputChange('eIFULink', e.target.value)}
             />
           </div>
-         )}  */}
+         )}
 
         <div className="form-group">
           <label>4- Is caution necessary when operating the device?</label>

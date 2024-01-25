@@ -81,7 +81,11 @@ import {ALL_PROJECTS_FAILED,
         TRANSFUSION_INFUSION_FAILED,
         TRANSFUSION_INFUSION_REQUEST,
         TRANSFUSION_INFUSION_RESET,
-        TRANSFUSION_INFUSION_SUCCESS} from "../constants/projectConstants";
+        TRANSFUSION_INFUSION_SUCCESS,
+        TRANSLATION_REPACKAGING_FAILED,
+        TRANSLATION_REPACKAGING_REQUEST,
+        TRANSLATION_REPACKAGING_RESET,
+        TRANSLATION_REPACKAGING_SUCCESS} from "../constants/projectConstants";
 
 
 const getProjects = {
@@ -172,6 +176,13 @@ const others = {
     othersSuccess :  false,
     othersFail : null,
     projectInfo: null
+}
+
+const translationAndRepackaging = {
+    translationAndRepackagingRequest : false,
+    translationAndRepackagingSuccess :  false,
+    translationAndRepackagingFail : null,
+    translationAndRepackagingInfo: null
 }
 
 const sendingProject = {
@@ -664,6 +675,36 @@ export const othersReducer = (state = others, action) => {
             } ;
         case OTHERS_RESET :
             return others;
+        default :
+            return state ;
+    }
+}
+
+export const translationAndRepackagingReducer = (state = translationAndRepackaging, action) => {
+    switch(action.type){
+        case TRANSLATION_REPACKAGING_REQUEST:
+            return {
+                ...state,
+                translationAndRepackagingRequest : true,
+                translationAndRepackagingSuccess :  false,
+                translationAndRepackagingFail : null,
+            } ;
+        case TRANSLATION_REPACKAGING_SUCCESS :
+            return {
+                ...state,
+                translationAndRepackagingRequest : false,
+                translationAndRepackagingSuccess : true,
+                translationAndRepackagingInfo: action.payload
+            } ;
+        case TRANSLATION_REPACKAGING_FAILED :
+            return {
+                ...state,
+                translationAndRepackagingFail : action.payload,
+                translationAndRepackagingSuccess :  false,
+                translationAndRepackagingRequest : false
+            } ;
+        case TRANSLATION_REPACKAGING_RESET :
+            return translationAndRepackaging;
         default :
             return state ;
     }

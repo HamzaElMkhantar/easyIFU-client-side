@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProjectAction, productInformationAction, uploadManufacturerLogoAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ProductInfoComponent = () => {
     const {projectId} = useParams()
@@ -33,51 +34,93 @@ const ProductInfoComponent = () => {
         useByDate: '',
         hasUseByDate: false,
         haDateOfManufacture: false,
+        hasCountryOfManufacture: false,
+        countryOfManufacture: '',
+        canBeUsedIfDamaged: false,
         haSerialNumber: false,
         hasLotNumber: false ,
         catalogueNumber: '',
         modelNumber: '',
-        packagingContents: '' ,
+        packagingContents: [] ,
         addManufacturerLogo: false,
+        quantity: 0,
+
     });
 
-         // get prev project info
-         const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
-         const [projectInformation, setProjectInformation] = useState({});
-         useEffect(() =>{
-             dispatch(getProjectAction(projectId, token))
-         }, [])
-         useEffect(() =>{
-             if(getProjectSuccess){
-             setProjectInformation(project)
-             }
-         }, [getProjectSuccess])
-         console.log(projectInformation)
 
-         useEffect(() =>{
-            setFormData({
-                isUpdate: false,
-                projectId,
-                productName: projectInformation?.labelData?.productName ||'',
-                intendedPurpose: projectInformation?.labelData?.intendedPurpose || '',
-                productType: projectInformation?.labelData?.productType || '',
-                udiDI: projectInformation?.labelData?.udiDI || '',
-                udiFormat: projectInformation?.labelData?.udiFormat || '',
-                udiType: projectInformation?.labelData?.udiType || '',
-                useByDate: projectInformation?.labelData?.useByDate || '',
-                hasUseByDate: projectInformation?.labelData?.hasUseByDate || false,
-                dateOfManufacture: projectInformation?.labelData?.dateOfManufacture || '',
-                haDateOfManufacture: projectInformation?.labelData?.haDateOfManufacture || false,
-                serialNumber: projectInformation?.labelData?.serialNumber || '',
-                haSerialNumber: projectInformation?.labelData?.haSerialNumber || false,
-                LOTNumber: projectInformation?.labelData?.LOTNumber || '',
-                hasLotNumber: projectInformation?.labelData?.hasLotNumber || false ,
-                catalogueNumber: projectInformation?.labelData?.catalogueNumber || '',
-                modelNumber: projectInformation?.labelData?.modelNumber || '',
-                // packagingContents: projectInformation?.labelData?.packagingContents || [''],
-                addManufacturerLogo: projectInformation?.labelData?.addManufacturerLogo || false,
-            })
-        }, [projectInformation])
+    //  dynamic input
+    const [serviceList, setServiceList] = useState([""]);
+
+    const handleServiceChange = (e, index) => {
+    const { value } = e.target;
+    const list = [...serviceList];
+    list[index] = value;
+    setServiceList(list);
+    setFormData((prevData) => ({
+        ...prevData,
+        packagingContents: list
+    }));
+    };
+    
+    const handleServiceRemove = (index) => {
+    const list = [...serviceList];
+    list.splice(index, 1);
+    setServiceList(list);
+    };
+    
+    const handleServiceAdd = () => {
+    setServiceList([...serviceList, ""]);
+    setFormData((prevData) => ({
+        ...prevData,
+        packagingContents: serviceList,
+    }));
+    };
+
+
+    // get prev project info
+    const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+    const [projectInformation, setProjectInformation] = useState({});
+    useEffect(() =>{
+        dispatch(getProjectAction(projectId, token))
+    }, [])
+    useEffect(() =>{
+        if(getProjectSuccess){
+        setProjectInformation(project)
+        }
+    }, [getProjectSuccess])
+
+
+
+    useEffect(() =>{
+        setFormData({
+            isUpdate: false,
+            projectId,
+            productName: projectInformation?.labelData?.productName ||'',
+            intendedPurpose: projectInformation?.labelData?.intendedPurpose || '',
+            productType: projectInformation?.labelData?.productType || '',
+            udiDI: projectInformation?.labelData?.udiDI || '',
+            udiFormat: projectInformation?.labelData?.udiFormat || '',
+            udiType: projectInformation?.labelData?.udiType || '',
+            useByDate: projectInformation?.labelData?.useByDate || '',
+            hasUseByDate: projectInformation?.labelData?.hasUseByDate || false,
+            dateOfManufacture: projectInformation?.labelData?.dateOfManufacture || '',
+            haDateOfManufacture: projectInformation?.labelData?.haDateOfManufacture || false,
+            countryOfManufacture: projectInformation?.labelData?.countryOfManufacture || '',
+            hasCountryOfManufacture: projectInformation?.labelData?.hasCountryOfManufacture || false,
+            serialNumber: projectInformation?.labelData?.serialNumber || '',
+            haSerialNumber: projectInformation?.labelData?.haSerialNumber || false,
+            LOTNumber: projectInformation?.labelData?.LOTNumber || '',
+            hasLotNumber: projectInformation?.labelData?.hasLotNumber || false ,
+            catalogueNumber: projectInformation?.labelData?.catalogueNumber || '',
+            modelNumber: projectInformation?.labelData?.modelNumber || '',
+            // packagingContents: projectInformation?.labelData?.packagingContents || [''],
+            addManufacturerLogo: projectInformation?.labelData?.addManufacturerLogo || false,
+            quantity: projectInformation?.labelData?.quantity || 0,
+            canBeUsedIfDamaged: projectInformation?.labelData?.canBeUsedIfDamaged || false,
+        })
+
+        setServiceList(projectInformation?.labelData?.packagingContents.length > 0 ? projectInformation?.labelData?.packagingContents : [''])
+    }, [projectInformation])
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -130,7 +173,6 @@ const ProductInfoComponent = () => {
           haSerialNumber: name === 'serialNumber' ? true : false,
         });
       };
-    console.log(formData)
     const dispatch = useDispatch()
     // const formDataObject = new FormData();
     // formDataObject.append('manufacturerLogo', formData.manufacturerLogo);
@@ -139,21 +181,8 @@ const ProductInfoComponent = () => {
     const handleSubmit = async(e) => {
         e.preventDefault();
 
-        if (formData.packagingContents) {
-            // Split the input string into an array using "-" as the delimiter
-            const packagingContentsArray = formData.packagingContents
-              .split('-')
-              .map((val) => val.trim())
-              .filter((val) => val !== ''); // Remove empty values
-        
-            // Update the state
-            setFormData({
-                ...formData,
-                packagingContents: packagingContentsArray
-              });
-          }
 
-       await dispatch(productInformationAction(formData, token))
+        await dispatch(productInformationAction(formData, token))
 
     //    await dispatch(uploadManufacturerLogoAction(formDataObject, token))
 
@@ -162,7 +191,7 @@ const ProductInfoComponent = () => {
     const navigate = useNavigate()
     useEffect(() => {
         if(productSuccess){
-            navigate(`/dashboard/create-project/step3/${projectInfo._id}`)
+            navigate(`/dashboard/create-project/step4/${projectInfo._id}`)
         }
 
         if(productFail){
@@ -170,13 +199,14 @@ const ProductInfoComponent = () => {
         }
     }, [productSuccess, productFail])
 
+
   return (
     <div className="container productInfo">
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step1/${projectId}`} className='label-info-link'> Back</Link>
             <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-        <HorizontalLinearStepper step={1}/>
+        <HorizontalLinearStepper step={2}/>
         <form className='productInfo-form' onSubmit={handleSubmit}>
             <h2>Product Information</h2>            
             <div className="row">
@@ -334,47 +364,118 @@ const ProductInfoComponent = () => {
                     type="number"
                     className="form-control"
                     name="useByDate"
+                    min="0"
                     onChange={handleInputChange}
                     />
                     <label>{formData.useByDate}</label>
                 </div>
+           
+                <div className="form-group">
+                    <label>6- Has Date of Manufacture ? (Optional):</label>
+                    <div className="form-group" style={{display:'flex'}}>
+                        <div style={{display:'flex'}}>
+                            <input style={{width:''}}
+                            type="CheckBox"
+                            className="form-check-input"
+                            checked={formData.haDateOfManufacture ? true : false}
+                            onClick={() => setFormData({...formData, haDateOfManufacture: true})}
+                            />
+                            <label className="form-check-label mx-3">Yes</label>
+                        </div>
+                        <div style={{display:'flex'}}>
+                        <input style={{width:''}}
+                            type="CheckBox"
+                            required={formData.haDateOfManufacture ? false : true}
+                            className="form-check-input"
+                            checked={formData.haDateOfManufacture ? false : true}
+                            onClick={() => setFormData({...formData, haDateOfManufacture: false})}
+                            />
+                            <label className="form-check-label mx-3">No</label>
+
+                        </div>
                 </div>
+                </div>
+                
+                </div>
+
+
                 <div className="col-md-6">
                 
                 <div className="form-group">
-                    <label>6- Has Date of Manufacture ? (Optional):</label>
-                    <div className="form-group">
-                    <div style={{display:'flex'}}>
+                    <label>- Do you want to write the country of origin? :</label>
+                    <div className="form-group" style={{display:'flex'}}>
+                        <div style={{display:'flex'}}>
+                            <input style={{width:''}}
+                            type="CheckBox"
+                            className="form-check-input"
+                            checked={formData.hasCountryOfManufacture ? true : false}
+                            onClick={() => setFormData({...formData, hasCountryOfManufacture: true})}
+                            />
+                            <label className="form-check-label mx-3">Yes</label>
+                        </div>
+                        <div style={{display:'flex'}}>
                         <input style={{width:''}}
-                        type="CheckBox"
-                        className="form-check-input"
-                        checked={formData.haDateOfManufacture ? true : false}
-                        onClick={() => setFormData({...formData, haDateOfManufacture: true})}
-                        />
-                        <label className="form-check-label mx-3">Yes</label>
-                    </div>
-                    <div style={{display:'flex'}}>
-                     <input style={{width:''}}
-                        type="CheckBox"
-                        required={formData.haDateOfManufacture ? false : true}
-                        className="form-check-input"
-                        checked={formData.haDateOfManufacture ? false : true}
-                        onClick={() => setFormData({...formData, haDateOfManufacture: false})}
-                        />
-                    <label className="form-check-label mx-3">No</label>
+                            type="CheckBox"
+                            required={formData.hasCountryOfManufacture ? false : true}
+                            className="form-check-input"
+                            checked={formData.hasCountryOfManufacture ? false : true}
+                            onClick={() => setFormData({...formData, hasCountryOfManufacture: false})}
+                            />
+                            <label className="form-check-label mx-3">No</label>
 
+                        </div>
+                </div>
+                </div>
+               {formData.hasCountryOfManufacture &&
+                    <div className="form-group">
+                        <label>Two Or tree letter of the Country Name:</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="countryOfManufacture"
+                                maxLength="3"
+                                value={formData.countryOfManufacture}
+                                onChange={(e) => setFormData({...formData, countryOfManufacture: (e.target.value).toUpperCase() })}
+                            />
+                    </div>}
+                    <div className="form-group">
+                            <label>2- Can your product be used if the package is damaged ?</label>
+                            <div style={{display:'flex'}}>
+                                <div className="form-check" >
+                                <label className="form-check-label mx-2">Yes</label>
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="canBeUsedIfDamaged"
+                                    value="Yes"
+                                    checked={formData.canBeUsedIfDamaged}
+                                    onClick={() => setFormData({...formData, canBeUsedIfDamaged: true})}
+                                />
+                                </div>
+                                <div className="form-check mx-3">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="canBeUsedIfDamaged"
+                                    value="No"
+                                    checked={!formData.canBeUsedIfDamaged}
+                                    onClick={() => setFormData({...formData, canBeUsedIfDamaged: false})}
+                                />
+                                <label className="form-check-label mx-2">No</label>
+                                </div>
+                            </div>
                     </div>
-                </div>
-                    {/* <input
-                    type="text"
-                    className="form-control"
-                    name="dateOfManufacture"
-                    placeholder='mm-dd-yyyy'
-                    value={formData.dateOfManufacture}
-                    onChange={handleInputChange}
-                    /> */}
-                </div>
-                <p className='form-group-paragraph'>In case where there is no specified expiration date, you can add the manufacture date*</p>
+                    <div className="form-group">
+                        <label>- Quantity of product per packaging:</label>
+                        <input
+                        type="number"
+                        className="form-control"
+                        name="quantity"
+                        value={formData.quantity}
+                        onChange={(e) => setFormData({...formData, quantity: e.target.value})}
+                        />
+                    </div>
+                <p className='form-group-paragraph' style={{fontSize:'14px'}}>In case where there is no specified expiration date, you can add the manufacture date*</p>
                 <div className="form-group">
                     <label>7- Choose one :</label>
                     <div style={{ display: 'flex' }}>
@@ -384,7 +485,7 @@ const ProductInfoComponent = () => {
                         name="lotNumber"
                         className="form-check-input"
                         checked={formData.hasLotNumber}
-                        onChange={() => handleRadioButtonChange('lotNumber')}
+                        onClick={() => setFormData({...formData, hasLotNumber: !formData.hasLotNumber})}
                     />
                     <label className="form-check-label mx-3" htmlFor="lotNumber">
                         LOT Number
@@ -397,7 +498,7 @@ const ProductInfoComponent = () => {
                         name="serialNumber"
                         className="form-check-input"
                         checked={formData.haSerialNumber}
-                        onChange={() => handleRadioButtonChange('serialNumber')}
+                        onClick={() => setFormData({...formData, haSerialNumber: !formData.haSerialNumber})}
                     />
                     <label className="form-check-label mx-3" htmlFor="serialNumber">
                         Serial Number
@@ -451,7 +552,7 @@ const ProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                <div className="form-group mb-0">
+                {/* <div className="form-group mb-0">
                     <label>10- Packaging contents (if necessary):</label>
                     <input
                     type="text"
@@ -461,13 +562,56 @@ const ProductInfoComponent = () => {
                     value={formData.packagingContents}
                     onChange={handleInputChange}
                     />
-                </div>
-                <div className='px-2'>
+                </div> */}
+                {/* <div className='px-2'>
                 {projectInformation?.labelData?.packagingContents.map((item, index) => {
                     return (
                         <p style={{color:'black', fontSize:'14px'}}>{index = projectInformation?.labelData?.packagingContents.length ? item  : item + " - " }</p>
                     )
                 })}
+                </div> */}
+
+                <div className="form-field">
+                    <label htmlFor="service">10- Packaging contents (if necessary):</label>
+                    {serviceList.map((singleService, index) => (
+                    <div key={index} className="services">
+                        <div className="first-division mb-1" style={{display:'flex',}}>
+                        <input
+                            name="service"
+                            style={{width:'50%', height:'35px', border:'1px solid lightgray', borderRadius:'5px'}}
+                            type="text"
+                            id="service"
+                            value={singleService}
+                            placeholder={`Content ${index + 1}`}
+                            onChange={(e) => handleServiceChange(e, index)}
+                        />
+                        {serviceList.length !== 1 && (
+                                    <button
+                                        type="button"
+                                        style={{backgroundColor:'#FBB8B8', borderRadius:'6px'}}
+                                        onClick={() => handleServiceRemove(index)}
+                                        className="remove-btn mx-2"
+                                        >
+                                        <span><DeleteIcon style={{color:'#2D2D2E'}} /></span>
+                                    </button>
+                                )}
+                        <p style={{color:'gray'}}>{singleService}</p>
+                        </div>
+                        <div className="second-division">
+       
+                        {serviceList.length - 1 === index && (
+                            <button
+                                    type="button"
+                                    style={{borderRadius:'5px', backgroundColor:'#79D4A3', fontSize:'14px'}}
+                                    onClick={handleServiceAdd}
+                                    className="add-btn"
+                                >
+                                <span>Add Content</span>
+                            </button>
+                        )}
+                        </div>
+                    </div>
+                    ))}
                 </div>
                 {/* <div className="form-group">
                     <label>11- Do you want to add your manufacturer logo in the label ?</label>

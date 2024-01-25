@@ -71,6 +71,7 @@ import Contact from './pages/DashboardPages/Contact';
 
 import jwt_decode from 'jwt-decode';
 import LegislationComponent from './pages/DashboardPages/LegislationComponent';
+import TranslationAndRepackaging from './pages/DashboardPages/TranslationAndRepackaging';
 
 function App() {
   const location = useLocation();
@@ -124,17 +125,6 @@ function App() {
   const R_Token = Cookies.get('eIfu_RTK') || null;
   const A_Token = Cookies.get('eIfu_ATK') || null;
   const decodedToken = A_Token ? jwtDecode(A_Token) : null
-  const decodedrToken = A_Token ? jwtDecode(R_Token) : null
-
-  console.log("decodedToken:",decodedToken)
-  console.log("decodedrToken: ",decodedrToken)
-
-// Assuming you have a cookie named 'accessToken'
-const accessTokenCookie = Cookies.get('eIfu_ATK');
-
-// Decode the JWT (you may need to use a library like jwt-decode)
-const decodedToke = accessTokenCookie ? jwt_decode(accessTokenCookie) : null;
-console.log('Decoded Token:', decodedToke);
 
   const intervalRef = useRef(null);
 
@@ -207,9 +197,6 @@ console.log('Decoded Token:', decodedToke);
     };
   }, [dispatch]);
 
-
-
-console.log(decodedToken?.userInfo?.isSubscripted)
   return (
     <div className="App">
       {showNav && <Header />}
@@ -243,6 +230,7 @@ console.log(decodedToken?.userInfo?.isSubscripted)
                   <Route path='/dashboard/create-project/step7/:projectId' element={<IVDDiagnosticComponent />} />
                   <Route path='/dashboard/create-project/step8/:projectId' element={<TransfusionInfusionComponent />} />
                   <Route path='/dashboard/create-project/step9/:projectId' element={<OthersComponent />} />
+                  <Route path='/dashboard/create-project/step10/:projectId' element={<TranslationAndRepackaging />} />
 
                   <Route path='/dashboard/project-information/:projectId' element={<LabelInformation />} />
                   <Route path='/dashboard/project/review-creator/:projectId' element={<CreatorReview />} />

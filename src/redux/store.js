@@ -41,6 +41,7 @@ import {IVDDiagnosticReducer,
         sterilityReducer, 
         storageReducer, 
         transfusionInfusionReducer,
+        translationAndRepackagingReducer,
         uploadManufacturerLogoReducer
     } from './reducers/projectReducers';
 import { dashboardCompanyInfoReducer, getCompanyInfoReducer, 
@@ -96,6 +97,7 @@ const reducer = combineReducers({
     IVDDiagnostic: IVDDiagnosticReducer,
     transfusionInfusion: transfusionInfusionReducer,
     others: othersReducer,
+    translationAndRepackaging: translationAndRepackagingReducer,
     sendingProjectToOtherRole: sendingProjectToOtherRoleReducer,
     ProjectByRoleId: ProjectByRoleIdReducer,
     ReleasedProject: ReleasedProjectReducer,
