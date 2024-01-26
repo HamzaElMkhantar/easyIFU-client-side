@@ -2,7 +2,7 @@
   "name": "client-side",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://emd.liveblog365.com",
+  "homepage": "https://easyifu.com",
   "dependencies": {
     "@babel/preset-env": "^7.23.3",
     "@emotion/react": "^11.11.1",
