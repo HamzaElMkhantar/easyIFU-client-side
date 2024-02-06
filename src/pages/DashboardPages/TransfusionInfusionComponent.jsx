@@ -109,18 +109,25 @@ const TransfusionInfusionComponent = () => {
 
   return (
     <div className="container transfusion-infusion">
-        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to={projectInformation && projectInformation.labelData && projectInformation.labelData.productType == "Medical device"
+      <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
+             <Link style={{height:'35px'}} to={projectInformation && projectInformation.labelData && projectInformation.labelData.productType == "Medical device"
              ? `/dashboard/create-project/step5/${projectId}`
             :`/dashboard/create-project/step6/${projectId}`} className='label-info-link'> Back</Link>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+                <HorizontalLinearStepper step={7}/>
+                <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={7} />
       <form className="transfusion-infusion-form" onSubmit={handleSubmit}>
         <h2>Transfusion/Infusion</h2>
 
         <div className="form-group">
-          <label>1- Is your product a medical device or blood processing application that includes a system dedicated to the collection of samples of a given substance stored in the medical device or blood container?</label>
+          <label className='question-bg mb-1'>1- Is your product a medical device or blood processing application that includes a system dedicated to the collection of samples of a given substance stored in the medical device or blood container?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -148,7 +155,7 @@ const TransfusionInfusionComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>2- Is there a presence of a fluid path?</label>
+          <label className='question-bg mb-1'>2- Is there a presence of a fluid path?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -176,7 +183,7 @@ const TransfusionInfusionComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>3- Is your medical device non-pyrogenic?</label>
+          <label className='question-bg mb-1'>3- Is your medical device non-pyrogenic?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -204,7 +211,7 @@ const TransfusionInfusionComponent = () => {
         </div>
 
           <div className="form-group">
-            <label>4- Is there an indication of number of drops per milliliter?</label>
+            <label className='question-bg mb-1'>4- Is there an indication of number of drops per milliliter?</label>
             <div style={{margin:'10px 0'}}>
               <label style={{marginRight:'10px '}} >Not applicable : </label>
                   <input
@@ -228,7 +235,7 @@ const TransfusionInfusionComponent = () => {
           </div>
 
           <div className="form-group">
-            <label>5- Is the medical device contains a filter of a particular nominal pore size for infusion or transfusion?</label>
+            <label className='question-bg mb-1'>5- Is the medical device contains a filter of a particular nominal pore size for infusion or transfusion?</label>
             <div style={{margin:'10px 0'}}>
               <label style={{marginRight:'10px '}} >Not applicable : </label>
                   <input
@@ -252,7 +259,7 @@ const TransfusionInfusionComponent = () => {
           </div>
 
         <div className="form-group">
-          <label>6- Is your product contains a valve that allows flow in only one way?</label>
+          <label className='question-bg mb-1'>6- Is your product contains a valve that allows flow in only one way?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>

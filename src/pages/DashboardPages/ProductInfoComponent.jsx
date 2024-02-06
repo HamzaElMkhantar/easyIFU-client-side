@@ -161,17 +161,38 @@ const ProductInfoComponent = () => {
             return;
           }
 
+
         setFormData({
             ...formData,
             [name]: newValue,
         });
     }
-    const handleRadioButtonChange = (name) => {
-        setFormData({
-          ...formData,
-          hasLotNumber: name === 'lotNumber' ? true : false,
-          haSerialNumber: name === 'serialNumber' ? true : false,
-        });
+    const handleRadioButtonChange = (e) => {
+        const {name, value, checkbox} = e.target;
+        const serialAndLotNumbers = [
+            'haSerialNumber',
+            'hasLotNumber',
+          ];
+      
+        if (serialAndLotNumbers.includes(name)) {
+            console.log(name, value, serialAndLotNumbers.includes(name))
+          // If the checkbox is in the exclusive list, set its value to true and others to false
+          setFormData((prevFormData) => {
+            const updatedFormData = { ...prevFormData };
+      
+            serialAndLotNumbers.forEach((checkbox) => {
+              if (checkbox !== name) {
+                updatedFormData[checkbox] = false;
+              }
+            });
+      
+            updatedFormData[name] = value === 'Yes';
+      
+            return updatedFormData;
+          });
+
+          return;
+        } 
       };
     const dispatch = useDispatch()
     // const formDataObject = new FormData();
@@ -202,17 +223,24 @@ const ProductInfoComponent = () => {
 
   return (
     <div className="container productInfo">
-        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to={`/dashboard/create-project/step1/${projectId}`} className='label-info-link'> Back</Link>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step2/${projectId}`} className='label-info-link'>Back</Link>
+                <HorizontalLinearStepper step={2}/>
+                <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-        <HorizontalLinearStepper step={2}/>
         <form className='productInfo-form' onSubmit={handleSubmit}>
             <h2>Product Information</h2>            
             <div className="row">
                 <div className="col-md-6">
                 <div className="form-group">
-                    <label>1- Product Name*:</label>
+                    <label className='question-bg mb-1'>- Product Name*:</label>
                     <input
                     type="text"
                     className="form-control"
@@ -222,7 +250,7 @@ const ProductInfoComponent = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>2- Intended purpose of the device:</label>
+                    <label className='question-bg mb-1'>- Intended purpose of the device:</label>
                     <input
                     type="text"
                     className="form-control"
@@ -232,7 +260,7 @@ const ProductInfoComponent = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>3- Is your product a*:</label>
+                    <label className='question-bg mb-1'>- Is your product a*:</label>
                     <select
                         className="form-control"
                         name="productType"
@@ -246,7 +274,7 @@ const ProductInfoComponent = () => {
                     </select>
                 </div>
                 <div className="form-group">
-                    <label>4- Insert the UDI of the device*:</label>
+                    <label className='question-bg'>- Insert the UDI of the device*:</label>
                 </div>
                 <div  className="form-group">
                     <label>Choose UDI Format :</label>
@@ -359,7 +387,7 @@ const ProductInfoComponent = () => {
                     />
                 </div> */}
                 <div className="form-group">
-                    <label>5-how many month(Use-by Date):</label>
+                    <label className='question-bg mb-1'>-how many month(Use-by Date):</label>
                     <input
                     type="number"
                     className="form-control"
@@ -371,7 +399,7 @@ const ProductInfoComponent = () => {
                 </div>
            
                 <div className="form-group">
-                    <label>6- Has Date of Manufacture ? (Optional):</label>
+                    <label className='question-bg mb-1'>- Has Date of Manufacture ? (Optional):</label>
                     <div className="form-group" style={{display:'flex'}}>
                         <div style={{display:'flex'}}>
                             <input style={{width:''}}
@@ -402,7 +430,7 @@ const ProductInfoComponent = () => {
                 <div className="col-md-6">
                 
                 <div className="form-group">
-                    <label>- Do you want to write the country of origin? :</label>
+                    <label className='question-bg mb-1'>- Do you want to write the country of origin? :</label>
                     <div className="form-group" style={{display:'flex'}}>
                         <div style={{display:'flex'}}>
                             <input style={{width:''}}
@@ -439,7 +467,7 @@ const ProductInfoComponent = () => {
                             />
                     </div>}
                     <div className="form-group">
-                            <label>2- Can your product be used if the package is damaged ?</label>
+                            <label className='question-bg mb-1'>- Can your product be used if the package is damaged ?</label>
                             <div style={{display:'flex'}}>
                                 <div className="form-check" >
                                 <label className="form-check-label mx-2">Yes</label>
@@ -466,7 +494,7 @@ const ProductInfoComponent = () => {
                             </div>
                     </div>
                     <div className="form-group">
-                        <label>- Quantity of product per packaging:</label>
+                        <label className='question-bg mb-1'>- Quantity of product per packaging:</label>
                         <input
                         type="number"
                         className="form-control"
@@ -477,63 +505,71 @@ const ProductInfoComponent = () => {
                     </div>
                 <p className='form-group-paragraph' style={{fontSize:'14px'}}>In case where there is no specified expiration date, you can add the manufacture date*</p>
                 <div className="form-group">
-                    <label>7- Choose one :</label>
-                    <div style={{ display: 'flex' }}>
-                    <input
-                        type="CheckBox"
-                        id="lotNumber"
-                        name="lotNumber"
-                        className="form-check-input"
-                        checked={formData.hasLotNumber}
-                        onClick={() => setFormData({...formData, hasLotNumber: !formData.hasLotNumber})}
-                    />
-                    <label className="form-check-label mx-3" htmlFor="lotNumber">
-                        LOT Number
-                    </label>
+                    <label className='question-bg mb-1'>- Choose one :</label>
+                    <div style={{display:'flex'}}>
+                    
+                   <label className="form-check-label mx-3" htmlFor="lotNumber">LOT Number:</label>
+                    <div style={{display:'flex', gridGap:'10px'}}>
+                        <div className="form-check">
+                        <label className="form-check-label">Yes</label>
+                        <input
+                            type="checkbox"
+                            className="form-check-input"
+                            name="hasLotNumber"
+                            value="Yes"
+                            checked={formData.hasLotNumber}
+                            onChange={handleRadioButtonChange}
+                        />
+                        </div>
+                        <div className="form-check">
+                        <input
+                            type="checkbox"
+                            className="form-check-input"
+                            name="hasLotNumber"
+                            value="No"
+                            checked={!formData.hasLotNumber}
+                            onChange={handleRadioButtonChange}
+                        />
+                        <label className="form-check-label">No</label>
+                        </div>
                     </div>
-                    <div style={{ display: 'flex' }}>
-                    <input
-                        type="CheckBox"
-                        id="serialNumber"
-                        name="serialNumber"
-                        className="form-check-input"
-                        checked={formData.haSerialNumber}
-                        onClick={() => setFormData({...formData, haSerialNumber: !formData.haSerialNumber})}
-                    />
-                    <label className="form-check-label mx-3" htmlFor="serialNumber">
-                        Serial Number
-                    </label>
+ 
+
+
+                    </div>
+                    <div style={{display:'flex'}}>
+                    
+                    <label className="form-check-label mx-3" htmlFor="serialNumber">Serial Number: </label>
+
+                    <div style={{display:'flex', gridGap:'10px'}}>
+                        <div className="form-check">
+                        <label className="form-check-label">Yes</label>
+                        <input
+                            type="checkbox"
+                            className="form-check-input"
+                            name="haSerialNumber"
+                            value="Yes"
+                            checked={formData.haSerialNumber}
+                            onChange={handleRadioButtonChange}
+                        />
+                        </div>
+                        <div className="form-check">
+                        <input
+                            type="checkbox"
+                            className="form-check-input"
+                            name="haSerialNumber"
+                            value="No"
+                            checked={!formData.haSerialNumber}
+                            onChange={handleRadioButtonChange}
+                        />
+                        <label className="form-check-label">No</label>
+                        </div>
+                    </div>
                     </div>
                 </div>
-                {/* {numbersData == "Serial" &&
-                <div className="form-group">
-                    <label>Serial Number*:</label>
-                    <input
-                    type="text"
-                    required={numbersData == "Serial" && true}
-                    className="form-control"
-                    name="serialNumber"
-                    value={formData.serialNumber}
-                    onChange={handleInputChange}
-                    />
-                </div>}
-
-                { numbersData == "LOT" &&
-                <div className="form-group">
-                    <label>LOT Number*:</label>
-                    <input
-                    type="text"
-                    required={numbersData == "LOT" && true}
-                    className="form-control"
-                    name="LOTNumber"
-                    value={formData.LOTNumber}
-                    onChange={handleInputChange}
-                    />
-                </div>} */}
-
 
                 <div className="form-group">
-                    <label>8- Catalogue Number (Ref)*:</label>
+                    <label className='question-bg mb-1'>- Catalogue Number (Ref)*:</label>
                     <input
                     type="text"
                     className="form-control"
@@ -543,7 +579,7 @@ const ProductInfoComponent = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>9- Model Number:</label>
+                    <label className='question-bg mb-1'>- Model Number:</label>
                     <input
                     type="text"
                     className="form-control"
@@ -552,27 +588,9 @@ const ProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                {/* <div className="form-group mb-0">
-                    <label>10- Packaging contents (if necessary):</label>
-                    <input
-                    type="text"
-                    className="form-control"
-                    placeholder='content1 - content2 - ....'
-                    name="packagingContents"
-                    value={formData.packagingContents}
-                    onChange={handleInputChange}
-                    />
-                </div> */}
-                {/* <div className='px-2'>
-                {projectInformation?.labelData?.packagingContents.map((item, index) => {
-                    return (
-                        <p style={{color:'black', fontSize:'14px'}}>{index = projectInformation?.labelData?.packagingContents.length ? item  : item + " - " }</p>
-                    )
-                })}
-                </div> */}
 
                 <div className="form-field">
-                    <label htmlFor="service">10- Packaging contents (if necessary):</label>
+                    <label htmlFor="service" className='question-bg mb-1'>- Packaging contents (if necessary):</label>
                     {serviceList.map((singleService, index) => (
                     <div key={index} className="services">
                         <div className="first-division mb-1" style={{display:'flex',}}>
@@ -595,7 +613,6 @@ const ProductInfoComponent = () => {
                                         <span><DeleteIcon style={{color:'#2D2D2E'}} /></span>
                                     </button>
                                 )}
-                        <p style={{color:'gray'}}>{singleService}</p>
                         </div>
                         <div className="second-division">
        

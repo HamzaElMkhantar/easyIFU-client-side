@@ -15,11 +15,11 @@ export default function ResponsiveStepper({ step }) {
   return (
  
     <Box className="container" style={{
-        backgroundColor: "#fff",
-        padding: "30px 10px 15px 10px",
+        // backgroundColor: "#fff",
+        padding: "0px",
         borderRadius: "6px",
         color:"#fff",
-        width:'100%',
+        width:'70%',
         overflowX: 'scroll'
     }} sx={{ width: '100%' }}>
       <Stepper style={{color:"#fff"}} activeStep={activeStep} alternativeLabel>

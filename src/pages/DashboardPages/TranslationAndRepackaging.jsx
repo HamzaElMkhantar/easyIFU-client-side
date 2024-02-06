@@ -95,16 +95,23 @@ const TranslationAndRepackaging = () => {
 
   return (
     <div className='container others'>
-       <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to={`/dashboard/create-project/step7/${projectId}`} className='label-info-link'> Back</Link>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step9/${projectId}`} className='label-info-link'>Back</Link>
+                <HorizontalLinearStepper step={9}/>
+                <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={9} />
       <form onSubmit={handleSubmit} className="others-form">
         <h2>Translation and repackaging</h2>
 
         <div className="form-group">
-          <label>- Has the original medical device information undergone a translation that supplements or replaces the original information? (Choose YES only if this translation activity was undertaken by someone other than the manufacturer)</label>
+          <label className='question-bg mb-1'>- Has the original medical device information undergone a translation that supplements or replaces the original information? (Choose YES only if this translation activity was undertaken by someone other than the manufacturer)</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -160,7 +167,7 @@ const TranslationAndRepackaging = () => {
         )}
 
         <div className="form-group">
-          <label>- Has a modification to the original medical device packaging configuration occurred? (Choose YES only if this repackaging activity was undertaken by someone other than the manufacturer)</label>
+          <label className='question-bg mb-1'>- Has a modification to the original medical device packaging configuration occurred? (Choose YES only if this repackaging activity was undertaken by someone other than the manufacturer)</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>

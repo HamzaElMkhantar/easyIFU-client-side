@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RotatingLines } from 'react-loader-spinner';
 import { getProjectAction, othersAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const OthersComponent = () => {
   const {projectId} = useParams()
@@ -36,40 +38,71 @@ const OthersComponent = () => {
     fetchCurrentDate();
   }, []);
 
+
+  //  dynamic input
+  const [serviceList, setServiceList] = useState([""]);
+
+  const handleServiceChange = (e, index) => {
+    const { value } = e.target;
+    const list = [...serviceList];
+    list[index] = value;
+    setServiceList(list);
+    setFormData((prevData) => ({
+        ...prevData,
+        cmrSubstancesList: list
+    }));
+  };
+  
+  const handleServiceRemove = (index) => {
+    const list = [...serviceList];
+    list.splice(index, 1);
+    setServiceList(list);
+    setFormData((prevData) => ({
+      ...prevData,
+      cmrSubstancesList: list
+    }));
+  };
+  
+  const handleServiceAdd = () => {
+    setServiceList([...serviceList, ""]);
+    setFormData((prevData) => ({
+        ...prevData,
+        cmrSubstancesList: serviceList,
+    }));
+  };
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     projectId,
     isUpdate: false,
     associatedWithIndividualPatient: false,
+    hasPatientNumber: false,
     patientNumber: '',
+    hasPatientName: false,
     patientName: '',
+    hasHealthCareCenterNameAndAddress: false,
     healthCareCentreName: '',
     healthCareCentreAddress: '',
+    hasDoctorName: false,
     doctorName: '',
     date: currentDate || (new Date(Date.now())).toLocaleDateString('en-GB'),
     addWebsite: false,
     website: '',
-    translationActivity: false,
-    translationEntityName: '',
-    translationEntityAddress: '',
-    modificationToPackaging: false,
-    repackagingEntityName: '',
-    repackagingEntityAddress: '',
     reprocessedDevice: false,
     reprocessingCycles: 0,
-    reprocessingLimitation: '',
+    reprocessingLimitation: 0,
     containsCMRSubstances: false,
-    cmrSubstancesList: '',
+    cmrSubstancesList: [],
     intendedForIntroduction: false,
     qualitativeComposition: '',
-    quantitativeInformation: '',
-    // quantity: 0,
+    quantitativeInformation: ''
   });
 
-     // get prev project info
-     const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
-     const [projectInformation, setProjectInformation] = useState({});
+  console.log(formData)
+  // get prev project info
+  const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+  const [projectInformation, setProjectInformation] = useState({});
      useEffect(() =>{
        dispatch(getProjectAction(projectId, token))
      }, [])
@@ -85,10 +118,14 @@ const OthersComponent = () => {
       isUpdate: false,
       projectId,
       associatedWithIndividualPatient: projectInformation?.labelData?.associatedWithIndividualPatient || false,
+      hasPatientNumber: projectInformation?.labelData?.hasPatientNumber || false,
       patientNumber:projectInformation?.labelData?.patientNumber || '',
+      hasPatientName: projectInformation?.labelData?.hasPatientName || false,
       patientName: projectInformation?.labelData?.patientName || '',
+      hasHealthCareCenterNameAndAddress: projectInformation?.labelData?.hasHealthCareCenterNameAndAddress || false,
       healthCareCentreName: projectInformation?.labelData?.healthCareCentreName || '',
       healthCareCentreAddress: projectInformation?.labelData?.healthCareCentreAddress || '',
+      hasDoctorName: projectInformation?.labelData?.hasDoctorName || false,
       doctorName:  projectInformation?.labelData?.doctorName || '',
       date: projectInformation?.labelData?.date || (new Date(Date.now())).toLocaleDateString('en-GB'),
       addWebsite: projectInformation?.labelData?.addWebsite || false,
@@ -101,14 +138,17 @@ const OthersComponent = () => {
       repackagingEntityAddress: projectInformation?.labelData?.repackagingEntityAddress || '',
       reprocessedDevice: projectInformation?.labelData?.reprocessedDevice || false,
       reprocessingCycles: projectInformation?.labelData?.reprocessingCycles || 0,
-      reprocessingLimitation: projectInformation?.labelData?.reprocessingLimitation || '',
+      reprocessingLimitation: projectInformation?.labelData?.reprocessingLimitation || 0,
       containsCMRSubstances: projectInformation?.labelData?.containsCMRSubstances || false,
-      cmrSubstancesList: projectInformation?.labelData?.cmrSubstancesList || '',
+      cmrSubstancesList: projectInformation?.labelData?.cmrSubstancesList || [],
       intendedForIntroduction: projectInformation?.labelData?.intendedForIntroduction || false,
       qualitativeComposition: projectInformation?.labelData?.qualitativeComposition || '',
       quantitativeInformation: projectInformation?.labelData?.quantitativeInformation || '',
       quantity: projectInformation?.labelData?.quantity || 0,
     });
+
+    setServiceList(projectInformation?.labelData?.cmrSubstancesList.length > 0 ? projectInformation?.labelData?.cmrSubstancesList : [''])
+
   }, [projectInformation])
   const handleCheckboxChange = (name, value) => {
     setFormData({
@@ -144,127 +184,143 @@ const OthersComponent = () => {
     }
   }, [othersSuccess, othersFail])
 
+
+
+
+
+  
+
   return (
     <div className="container others">
-       <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to={`/dashboard/create-project/step7/${projectId}`} className='label-info-link'> Back</Link>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step8/${projectId}`} className='label-info-link'>Back</Link>
+                <HorizontalLinearStepper step={8}/>
+                <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={8} />
       <form className="others-form" onSubmit={handleSubmit}>
         <h2>Others</h2>
-
-        {/* <div className="form-group">
-          <label>1- Is your medical device associated with an individual patient?</label>
-          <div>
-            <div className="form-check">
-              <label className="form-check-label">Yes</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="associatedWithIndividualPatient"
-                value="Yes"
-                checked={formData.associatedWithIndividualPatient}
-                onChange={() => handleCheckboxChange('associatedWithIndividualPatient', 'Yes')}
-              />
-            </div>
-            <div className="form-check">
-              <label className="form-check-label">No</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="associatedWithIndividualPatient"
-                value="No"
-                checked={!formData.associatedWithIndividualPatient}
-                onChange={() => handleCheckboxChange('associatedWithIndividualPatient', 'No')}
-              />
-            </div>
-          </div>
+          <div className="form-group">
+              <label className='question-bg mb-1'>- is there any additional patient data?</label>
+              <div>
+                  <div className="form-check">
+                  <label className="form-check-label">Yes</label>
+                  <input
+                      type="checkbox"
+                      className="form-check-input"
+                      name="associatedWithIndividualPatient"
+                      value="Yes"
+                      checked={formData.associatedWithIndividualPatient}
+                      onChange={() => handleCheckboxChange("associatedWithIndividualPatient", "Yes")}
+                  />
+                  </div>
+                  <div className="form-check">
+                  <input
+                      type="checkbox"
+                      className="form-check-input"
+                      name="associatedWithIndividualPatient"
+                      value="No"
+                      checked={!formData.associatedWithIndividualPatient}
+                      onChange={() => handleCheckboxChange("associatedWithIndividualPatient", "No")}
+                  />
+                  <label className="form-check-label">No</label>
+                  </div>
+              </div>
         </div>
 
-        {formData.associatedWithIndividualPatient && (
-          <div>
-            <div className="form-group">
-              <label>Patient Number:</label>
-              <input
-                type="text"
-                className="form-control"
-                name="patientNumber"
-                value={formData.patientNumber}
-                required={formData.associatedWithIndividualPatient ? true : false}
-                onChange={(e) => handleInputChange('patientNumber', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Patient Name:</label>
-              <input
-                type="text"
-                className="form-control"
-                name="patientName"
-                value={formData.patientName}
-                required={formData.associatedWithIndividualPatient ? true : false}
-                onChange={(e) => handleInputChange('patientName', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Health Care Centre Name*:</label>
-              <input
-                type="text"
-                className="form-control"
-                name="healthCareCentreName"
-                value={formData.healthCareCentreName}
-                required={formData.associatedWithIndividualPatient ? true : false}
-                onChange={(e) => handleInputChange('healthCareCentreName', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Health Care Centre Address:</label>
-              <input
-                type="text"
-                className="form-control"
-                name="healthCareCentreAddress"
-                value={formData.healthCareCentreAddress}
-                required={formData.associatedWithIndividualPatient ? true : false}
-                onChange={(e) => handleInputChange('healthCareCentreAddress', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Doctor Name:</label>
-              <input
-                type="text"
-                className="form-control"
-                name="doctorName"
-                required={formData.associatedWithIndividualPatient ? true : false}
-                value={formData.doctorName}
-                onChange={(e) => handleInputChange('doctorName', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Date*:</label>
-              <input
-                type="date"
-                className="form-control"
-                required={formData.associatedWithIndividualPatient ? true : false}
-                name="date"
-                value={formData.date}
-                onChange={(e) => handleInputChange('date', e.target.value)}
-              />
-            </div>
-            <p className='form-group-paragraph'>
-                *Mention the health care centre where the medical information about the patient may be found.<br/>
-                *Mention the date that information was entered or a medical procedure took place.
-            </p>
-          </div>
-
-        )} */}
+        <div className="form-group">
+              <label className='question-bg mb-1'>- Is there a patient Name?</label>
+              <div>
+                  <div className="form-check">
+                  <label className="form-check-label">Yes</label>
+                  <input
+                      type="checkbox"
+                      className="form-check-input"
+                      name="hasPatientName"
+                      value="Yes"
+                      checked={formData.hasPatientName}
+                      onChange={() => handleCheckboxChange("hasPatientName", "Yes")}
+                  />
+                  </div>
+                  <div className="form-check">
+                  <input
+                      type="checkbox"
+                      className="form-check-input"
+                      name="hasPatientName"
+                      value="No"
+                      checked={!formData.hasPatientName}
+                      onChange={() => handleCheckboxChange("hasPatientName", "No")}
+                  />
+                  <label className="form-check-label">No</label>
+                  </div>
+              </div>
+        </div>
 
         <div className="form-group">
-          <label>- Would you add a website where the patients can obtain additional information on your medical product?</label>
+              <label className='question-bg mb-1'>- Is there a patient Number?</label>
+              <div>
+                  <div className="form-check">
+                  <label className="form-check-label">Yes</label>
+                  <input
+                      type="checkbox"
+                      className="form-check-input"
+                      name="hasPatientNumber"
+                      value="Yes"
+                      checked={formData.hasPatientNumber}
+                      onChange={() => handleCheckboxChange("hasPatientNumber", "Yes")}
+                  />
+                  </div>
+                  <div className="form-check">
+                  <input
+                      type="checkbox"
+                      className="form-check-input"
+                      name="hasPatientNumber"
+                      value="No"
+                      checked={!formData.hasPatientNumber}
+                      onChange={() => handleCheckboxChange("hasPatientNumber", "No")}
+                  />
+                  <label className="form-check-label">No</label>
+                  </div>
+              </div>
+        </div>
+
+        <div className="form-group">
+              <label className='question-bg mb-1'>- Is there a Health Care center or doctor?</label>
+              <div>
+                  <div className="form-check">
+                  <label className="form-check-label">Yes</label>
+                  <input
+                      type="checkbox"
+                      className="form-check-input"
+                      name="hasDoctorName"
+                      value="Yes"
+                      checked={formData.hasDoctorName}
+                      onChange={() => handleCheckboxChange("hasDoctorName", "Yes")}
+                  />
+                  </div>
+                  <div className="form-check">
+                  <input
+                      type="checkbox"
+                      className="form-check-input"
+                      name="hasDoctorName"
+                      value="No"
+                      checked={!formData.hasDoctorName}
+                      onChange={() => handleCheckboxChange("hasDoctorName", "No")}
+                  />
+                  <label className="form-check-label">No</label>
+                  </div>
+              </div>
+        </div>
+
+
+        <div className="form-group">
+          <label className='question-bg mb-1'>- Would you add a website where the patients can obtain additional information on your medical product?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -304,120 +360,9 @@ const OthersComponent = () => {
             />
           </div>
         )}
-                <div className="form-group">
-          <label>- Has the original medical device information undergone a translation that supplements or replaces the original information? (Choose YES only if this translation activity was undertaken by someone other than the manufacturer)</label>
-          <div>
-            <div className="form-check">
-              <label className="form-check-label">Yes</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="translationActivity"
-                value="Yes"
-                checked={formData.translationActivity}
-                onChange={() => handleCheckboxChange('translationActivity', 'Yes')}
-              />
-            </div>
-            <div className="form-check">
-              <label className="form-check-label">No</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="translationActivity"
-                value="No"
-                checked={!formData.translationActivity}
-                onChange={() => handleCheckboxChange('translationActivity', 'No')}
-              />
-            </div>
-          </div>
-        </div>
-
-        {formData.translationActivity && (
-          <div>
-            <div className="form-group">
-              <label>Entity responsible for the translation activity name:</label>
-              <input
-                type="text"
-                className="form-control"
-                name="translationEntityName"
-                required={formData.translationActivity ? true : false}
-                value={formData.translationEntityName}
-                onChange={(e) => handleInputChange('translationEntityName', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Entity responsible for the translation activity Address:</label>
-              <input
-                type="text"
-                className="form-control"
-                name="translationEntityAddress"
-                required={formData.translationActivity ? true : false}
-                value={formData.translationEntityAddress}
-                onChange={(e) => handleInputChange('translationEntityAddress', e.target.value)}
-              />
-            </div>
-          </div>
-        )}
 
         <div className="form-group">
-          <label>- Has a modification to the original medical device packaging configuration occurred? (Choose YES only if this repackaging activity was undertaken by someone other than the manufacturer)</label>
-          <div>
-            <div className="form-check">
-              <label className="form-check-label">Yes</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="modificationToPackaging"
-                value="Yes"
-                checked={formData.modificationToPackaging}
-                onChange={() => handleCheckboxChange('modificationToPackaging', 'Yes')}
-              />
-            </div>
-            <div className="form-check">
-              <label className="form-check-label">No</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="modificationToPackaging"
-                value="No"
-                checked={!formData.modificationToPackaging}
-                onChange={() => handleCheckboxChange('modificationToPackaging', 'No')}
-              />
-            </div>
-          </div>
-        </div>
-
-        {formData.modificationToPackaging && (
-          <div>
-            <div className="form-group">
-              <label>Entity responsible for the repackaging activity Name:</label>
-              <input
-                type="text"
-                className="form-control"
-                name="repackagingEntityName"
-                required={formData.modificationToPackaging ? true : false}
-                value={formData.repackagingEntityName}
-                onChange={(e) => handleInputChange('repackagingEntityName', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Entity responsible for the repackaging activity Address:</label>
-              <input
-                type="text"
-                className="form-control"
-                required={formData.modificationToPackaging ? true : false}
-                name="repackagingEntityAddress"
-                value={formData.repackagingEntityAddress}
-                onChange={(e) => handleInputChange('repackagingEntityAddress', e.target.value)}
-              />
-            </div>
-          </div>
-        )}
-
-        <div className="form-group">
-          <label>- Is your device a single-use device that has been reprocessed?</label>
+          <label className='question-bg mb-1'>- Is your device a single-use device that has been reprocessed?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -450,6 +395,7 @@ const OthersComponent = () => {
               <label>Number of reprocessing cycles already performed:</label>
               <input
                 type="Number"
+                min="0"
                 className="form-control"
                 required={formData.reprocessedDevice ? true : false}
                 name="reprocessingCycles"
@@ -461,7 +407,8 @@ const OthersComponent = () => {
             <div className="form-group">
               <label>Limitation:</label>
               <input
-                type="text"
+                type="Number"
+                min="0"
                 className="form-control"
                 required={formData.reprocessedDevice ? true : false}
                 name="reprocessingLimitation"
@@ -471,64 +418,9 @@ const OthersComponent = () => {
             </div>
           </div>
         )}
-        {/* <div className="form-group">
-          <label>- Is your product a Custom made device?</label>
-          <div>
-            <div className="form-check">
-              <label className="form-check-label">Yes</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="customMadeDevice"
-                value="Yes"
-                checked={formData.customMadeDevice}
-                onChange={() => handleCheckboxChange('customMadeDevice', 'Yes')}
-              />
-            </div>
-            <div className="form-check">
-              <label className="form-check-label">No</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="customMadeDevice"
-                value="No"
-                checked={!formData.customMadeDevice}
-                onChange={() => handleCheckboxChange('customMadeDevice', 'No')}
-              />
-            </div>
-          </div>
-        </div>
-        
-        <div className="form-group">
-          <label>- Is your device intended for clinical investigation only?</label>
-          <div>
-            <div className="form-check">
-              <label className="form-check-label">Yes</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="clinicalInvestigationOnly"
-                value="Yes"
-                checked={formData.clinicalInvestigationOnly}
-                onChange={() => handleCheckboxChange('clinicalInvestigationOnly', 'Yes')}
-              />
-            </div>
-            <div className="form-check">
-              <label className="form-check-label">No</label>
-              <input
-                type="checkbox"
-                className="form-check-input"
-                name="clinicalInvestigationOnly"
-                value="No"
-                checked={!formData.clinicalInvestigationOnly}
-                onChange={() => handleCheckboxChange('clinicalInvestigationOnly', 'No')}
-              />
-            </div>
-          </div>
-        </div> */}
 
         <div className="form-group">
-          <label>- Does your medical device contain CMR (Carcinogenic, Mutagenic or Reprotoxic) substances of category 1A or 1B or substances having endocrine-disrupting properties in a concentration above 0.1 % (w/w)?</label>
+          <label className='question-bg mb-1'>- Does your medical device contain CMR (Carcinogenic, Mutagenic or Reprotoxic) substances of category 1A or 1B or substances having endocrine-disrupting properties in a concentration above 0.1 % (w/w)?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -559,19 +451,50 @@ const OthersComponent = () => {
           <div>
             <div className="form-group">
               <label>List of existing substances:</label>
-              <textarea
-                className="form-control"
-                required={formData.containsCMRSubstances ? true : false}
-                name="cmrSubstancesList"
-                value={formData.cmrSubstancesList}
-                onChange={(e) => handleInputChange('cmrSubstancesList', e.target.value)}
-              />
+                  {serviceList.map((singleService, index) => (
+                    <div key={index} className="services" style={{display:'flex', flexDirection:'column'}}>
+                        <div className="first-division mb-1" style={{display:'flex', width:'80%'}}>
+                        <input
+                            name="service"
+                            style={{width:'100%', height:'35px', border:'1px solid lightgray', borderRadius:'5px'}}
+                            type="text"
+                            id="service"
+                            value={singleService}
+                            placeholder={`substance ${index + 1}`}
+                            onChange={(e) => handleServiceChange(e, index)}
+                        />
+                        {serviceList.length !== 1 && (
+                                    <button
+                                        type="button"
+                                        style={{backgroundColor:'#FBB8B8', borderRadius:'6px'}}
+                                        onClick={() => handleServiceRemove(index)}
+                                        className="remove-btn mx-2"
+                                        >
+                                        <span><DeleteIcon style={{color:'#2D2D2E'}} /></span>
+                                    </button>
+                                )}
+                        </div>
+                        <div className="second-division">
+       
+                        {serviceList.length - 1 === index && (
+                            <button
+                                    type="button"
+                                    style={{borderRadius:'5px', backgroundColor:'#79D4A3', fontSize:'14px'}}
+                                    onClick={handleServiceAdd}
+                                    className="add-btn"
+                                >
+                                <span>Add substance</span>
+                            </button>
+                        )}
+                        </div>
+                    </div>
+                    ))}
             </div>
           </div>
         )}
 
         <div className="form-group">
-          <label>- Is your product composed of substances or combinations of substances that are intended to be introduced into the human body via a body orifice or applied to the skin and that are absorbed by or locally dispersed in the human body?</label>
+          <label className='question-bg mb-1'>- Is your product composed of substances or combinations of substances that are intended to be introduced into the human body via a body orifice or applied to the skin and that are absorbed by or locally dispersed in the human body?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -622,17 +545,6 @@ const OthersComponent = () => {
             </div>
           </div>
         )}
-
-          {/* <div className="form-group">
-            <label>- Quantity of product per packaging:</label>
-            <input
-              type="number"
-              className="form-control"
-              name="quantity"
-              value={formData.quantity}
-              onChange={(e) => handleInputChange('quantity', e.target.value)}
-            />
-          </div> */}
           {!othersRequest 
            ? <div style={{width:"100%", display:'flex', justifyContent:"center", alignItems:'center', marginTop:"30px"}}>
                 <button type='submit' style={{padding:'4px 20px', borderRadius:'4px', backgroundColor:'#011D41', color:'#fff', fontWeight:"600"}}>Save</button>

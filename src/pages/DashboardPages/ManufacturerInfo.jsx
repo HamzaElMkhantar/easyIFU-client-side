@@ -157,16 +157,23 @@ const ManufacturerInfoComponent = () => {
 
   return (
     <div className='manufactureInfo container'>
-        <div className='mb-2' style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
+        <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
             <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>Back</Link>
+                <HorizontalLinearStepper step={0}/>
         </div>
-        <HorizontalLinearStepper step={0}/>
         <form onSubmit={handleSubmit}>
             <h2>Manufacturer Information</h2>
             {!companyRequest 
             ?<div>
-                    <div>
-                        <label>Do You have a Distributor ?</label>
+                    <div style={{width:'100%'}}>
+                        <label className='question-bg'>Do You have a Distributor ?</label>
                         <div style={{display:'flex', flexDirection:'row'}}>
                             <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:'20px'}} >
                             <label >Yes: </label>
@@ -244,34 +251,6 @@ const ManufacturerInfoComponent = () => {
                         />
                         </div>
                     )}
-                    {/* <div>
-                        <label>What is the class of your product?</label>
-                        <select
-                        name="productClass"
-                        value={formData.productClass}
-                        onChange={handleInputChange}
-                        >
-                        <option value="Class I">Class I</option>
-                        <option value="Class Is (sterile)">Class Is (sterile)</option>
-                        <option value="Class Im (with a measuring function)">Class Im (with a measuring function)</option>
-                        <option value="Class Ir (surgical reusable device)">Class Ir (surgical reusable device)</option>
-                        <option value="Class IIa">Class IIa</option>
-                        <option value="Class IIb">Class IIb</option>
-                        <option value="Class III">Class III</option>
-                        </select>
-                    </div> */}
-                    {/* {formData.productClass !== 'Class I' && (
-                        <div>
-                        <label>Notified Body Number*:</label>
-                        <input
-                            type="text"
-                            name="notifiedBodyNumber"
-                            value={formData.notifiedBodyNumber}
-                            onChange={handleInputChange}
-                            required={formData.productClass !== 'Class I' ? true : false}
-                        />
-                        </div>
-                    )} */}
                 {!manufacturerRequest
                 ? <div style={{width:"100%", display:'flex', justifyContent:"center", alignItems:'center', marginTop:"30px"}}>
                         <button style={{padding:'4px 20px', borderRadius:'4px', backgroundColor:'#011D41', color:'#fff', fontWeight:"600"}}>Save</button>
@@ -295,7 +274,7 @@ const ManufacturerInfoComponent = () => {
                 width="40"
                 visible={true}
                 /> 
-        </div>  }
+        </div>}
         </form>
 
     </div>

@@ -114,16 +114,23 @@ const SafeUseComponent = () => {
 
   return (
     <div className="container safe-use">
-        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to={`/dashboard/create-project/step4/${projectId}`} className='label-info-link'> Back</Link>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step5/${projectId}`} className='label-info-link'>Back</Link>
+                <HorizontalLinearStepper step={5}/>
+                <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={5} />
       <form className="safe-use-form" onSubmit={handleSubmit}>
         <h2>Safe Use</h2>
 
         <div className="form-group">
-          <label>1- Are there any potential biological risks associated with your product?</label>
+          <label className='question-bg mb-1'>1- Are there any potential biological risks associated with your product?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -151,7 +158,7 @@ const SafeUseComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>2- Is your product intended for one single use only?</label>
+          <label className='question-bg mb-1'>2- Is your product intended for one single use only?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -179,7 +186,7 @@ const SafeUseComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>3- Is there a need for the user to consult the instructions for use?</label>
+          <label className='question-bg mb-1'>3- Is there a need for the user to consult the instructions for use?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -221,7 +228,7 @@ const SafeUseComponent = () => {
          )}
 
         <div className="form-group">
-          <label>4- Is caution necessary when operating the device?</label>
+          <label className='question-bg mb-1'>4- Is caution necessary when operating the device?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -250,7 +257,7 @@ const SafeUseComponent = () => {
 
                 {/* Question 5 */}
         <div className="form-group">
-        <label>5- Is there a presence of a dry natural rubber or natural rubber latex as a material of construction within your device or the packaging of your device?</label>
+        <label className='question-bg mb-1'>5- Is there a presence of a dry natural rubber or natural rubber latex as a material of construction within your device or the packaging of your device?</label>
         <div>
             <div className="form-check">
             <label className="form-check-label">Yes</label>
@@ -279,7 +286,7 @@ const SafeUseComponent = () => {
 
         {/* Question 6 */}
         <div className="form-group">
-        <label>6- Does your product contain human blood or plasma derivatives?</label>
+        <label className='question-bg mb-1'>6- Does your product contain human blood or plasma derivatives?</label>
         <div>
             <div className="form-check">
             <label className="form-check-label">Yes</label>
@@ -308,7 +315,7 @@ const SafeUseComponent = () => {
 
                 {/* Question 7 */}
         <div className="form-group">
-        <label>7- Does your product contain a medicinal substance?</label>
+        <label className='question-bg mb-1'>7- Does your product contain a medicinal substance?</label>
         <div>
             <div className="form-check">
             <label className="form-check-label">Yes</label>
@@ -337,7 +344,7 @@ const SafeUseComponent = () => {
 
         {/* Question 8 */}
         <div className="form-group">
-        <label>8- Does your product contain biological material of animal origin?</label>
+        <label className='question-bg mb-1'>8- Does your product contain biological material of animal origin?</label>
         <div>
             <div className="form-check">
             <label className="form-check-label">Yes</label>
@@ -366,7 +373,7 @@ const SafeUseComponent = () => {
 
         {/* Question 9 */}
         <div className="form-group">
-        <label>9- Does your product contain biological material of human origin?</label>
+        <label className='question-bg mb-1'>9- Does your product contain biological material of human origin?</label>
         <div>
             <div className="form-check">
             <label className="form-check-label">Yes</label>
@@ -395,7 +402,7 @@ const SafeUseComponent = () => {
 
         {/* Question 10 */}
         <div className="form-group">
-        <label>10- Does your product contain hazardous substances?</label>
+        <label className='question-bg mb-1'>10- Does your product contain hazardous substances?</label>
         <div>
             <div className="form-check">
             <label className="form-check-label">Yes</label>
@@ -424,7 +431,7 @@ const SafeUseComponent = () => {
 
         {/* Question 11 */}
         <div className="form-group">
-        <label>11- Does your product contain nano materials?</label>
+        <label className='question-bg mb-1'>11- Does your product contain nano materials?</label>
         <div>
             <div className="form-check">
             <label className="form-check-label">Yes</label>
@@ -453,7 +460,7 @@ const SafeUseComponent = () => {
 
         {/* Question 12 */}
         <div className="form-group">
-        <label>12- Is your product intended for multiple uses on a single patient?</label>
+        <label className='question-bg mb-1'>12- Is your product intended for multiple uses on a single patient?</label>
         <div>
             <div className="form-check">
             <label className="form-check-label">Yes</label>

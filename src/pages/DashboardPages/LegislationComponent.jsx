@@ -108,16 +108,24 @@ const LegislationComponent = () => {
     }, [legislationSuccess, legislationFail])
   return (
     <div className='manufactureInfo container pb-3'>
-         <div className='mb-2' style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>Back</Link>
+        <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step1/${projectId}`} className='label-info-link'>Back</Link>
+                <HorizontalLinearStepper step={1}/>
+                <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-        <HorizontalLinearStepper step={1}/>
 
         <form onSubmit={handleLegislation} action="">
             <h2>Legislation</h2>
 
             <div className="form-group" >
-                <label>- Is your product a Custom made device?</label>
+                <label className='question-bg'>- Is your product a Custom made device?</label>
                 <div style={{display:'flex', flexDirection:'row-reverse'}}>
                     <div className="form-check" style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:'20px'}}>
                     <label className="form-check-label">Yes</label>
@@ -145,7 +153,7 @@ const LegislationComponent = () => {
             </div>
                 
             <div className="form-group">
-                <label>- Is your device intended for clinical investigation only?</label>
+                <label className='question-bg'>- Is your device intended for clinical investigation only?</label>
                 <div style={{display:'flex', flexDirection:'row-reverse'}}>
                     <div className="form-check" style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:'20px'}}>
                     <label className="">Yes</label>
@@ -175,7 +183,7 @@ const LegislationComponent = () => {
             {(!formData.customMadeDevice && !formData.clinicalInvestigationOnly)&&
             <>
                 <div className="form-group">
-                    <label>- Is It For Europe ?</label>
+                    <label className='question-bg'>- Is It For Europe ?</label>
                     <div style={{display:'flex', flexDirection:'row-reverse'}}>
                         <div className="form-check" style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:'20px'}}>
                         <label className="">Yes</label>
@@ -232,7 +240,7 @@ const LegislationComponent = () => {
                 </div>}
 
                 <div className="form-group">
-                    <label>- Is It For UK ?</label>
+                    <label className='question-bg'>- Is It For UK ?</label>
                     <div style={{display:'flex', flexDirection:'row-reverse'}}>
                         <div className="form-check" style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:'20px'}}>
                         <label className="">Yes</label>

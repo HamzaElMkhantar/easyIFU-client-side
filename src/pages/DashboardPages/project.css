@@ -1,4 +1,11 @@
-
+.question-bg {
+    background-color:#03295c ;
+    color: #fff;
+    width: 100% !important;
+    border-radius: 4px ;
+    padding: 0 10px;
+    font-weight: 500;
+}
 .manufactureInfo, .productInfo , .sterility, .storage, .safe-use, .ivd-diagnostic, .transfusion-infusion, .others{
     padding-top: 50px;
     display: flex;

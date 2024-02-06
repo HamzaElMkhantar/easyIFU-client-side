@@ -4,6 +4,7 @@ import SideBar from '../../components/header/SideBar'
 import Avatar from '@mui/material/Avatar';
 import {Routes, Route, Link, useNavigate } from 'react-router-dom';
 import '../../components/header/header.css';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -102,7 +103,7 @@ const Project = () => {
     createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id ,
     projectName: '',
     projectDescription: '',
-    labelSizes: projectSizes,
+    labelSizes: [],
   });
 
   console.log(formData)
@@ -185,6 +186,39 @@ const Project = () => {
     }
   }, [ startProjectSuccess, startProjectFail])
   
+
+
+    //  dynamic input
+    const [serviceList, setServiceList] = useState([""]);
+
+    const handleServiceChange = (e, index) => {
+      const { value } = e.target;
+      const list = [...serviceList];
+      list[index] = value;
+      setServiceList(list);
+      setFormData((prevData) => ({
+          ...prevData,
+          labelSizes: list
+      }));
+    };
+    
+    const handleServiceRemove = (index) => {
+      const list = [...serviceList];
+      list.splice(index, 1);
+      setServiceList(list);
+      setFormData((prevData) => ({
+        ...prevData,
+        labelSizes: list
+      }));
+    };
+    
+    const handleServiceAdd = () => {
+      setServiceList([...serviceList, ""]);
+      setFormData((prevData) => ({
+          ...prevData,
+          labelSizes: serviceList,
+      }));
+    };
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
@@ -260,35 +294,7 @@ const Project = () => {
                         />
                     </div>
                     {/* <div className="form-group">
-                        <label>3- Labels Count:</label>
-                        <input
-                        type="number"
-                        className="form-control"
-                        name="labelsCount"
-                        value={formData.labelsCount}
-                        onChange={handleInputChange}
-                        />
-                    </div> */}
-                    {/* <div className="form-group">
-                            <label>Number of elements in the array:</label>
-                          <input
-                            type="number"
-                            className="form-control"
-                            name="numElements"
-                            value={formData.labelSizes.length}
-                            onChange={handleNumElementsChange}
-                          />
-                        </div> */}
-                    <div className="form-group">
-                        {/* <label>4- project sizes (By Centimeter):</label> */}
-                        {/* <input
-                        type=""
-                        className="form-control"
-                        name="labelSizes"
-                        placeholder={`Enter size ${index + 1}`}
-                        value={size}
-                        onChange={renderInputFields()}
-                        /> */}
+                
                         <label>4- Enter Project Sizes separated by - (By Centimeter):</label>
                           <input
                             type="text"
@@ -298,7 +304,48 @@ const Project = () => {
                             value={formData.labelSizes.join('-')} // Join array values with "-"
                             onChange={handleInputChange}
                           />
+                    </div> */}
+                    <div className="form-field">
+                    <label htmlFor="service">4- Enter Project Sizes (By Centimeter):</label>
+                    {serviceList.map((singleService, index) => (
+                    <div key={index} className="services">
+                        <div className="first-division mb-1" style={{display:'flex',}}>
+                        <input
+                            name="service"
+                            style={{width:'50%', height:'35px', border:'1px solid lightgray', borderRadius:'5px'}}
+                            type="Number"
+                            id="service"
+                            value={singleService}
+                            placeholder={`Size ${index + 1}`}
+                            onChange={(e) => handleServiceChange(e, index)}
+                        />
+                        {serviceList.length !== 1 && (
+                                    <button
+                                        type="button"
+                                        style={{backgroundColor:'#FBB8B8', borderRadius:'6px'}}
+                                        onClick={() => handleServiceRemove(index)}
+                                        className="remove-btn mx-2"
+                                        >
+                                        <span><DeleteIcon style={{color:'#2D2D2E'}} /></span>
+                                    </button>
+                                )}
+                        </div>
+                        <div className="second-division">
+       
+                        {serviceList.length - 1 === index && (
+                            <button
+                                    type="button"
+                                    style={{borderRadius:'5px', backgroundColor:'#79D4A3', fontSize:'14px'}}
+                                    onClick={handleServiceAdd}
+                                    className="add-btn"
+                                >
+                                <span>Add Content</span>
+                            </button>
+                        )}
+                        </div>
                     </div>
+                    ))}
+                </div>
                     {!startProjectRequest 
                       ? <div style={{display:'flex', justifyContent:'space-between'}}>
                         <button style={{marginTop:'20px', padding:'5px 20px', fontWeight:'600', fontSize:'18px', borderRadius:'5px', backgroundColor:'#011d41', color:'#fff'}}>Start Creating</button>
@@ -363,7 +410,7 @@ const Project = () => {
                         {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
                         
                         <td>
-                          {item.projectStep < 9 
+                          {item.projectStep < 10
                           ? <Link to={`/dashboard/create-project/step${item.projectStep}/${item._id}`}
                             style={{backgroundColor:'#0C458F', 
                               color:"#fff", 

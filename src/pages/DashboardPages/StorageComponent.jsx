@@ -158,16 +158,23 @@ const StorageComponent = () => {
 
   return (
     <div className="container storage">
-        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to={`/dashboard/create-project/step3/${projectId}`} className='label-info-link'> Back</Link>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step4/${projectId}`} className='label-info-link'>Back</Link>
+                <HorizontalLinearStepper step={4}/>
+                <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={4} />
       <form onSubmit={handleSubmit} className="storage-form">
         <h2>Storage</h2>
 
         <div className="form-group">
-          <label>1- Does this product need to be handled carefully to prevent it from being broken or damaged?</label>
+          <label className='question-bg mb-1'>1- Does this product need to be handled carefully to prevent it from being broken or damaged?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -195,7 +202,7 @@ const StorageComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>2- Does your product require protection from light sources?</label>
+          <label className='question-bg mb-1'>2- Does your product require protection from light sources?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -223,7 +230,7 @@ const StorageComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>3- Does your product require protection from heat and radioactive sources?</label>
+          <label className='question-bg mb-1'>3- Does your product require protection from heat and radioactive sources?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -251,7 +258,7 @@ const StorageComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>4- Does your product require protection from moisture?</label>
+          <label className='question-bg mb-1'>4- Does your product require protection from moisture?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -280,7 +287,7 @@ const StorageComponent = () => {
   
 
         <div className="form-group">
-          <label>5- Is there a lower limit of temperature that your product must not exceed to operate safely?</label>
+          <label className='question-bg mb-1'>5- Is there a lower limit of temperature that your product must not exceed to operate safely?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -324,7 +331,7 @@ const StorageComponent = () => {
         )}
 
         <div className="form-group">
-          <label>6- Is there an upper limit of temperature that your product must not exceed to operate safely?</label>
+          <label className='question-bg mb-1'>6- Is there an upper limit of temperature that your product must not exceed to operate safely?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -397,7 +404,7 @@ const StorageComponent = () => {
         </div>}
 
         <div className="form-group">
-          <label>7- Is there a range of humidity that your product must not exceed to operate safely?</label>
+          <label className='question-bg mb-1'>7- Is there a range of humidity that your product must not exceed to operate safely?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -457,7 +464,7 @@ const StorageComponent = () => {
         )}
 
         <div className="form-group">
-          <label>8- Is there a range of atmospheric pressure that your product must not exceed to operate safely?</label>
+          <label className='question-bg mb-1'>8- Is there a range of atmospheric pressure that your product must not exceed to operate safely?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>

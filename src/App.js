@@ -216,7 +216,7 @@ function App() {
 
         <Route element={<RequireAuth />}>
           {/* <Route element={<IsVerified /> }> */}
-            <Route element={<SubscriptionChecker  /> }>
+            {/* <Route element={<SubscriptionChecker  /> }> */}
 
               {/* routes for creator */}
               {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
@@ -286,7 +286,7 @@ function App() {
                 <Route path='/dashboard/received-project' element={<ProjectByRole />} />
                 <Route path='/dashboard/project/released' element={<ReleasedProjects />} />
 
-            </Route>
+            {/* </Route> */}
           {/* </Route> */}
 
             {/* easyIFU Admin routes */}

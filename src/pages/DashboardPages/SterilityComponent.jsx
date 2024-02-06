@@ -193,16 +193,23 @@ const SterilityComponent = () => {
 
   return (
     <div className="container sterility">
-        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to={`/dashboard/create-project/step2/${projectId}`} className='label-info-link'> Back</Link>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step3/${projectId}`} className='label-info-link'>Back</Link>
+                <HorizontalLinearStepper step={3}/>
+                <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-        <HorizontalLinearStepper step={3}/>
         <form onSubmit={handleSubmit} className='sterility-form'>
             <h2>Sterility</h2>
            
                 <div style={{textAlign:'center', display:'flex', flexDirection:'column', alignItems:'center'}} className="form-group">
-                    <label>-Is the Product delivered Sterile?</label>
+                    <label className='question-bg mb-1'>-Is the Product delivered Sterile?</label>
                     <div>
                         <div className="form-check">
                             <label className="form-check-label">Yes</label>
@@ -231,7 +238,7 @@ const SterilityComponent = () => {
                 {!formData.isSterile ? null
             :<div>
                 <div className="form-group">
-                    <label>1- Has your product been subjected to a sterilization process?</label>
+                    <label className='question-bg mb-1'>1- Has your product been subjected to a sterilization process?</label>
                     <div>
                         <div className="form-check">
                         <label className="form-check-label">Yes</label>
@@ -261,31 +268,31 @@ const SterilityComponent = () => {
                 {formData.hasSterilizationProcess && (
                 <div>
                     <div className="form-group">
-                            <label>- Has your product been sterilized using aseptic processing techniques?</label>
-                            <div>
-                                <div className="form-check">
-                                <label className="form-check-label">Yes</label>
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="hasAsepticProcessing"
-                                    value="Yes"
-                                    checked={formData.hasAsepticProcessing}
-                                    onChange={handleCheckboxChange}
-                                />
-                                </div>
-                                <div className="form-check">
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="hasAsepticProcessing"
-                                    value="No"
-                                    checked={!formData.hasAsepticProcessing}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <label className="form-check-label">No</label>
-                                </div>
+                        <label>- Has your product been sterilized using aseptic processing techniques?</label>
+                        <div>
+                            <div className="form-check">
+                            <label className="form-check-label">Yes</label>
+                            <input
+                                type="checkbox"
+                                className="form-check-input"
+                                name="hasAsepticProcessing"
+                                value="Yes"
+                                checked={formData.hasAsepticProcessing}
+                                onChange={handleCheckboxChange}
+                            />
                             </div>
+                            <div className="form-check">
+                            <input
+                                type="checkbox"
+                                className="form-check-input"
+                                name="hasAsepticProcessing"
+                                value="No"
+                                checked={!formData.hasAsepticProcessing}
+                                onChange={handleCheckboxChange}
+                            />
+                            <label className="form-check-label">No</label>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="form-group">
@@ -402,36 +409,8 @@ const SterilityComponent = () => {
                 </div>
                 )}
 
-                    {/* <div className="form-group">
-                            <label>2- Can your product be used if the package has been damaged or opened ?</label>
-                            <div>
-                                <div className="form-check">
-                                <label className="form-check-label">Yes</label>
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="canBeUsedIfDamaged"
-                                    value="Yes"
-                                    checked={formData.canBeUsedIfDamaged}
-                                    onChange={handleCheckboxChange}
-                                />
-                                </div>
-                                <div className="form-check">
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name="canBeUsedIfDamaged"
-                                    value="No"
-                                    checked={!formData.canBeUsedIfDamaged}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <label className="form-check-label">No</label>
-                                </div>
-                            </div>
-                    </div> */}
-
                     <div className="form-group">
-                            <label>2- Is your product intended to be resterilized?</label>
+                            <label className='question-bg mb-1'>2- Is your product intended to be resterilized?</label>
                             <div>
                                 <div className="form-check">
                                 <label className="form-check-label">Yes</label>
@@ -459,7 +438,7 @@ const SterilityComponent = () => {
                     </div>
 
                     <div className="form-group">
-                            <label>3- Is there a presence of a sterile fluid path within your product, even if the other parts of it,
+                            <label className='question-bg mb-1'>3- Is there a presence of a sterile fluid path within your product, even if the other parts of it,
                                     including the exterior, might not be supplied sterile ?
                             </label>
                             <div>
@@ -573,7 +552,7 @@ const SterilityComponent = () => {
                     </>
                     }
                     <div className="form-group">
-                                <label>4- Is there a sterile barrier system ?</label>
+                                <label className='question-bg mb-1'>4- Is there a sterile barrier system ?</label>
                                 <div>
                                     <div className="form-check">
                                     <label className="form-check-label">Yes</label>

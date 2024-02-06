@@ -118,16 +118,23 @@ useEffect(() => {
 
   return (
     <div className="container ivd-diagnostic">
-        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            <Link style={{height:'35px'}} to={`/dashboard/create-project/step5/${projectId}`} className='label-info-link'> Back</Link>
-            <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
+        <div className='' style={{display:'flex',
+                                  justifyContent:'space-between', 
+                                  alignItems:'', width:'100%', 
+                                  backgroundColor:'#fff',
+                                  height:'',
+                                  padding:'30px 5px 0 5px',
+                                  borderRadius:'5px'
+                                  }}>
+            <Link style={{height:'35px'}} to={`/dashboard/create-project/step6/${projectId}`} className='label-info-link'>Back</Link>
+                <HorizontalLinearStepper step={6}/>
+                <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-      <HorizontalLinearStepper step={6} />
       <form className="ivd-diagnostic-form" onSubmit={handleSubmit}>
         <h2>In Vitro Diagnostic (IVD)</h2>
 
         <div className="form-group">
-          <label>1- Is there a control material?</label>
+          <label className='question-bg mb-1'>1- Is there a control material?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -244,7 +251,7 @@ useEffect(() => {
 
 
         <div className="form-group">
-          <label>2- Is there a specific number of tests that can be performed with your medical device?</label>
+          <label className='question-bg mb-1'>2- Is there a specific number of tests that can be performed with your medical device?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -275,7 +282,8 @@ useEffect(() => {
           <div className="form-group">
             <label>Number of tests:</label>
             <input
-              type="text"
+              type="number"
+              min='0'
               className="form-control"
               name="numberOfTests"
               required={formData.hasSpecificNumberOfTests ? true : false}
@@ -284,7 +292,6 @@ useEffect(() => {
             />
           </div>
         )}
-
         {/* <div className="form-group">
           <label>5- Is your product an IVD medical device intended to be used only for evaluating its performance characteristics before it’s placed on the market for medical diagnostic use?</label>
           <div>
