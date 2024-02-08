@@ -17,6 +17,26 @@ const UpdateStorageComponent = () => {
   const {storage, getProject} = useSelector(state => state);
   const {storageRequest, storageSuccess, storageFail, projectInfo} = storage
 
+  // °F
+  const [formData, setFormData] = useState({
+    projectId,
+    isUpdate: true,
+    temperatureUnite: '°C',
+    requiresCarefulHandling: false,
+    requiresProtectionFromLight: false,
+    requiresProtectionFromHeatAndRadioactiveSources: false,
+    requiresProtectionFromMoisture: false,
+    hasLowerLimitOfTemperature: false,
+    lowerTemperatureLimit: 0,
+    hasUpperLimitOfTemperature: false,
+    upperTemperatureLimit: 0,
+    hasHumidityRange: false,
+    humidityMin: 0,
+    humidityMax: 0,
+    hasAtmosphericPressureRange: false,
+    atmosphericPressureMin: 0,
+    atmosphericPressureMax: 0,
+  });
 
     // get prev project info
     const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
@@ -29,33 +49,12 @@ const UpdateStorageComponent = () => {
         setProjectInformation(project)
       }
     }, [getProjectSuccess])
-
-  const [formData, setFormData] = useState({
-    isUpdate: true,
-    projectId,
-    temperatureUnite: '°C',
-    requiresCarefulHandling: false,
-    requiresProtectionFromLight: false,
-    requiresProtectionFromHeatAndRadioactiveSources: false,
-    requiresProtectionFromMoisture: false,
-    hasLowerLimitOfTemperature: false,
-    lowerTemperatureLimit: '',
-    hasUpperLimitOfTemperature: false,
-    upperTemperatureLimit: '',
-    hasHumidityRange: false,
-    humidityMin: '',
-    humidityMax: '',
-    hasAtmosphericPressureRange: false,
-    atmosphericPressureMin: '',
-    atmosphericPressureMax: '',
-  });
-
   useEffect(() => {
     // Set formData with existing project information
     setFormData({
       isUpdate: true,
       projectId,
-      temperatureUnite : projectInformation?.labelData?.requiresCarefulHandling || '°C',
+      temperatureUnite : projectInformation?.labelData?.temperatureUnite || '°C',
       requiresCarefulHandling: projectInformation?.labelData?.requiresCarefulHandling || false,
       requiresProtectionFromLight: projectInformation?.labelData?.requiresProtectionFromLight || false,
       requiresProtectionFromHeatAndRadioactiveSources: projectInformation?.labelData?.requiresProtectionFromHeatAndRadioactiveSources || false,
@@ -91,13 +90,15 @@ const UpdateStorageComponent = () => {
   };
 
   const handleInputChange = (name, value) => {
+
     setFormData({
       ...formData,
       [name]: value,
     });
     console.log(formData)
-
   };
+  
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -105,35 +106,44 @@ const UpdateStorageComponent = () => {
   const handleSubmit = e => {
       e.preventDefault();
       console.log(formData)
-      
-      if(formData.lowerTemperatureLimit != '' && formData.upperTemperatureLimit != ''){
-        if(formData.lowerTemperatureLimit >= formData.upperTemperatureLimit){
-          return toast.warning("Lower Temperature grater than or equal upper Temperature")
 
-        }
-      }
+        // Convert temperature values to numbers
+          const lowerTemperature = parseFloat(formData.lowerTemperatureLimit);
+          const upperTemperature = parseFloat(formData.upperTemperatureLimit);
 
-      if(formData.humidityMin != '' && formData.humidityMax != ''){
-        if(formData.humidityMin >= formData.humidityMax){
-          return toast.warning("Min humidity grater than or equal Max humidity")
+          if (!isNaN(lowerTemperature) && !isNaN(upperTemperature)) {
+            if (lowerTemperature >= upperTemperature) {
+              return toast.warning("Lower Temperature greater than or equal to Upper Temperature");
+            }
+          }
 
-        }
-      }
+          // Convert humidity values to numbers
+          const humidityMin = parseFloat(formData.humidityMin);
+          const humidityMax = parseFloat(formData.humidityMax);
 
-      if(formData.atmosphericPressureMin != '' && formData.atmosphericPressureMax != ''){
-        if(formData.atmosphericPressureMin >= formData.atmosphericPressureMax){
-          return toast.warning("Min Atmospheric Pressure grater than or equal Max Atmospheric Pressure")
+          if (!isNaN(humidityMin) && !isNaN(humidityMax)) {
+            if (humidityMin >= humidityMax) {
+              return toast.warning("Min humidity greater than or equal to Max humidity");
+            }
+          }
 
-        }
-      }
+          // Convert atmospheric pressure values to numbers
+          const atmosphericPressureMin = parseFloat(formData.atmosphericPressureMin);
+          const atmosphericPressureMax = parseFloat(formData.atmosphericPressureMax);
 
+          if (!isNaN(atmosphericPressureMin) && !isNaN(atmosphericPressureMax)) {
+            if (atmosphericPressureMin >= atmosphericPressureMax) {
+              return toast.warning("Min Atmospheric Pressure greater than or equal to Max Atmospheric Pressure");
+            }
+          }
+
+          console.log("formData : ", formData)
       dispatch(storageAction(formData, token))
   }
 
   useEffect(() => {
       if(storageSuccess){
-        navigate(`/dashboard/project-information/${projectInfo._id}`)
-        toast.success(`updated success`) 
+        toast.success(`updated success`)
       }
 
       if(storageFail){
@@ -145,16 +155,14 @@ const UpdateStorageComponent = () => {
 
   return (
     <div className="container storage">
-        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', marginBottom:'5px'}}>
-            {/* <Link style={{height:'35px'}} to={`/dashboard/create-project/step3/65764c7df80c7c51796e9bda`} className='label-info-link'> Back</Link> */}
+        <div className='mb-2' style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%'}}>
             <Link style={{height:'35px'}} to={`/dashboard/project-information/${projectId}`} className='label-info-link'>Back</Link>
         </div>
-      {/* <HorizontalLinearStepper step={3} /> */}
       <form onSubmit={handleSubmit} className="storage-form">
         <h2>Storage</h2>
 
         <div className="form-group">
-          <label>1- Does this product need to be handled carefully to prevent it from being broken or damaged?</label>
+          <label className='question-bg mb-1'>1- Does this product need to be handled carefully to prevent it from being broken or damaged?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -182,7 +190,7 @@ const UpdateStorageComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>2- Does your product require protection from light sources?</label>
+          <label className='question-bg mb-1'>2- Does your product require protection from light sources?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -210,7 +218,7 @@ const UpdateStorageComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>3- Does your product require protection from heat and radioactive sources?</label>
+          <label className='question-bg mb-1'>3- Does your product require protection from heat and radioactive sources?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -238,7 +246,7 @@ const UpdateStorageComponent = () => {
         </div>
 
         <div className="form-group">
-          <label>4- Does your product require protection from moisture?</label>
+          <label className='question-bg mb-1'>4- Does your product require protection from moisture?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -264,9 +272,10 @@ const UpdateStorageComponent = () => {
             </div>
           </div>
         </div>
+  
 
         <div className="form-group">
-          <label>5- Is there a lower limit of temperature that your product must not exceed to operate safely?</label>
+          <label className='question-bg mb-1'>5- Is there a lower limit of temperature that your product must not exceed to operate safely?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -297,10 +306,11 @@ const UpdateStorageComponent = () => {
           <div className="form-group">
             <label>Lower limit of temperature:</label>
             <input
-              type="text"
+              type="number"
+              // min='0'
               className="form-control"
               name="lowerTemperatureLimit"
-              placeholder='number + unit'
+              placeholder='Min'
               value={formData.lowerTemperatureLimit}
               required={formData.hasLowerLimitOfTemperature ? true : false}
               onChange={(e) => handleInputChange('lowerTemperatureLimit', e.target.value)}
@@ -309,7 +319,7 @@ const UpdateStorageComponent = () => {
         )}
 
         <div className="form-group">
-          <label>6- Is there an upper limit of temperature that your product must not exceed to operate safely?</label>
+          <label className='question-bg mb-1'>6- Is there an upper limit of temperature that your product must not exceed to operate safely?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -340,10 +350,11 @@ const UpdateStorageComponent = () => {
           <div className="form-group">
             <label>Upper limit of temperature:</label>
             <input
-              type="text"
+              type="number"
+              // min='0'
               className="form-control"
               name="upperTemperatureLimit"
-              placeholder='umber + unit'
+              placeholder='Max'
               value={formData.upperTemperatureLimit}
               required={formData.hasUpperLimitOfTemperature ? true : false}
               onChange={(e) => handleInputChange('upperTemperatureLimit', e.target.value)}
@@ -351,7 +362,7 @@ const UpdateStorageComponent = () => {
           </div>
         )}
 
-{(formData.hasUpperLimitOfTemperature || formData.hasLowerLimitOfTemperature) &&
+       {(formData.hasUpperLimitOfTemperature || formData.hasLowerLimitOfTemperature) &&
          <div className="form-group">
           <label>choose unit of Temperature:</label>
           <div>
@@ -381,7 +392,7 @@ const UpdateStorageComponent = () => {
         </div>}
 
         <div className="form-group">
-          <label>7- Is there a range of humidity that your product must not exceed to operate safely?</label>
+          <label className='question-bg mb-1'>7- Is there a range of humidity that your product must not exceed to operate safely?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -414,7 +425,8 @@ const UpdateStorageComponent = () => {
             <div className="row">
               <div className="col">
                 <input
-                  type="text"
+                  type="number"
+                  // min='0'
                   className="form-control"
                   name="humidityMin"
                   placeholder="Min"
@@ -425,7 +437,8 @@ const UpdateStorageComponent = () => {
               </div>
               <div className="col">
                 <input
-                  type="text"
+                  type="number"
+                  // min='0'
                   className="form-control"
                   name="humidityMax"
                   placeholder="Max"
@@ -439,7 +452,7 @@ const UpdateStorageComponent = () => {
         )}
 
         <div className="form-group">
-          <label>8- Is there a range of atmospheric pressure that your product must not exceed to operate safely?</label>
+          <label className='question-bg mb-1'>8- Is there a range of atmospheric pressure that your product must not exceed to operate safely?</label>
           <div>
             <div className="form-check">
               <label className="form-check-label">Yes</label>
@@ -472,10 +485,11 @@ const UpdateStorageComponent = () => {
             <div className="row">
               <div className="col">
                 <input
-                  type="text"
+                  type="number"
+                  // min='0'
                   className="form-control"
                   name="atmosphericPressureMin"
-                  placeholder="Min (number + unit)"
+                  placeholder="Min"
                   required={formData.hasAtmosphericPressureRange ? true : false}
                   value={formData.atmosphericPressureMin}
                   onChange={(e) => handleInputChange('atmosphericPressureMin', e.target.value)}
@@ -483,11 +497,12 @@ const UpdateStorageComponent = () => {
               </div>
               <div className="col">
                 <input
-                  type="text"
+                  type="number"
+                  // min='0'
                   className="form-control"
                   name="atmosphericPressureMax"
                   required={formData.hasAtmosphericPressureRange ? true : false}
-                  placeholder="Max (number + unit)"
+                  placeholder="Max"
                   value={formData.atmosphericPressureMax}
                   onChange={(e) => handleInputChange('atmosphericPressureMax', e.target.value)}
                 />
@@ -513,5 +528,6 @@ const UpdateStorageComponent = () => {
     </div>
   );
 };
+
 
 export default UpdateStorageComponent;

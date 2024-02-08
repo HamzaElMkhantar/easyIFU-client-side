@@ -2907,26 +2907,32 @@ const LabelInformation = () => {
                         <p style={{ color:'black', padding:'0'}}>Manufacturer Info</p>
                       </Link>
                       <Link to={`/dashboard/update-project/step2/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
-                        <p style={{ color:'black', padding:'0'}}>Product Info</p>
+                        <p style={{ color:'black', padding:'0'}}>Legislation</p>
                       </Link>
                       <Link to={`/dashboard/update-project/step3/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
-                        <p style={{ color:'black', padding:'0'}}>Sterility</p>
+                        <p style={{ color:'black', padding:'0'}}>Product Info</p>
                       </Link>
                       <Link to={`/dashboard/update-project/step4/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
-                        <p style={{ color:'black', padding:'0'}}>Storage</p>
+                        <p style={{ color:'black', padding:'0'}}>Sterility</p>
                       </Link>
                       <Link to={`/dashboard/update-project/step5/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0'}}>Storage</p>
+                      </Link>
+                      <Link to={`/dashboard/update-project/step6/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
                         <p style={{ color:'black', padding:'0'}}>Safe Use</p>
                       </Link>
                       {projectInfo?.labelData && projectInfo?.labelData?.productType === "In Vitro Diagnostic (IVD) Medical Device" && 
-                      <Link to={`/dashboard/update-project/step6/${projectId}`} style={{backgroundColor:'rd', marginBottom:"5px", borderRadius:'4px'}}>
+                      <Link to={`/dashboard/update-project/step7/${projectId}`} style={{backgroundColor:'rd', marginBottom:"5px", borderRadius:'4px'}}>
                         <p style={{ color:'black', padding:'0'}}>IVD Diagnostic</p>
                       </Link>}
-                      <Link to={`/dashboard/update-project/step7/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                      <Link to={`/dashboard/update-project/step8/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
                         <p style={{ color:'black', padding:'0'}}>Transfusion-Infusion</p>
                       </Link>
-                      <Link to={`/dashboard/update-project/step8/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                      <Link to={`/dashboard/update-project/step9/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
                         <p style={{ color:'black', padding:'0'}}>Others</p>
+                      </Link>
+                      <Link to={`/dashboard/update-project/step10/${projectId}`} style={{backgroundColor:'', marginBottom:"5px", borderRadius:'4px'}}>
+                        <p style={{ color:'black', padding:'0', fontSize:'15px'}}>Translation/Repackaging</p>
                       </Link>          
                     </ul>
                   </div>}

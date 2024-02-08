@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ProjectByRoleIdAction, releasedProjectAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
+import BarLinks from '../../utilities/BarLinks';
 
 
 const ReleasedProjects = () => {
@@ -52,6 +53,12 @@ const ReleasedProjects = () => {
         }, [releasedProjectSuccess, releasedProjectFail])
 
 
+
+    const barLinks = [
+      {title: 'Projects', link: '/dashboard/project'},
+      {title: 'Released', link: '/dashboard/project/released'},
+      {title: 'Received', link: '/dashboard/received-project'},
+      ];
   return (
     <div style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
@@ -90,6 +97,8 @@ const ReleasedProjects = () => {
           </div>
         </div>
 
+        <BarLinks pages={barLinks} />
+        
         <section className='container' style={{marginTop:'20px', padding:'10px'}}>
             <h6>Released Project: </h6>
             <div className="table-responsive">

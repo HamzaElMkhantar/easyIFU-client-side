@@ -72,6 +72,8 @@ import Contact from './pages/DashboardPages/Contact';
 import jwt_decode from 'jwt-decode';
 import LegislationComponent from './pages/DashboardPages/LegislationComponent';
 import TranslationAndRepackaging from './pages/DashboardPages/TranslationAndRepackaging';
+import UpdateLegislationComponent from './pages/DashboardPages/UpdateLegislationComponent';
+import UpdateTranslationAndRepackaging from './pages/DashboardPages/UpdateTranslationAndRepackaging';
 
 function App() {
   const location = useLocation();
@@ -81,7 +83,6 @@ function App() {
     const fetch = async() =>{
       await dispatch(refreshAction());
     }
-     console.log("ref!")
      fetch()
   }, [location.pathname]);
 
@@ -241,6 +242,7 @@ function App() {
                   {/* toast.success(`updated success`) */}
 
                   <Route path='/dashboard/update-project/step1/:projectId' element={<UpdateManufacturerInfoComponent />} />
+                  <Route path='/dashboard/update-project/step2/:projectId' element={<UpdateLegislationComponent />} />
                   <Route path='/dashboard/update-project/step3/:projectId' element={<UpdateProductInfoComponent />} />
                   <Route path='/dashboard/update-project/step4/:projectId' element={<UpdateSterilityComponent />} />
                   <Route path='/dashboard/update-project/step5/:projectId' element={<UpdateStorageComponent />} />
@@ -248,6 +250,7 @@ function App() {
                   <Route path='/dashboard/update-project/step7/:projectId' element={<UpdateIVDDiagnosticComponent />} />
                   <Route path='/dashboard/update-project/step8/:projectId' element={<UpdateTransfusionInfusionComponent />} />
                   <Route path='/dashboard/update-project/step9/:projectId' element={<UpdateOthersComponent />} />
+                  <Route path='/dashboard/update-project/step10/:projectId' element={<UpdateTranslationAndRepackaging />} />
                   {/* 
                    */}
               </>}

@@ -54,8 +54,8 @@ const SideBar = ({isSidebarOpen}) => {
             <div style={{height:'63vh', overflowY:'scroll'}} className='navList' >
                 {<Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
                 {<Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>create Project</Link>}
-                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/received-project"><CallReceivedIcon style={{color:'#44638C'}}/> received project</Link>
-                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/project/released"><LastPageIcon style={{color:'#9A3B3A'}}/> released project</Link>
+                {/* <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/received-project"><CallReceivedIcon style={{color:'#44638C'}}/> received project</Link>
+                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/project/released"><LastPageIcon style={{color:'#9A3B3A'}}/> released project</Link> */}
                 {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Release") || decodedToken?.userInfo?.role.includes("Admin") )&&
                 <>
                   <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/> Documents</Link>

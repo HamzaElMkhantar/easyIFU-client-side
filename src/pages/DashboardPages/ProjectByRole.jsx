@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ProjectByRoleIdAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
+import BarLinks from '../../utilities/BarLinks';
 
 const ProjectByRole = () => {
     // side bar toggle
@@ -52,7 +53,13 @@ const ProjectByRole = () => {
             }
         }
     }, [roleProjectSuccess, roleProjectFail])
-    console.log(decodedToken && decodedToken)
+
+
+    const barLinks = [
+      {title: 'Projects', link: '/dashboard/project'},
+      {title: 'Released', link: '/dashboard/project/released'},
+      {title: 'Received', link: '/dashboard/received-project'},
+  ];
   return (
     <div style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
@@ -90,6 +97,8 @@ const ProjectByRole = () => {
         </div>
           </div>
         </div>
+
+        <BarLinks pages={barLinks}/>
 
         <section className='container' style={{marginTop:'20px', padding:'10px'}}>
             <h6>Received Project: {ProjectByRole?.length}</h6>

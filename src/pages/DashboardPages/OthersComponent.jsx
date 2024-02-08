@@ -206,117 +206,121 @@ const OthersComponent = () => {
         </div>
       <form className="others-form" onSubmit={handleSubmit}>
         <h2>Others</h2>
+        {projectInfo && projectInfo?.customMadeDevice &&
+        <>
+            <div className="form-group">
+                <label className='question-bg mb-1'>- is there any additional patient data?</label>
+                <div>
+                    <div className="form-check">
+                    <label className="form-check-label">Yes</label>
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="associatedWithIndividualPatient"
+                        value="Yes"
+                        checked={formData.associatedWithIndividualPatient}
+                        onChange={() => handleCheckboxChange("associatedWithIndividualPatient", "Yes")}
+                    />
+                    </div>
+                    <div className="form-check">
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="associatedWithIndividualPatient"
+                        value="No"
+                        checked={!formData.associatedWithIndividualPatient}
+                        onChange={() => handleCheckboxChange("associatedWithIndividualPatient", "No")}
+                    />
+                    <label className="form-check-label">No</label>
+                    </div>
+                </div>
+          </div>
+
           <div className="form-group">
-              <label className='question-bg mb-1'>- is there any additional patient data?</label>
-              <div>
-                  <div className="form-check">
-                  <label className="form-check-label">Yes</label>
-                  <input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="associatedWithIndividualPatient"
-                      value="Yes"
-                      checked={formData.associatedWithIndividualPatient}
-                      onChange={() => handleCheckboxChange("associatedWithIndividualPatient", "Yes")}
-                  />
-                  </div>
-                  <div className="form-check">
-                  <input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="associatedWithIndividualPatient"
-                      value="No"
-                      checked={!formData.associatedWithIndividualPatient}
-                      onChange={() => handleCheckboxChange("associatedWithIndividualPatient", "No")}
-                  />
-                  <label className="form-check-label">No</label>
-                  </div>
-              </div>
-        </div>
+                <label className='question-bg mb-1'>- Is there a patient Name?</label>
+                <div>
+                    <div className="form-check">
+                    <label className="form-check-label">Yes</label>
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="hasPatientName"
+                        value="Yes"
+                        checked={formData.hasPatientName}
+                        onChange={() => handleCheckboxChange("hasPatientName", "Yes")}
+                    />
+                    </div>
+                    <div className="form-check">
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="hasPatientName"
+                        value="No"
+                        checked={!formData.hasPatientName}
+                        onChange={() => handleCheckboxChange("hasPatientName", "No")}
+                    />
+                    <label className="form-check-label">No</label>
+                    </div>
+                </div>
+          </div>
 
-        <div className="form-group">
-              <label className='question-bg mb-1'>- Is there a patient Name?</label>
-              <div>
-                  <div className="form-check">
-                  <label className="form-check-label">Yes</label>
-                  <input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="hasPatientName"
-                      value="Yes"
-                      checked={formData.hasPatientName}
-                      onChange={() => handleCheckboxChange("hasPatientName", "Yes")}
-                  />
-                  </div>
-                  <div className="form-check">
-                  <input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="hasPatientName"
-                      value="No"
-                      checked={!formData.hasPatientName}
-                      onChange={() => handleCheckboxChange("hasPatientName", "No")}
-                  />
-                  <label className="form-check-label">No</label>
-                  </div>
-              </div>
-        </div>
+          <div className="form-group">
+                <label className='question-bg mb-1'>- Is there a patient Number?</label>
+                <div>
+                    <div className="form-check">
+                    <label className="form-check-label">Yes</label>
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="hasPatientNumber"
+                        value="Yes"
+                        checked={formData.hasPatientNumber}
+                        onChange={() => handleCheckboxChange("hasPatientNumber", "Yes")}
+                    />
+                    </div>
+                    <div className="form-check">
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="hasPatientNumber"
+                        value="No"
+                        checked={!formData.hasPatientNumber}
+                        onChange={() => handleCheckboxChange("hasPatientNumber", "No")}
+                    />
+                    <label className="form-check-label">No</label>
+                    </div>
+                </div>
+          </div>
 
-        <div className="form-group">
-              <label className='question-bg mb-1'>- Is there a patient Number?</label>
-              <div>
-                  <div className="form-check">
-                  <label className="form-check-label">Yes</label>
-                  <input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="hasPatientNumber"
-                      value="Yes"
-                      checked={formData.hasPatientNumber}
-                      onChange={() => handleCheckboxChange("hasPatientNumber", "Yes")}
-                  />
-                  </div>
-                  <div className="form-check">
-                  <input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="hasPatientNumber"
-                      value="No"
-                      checked={!formData.hasPatientNumber}
-                      onChange={() => handleCheckboxChange("hasPatientNumber", "No")}
-                  />
-                  <label className="form-check-label">No</label>
-                  </div>
-              </div>
-        </div>
-
-        <div className="form-group">
-              <label className='question-bg mb-1'>- Is there a Health Care center or doctor?</label>
-              <div>
-                  <div className="form-check">
-                  <label className="form-check-label">Yes</label>
-                  <input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="hasDoctorName"
-                      value="Yes"
-                      checked={formData.hasDoctorName}
-                      onChange={() => handleCheckboxChange("hasDoctorName", "Yes")}
-                  />
-                  </div>
-                  <div className="form-check">
-                  <input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="hasDoctorName"
-                      value="No"
-                      checked={!formData.hasDoctorName}
-                      onChange={() => handleCheckboxChange("hasDoctorName", "No")}
-                  />
-                  <label className="form-check-label">No</label>
-                  </div>
-              </div>
-        </div>
+          <div className="form-group">
+                <label className='question-bg mb-1'>- Is there a Health Care center or doctor?</label>
+                <div>
+                    <div className="form-check">
+                    <label className="form-check-label">Yes</label>
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="hasDoctorName"
+                        value="Yes"
+                        checked={formData.hasDoctorName}
+                        onChange={() => handleCheckboxChange("hasDoctorName", "Yes")}
+                    />
+                    </div>
+                    <div className="form-check">
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="hasDoctorName"
+                        value="No"
+                        checked={!formData.hasDoctorName}
+                        onChange={() => handleCheckboxChange("hasDoctorName", "No")}
+                    />
+                    <label className="form-check-label">No</label>
+                    </div>
+                </div>
+          </div>
+        </>
+        }
 
 
         <div className="form-group">

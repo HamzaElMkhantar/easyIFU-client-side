@@ -39,31 +39,25 @@ const UpdateManufacturerInfoComponent = () => {
     hasDistributor: false,
     distributorName: '',
     distributorAddress: '',
-    isOutsideEU: false,
     europeanAuthorizedRepName: '',
     europeanAuthorizedRepAddress: '',
     importerName: '',
     importerAddress: '',
-    productClass: 'Class I',
-    notifiedBodyNumber: '',
   });
 
   useEffect(() => {
     // Set formData with existing project information
     setFormData({
-        isUpdate: true,
         projectId,
+        isUpdate: true,
         companyId: decodedToken && decodedToken.userInfo ? decodedToken.userInfo.companyId : null,
         hasDistributor:projectInformation?.labelData?.hasDistributor || false,
         distributorName: projectInformation?.labelData?.distributorName || '',
         distributorAddress: projectInformation?.labelData?.distributorAddress || '',
-        isOutsideEU: projectInformation?.labelData?.isOutsideEU || false,
         europeanAuthorizedRepName: projectInformation?.labelData?.europeanAuthorizedRepName || '',
         europeanAuthorizedRepAddress: projectInformation?.labelData?.europeanAuthorizedRepAddress || '',
         importerName: projectInformation?.labelData?.importerName || '',
         importerAddress: projectInformation?.labelData?.importerAddress || '',
-        productClass: projectInformation?.labelData?.productClass || 'Class I',
-        notifiedBodyNumber: projectInformation?.labelData?.notifiedBodyNumber || '',
     });
   }, [projectInformation])
 
@@ -72,12 +66,9 @@ const UpdateManufacturerInfoComponent = () => {
     const [userCountry, setUserCountry] = useState('');
 
     const europeanCountries = [
-        'albania', 'andorra', 'armenia', 'austria', 'azerbaijan', 'belarus', 'belgium', 'bosnia and herzegovina',
-        'bulgaria', 'croatia', 'cyprus', 'czech republic', 'denmark', 'estonia', 'finland', 'france', 'georgia',
-        'germany', 'greece', 'hungary', 'iceland', 'ireland', 'italy', 'kazakhstan', 'kosovo', 'latvia', 'liechtenstein',
-        'lithuania', 'luxembourg', 'malta', 'moldova', 'monaco', 'montenegro', 'netherlands', 'north macedonia', 'norway',
-        'poland', 'portugal', 'romania', 'russia', 'san marino', 'serbia', 'slovakia', 'slovenia', 'spain', 'sweden',
-        'switzerland', 'turkey', 'ukraine', 'united kingdom', 'vatican city'
+      'austria', 'belgium', 'bulgaria', 'croatia', 'cyprus', 'czech republic', 'denmark', 'estonia', 'finland',
+      'france', 'germany', 'greece', 'hungary', 'ireland', 'italy', 'latvia', 'lithuania', 'luxembourg', 'malta',
+      'netherlands', 'poland', 'portugal', 'romania', 'slovakia', 'slovenia', 'spain', 'sweden'
     ];
 
 
@@ -114,20 +105,6 @@ const UpdateManufacturerInfoComponent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(manufacturerInformationAction(formData, token))
-
-    setFormData({
-        projectId,
-        isOutsideEU: false,
-        hasDistributor: false,
-        distributorName: '',
-        distributorAddress: '',
-        europeanAuthorizedRepName: '',
-        europeanAuthorizedRepAddress: '',
-        importerName: '',
-        importerAddress: '',
-        productClass: 'Class I',
-        notifiedBodyNumber: '',
-    })
   }
 
   useEffect(() => {
@@ -154,7 +131,6 @@ const UpdateManufacturerInfoComponent = () => {
   const navigate = useNavigate()
   useEffect(() => {
     if(manufacturerSuccess){
-      navigate(`/dashboard/project-information/${projectInfo._id}`)
         toast.success(`updated success`)
     }
 
@@ -173,8 +149,8 @@ const UpdateManufacturerInfoComponent = () => {
             <h2>Manufacturer Information</h2>
             {!companyRequest 
             ?<div>
-                    <div>
-                        <label>Do You have a Distributor ?</label>
+                    <div style={{width:'100%'}}>
+                        <label className='question-bg'>Do You have a Distributor ?</label>
                         <div style={{display:'flex', flexDirection:'row'}}>
                             <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:'20px'}} >
                             <label >Yes: </label>
@@ -240,7 +216,6 @@ const UpdateManufacturerInfoComponent = () => {
                             name="importerName"
                             value={formData.importerName}
                             onChange={handleInputChange}
-                            // required={formData.isOutsideEU? true : false}
                         />
                         <label>Importer Address:</label>
                         <input
@@ -248,35 +223,6 @@ const UpdateManufacturerInfoComponent = () => {
                             name="importerAddress"
                             value={formData.importerAddress}
                             onChange={handleInputChange}
-                            // required={formData.isOutsideEU ? true : false}
-                        />
-                        </div>
-                    )}
-                    <div>
-                        <label>What is the class of your product?</label>
-                        <select
-                        name="productClass"
-                        value={formData.productClass}
-                        onChange={handleInputChange}
-                        >
-                        <option value="Class I">Class I</option>
-                        <option value="Class Is (sterile)">Class Is (sterile)</option>
-                        <option value="Class Im (with a measuring function)">Class Im (with a measuring function)</option>
-                        <option value="Class Ir (surgical reusable device)">Class Ir (surgical reusable device)</option>
-                        <option value="Class IIa">Class IIa</option>
-                        <option value="Class IIb">Class IIb</option>
-                        <option value="Class III">Class III</option>
-                        </select>
-                    </div>
-                    {formData.productClass !== 'Class I' && (
-                        <div>
-                        <label>Notified Body Number*:</label>
-                        <input
-                            type="text"
-                            name="notifiedBodyNumber"
-                            value={formData.notifiedBodyNumber}
-                            onChange={handleInputChange}
-                            required={formData.productClass !== 'Class I' ? true : false}
                         />
                         </div>
                     )}

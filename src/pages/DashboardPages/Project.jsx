@@ -18,6 +18,7 @@ import { RotatingLines } from 'react-loader-spinner';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import easyIFUlogo from '../../assets/easyIFU_Logo.png' 
+import BarLinks from '../../utilities/BarLinks';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -219,6 +220,14 @@ const Project = () => {
           labelSizes: serviceList,
       }));
     };
+
+
+    const barLinks = [
+      {title: 'Projects', link: '/dashboard/project'},
+      {title: 'Released', link: '/dashboard/project/released'},
+      {title: 'Received', link: '/dashboard/received-project'},
+      // {title: 'Archived', link: '/dashboard/Archived-project'},
+  ];
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
@@ -257,6 +266,7 @@ const Project = () => {
         </div>
           </div>
         </div>
+        <BarLinks pages={barLinks}/>
 
         {/* Dashboard  content   */}
         <section className='container' style={{marginTop:'20px'}}>
@@ -293,18 +303,6 @@ const Project = () => {
                         onChange={(e) => setFormData({ ...formData, projectDescription: e.target.value })}
                         />
                     </div>
-                    {/* <div className="form-group">
-                
-                        <label>4- Enter Project Sizes separated by - (By Centimeter):</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="labelSizes"
-                            placeholder="number - number - number ..."
-                            value={formData.labelSizes.join('-')} // Join array values with "-"
-                            onChange={handleInputChange}
-                          />
-                    </div> */}
                     <div className="form-field">
                     <label htmlFor="service">4- Enter Project Sizes (By Centimeter):</label>
                     {serviceList.map((singleService, index) => (
@@ -314,6 +312,7 @@ const Project = () => {
                             name="service"
                             style={{width:'50%', height:'35px', border:'1px solid lightgray', borderRadius:'5px'}}
                             type="Number"
+                            min="0"
                             id="service"
                             value={singleService}
                             placeholder={`Size ${index + 1}`}

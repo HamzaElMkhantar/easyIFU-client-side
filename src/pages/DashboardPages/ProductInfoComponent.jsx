@@ -226,7 +226,7 @@ const ProductInfoComponent = () => {
         <div className='' style={{display:'flex',
                                   justifyContent:'space-between', 
                                   alignItems:'', width:'100%', 
-                                  backgroundColor:'#fff',
+                                //   backgroundColor:'#fff',
                                   height:'',
                                   padding:'30px 5px 0 5px',
                                   borderRadius:'5px'
@@ -387,7 +387,7 @@ const ProductInfoComponent = () => {
                     />
                 </div> */}
                 <div className="form-group">
-                    <label className='question-bg mb-1'>-how many month(Use-by Date):</label>
+                    <label className='question-bg mb-1'>- Use-by Date (how many month):</label>
                     <input
                     type="number"
                     className="form-control"

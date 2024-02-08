@@ -62,8 +62,6 @@ const ManufacturerInfoComponent = () => {
         europeanAuthorizedRepAddress: projectInformation?.labelData?.europeanAuthorizedRepAddress || '',
         importerName: projectInformation?.labelData?.importerName || '',
         importerAddress: projectInformation?.labelData?.importerAddress || '',
-        // productClass: projectInformation?.labelData?.productClass || 'Class I',
-        // notifiedBodyNumber: projectInformation?.labelData?.notifiedBodyNumber || '',
     });
   }, [projectInformation])
 
@@ -75,7 +73,7 @@ const ManufacturerInfoComponent = () => {
       'austria', 'belgium', 'bulgaria', 'croatia', 'cyprus', 'czech republic', 'denmark', 'estonia', 'finland',
       'france', 'germany', 'greece', 'hungary', 'ireland', 'italy', 'latvia', 'lithuania', 'luxembourg', 'malta',
       'netherlands', 'poland', 'portugal', 'romania', 'slovakia', 'slovenia', 'spain', 'sweden'
-  ];
+    ];
 
 
     const isCountryInEurope = () => {

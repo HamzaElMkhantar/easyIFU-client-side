@@ -3,31 +3,21 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-const pages = [
-    {title: 'project', link: '/dashboard/project'},
-];
 
-function BarLinks() {
+
+function BarLinks({pages}) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
@@ -37,6 +27,15 @@ function BarLinks() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  // ---
+  const location = useLocation();
+  const [currentPage, setCurrentPage] = React.useState('')
+  React.useEffect(()=>{
+    setCurrentPage(location.pathname)
+  }, [location])
+
+  console.log("pathName: ", currentPage)
 
   return (
     <AppBar position="static" style={{backgroundColor:'#021d41'}}>
@@ -73,7 +72,9 @@ function BarLinks() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link to={page.link} textAlign="center">{page.title}</Link>
+                  <Link style={ page.link == currentPage ?
+                     {marginRight:'10px'} : {color:'black'}
+                     } to={page.link} textAlign="center">{page.title}</Link>
                 </MenuItem>
               ))}
 
@@ -83,10 +84,17 @@ function BarLinks() {
             sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
           />
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box style={{ display:'flex', justifyContent:''}} sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Link to={page.link}
-                style={{color:'#ecf0f3', fontWeight:'500'}}
+                style={page.link !== currentPage ?
+                  {color:'#ecf0f3', fontWeight:'500', marginRight:'10px',  padding:'2px 10px'}
+                  : {color:'#ecf0f3', fontWeight:'500', marginRight:'10px', backgroundColor:'#08408B', 
+                  padding:'2px 10px', 
+                  borderRadius:'5px',
+                  fontWeight:'700'
+                  }
+                }
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
@@ -95,25 +103,6 @@ function BarLinks() {
               </Link>
               
             ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            ></Menu>
           </Box>
         </Toolbar>
       </Container>
