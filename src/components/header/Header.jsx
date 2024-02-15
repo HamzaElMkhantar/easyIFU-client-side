@@ -32,7 +32,7 @@ const Header = () => {
      className='navbar navbar-expand-md navbar-light'>
       <div className='container'>
         <Link onClick={() => setMenuOpen(false)} to='/' className='navbar-brand'>
-          <img src={headerLogo} alt='Logo' width='120' height='50' />
+          <img src={headerLogo} alt='Logo' width='50' height='50' />
         </Link>
         <div className='d-lg-none ml-auto'>
           <button

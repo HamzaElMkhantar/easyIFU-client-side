@@ -75,11 +75,10 @@ export const loginAction = (email, password) => async (dispatch) => {
           password,
         }, config);
 
-  
 
     // Store the access token and refresh token in cookies
-    Cookies.set('eIfu_ATK', response.data.accessToken);
-    Cookies.set('eIfu_RTK', response.data.refreshToken); // Set the expiration time as needed
+    // Cookies.set('eIfu_ATK', response.data.accessToken);
+    // Cookies.set('eIfu_RTK', response.data.refreshToken); // Set the expiration time as needed
     dispatch({ 
         type: LOGIN_SUCCESS, 
         payload: response.data 
@@ -131,13 +130,11 @@ export const refreshAction = () => async (dispatch) => {
     }
 
     // Send a request to the /api/v1/auth/refresh endpoint using Fetch.
-    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, {refreshToken}, config);
-    const decodedToken = await jwtDecode( response?.data?.accessToken) || null
+    // const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, {refreshToken}, config);
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, config);
+    // const decodedToken = await jwtDecode( response?.data?.accessToken) || null
     
-    await Cookies.set('eIfu_ATK', response?.data?.accessToken);
-    // await Cookies.set('eIfu_sub',JSON.stringify(decodedToken?.userInfo?.companySubscriptionInfo));
-
-    console.log(jwtDecode( response?.data?.accessToken))
+    // await Cookies.set('eIfu_ATK', response?.data?.accessToken);
 
     dispatch({ type: REFRESH_SUCCESS, payload: 'succeed'});
     setTimeout(() =>{
@@ -170,8 +167,8 @@ export const logoutAction = () => async (dispatch) => {
         responseType: 'json'
       }
 
-      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout',{}, config)
-      // console.log(data)
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout', config)
+      console.log(data)
       // window.location.reload();
       
       // Clear the access token and refresh token cookies

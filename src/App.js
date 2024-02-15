@@ -74,8 +74,10 @@ import LegislationComponent from './pages/DashboardPages/LegislationComponent';
 import TranslationAndRepackaging from './pages/DashboardPages/TranslationAndRepackaging';
 import UpdateLegislationComponent from './pages/DashboardPages/UpdateLegislationComponent';
 import UpdateTranslationAndRepackaging from './pages/DashboardPages/UpdateTranslationAndRepackaging';
+import ArchivedProject from './pages/DashboardPages/ArchivedProject';
 
 function App() {
+
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -90,7 +92,7 @@ function App() {
   const [showNav, setShowNav] = useState(true);
   const [showFooter, setShowFooter] = useState(true);
   const token = Cookies.get('eIfu_ATK') || null;
-  const dateNow = Cookies.get('d_n') || null;
+  // const dateNow = Cookies.get('d_n') || null;
 
   useEffect(() => {
     const pathSegments = location.pathname.split('/');
@@ -117,16 +119,15 @@ function App() {
     }
   }, [location]);
 
-  const dashboardRoutes = (
-                <>
-  
-                </>
-  )
   
   const R_Token = Cookies.get('eIfu_RTK') || null;
   const A_Token = Cookies.get('eIfu_ATK') || null;
-  const decodedToken = A_Token ? jwtDecode(A_Token) : null
 
+  const decodedToken = A_Token ? jwtDecode(A_Token) : null
+  const decodedToken_R = A_Token ? jwtDecode(R_Token) : null
+
+  console.log("decoded tokens : ",decodedToken,  decodedToken_R)
+  console.log(" tokens : ",R_Token,  A_Token)
   const intervalRef = useRef(null);
 
    // Memoize the interval setup function to prevent re-renders
@@ -280,6 +281,7 @@ function App() {
            
                 <Route path='/dashboard' element={<Dashboard />} />
                 <Route path='/dashboard/project' element={<Project />} />
+                <Route path='/dashboard/archived-project' element={<ArchivedProject />} />
                 <Route path='/dashboard/contact' element={<Contact />} />
                 <Route path='/dashboard/users' element={<Users />} />
                 <Route path='/dashboard/company' element={<MyCompany />} />

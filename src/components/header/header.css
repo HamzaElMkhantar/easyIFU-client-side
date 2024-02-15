@@ -182,8 +182,6 @@
 }
 
 .dash-Logo {
-    height: 40px;
-    width: 100px;
     display: none;
 }
 
@@ -268,6 +266,8 @@
   }
   .dash-Logo {
     display: block;
+    height: 30px !important;
+    width: 80px !important;
   }
 }
 

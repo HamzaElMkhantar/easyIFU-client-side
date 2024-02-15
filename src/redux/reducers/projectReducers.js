@@ -2,6 +2,10 @@ import {ALL_PROJECTS_FAILED,
         ALL_PROJECTS_REQUEST, 
         ALL_PROJECTS_RESET, 
         ALL_PROJECTS_SUCCESS, 
+        ARCHIVED_PROJECTS_FAILED, 
+        ARCHIVED_PROJECTS_REQUEST, 
+        ARCHIVED_PROJECTS_RESET, 
+        ARCHIVED_PROJECTS_SUCCESS, 
         DELETE_DOCUMENTS_FAILED, 
         DELETE_DOCUMENTS_REQUEST, 
         DELETE_DOCUMENTS_RESET, 
@@ -78,6 +82,10 @@ import {ALL_PROJECTS_FAILED,
         STORAGE_REQUEST,
         STORAGE_RESET,
         STORAGE_SUCCESS,
+        TOGGLE_ARCHIVE_PROJECT_FAILED,
+        TOGGLE_ARCHIVE_PROJECT_REQUEST,
+        TOGGLE_ARCHIVE_PROJECT_RESET,
+        TOGGLE_ARCHIVE_PROJECT_SUCCESS,
         TRANSFUSION_INFUSION_FAILED,
         TRANSFUSION_INFUSION_REQUEST,
         TRANSFUSION_INFUSION_RESET,
@@ -100,6 +108,20 @@ const getProject = {
     getProjectSuccess :  false,
     getProjectFail : null,
     project: null
+}
+
+const archivedProjects = {
+    getArchivedProjectsRequest : false,
+    getArchivedProjectsSuccess :  false,
+    archivedProjects: null,
+    getArchivedProjectsFail : null,
+}
+
+const archiveToggleProject = {
+    archiveToggleProjectRequest : false,
+    archiveToggleProjectSuccess :  false,
+    archiveToggleData: null,
+    archiveToggleProjectFail : null,
 }
 
 const startProject = {
@@ -274,6 +296,70 @@ export const getAllProjectsReducer = (state = getProjects, action) => {
             } ;
         case ALL_PROJECTS_RESET :
             return getProjects;
+        default :
+            return state ;
+    }
+
+}
+
+export const getArchivedProjectsReducer = (state = archivedProjects, action) => {
+
+    switch(action.type){
+        case ARCHIVED_PROJECTS_REQUEST:
+            return {
+                ...state,
+                getArchivedProjectsRequest : true,
+                getArchivedProjectsSuccess :  false,
+                getArchivedProjectsFail : null,
+            } ;
+        case ARCHIVED_PROJECTS_SUCCESS :
+            return {
+                ...state,
+                getArchivedProjectsRequest : false,
+                getArchivedProjectsSuccess : true,
+                archivedProjects: action.payload
+            } ;
+        case ARCHIVED_PROJECTS_FAILED :
+            return {
+                ...state,
+                getArchivedProjectsFail : action.payload,
+                getArchivedProjectsSuccess :  false,
+                getArchivedProjectsRequest : false
+            } ;
+        case ARCHIVED_PROJECTS_RESET :
+            return archivedProjects;
+        default :
+            return state ;
+    }
+
+}
+
+export const archivedProjectToggleReducer = (state = archiveToggleProject, action) => {
+
+    switch(action.type){
+        case TOGGLE_ARCHIVE_PROJECT_REQUEST:
+            return {
+                ...state,
+                archiveToggleProjectRequest : true,
+                archiveToggleProjectSuccess :  false,
+                archiveToggleProjectFail : null,
+            } ;
+        case TOGGLE_ARCHIVE_PROJECT_SUCCESS :
+            return {
+                ...state,
+                archiveToggleProjectRequest : false,
+                archiveToggleProjectSuccess : true,
+                archiveToggleData: action.payload
+            } ;
+        case TOGGLE_ARCHIVE_PROJECT_FAILED :
+            return {
+                ...state,
+                archiveToggleProjectFail : action.payload,
+                archiveToggleProjectSuccess :  false,
+                archiveToggleProjectRequest : false
+            } ;
+        case TOGGLE_ARCHIVE_PROJECT_RESET :
+            return archiveToggleProject;
         default :
             return state ;
     }

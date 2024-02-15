@@ -19,10 +19,6 @@ const RequireAuth = () => {
       const accessToken = Cookies.get('eIfu_ATK') || null;
       const refreshToken = Cookies.get('eIfu_RTK') || null;
 
-      console.log("accessToken",accessToken)
-      console.log("refreshToken",refreshToken)
-
-
       try {
         // Check Access Token expiration
         if (!accessToken) {
@@ -42,9 +38,9 @@ const RequireAuth = () => {
             if (decodedAccessToken.exp < currentTimeInSeconds) {
               console.log('Access Token has expired');
               // <LogoutModal openValue={true} />
-              // toast.info('Your Session is Expired, Please LogIn Again');
+              toast.info('Your Session is Expired, Please LogIn Again');
               dispatch(logoutAction());
-              setShowLogoutModal(true);
+              // setShowLogoutModal(true);
               return;
             }
           }
@@ -54,7 +50,8 @@ const RequireAuth = () => {
         // Check Refresh Token expiration
         if (!refreshToken) {
           // console.log('Refresh Token not found');
-          setShowLogoutModal(true);
+          // setShowLogoutModal(true);
+          toast.info('Your Session is Expired, Please LogIn Again');
           dispatch(logoutAction());
           // <Navigate to="/login" state={{ from: location }} replace />;
           return;
@@ -74,7 +71,6 @@ const RequireAuth = () => {
             }
           }
         }
-
 
       } catch (error) {
         // console.error('Error decoding token:', error);
@@ -102,7 +98,7 @@ const RequireAuth = () => {
       {/* {showLogoutModal && <LogoutModal />} */}
       { refreshToken ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />}
       {/* <Outlet /> */}
-      {(showLogoutModal) && <LogoutModal />}
+      {/* {(showLogoutModal) && <LogoutModal />} */}
     </>
   );
 };

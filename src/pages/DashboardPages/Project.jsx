@@ -5,20 +5,34 @@ import Avatar from '@mui/material/Avatar';
 import {Routes, Route, Link, useNavigate } from 'react-router-dom';
 import '../../components/header/header.css';
 import DeleteIcon from '@mui/icons-material/Delete';
+import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { deleteProjectAction, getAllProjectsAction, startProjectAction } from '../../redux/actions/projectActions';
+import { archivedProjectToggleAction, deleteProjectAction, getAllProjectsAction, startProjectAction } from '../../redux/actions/projectActions';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 
+
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+
+
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import easyIFUlogo from '../../assets/easyIFU_Logo.png' 
 import BarLinks from '../../utilities/BarLinks';
+import NavDashboard from '../../components/header/NavDashboard';
+import { logoutAction } from '../../redux/actions/authActions';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -35,7 +49,6 @@ const style = {
 
 const Project = () => {
   const [isOpen, setIsOpen] = useState(false);
-      
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -58,11 +71,23 @@ const Project = () => {
   const navigate = useNavigate()
 
   const [allProjects, setAllProjects] = useState([])
-
-  const {startProject, getAllProjects, deleteProject} = useSelector(state => state)
+  const {startProject, getAllProjects, deleteProject, logout, archivedProjectToggle} = useSelector(state => state)
   const {getAllProjectsRequest, getAllProjectsSuccess, getAllProjectsFail, projects} = getAllProjects
   const {startProjectRequest, startProjectSuccess, startProjectFail, projectId} = startProject
   const {deleteProjectRequest, deleteProjectSuccess, deleteProjectFail} = deleteProject
+  const {logoutRequest, logoutSuccess, logoutFail} = logout
+  const {archiveToggleProjectRequest, archiveToggleProjectSuccess, archiveToggleProjectFail, archiveToggleData} = archivedProjectToggle
+
+  const handleLogout = () => {
+    dispatch(logoutAction())
+  }
+
+  useEffect(() => {
+    if(logoutSuccess){
+      navigate("/login")
+    }
+  },[logoutSuccess])
+
 
   // get all projects
   useEffect(() => {
@@ -70,10 +95,10 @@ const Project = () => {
   }, [])
 
   useEffect(() => {
-    if(deleteProjectSuccess){
+    if(deleteProjectSuccess || archiveToggleProjectSuccess){
       dispatch(getAllProjectsAction(companyId, token))
     }
-  }, [deleteProjectSuccess])
+  }, [deleteProjectSuccess , archiveToggleProjectSuccess])
 
 
   useEffect(() => {
@@ -106,8 +131,6 @@ const Project = () => {
     projectDescription: '',
     labelSizes: [],
   });
-
-  console.log(formData)
   
   // handleNumElementsChange function
   const handleNumElementsChange = (e) => {
@@ -144,11 +167,6 @@ const Project = () => {
     }
   };
   
-  
-  
-  // console.log(projectSizes)
-  // console.log(formData.labelSizes)
-  console.log(projects)
   const renderInputFields = () => {
     return projectSizes.map((size, index) => (
       <input
@@ -217,59 +235,99 @@ const Project = () => {
       setServiceList([...serviceList, ""]);
       setFormData((prevData) => ({
           ...prevData,
-          labelSizes: serviceList,
+              labelSizes: serviceList,
       }));
     };
 
 
+    // ------ headers ------
     const barLinks = [
       {title: 'Projects', link: '/dashboard/project'},
       {title: 'Released', link: '/dashboard/project/released'},
       {title: 'Received', link: '/dashboard/received-project'},
-      // {title: 'Archived', link: '/dashboard/Archived-project'},
-  ];
+      {title: 'Archived', link: '/dashboard/archived-project'},
+    ];
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const handleMenu = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleCloseAnchor = () => {
+      setAnchorEl(null);
+    };
+
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
 
       <main className='' style={{paddingTop:'0px', width:'100%'}}>
         {/* Dashboard header  */}
-        <div  style={{ borderBottom:'1px solid lightGray'}} id="page-content-wrapper">
-            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} className='container-dashboard'>
-                <div style={{display:'flex', alignItems:'center'}} className=''>
-                    <span href="#menu-toggle" id="menu-toggle" onClick={toggleSidebar}>
-                        &#9776;
-                    </span>
-                    <Link to="/">
-                        <img className='dash-Logo' src={easyIFUlogo} alt="easyIFU-logo" />
-                    </Link>
-                      <div style={{display:'flex', flexWrap:'wrap', gridGap:'5px'}} className='dash-header-sm-devices'>
-                          
-                      </div>
-          </div>
-          <div className="custom-dropdown-container">
-                      <div className={`custom-dropdown ${isOpen ? 'open' : ''}`}>
-                        <button className="custom-dropdown-toggle" onClick={toggleDropdown}>
-                          menu
-                        </button>
-                        <div className="custom-dropdown-menu">
-                          {/* Dropdown items */}
-                          <Link to="/dashboard">Home</Link>
-                          <Link to="/dashboard/project">Project</Link>
-                          <Link to="/dashboard/users">Users</Link>
-                          <Link to="/dashboard/user/create">Create User</Link>
-                          <Link to="/dashboard/company">Company</Link>
-                          <Link to="/dashboard/account">Account</Link>
-                        </div>
-                      </div>
-                      <Avatar className="avatar" sx={{ bgcolor: '#000000' }}></Avatar>
+        <div  style={{position:'sticky', top:'0'}} id="page-content-wrapper">
+          <Box sx={{ flexGrow: 1}} className="" >
+            <AppBar position="static" style={{backgroundColor:'#ecf0f3',  marginBottom:'-10px'}}>
+              <Toolbar className='container'  style={{marginTop:'-10px'}}>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="black"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  onClick={toggleSidebar}
+                >
+                  <WidgetsRoundedIcon style={{color:'#021d41'}} />
+                </IconButton>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                  <Link to="/">
+                      <img className='dash-Logo' src={easyIFUlogo} alt="easyIFU-logo" />
+                  </Link>
+                </Typography>
+
+                  <div >
+                    <IconButton
+                      size="small"
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      onClick={handleMenu}
+                      color="inherit"
+                      style={{height:'35px', width:'35px', padding:'2px'}}
+                    >
+                      <Avatar  style={{color:'#ecf0f3', backgroundColor:'#021d41', height:'100%', width:'100%'}} 
+                      onClick={handleMenu}
+                      />
+                      {/* <Avatar style={{backgroundColor:'#021d41', color:'#fff', height:'30px', width:'30px'}}>Y</Avatar> */}
+                    </IconButton>
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      open={Boolean(anchorEl)}
+                      onClose={handleCloseAnchor}
+                    >
+                      <Link to="/dashboard/account" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >Profile</MenuItem></Link>
+                      <Link to="/dashboard/company" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >My Company</MenuItem></Link>
+                      <Link style={{color:'black', borderTop:'1px solid lightGray'}}
+                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >LogOut</MenuItem>
+                            </Link>
+                    </Menu>
+                  </div>
+
+              </Toolbar>
+            </AppBar>
+          </Box>
+          <BarLinks pages={barLinks}/>
         </div>
-          </div>
-        </div>
-        <BarLinks pages={barLinks}/>
+
 
         {/* Dashboard  content   */}
-        <section className='container' style={{marginTop:'20px'}}>
+        <section className='container' style={{marginTop:'15px'}}>
 
           {/* modal */}
           <Modal
@@ -319,15 +377,15 @@ const Project = () => {
                             onChange={(e) => handleServiceChange(e, index)}
                         />
                         {serviceList.length !== 1 && (
-                                    <button
-                                        type="button"
-                                        style={{backgroundColor:'#FBB8B8', borderRadius:'6px'}}
-                                        onClick={() => handleServiceRemove(index)}
-                                        className="remove-btn mx-2"
-                                        >
-                                        <span><DeleteIcon style={{color:'#2D2D2E'}} /></span>
-                                    </button>
-                                )}
+                              <button
+                                  type="button"
+                                  style={{backgroundColor:'#FBB8B8', borderRadius:'6px'}}
+                                  onClick={() => handleServiceRemove(index)}
+                                  className="remove-btn mx-2"
+                                  >
+                                  <span><DeleteIcon style={{color:'#2D2D2E'}} /></span>
+                              </button>
+                          )}
                         </div>
                         <div className="second-division">
        
@@ -390,8 +448,8 @@ const Project = () => {
                   {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
                   
                   <>
-                    <th scope="col"> Manage</th>
-                    <th scope="col">Delete</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Manage</th>
                   </>}
                   </tr>
               </thead>
@@ -428,7 +486,20 @@ const Project = () => {
                           </Link>}
                         </td>}
                         {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
-                          <td><button style={{backgroundColor:'#E97472', borderRadius:'5px'}} onClick={() => handleDelete(item._id)}>delete</button></td>}
+                          <td>{item.projectStep < 10
+                             ? <button style={{backgroundColor:'#E97472', borderRadius:'5px'}} onClick={() => handleDelete(item._id)}>delete</button>
+                             :<button disabled={archiveToggleProjectRequest ? true : false}
+                             onClick={() => dispatch(archivedProjectToggleAction(item._id, token))} 
+                             style={{backgroundColor:'#021D41', color:'#d6d9dc', fontSize:'14px', fontWeight:'500', width:'80px', borderRadius:'5px'}}>
+                                  {!archiveToggleProjectRequest ? "Archive" :  <RotatingLines
+                                              strokeColor="#fff"
+                                              strokeWidth="5"
+                                              animationDuration="0.75"
+                                              width="23"
+                                              visible={true}
+                                          /> }
+                                  </button>
+                          }</td>}
                       </tr>
                     )
                   })
@@ -446,7 +517,7 @@ const Project = () => {
                   /> 
                 </div>
               }
-              {allProjects.length < 1 && <h6 style={{textAlign:'center', marginTop:'10px'}}>doesn't exist any project</h6>}
+              {allProjects.length < 1 && <h6 style={{textAlign:'center', marginTop:'10px'}}>No Projects Created</h6>}
           </div>
         </section>
       </main>

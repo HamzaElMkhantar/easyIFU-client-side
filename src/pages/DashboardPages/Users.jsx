@@ -15,6 +15,19 @@ import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRound
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 
+import { logoutAction } from '../../redux/actions/authActions';
+import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import BarLinks from '../../utilities/BarLinks';
+import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+
 const Users = () => {
   const [isOpen, setIsOpen] = useState(false);
       
@@ -83,44 +96,105 @@ const Users = () => {
     return formattedDate;
   };
   
+  // ------ headers ------
+  const {logout} = useSelector(state => state)
+  const {logoutRequest, logoutSuccess, logoutFail} = logout
+  const handleLogout = () => {
+    dispatch(logoutAction())
+  }
+    let barLinks = []
 
+    if(decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin"))){
+      barLinks = [
+        {title: 'Company', link: '/dashboard/company'},
+        {title: 'Users', link: '/dashboard/users'},
+        {title: 'Create User', link: '/dashboard/user/create'},
+        {title: 'Archived', link: '/dashboard/archived-project'},
+      ];
+    }else{
+      barLinks = [
+        {title: 'Company', link: '/dashboard/company'},
+        {title: 'Users', link: '/dashboard/users'},
+        // {title: 'Create User', link: '/dashboard/user/create'},
+        {title: 'Archived', link: '/dashboard/archived-project'},
+      ];
+    }
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const handleMenu = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleCloseAnchor = () => {
+      setAnchorEl(null);
+    };
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
 
       <main className='' style={{paddingTop:'0px', width:'100%'}}>
         {/* Dashboard header  */}
-        <div  style={{ borderBottom:'1px solid lightGray'}} id="page-content-wrapper">
-            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} className='container-dashboard'>
-                <div style={{display:'flex', alignItems:'center'}} className=''>
-                    <span href="#menu-toggle" id="menu-toggle" onClick={toggleSidebar}>
-                        &#9776;
-                    </span>
-                    <Link to="/">
-                        <img className='dash-Logo' src={easyIFUlogo} alt="easyIFU-logo" />
-                    </Link>
-                    <div style={{display:'flex', flexWrap:'wrap', gridGap:'5px'}} className='dash-header-sm-devices'>
-                        
-                    </div>
-                </div>
-           <div className="custom-dropdown-container">
-                      <div className={`custom-dropdown ${isOpen ? 'open' : ''}`}>
-                        <button className="custom-dropdown-toggle" onClick={toggleDropdown}>
-                          menu
-                        </button>
-                        <div className="custom-dropdown-menu">
-                          {/* Dropdown items */}
-                          <Link to="/dashboard">Home</Link>
-                          <Link to="/dashboard/project">Project</Link>
-                          <Link to="/dashboard/users">Users</Link>
-                          <Link to="/dashboard/user/create">Create User</Link>
-                          <Link to="/dashboard/company">Company</Link>
-                          <Link to="/dashboard/account">Account</Link>
-                        </div>
-                      </div>
-                      <Avatar className="avatar" sx={{ bgcolor: '#000000' }}></Avatar>
-        </div>
-          </div>
+        <div  style={{position:'sticky', top:'0'}} id="page-content-wrapper">
+          <Box sx={{ flexGrow: 1}} className="" >
+            <AppBar position="static" style={{backgroundColor:'#ecf0f3',  marginBottom:'-10px'}}>
+              <Toolbar className='container'  style={{marginTop:'-10px'}}>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="black"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  onClick={toggleSidebar}
+                >
+                  <WidgetsRoundedIcon style={{color:'#021d41'}} />
+                </IconButton>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                  <Link to="/">
+                      <img className='dash-Logo' src={easyIFUlogo} alt="easyIFU-logo" />
+                  </Link>
+                </Typography>
+
+                  <div >
+                    <IconButton
+                      size="small"
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      onClick={handleMenu}
+                      color="inherit"
+                      style={{height:'35px', width:'35px', padding:'2px'}}
+                    >
+                      <Avatar  style={{color:'#ecf0f3', backgroundColor:'#021d41', height:'100%', width:'100%'}} 
+                      onClick={handleMenu}
+                      />
+                      {/* <Avatar style={{backgroundColor:'#021d41', color:'#fff', height:'30px', width:'30px'}}>Y</Avatar> */}
+                    </IconButton>
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      open={Boolean(anchorEl)}
+                      onClose={handleCloseAnchor}
+                    >
+                      <Link to="/dashboard/account" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >Profile</MenuItem></Link>
+                      <Link to="/dashboard/company" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >My Company</MenuItem></Link>
+                      <Link style={{color:'black', borderTop:'1px solid lightGray'}}
+                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >LogOut</MenuItem>
+                            </Link>
+                    </Menu>
+                  </div>
+
+              </Toolbar>
+            </AppBar>
+          </Box>
+          <BarLinks pages={barLinks}/>
         </div>
 
         {/* Dashboard  content   */}

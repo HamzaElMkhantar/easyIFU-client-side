@@ -1,8 +1,11 @@
 import axios from 'axios';
-import { BaseUrl } from '../../config';
 import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST, 
             ALL_PROJECTS_RESET, 
             ALL_PROJECTS_SUCCESS, 
+            ARCHIVED_PROJECTS_FAILED, 
+            ARCHIVED_PROJECTS_REQUEST, 
+            ARCHIVED_PROJECTS_RESET, 
+            ARCHIVED_PROJECTS_SUCCESS, 
             DELETE_DOCUMENTS_FAILED, 
             DELETE_DOCUMENTS_REQUEST, 
             DELETE_DOCUMENTS_RESET, 
@@ -79,6 +82,10 @@ import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST,
             STORAGE_REQUEST,
             STORAGE_RESET,
             STORAGE_SUCCESS,
+            TOGGLE_ARCHIVE_PROJECT_FAILED,
+            TOGGLE_ARCHIVE_PROJECT_REQUEST,
+            TOGGLE_ARCHIVE_PROJECT_RESET,
+            TOGGLE_ARCHIVE_PROJECT_SUCCESS,
             TRANSFUSION_INFUSION_FAILED,
             TRANSFUSION_INFUSION_REQUEST,
             TRANSFUSION_INFUSION_RESET,
@@ -126,6 +133,84 @@ export const getAllProjectsAction = (companyId, token) => async (dispatch) => {
             });
         }, 1500)
         }
+};
+
+export const getArchivedProjectsAction = (companyId, token) => async (dispatch) => {
+  try {
+  
+      dispatch({ 
+          type: ARCHIVED_PROJECTS_REQUEST
+      });
+
+      const config = {
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      }
+  
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/project-archived/${companyId}`, config);
+
+      dispatch({ 
+          type: ARCHIVED_PROJECTS_SUCCESS, 
+          payload: response.data
+      });
+      setTimeout(() =>{
+      dispatch({ 
+          type: ARCHIVED_PROJECTS_RESET
+      });
+      }, 1500)
+  } catch (error) {
+      console.error(error);
+      dispatch({
+          type: ARCHIVED_PROJECTS_FAILED, 
+          payload: error?.response?.data 
+      });
+
+      setTimeout(() =>{
+          dispatch({ 
+          type: ARCHIVED_PROJECTS_RESET
+          });
+      }, 1500)
+      }
+};
+
+export const archivedProjectToggleAction = (projectId, token) => async (dispatch) => {
+  try {
+    console.log(projectId, token)
+      dispatch({ 
+          type: TOGGLE_ARCHIVE_PROJECT_REQUEST
+      });
+
+      const config = {
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      }
+  
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/archive-toggle/${projectId}`, config);
+console.log(response.data)
+      dispatch({ 
+          type: TOGGLE_ARCHIVE_PROJECT_SUCCESS, 
+          payload: response.data
+      });
+      setTimeout(() =>{
+      dispatch({ 
+          type: TOGGLE_ARCHIVE_PROJECT_RESET
+      });
+      }, 1500)
+  } catch (error) {
+      console.error(error);
+      dispatch({
+          type: TOGGLE_ARCHIVE_PROJECT_FAILED, 
+          payload: error?.response?.data 
+      });
+
+      setTimeout(() =>{
+          dispatch({ 
+          type: TOGGLE_ARCHIVE_PROJECT_RESET
+          });
+      }, 1500)
+      }
 };
 
 export const getProjectAction = (projectId, token) => async (dispatch) => {

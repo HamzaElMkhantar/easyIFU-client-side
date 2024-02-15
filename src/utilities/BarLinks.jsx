@@ -5,7 +5,6 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import { Link, useLocation } from "react-router-dom";
@@ -38,8 +37,8 @@ function BarLinks({pages}) {
   console.log("pathName: ", currentPage)
 
   return (
-    <AppBar position="static" style={{backgroundColor:'#021d41'}}>
-      <Container maxWidth="xl">
+    <AppBar position="static"style={{backgroundColor:'#021d41'}}>
+      <div className='container' >
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -105,7 +104,7 @@ function BarLinks({pages}) {
             ))}
           </Box>
         </Toolbar>
-      </Container>
+      </div>
     </AppBar>
   );
 }
