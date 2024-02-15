@@ -109,14 +109,14 @@ const Users = () => {
         {title: 'Company', link: '/dashboard/company'},
         {title: 'Users', link: '/dashboard/users'},
         {title: 'Create User', link: '/dashboard/user/create'},
-        {title: 'Archived', link: '/dashboard/archived-project'},
+        
       ];
     }else{
       barLinks = [
         {title: 'Company', link: '/dashboard/company'},
         {title: 'Users', link: '/dashboard/users'},
         // {title: 'Create User', link: '/dashboard/user/create'},
-        {title: 'Archived', link: '/dashboard/archived-project'},
+       
       ];
     }
 
