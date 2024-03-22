@@ -194,7 +194,11 @@ useEffect(() => {
 
   const convertDateToYYMMDD = (inputDate) => {
     // Split the input date into day, month, and year
-    const [year, month, day ] = inputDate.split('-');
+    if(!inputDate){
+      return "yyyy-mm-dd";
+    }
+    console.log("inputDate")
+    const [year, month, day ] = inputDate ? inputDate?.split('-'): "yyyy-mm-dd";
     
     // Ensure the date components are valid
     if (day && month && year) {
@@ -1403,8 +1407,8 @@ useEffect(() => {
                                 <h5>{projectInfo.labelData.productName}</h5>}
                              {projectInfo && 
                                 projectInfo.labelData && 
-                                  projectInfo.labelData.intendedPurpose &&
-                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                                projectInfo.labelData.intendedPurpose.length > 0 &&
+                                <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
                             </div>
                             {projectInfo &&
                                projectInfo.labelData && 
@@ -1556,9 +1560,9 @@ useEffect(() => {
                                 projectInfo.labelData.productName &&
                                 <h3>{projectInfo.labelData.productName}</h3>}
                             {projectInfo && 
-                        projectInfo.labelData && 
-                                  projectInfo.labelData.intendedPurpose &&
-                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                          projectInfo.labelData && 
+                          projectInfo.labelData.intendedPurpose.length > 0 &&
+                          <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
                         </div>
                         <div className='label-MD-QTY-info' style={{display:'flex', flexDirection:'column'}}> 
                         {projectInfo &&
@@ -1686,8 +1690,8 @@ useEffect(() => {
                                 <h3>{projectInfo.labelData.productName}</h3>}
                              {projectInfo && 
                                 projectInfo.labelData && 
-                                  projectInfo.labelData.intendedPurpose &&
-                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                                projectInfo.labelData.intendedPurpose.length > 0 &&
+                                <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
                     </div>
                     <div className='template-3-top-content'>
                       <div className='template-3-code-bar'>

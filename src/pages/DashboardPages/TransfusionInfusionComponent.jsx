@@ -8,15 +8,16 @@ import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProjectAction, transfusionInfusionAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const TransfusionInfusionComponent = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {transfusionInfusion, getProject} = useSelector(state => state);
+  const {transfusionInfusion, getLabel} = useSelector(state => state);
   const {transfusionInfusionRequest, transfusionInfusionSuccess, transfusionInfusionFail, projectInfo} = transfusionInfusion
-  const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+  const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
 
 
   const dispatch = useDispatch()
@@ -24,18 +25,19 @@ const TransfusionInfusionComponent = () => {
 
 
   const [projectInformation, setProjectInformation] = useState({})
+  console.log(projectInformation)
 
   useEffect(() => {
-    dispatch(getProjectAction(projectId))
+    dispatch(getLabelAction(projectId))
   }, [])
 
   useEffect(() => {
-    if(getProjectSuccess){
-      setProjectInformation(project)
+    if(getLabelSuccess){
+      setProjectInformation(label)
     }
-  }, [getProjectSuccess])
+  }, [getLabelSuccess])
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId,
     isUpdate: false,
     isMedicalDeviceForSampleCollection: false,
     hasFluidPath: false,
@@ -51,17 +53,18 @@ const TransfusionInfusionComponent = () => {
     // Set formData with existing project information
     setFormData({
       isUpdate: false,
-      projectId,
+      labelId: projectId,
       isMedicalDeviceForSampleCollection: projectInformation?.labelData?.isMedicalDeviceForSampleCollection ||  false,
       hasFluidPath: projectInformation?.labelData?.hasFluidPath ||  false,
       isNonPyrogenic: projectInformation?.labelData?.isNonPyrogenic ||  false,
-      numberOfDropsPerMilliliter: projectInformation?.labelData?.isNonPyrogenic ||  '',
-      liquidFilterPoreSize: projectInformation?.labelData?.liquidFilterPoreSize ||  '',
+      numberOfDropsPerMilliliter: projectInformation?.labelData?.numberOfDropsPerMilliliter ||  '',
+      liquidFilterPoreSize: projectInformation?.labelData?.liquidFilterPoreSize ,
       hasOneWayValve: projectInformation?.labelData?.hasOneWayValve ||  false,
     });
   }, [projectInformation])
 
   const handleCheckboxChange = (name, value) => {
+
     let newValue = null
     if(value === 'Yes'){
       newValue = true
@@ -118,8 +121,9 @@ const TransfusionInfusionComponent = () => {
                                   borderRadius:'5px'
                                   }}>
              <Link style={{height:'35px'}} to={projectInformation && projectInformation.labelData && projectInformation.labelData.productType == "Medical device"
-             ? `/dashboard/create-project/step5/${projectId}`
-            :`/dashboard/create-project/step6/${projectId}`} className='label-info-link'> Back</Link>
+              ? `/dashboard/create-project/step6/${projectId}`
+              : `/dashboard/create-project/step7/${projectId}`} 
+              className='label-info-link'> Back</Link>
                 <HorizontalLinearStepper step={7}/>
                 <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>

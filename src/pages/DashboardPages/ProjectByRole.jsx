@@ -19,9 +19,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import BarLinks from '../../utilities/BarLinks';
+import { Tab, Table } from 'react-bootstrap';
 
 const ProjectByRole = () => {
     // side bar toggle
@@ -67,18 +66,18 @@ const ProjectByRole = () => {
 
 
 
-// ------ headers ------
-const {logout} = useSelector(state => state)
-const {logoutRequest, logoutSuccess, logoutFail} = logout
-const handleLogout = () => {
-  dispatch(logoutAction())
-}
-const barLinks = [
-  {title: 'Projects', link: '/dashboard/project'},
-  {title: 'Released', link: '/dashboard/project/released'},
-  {title: 'Received', link: '/dashboard/received-project'},
-  {title: 'Archived', link: '/dashboard/archived-project'},
-];
+  // ------ headers ------
+  const {logout} = useSelector(state => state)
+  const {logoutRequest, logoutSuccess, logoutFail} = logout
+  const handleLogout = () => {
+    dispatch(logoutAction())
+  }
+  const barLinks = [
+    {title: 'Projects', link: '/dashboard/project'},
+    {title: 'Released', link: '/dashboard/project/released'},
+    {title: 'Received', link: '/dashboard/received-project'},
+    {title: 'Archived', link: '/dashboard/archived-project'},
+  ];
 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -160,7 +159,7 @@ const barLinks = [
         <section className='container' style={{marginTop:'20px', padding:'10px'}}>
             <h6>Received Project: {ProjectByRole?.length}</h6>
             <div className="table-responsive">
-                <table style={{backgroundColor:'#fff'}} className="table responsive-table table-hover my-1">
+                <Table striped bordered hover style={{backgroundColor:'#fff'}} className="table responsive-table table-hover my-1">
                     <thead style={{backgroundColor:'#075670', textAlign:'center', color:"#fff"}} className="thead-dark">
                     <tr>
                         <th>#</th>
@@ -194,7 +193,7 @@ const barLinks = [
                         </tr>
                     ))}
                     </tbody>
-                </table>
+                </Table>
                 {roleProjectRequest && 
                     <div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
                         <RotatingLines

@@ -111,7 +111,7 @@ export const refreshAction = () => async (dispatch) => {
       dispatch({ type: REFRESH_FAILED, payload: 'Refresh token missing' });
       return;
     }
-
+    console.log("is refresh request !!")
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -129,21 +129,27 @@ export const refreshAction = () => async (dispatch) => {
       responseType: 'json'
     }
 
-    // Send a request to the /api/v1/auth/refresh endpoint using Fetch.
-    // const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, {refreshToken}, config);
-    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`, config);
-    // const decodedToken = await jwtDecode( response?.data?.accessToken) || null
-    
-    // await Cookies.set('eIfu_ATK', response?.data?.accessToken);
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/refresh`,{}, config);
+
+    console.log("response : " , response)
+    console.log("response data : " ,response.data)
 
     dispatch({ type: REFRESH_SUCCESS, payload: 'succeed'});
+
+    if(response == 201){
+      console.log("201 response")
+      window.location.href = "/login";
+
+    }
     setTimeout(() =>{
       dispatch({ 
         type: 'REFRESH_RESET'
       });
     }, 1500)
   } catch (error) {
-    console.error(error);
+    console.log(error);
+
+  
     dispatch({ type: REFRESH_FAILED, payload: error });
     setTimeout(() =>{
       dispatch({ 
@@ -167,11 +173,9 @@ export const logoutAction = () => async (dispatch) => {
         responseType: 'json'
       }
 
-      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout', config)
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout', {}, config)
       console.log(data)
-      // window.location.reload();
-      
-      // Clear the access token and refresh token cookies
+  
       dispatch({ type: LOGOUT_SUCCESS });
       Cookies.remove('eIfu_ATK');
       Cookies.remove('eIfu_RTK');

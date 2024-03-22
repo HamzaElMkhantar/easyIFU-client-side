@@ -8,13 +8,14 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { IVDDiagnosticAction, getProjectAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const IVDDiagnosticComponent = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {IVDDiagnostic, getProject} = useSelector(state => state);
+  const {IVDDiagnostic, getLabel} = useSelector(state => state);
   const {IVDDiagnosticRequest, IVDDiagnosticSuccess, IVDDiagnosticFail, projectInfo} = IVDDiagnostic;
 
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const IVDDiagnosticComponent = () => {
  
 
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId,
     isUpdate: false,
     hasControlMaterial: false,
     isControlMaterial: false,
@@ -35,22 +36,22 @@ const IVDDiagnosticComponent = () => {
   });
 
     // get prev project info
-    const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+    const {getLabelRequest, getLabelSuccess, getProjectFail, label} = getLabel;
     const [projectInformation, setProjectInformation] = useState({});
     useEffect(() =>{
-      dispatch(getProjectAction(projectId, token))
+      dispatch(getLabelAction(projectId, token))
     }, [])
     useEffect(() =>{
-      if(getProjectSuccess){
-        setProjectInformation(project)
+      if(getLabelSuccess){
+        setProjectInformation(label)
       }
-    }, [getProjectSuccess])
+    }, [getLabelSuccess])
 
   useEffect(() => {
     // Set formData with existing project information
     setFormData({
       isUpdate: false,
-      projectId,
+      labelId: projectId,
       hasControlMaterial: projectInformation?.labelData?.hasControlMaterial || false,
       isControlMaterial: projectInformation?.labelData?.isControlMaterial || false,
       isControlMaterialForNegativeRange: projectInformation?.labelData?.isControlMaterialForNegativeRange || false,

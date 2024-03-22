@@ -104,17 +104,18 @@ import bwipjs from 'bwip-js';
 import SendIcon from '@mui/icons-material/Send';
 import { usersCompanyAction } from '../../redux/actions/userActions';
 import { Button } from 'react-bootstrap';
+import { getLabelAction } from '../../redux/actions/labelActions';
 const LabelInformation = () => {
 
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
-  const {getProject, usersCompany, sendingProjectToOtherRole} = useSelector(state => state);
-  const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+  const {getLabel, usersCompany, sendingProjectToOtherRole} = useSelector(state => state);
+  const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
   const {usersCompanyRequest, usersCompanySuccess, usersCompanyFail, allUsers} = usersCompany;
   const {sendingProjectRequest, sendingProjectSuccess, sendingProjectFail, sendingProjectMessage} = sendingProjectToOtherRole
 
-
+  
   const [projectInfo, setProjectInfo] = useState({});
   const [allUsersCompany, setAllUsersCompany] = useState([]);
   const [imageSrc, setImageSrc] = useState('');
@@ -123,6 +124,8 @@ const LabelInformation = () => {
     senderId: decodedToken && decodedToken.userInfo && decodedToken.userInfo._id,
     receivedId: ''
   });
+  console.log(getLabelRequest, getLabelSuccess, getLabelFail, label)
+  console.log(projectInfo)
 
   const dispatch = useDispatch()
   const  handleSendLabel = () => {
@@ -139,7 +142,7 @@ const LabelInformation = () => {
     }
   },  [sendingProjectSuccess, sendingProjectFail])
   useEffect(() => {
-    dispatch(getProjectAction(projectId, token))
+    dispatch(getLabelAction(projectId, token))
     dispatch(usersCompanyAction({
       _id:decodedToken && decodedToken.userInfo && decodedToken.userInfo._id, 
       companyId: decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId 
@@ -147,640 +150,18 @@ const LabelInformation = () => {
   }, [])
 
   useEffect(() => {
-    if(getProjectSuccess){
-      setProjectInfo(project)
+    if(getLabelSuccess){
+      setProjectInfo(label)
     }
     if(usersCompanySuccess){
       setAllUsersCompany(allUsers)
     }
 
-    if(getProjectFail){
-      toast.warning(`${getProjectFail.message}`)
+    if(getLabelFail){
+      toast.warning(`${getLabelFail.message}`)
     }
-  }, [getProjectSuccess, getProjectFail, usersCompanySuccess])
+  }, [getLabelSuccess, getLabelFail, usersCompanySuccess])
 
-
-    const handleManufacturerInfo = () => {
-      if(projectInfo && projectInfo.labelData){
-        if(projectInfo.labelData.isOutsideEU){
-          return (
-            <div className='symbol-content'>
-  
-              {/* <div className='symbol-content-item'>
-                <img className='symbol-img' src={Manufacturer} />
-                <div className='symbol-info'>
-                  <p>{projectInfo.labelData.manufacturerName}</p>
-                  <p>{projectInfo.labelData.manufacturerAddress}</p>
-                </div>
-              </div> */}
-  
-              {/* { projectInfo.labelData.hasDistributor &&
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={Distributor} />
-                <div className='symbol-info'>
-                  <p>{projectInfo.labelData.distributorAddress}</p>
-                  <p>{projectInfo.labelData.distributorAddress}</p> 
-                </div>
-              </div>
-              } */}
-  
-              {/* <div className='symbol-content-item'>
-                <img className='symbol-img' src={Importer} />
-                <div className='symbol-info'>
-                  <p>{projectInfo.labelData.importerName}</p>
-                  <p>{projectInfo.labelData.importerAddress}</p> 
-                </div>
-              </div>
-  
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={Authorized_Representative} />
-                <div className='symbol-info'>
-                  <p>{projectInfo.labelData.europeanAuthorizedRepName}</p>
-                  <p>{projectInfo.labelData.europeanAuthorizedRepAddress}</p> 
-                </div>
-              </div> */}
-  
-              {/* {projectInfo.labelData.productClass == 'Class I'
-              ?( <div className='symbol-content-item'>
-                    <img className='symbol-img' src={CE_mark} />
-                 </div>)
-  
-              :( <div className='symbol-content-item'>
-                    <img className='symbol-img' src={CE_mark} />
-                    <div className='symbol-info'>
-                      <p>{projectInfo.labelData.notifiedBodyNumber}</p>
-                    </div>
-                 </div>)} */}
-            </div>
-          )
-        }else{
-          return (
-            <div className='symbol-content'>
-{/*   
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={Manufacturer} />
-                <div className='symbol-info'>
-                  <p>{projectInfo.labelData.manufacturerName}</p>
-                  <p>{projectInfo.labelData.manufacturerAddress}</p> 
-                </div>
-              </div>
-  
-              {projectInfo.labelData.hasDistributor &&
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={Distributor} />
-                <div className='symbol-info'>
-                  <p>{projectInfo.labelData.distributorName}</p>
-                  <p>{projectInfo.labelData.distributorAddress}</p> 
-                </div>
-              </div>
-              } */}
-  
-              {/* {projectInfo.labelData.productClass == 'Class I'
-              ?( <div className='symbol-content-item'>
-                    <img className='symbol-img' src={CE_mark} />
-                 </div>)
-  
-              :( <div className='symbol-content-item'>
-                    <img className='symbol-img' src={CE_mark} />
-                    <div className='symbol-info'>
-                      <p>{projectInfo.labelData.notifiedBodyNumber}</p>
-                    </div>
-                 </div>)} */}
-            </div>
-          )
-        }
-      }
-
-      return null;
-    }
-    const handleProductInfo = () => {
-      if(projectInfo && projectInfo.labelData){
-        return(
-          <div className='symbol-content'>
-            <div className='right-side'>
-              {/* {projectInfo.labelData.productName &&
-                <div className='symbol-info'>
-                  <p>{projectInfo.labelData.productName}</p>
-                </div>}
-
-              {projectInfo.labelData.intendedPurpose &&
-                <div className='symbol-info'>
-                  <p>{projectInfo.labelData.intendedPurpose}</p>
-                </div>}
-
-              {projectInfo.labelData.packagingContents &&
-                <div className='symbol-info'>
-                  <p>{projectInfo.labelData.packagingContents}</p>
-                </div>} */}
-
-              {/* {projectInfo.labelData.dateOfManufacture &&
-                <div className='symbol-content-item'>
-                  <img className='symbol-img' src={Date_of_manufactureSymbol} />
-                  <div className='symbol-info'>
-                    <p>{projectInfo.labelData.dateOfManufacture}</p>
-                  </div>
-                </div>}
-
-              {projectInfo.labelData.catalogueNumber &&
-                <div className='symbol-content-item'>
-                  <img className='symbol-img' src={catalogueNumberSymbol} />
-                  <div className='symbol-info'>
-                    <p>{projectInfo.labelData.catalogueNumber}</p>
-                  </div>
-                </div>}
-
-              {projectInfo.labelData.modelNumber &&
-                <div className='symbol-content-item'>
-                  <img className='symbol-img' src={modelNumberSymbol} />
-                  <div className='symbol-info'>
-                    <p>{projectInfo.labelData.modelNumber}</p>
-                  </div>
-                </div>}
-
-                {projectInfo.labelData.LOTNumber &&
-                <div className='symbol-content-item'>
-                  <img className='symbol-img' src={Batch_codeSymbol} />
-                  <div className='symbol-info'>
-                    <p>{projectInfo.labelData.LOTNumber}</p>
-                  </div>
-                </div>}
-
-                {projectInfo.labelData.serialNumber &&
-                <div className='symbol-content-item'>
-                  <img className='symbol-img' src={Serial_numberSymbol} />
-                  <div className='symbol-info'>
-                    <p>{projectInfo.labelData.serialNumber}</p>
-                  </div>
-                </div>} */}
-
-                {/* {projectInfo.labelData.productType == "Medical device" &&
-                <div className='symbol-content-item'>
-                  <img className='symbol-img' src={Medical_deviceSymbol} />
-                </div>} */}
-
-            </div>
-            
-          </div>
-        )
-      }
-      return null;
-    }
-    const handleSterility = () => {
-      if(projectInfo && projectInfo.labelData){
-        if(projectInfo.labelData.isSterile == false){
-          return null;
-        }else{
-          if(projectInfo.labelData.hasSterilizationProcess){
-            return (<div className='symbols-Sterile' style={{display:'flex', justifyContent:'start', alignItems:'center', flexWrap:'wrap'}}>
-
-                      {/* {(projectInfo.labelData.hasVaporizedHydrogenPeroxide  == true
-                        || projectInfo.labelData.hasAsepticProcessing  == true
-                        || projectInfo.labelData.hasEthyleneOxide  == true
-                        || projectInfo.labelData.hasIrradiation  == true
-                        || projectInfo.labelData.hasSteamOrDryHeat  == true
-                        )
-
-                        ? null
-                        : <div className='symbol-content-item'>
-                            <img className='symbol-img' src={sterileSymbol} />
-                          </div>
-                      } */}
-                      {/* {projectInfo.labelData.hasSterilizationProcess == true && 
-                        projectInfo.labelData.hasAsepticProcessing &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={sterile_ASymbol} />
-                        </div>}
-
-                      {projectInfo.labelData.hasSterilizationProcess == true && 
-                        projectInfo.labelData.hasEthyleneOxide &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={Sterile_EOSymbol} />
-                        </div>}
-
-                      {projectInfo.labelData.hasSterilizationProcess == true && 
-                        projectInfo.labelData.hasIrradiation &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={Sterile_RSymbol} />
-                        </div>}
-
-                      {projectInfo.labelData.hasSterilizationProcess == true && 
-                        projectInfo.labelData.hasSteamOrDryHeat &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={Sterilized_usings_team_or_dry_heatSymbol} />
-                        </div>}
-
-                      {projectInfo.labelData.hasSterilizationProcess == true && 
-                        projectInfo.labelData.isIntendedToBeResterilized &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={do_not_resterilizeSymbol} />
-                        </div>} */}
-
-                        
-                       
-
-            </div>)
-          }else{
-            return (<div className='symbols-Sterile' style={{display:'flex', justifyContent:'start', alignItems:'center', flexWrap:'wrap'}}>
-                      
-                      {/* {projectInfo.labelData.hasSterilizationProcess == false && 
-                        <div className='symbol-content-item'>
-                          <img className='symbol-img' src={nonSterileSymbol} />
-                        </div>
-                      }
-
-                      {projectInfo.labelData.canBeUsedIfDamaged &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={package_is_damageSymbol} />
-                        </div>}
-
-                      {projectInfo.labelData.hasSterileFluidPath &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={sterile_fluid_pathSymbol} />
-                        </div>}
-
-                      {projectInfo.labelData.hasVaporizedHydrogenPeroxide &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={VaporizedHydrogenPeroxideSymbol} />
-                        </div>}
-
-                      {projectInfo.labelData.hasSingleSterileBarrierSystem &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={single_S_B_S} />
-                        </div>}
-
-                      {projectInfo.labelData.hasTwoSterileBarrierSystems &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={double_S_B_S} />
-                        </div>}
-
-                      {projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveInside &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={double_S_B_S_inside} />
-                        </div>}
-
-                      {projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveOutside &&
-                          <div className='symbol-content-item'>
-                            <img className='symbol-img' src={double_S_B_S_outside} /> */}
-                        {/* </div>} */}
-            </div>)
-          }
-        }
-      }
-
-      return null;
-    }
-    const handleStorage = () => {
-      // if(projectInfo && projectInfo.labelData){
-        // return (
-          // <div style={{display:'flex', justifyContent:'start', alignItems:'center', flexWrap:'wrap', marginTop:'15px'}}>
-          //       {projectInfo.labelData.requiresCarefulHandling &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={fragile_handle_with_care} />
-          //         </div>}
-
-          //       {projectInfo.labelData.requiresProtectionFromLight &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={keep_away_from_sunlight} />
-          //         </div>}
-
-          //       {projectInfo.labelData.requiresProtectionFromHeatAndRadioactiveSources &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={protect_from_heat_and_radioactive_soures} />
-          //         </div>}
-
-          //       {projectInfo.labelData.requiresProtectionFromMoisture &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={keep_dry} />
-          //         </div>}
-
-          //       {projectInfo.labelData.hasLowerLimitOfTemperature &&
-          //         projectInfo.labelData.hasUpperLimitOfTemperature == false &&
-          //         <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
-          //           <div style={{display:'flex', alignItems:'flex-end'}}>
-          //             <p style={{marginBottom:'-3px', marginRight:'-13px', zIndex:'2'}} >{projectInfo.labelData.lowerTemperatureLimit}</p>
-          //           </div>
-          //           <img className='symbol-img' src={lower_limit_temperaure} />
-          //         </div>}
-
-          //       {projectInfo.labelData.hasUpperLimitOfTemperature &&
-          //         projectInfo.labelData.hasLowerLimitOfTemperature == false &&
-          //         <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
-          //           <img className='symbol-img' src={upper_limit_temperaure} />
-          //           <div style={{display:'flex', justifyContent:'flex-end'}}>
-          //             <p style={{marginTop:'-2px' ,marginLeft:'-13px', zIndex:'2'}} >{projectInfo.labelData.upperTemperatureLimit}</p>
-          //           </div>
-          //         </div>}
-
-          //       {projectInfo.labelData.hasUpperLimitOfTemperature == true &&
-          //         projectInfo.labelData.hasLowerLimitOfTemperature == true &&
-          //         <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
-          //           <div style={{display:'flex', alignItems:'flex-end'}}>
-          //             <p style={{marginBottom:'-3px', marginRight:'-13px', zIndex:'2'}} >{projectInfo.labelData.lowerTemperatureLimit}</p>
-          //           </div>
-          //           <img className='symbol-img' src={temperature} />
-          //           <div style={{display:'flex', justifyContent:'flex-end'}}>
-          //             <p style={{marginTop:'-2px' ,marginLeft:'-13px', zIndex:'2'}} >{projectInfo.labelData.upperTemperatureLimit}</p>
-          //           </div>
-          //         </div>}
-
-          //       {projectInfo.labelData.hasHumidityRange &&
-          //         <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
-          //           <div style={{display:'flex', alignItems:'flex-end'}}>
-          //             <p style={{marginBottom:'-10px', marginRight:'px', zIndex:'2'}} >{projectInfo.labelData.humidityMin}</p>
-          //           </div>
-          //           <img className='symbol-img' src={HumidityLimit} />
-          //           <div style={{display:'flex', justifyContent:'flex-end'}}>
-          //             <p style={{marginTop:'-11px', zIndex:'2'}} >{projectInfo.labelData.humidityMax}</p>
-          //           </div>
-          //         </div>}
-
-          //       {projectInfo.labelData.hasAtmosphericPressureRange &&
-          //         <div style={{display:'flex', height:'50px', backgroundColor:''}} className=''>
-          //         <div style={{display:'flex', alignItems:'flex-end'}}>
-          //           <p style={{marginBottom:'-10px', marginRight:'px', zIndex:'2'}} >{projectInfo.labelData.humidityMin}</p>
-          //         </div>
-          //         <img className='symbol-img' src={AtmPressureLimit} />
-          //         <div style={{display:'flex', justifyContent:'flex-end'}}>
-          //           <p style={{marginTop:'-11px', zIndex:'2'}} >{projectInfo.labelData.humidityMax}</p>
-          //         </div>
-          //       </div>}
-                
-          // </div>)
-      // }
-
-      return null;
-    }
-    const handleSafeUse = () => {
-      // if(projectInfo && projectInfo.labelData){
-        // return (
-          // <div style={{display:'flex', justifyContent:'start', alignItems:'center', flexWrap:'wrap', marginTop:'15px'}}>
-                
-          //       {projectInfo.labelData.hasBiologicalRisks &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={biological_risks} />
-          //         </div>}
-
-          //       {projectInfo.labelData.isIntendedForSingleUse &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={do_not_re_use} />
-          //         </div>}
-
-          //       {projectInfo.labelData.needCaution &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={caution} />
-          //         </div>}
-
-          //       {projectInfo.labelData.containsRubberLatex &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={contains_or_presence_of_natural_rubber_latex} />
-          //         </div>}
-
-          //       {projectInfo.labelData.containsBloodDerivatives &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={contains_human_blood} />
-          //         </div>}
-
-          //       {projectInfo.labelData.containsMedicinalSubstance &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={Contains_a_medicinal_substance} />
-          //         </div>}
-
-          //       {projectInfo.labelData.containsAnimalOriginMaterial &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={Contains_biological_material_of_animal_origin} />
-          //         </div>}
-
-          //       {projectInfo.labelData.containsHumanOriginMaterial &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={Contains_human_origin} />
-          //         </div>}
-
-          //       {projectInfo.labelData.containsHazardousSubstances &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={Contains_hazardous_substances} />
-          //         </div>}
-
-          //       {projectInfo.labelData.containsNanoMaterials &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={Contains_nano_materials} />
-          //         </div>}
-
-          //       {projectInfo.labelData.multipleUsesOnSinglePatient &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={Single_patient_multiple_use} />
-          //         </div>}
-
-          //       {projectInfo.labelData.needInstructionsForUse &&
-          //         <div className='symbol-content-item'>
-          //           <img className='symbol-img' src={consult_instruction_for_use} />
-          //           {projectInfo.labelData.eIFULink &&
-          //             <p>{projectInfo.labelData.eIFULink}</p>
-          //           }
-          //         </div>}
-          // </div>)
-      // }
-
-      return null;
-    }
-    const handleInVitroDiagnosticIVD = () => {
-      if(projectInfo && projectInfo.labelData){
-        if(projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device"){
-        return (
-          <div className='symbols-Sterile' style={{display:'flex', justifyContent:'start', alignItems:'center', flexWrap:'wrap', marginTop:'15px'}}>
-{/*                 
-                {projectInfo.labelData.isControlMaterial &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={control} />
-                  </div>}
-
-                {projectInfo.labelData.isControlMaterialForNegativeRange &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={control_negative} />
-                  </div>}
-
-                {projectInfo.labelData.isControlMaterialForPositiveRange &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={control_positive} />
-                  </div>} */}
-{/* 
-                {projectInfo.labelData.hasSpecificNumberOfTests &&
-                  <div className='symbol-content-item' style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:"column"}}>
-                        <img style={{width:'85%', height:'30px', marginBottom:'-10px', marginTop:'35px'}} className='symbol-img' src={contains_suffient_for_n_tests} />
-                          {projectInfo.labelData.numberOfTests && 
-                            <p style={{marginTop:"-6px"}}>{projectInfo.labelData.numberOfTests}</p>}
-                  </div>} */}
-{/* 
-                {projectInfo.labelData.isIVDForPerformanceEvaluation &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={for_IVD_performance_evaluation_only} />
-                  </div>} */}
-          </div>)
-        }
-      }
-      return null;
-    }
-    const handleTransfusionInfusion = () => {
-      if(projectInfo && projectInfo.labelData){
-        return (
-          <div style={{display:'flex', justifyContent:'start', alignItems:'center', flexWrap:'wrap', marginTop:'15px'}}>
-                
-                {/* {projectInfo.labelData.isMedicalDeviceForSampleCollection &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={sampling_site} />
-                  </div>}
-
-                {projectInfo.labelData.hasFluidPath &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={fluid_path} />
-                  </div>}
-
-                {projectInfo.labelData.isNonPyrogenic &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Non_pyrogenic} />
-                  </div>} */}
-
-                {/* {projectInfo.labelData.numberOfDropsPerMilliliter !== "Not applicable" &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Drops_per_millilitre} />
-                      <div>
-                        <p>{projectInfo.labelData.numberOfDropsPerMilliliter}</p>
-                      </div>
-                  </div>}
-
-                {projectInfo.labelData.liquidFilterPoreSize !== "Not applicable" &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={Liquid_filter_with_pore_size} />
-                      <div>
-                        <p>{projectInfo.labelData.liquidFilterPoreSize}</p>
-                      </div>
-                  </div>} */}
-
-                {/* {projectInfo.labelData.hasOneWayValve &&
-                  <div className='symbol-content-item'>
-                    <img className='symbol-img' src={one_way_valve} />
-                  </div>} */}
-          </div>)
-      }
-      return null;
-    }
-    const handleOthers = () => {
-      if(projectInfo && projectInfo.labelData){
-        return (
-          <div style={{display:'flex', justifyContent:'start', alignItems:'center', flexWrap:'wrap', marginTop:'15px'}}>
-
-            {/* {projectInfo.labelData.associatedWithIndividualPatient &&
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={patient_identification} />
-                <div>
-                  <p>{projectInfo.labelData.patientName}</p>
-                  <p>{projectInfo.labelData.patientNumber}</p>
-                </div>
-              </div>}
-
-              {projectInfo.labelData.associatedWithIndividualPatient &&
-                ( projectInfo.labelData.healthCareCentreName !== ''
-                  || projectInfo.labelData.healthCareCentreAddress !== ''
-                  || projectInfo.labelData.doctorName !== ''
-                ) &&
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={Health_care_centre_or_doctor} />
-                <div>
-                  {projectInfo.labelData.healthCareCentreName && 
-                    <p>{projectInfo.labelData.healthCareCentreName}</p>
-                  }
-                  {projectInfo.labelData.healthCareCentreAddress && 
-                    <p>{projectInfo.labelData.healthCareCentreAddress}</p>
-                  }
-                  {projectInfo.labelData.doctorName && 
-                    <p>{projectInfo.labelData.doctorName}</p>
-                  }
-                </div>
-              </div>} */}
-
-
-            {/* {projectInfo.labelData.associatedWithIndividualPatient &&
-              projectInfo.labelData.date &&
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={date} />
-                <div>
-                  <p>{projectInfo.labelData.date}</p>
-                </div>
-              </div>}
-
-            {projectInfo.labelData.addWebsite &&
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={Patient_information_website} />
-                <div>
-                  <p>{projectInfo.labelData.website}</p>
-                </div>
-              </div>} */}
-{/* 
-            {projectInfo.labelData.translationActivity &&
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={Translation} />
-                <div>
-                  {projectInfo.labelData.translationEntityName &&
-                    <p>{projectInfo.labelData.translationEntityName}</p>}
-                  {projectInfo.labelData.translationEntityAddress &&
-                    <p>{projectInfo.labelData.translationEntityAddress}</p>}
-                </div>
-              </div>}
-
-            {projectInfo.labelData.modificationToPackaging &&
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={Repackaging} />
-                <div>
-                  {projectInfo.labelData.repackagingEntityName &&
-                    <p>{projectInfo.labelData.repackagingEntityName}</p>}
-                  {projectInfo.labelData.repackagingEntityAddress &&
-                    <p>{projectInfo.labelData.repackagingEntityAddress}</p>}
-                </div>
-              </div>}
-
-            {projectInfo.labelData.reprocessedDevice &&
-              <div className='symbol-content-item'>
-                <img className='symbol-img' src={Repackaging} />
-                <div>
-                  {projectInfo.labelData.reprocessingCycles &&
-                    <p>number of reprocessing cycles: {projectInfo.labelData.reprocessingCycles}</p>}
-                  {projectInfo.labelData.reprocessingLimitation &&
-                    <p>{projectInfo.labelData.reprocessingLimitation}</p>}
-                </div>
-              </div>} */}
-
-            {/* {projectInfo.labelData.customMadeDevice &&
-              <div className='symbol-content-item'>
-                <p>custom-made device</p>
-              </div>}
-
-            {projectInfo.labelData.clinicalInvestigationOnly &&
-              <div className='symbol-content-item'>
-                <p>exclusively for clinical investigation</p>
-              </div>} */}
-
-            {/* {projectInfo.labelData.containsCMRSubstances &&
-              <div className='symbol-content-item'>
-                <p>{projectInfo.labelData.cmrSubstancesList}</p>
-              </div>}
-
-            {projectInfo.labelData.intendedForIntroduction &&
-              <div className='symbol-content-item'>
-                <p>{projectInfo.labelData.qualitativeComposition}</p>
-                <p>{projectInfo.labelData.quantitativeInformation}</p>
-              </div>}
-
-            {projectInfo.labelData.quantity > 0 &&
-              <div className='symbol-content-item'>
-                <p>QTY: {projectInfo.labelData.quantity}</p>
-              </div>} */}
-
-
-          </div>
-        )
-      }
-
-      return null;
-    }
 
 // handling the categories of the label symbol
     const symbolsWithImageAnd2ParagraphsOrMore = () => {
@@ -2380,7 +1761,7 @@ const LabelInformation = () => {
        </div>
        <div style={{display:'flex', justifyContent:'space-between', backgroundColor:''}}>
           <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'><ArrowBackIcon /> Back</Link>
-          {!getProjectRequest && 
+          {!getLabelRequest && 
           <>
             {/* <h3 className='label-info-title'>{projectInfo && projectInfo.projectName}</h3> */}
             <div style={{display:'flex'}}>
@@ -2436,7 +1817,7 @@ const LabelInformation = () => {
        </div>
       <div>
       </div>
-      {!getProjectRequest
+      {!getLabelRequest
       ?(<div>
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
         </div>
@@ -2466,8 +1847,8 @@ const LabelInformation = () => {
                                 <h5>{projectInfo.labelData.productName}</h5>}
                              {projectInfo && 
                                 projectInfo.labelData && 
-                                  projectInfo.labelData.intendedPurpose &&
-                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                                  projectInfo.labelData.intendedPurpose.length > 0 &&
+                              <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
                             </div>
                             {projectInfo &&
                                projectInfo.labelData && 
@@ -2606,8 +1987,8 @@ const LabelInformation = () => {
                                 <h3>{projectInfo.labelData.productName}</h3>}
                             {projectInfo && 
                         projectInfo.labelData && 
-                                  projectInfo.labelData.intendedPurpose &&
-                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                        projectInfo.labelData.intendedPurpose.length > 0 &&
+                        <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
                         </div>
                         <div className='label-MD-QTY-info' style={{display:'flex', flexDirection:'column'}}> 
                         {projectInfo &&
@@ -2721,8 +2102,8 @@ const LabelInformation = () => {
                                 <h3>{projectInfo.labelData.productName}</h3>}
                              {projectInfo && 
                                 projectInfo.labelData && 
-                                  projectInfo.labelData.intendedPurpose &&
-                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                                projectInfo.labelData.intendedPurpose.length > 0 &&
+                                <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
                     </div>
                     <div className='template-3-top-content'>
                       <div className='template-3-code-bar'>

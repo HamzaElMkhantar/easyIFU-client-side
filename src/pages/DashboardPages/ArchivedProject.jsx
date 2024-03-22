@@ -5,6 +5,7 @@ import Avatar from '@mui/material/Avatar';
 import {Routes, Route, Link, useNavigate } from 'react-router-dom';
 import '../../components/header/header.css';
 import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
+import UnarchiveRoundedIcon from '@mui/icons-material/UnarchiveRounded';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -25,6 +26,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import easyIFUlogo from '../../assets/easyIFU_Logo.png' 
 import BarLinks from '../../utilities/BarLinks';
 import { logoutAction } from '../../redux/actions/authActions';
+import { Tab, Table } from 'react-bootstrap';
 
 const ArchivedProject = () => {
 
@@ -187,7 +189,7 @@ const ArchivedProject = () => {
         {/* Dashboard  content   */}
         <section className='container' style={{marginTop:'15px'}}>
           <div>
-            <table style={{backgroundColor:'#fff'}} className="table table-hover my-1">
+            <Table striped bordered hover style={{backgroundColor:'#fff'}} className="table table-hover my-1">
               <thead style={{backgroundColor:'#075670', textAlign:'center'}} className="thead-dark">
                   <tr style={{color:'#fff'}}>
                   <th scope="col">#</th>
@@ -214,9 +216,11 @@ const ArchivedProject = () => {
                       <td>
                         <button disabled={archiveToggleProjectRequest ? true : false}
                             onClick={() => dispatch(archivedProjectToggleAction(item._id, token))} 
-                            style={{backgroundColor:'#021D41', color:'#d6d9dc', fontSize:'14px', fontWeight:'500', width:'80px', borderRadius:'5px'}}>
-                        {!archiveToggleProjectRequest ?"unArchive" :  <RotatingLines
-                                    strokeColor="#fff"
+                            style={{color:'#021D41', borderRadius:'4px',  fontSize:''}}>
+                        {!archiveToggleProjectRequest 
+                          ?<UnarchiveRoundedIcon />
+                          :<RotatingLines
+                                    strokeColor="#021D41"
                                     strokeWidth="5"
                                     animationDuration="0.75"
                                     width="23"
@@ -229,7 +233,7 @@ const ArchivedProject = () => {
                   })
                 }
               </tbody>
-            </table>
+            </Table>
               {(getArchivedProjectsRequest || deleteProjectRequest) && 
                 <div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
                   <RotatingLines

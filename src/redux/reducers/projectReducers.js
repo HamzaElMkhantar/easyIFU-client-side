@@ -22,6 +22,10 @@ import {ALL_PROJECTS_FAILED,
         DOCUMENT_REQUEST, 
         DOCUMENT_RESET, 
         DOCUMENT_SUCCESS, 
+        DUPLICATE_PROJECTS_FAILED, 
+        DUPLICATE_PROJECTS_REQUEST, 
+        DUPLICATE_PROJECTS_RESET, 
+        DUPLICATE_PROJECTS_SUCCESS, 
         GET_DOCUMENT_FAILED, 
         GET_DOCUMENT_REQUEST, 
         GET_DOCUMENT_RESET, 
@@ -122,6 +126,12 @@ const archiveToggleProject = {
     archiveToggleProjectSuccess :  false,
     archiveToggleData: null,
     archiveToggleProjectFail : null,
+}
+
+const duplicateProject = {
+    duplicateProjectRequest : false,
+    duplicateProjectSuccess :  false,
+    duplicateProjectFail : null,
 }
 
 const startProject = {
@@ -360,6 +370,37 @@ export const archivedProjectToggleReducer = (state = archiveToggleProject, actio
             } ;
         case TOGGLE_ARCHIVE_PROJECT_RESET :
             return archiveToggleProject;
+        default :
+            return state ;
+    }
+
+}
+
+export const duplicateProjectReducer = (state = duplicateProject, action) => {
+
+    switch(action.type){
+        case DUPLICATE_PROJECTS_REQUEST:
+            return {
+                ...state,
+                duplicateProjectRequest : true,
+                duplicateProjectSuccess :  false,
+                duplicateProjectFail : null,
+            } ;
+        case DUPLICATE_PROJECTS_SUCCESS :
+            return {
+                ...state,
+                duplicateProjectRequest : false,
+                duplicateProjectSuccess : true,
+            } ;
+        case DUPLICATE_PROJECTS_FAILED :
+            return {
+                ...state,
+                duplicateProjectFail : action.payload,
+                duplicateProjectSuccess :  false,
+                duplicateProjectRequest : false
+            } ;
+        case DUPLICATE_PROJECTS_RESET :
+            return duplicateProject;
         default :
             return state ;
     }

@@ -22,7 +22,7 @@ const TranslationAndRepackaging = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
-      projectId,
+      labelId: projectId,
       isUpdate: false,
       translationActivity: false,
       translationEntityName: '',
@@ -48,7 +48,7 @@ const TranslationAndRepackaging = () => {
     // Set formData with existing project information
     setFormData({
       isUpdate: false,
-      projectId,
+      labelId: projectId,
       translationActivity: projectInformation?.labelData?.translationActivity || false,
       translationEntityName: projectInformation?.labelData?.translationEntityName || '',
       translationEntityAddress: projectInformation?.labelData?.translationEntityAddress || '',

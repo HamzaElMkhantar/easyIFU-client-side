@@ -25,7 +25,7 @@ const LegislationComponent = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
-        projectId,
+        labelId: projectId,
         customMadeDevice: false,
         clinicalInvestigationOnly: false,
         IsItForEurope: false ,
@@ -53,7 +53,7 @@ const LegislationComponent = () => {
     useEffect(() =>{
         setFormData({
             isUpdate: false,
-            projectId,
+            labelId: projectId,
             customMadeDevice: projectInformation?.labelData?.customMadeDevice ? true : false,
             clinicalInvestigationOnly: projectInformation?.labelData?.clinicalInvestigationOnly ? true : false,
             IsItForEurope: projectInformation?.labelData?.IsItForEurope || false,

@@ -23,6 +23,7 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import BarLinks from '../../utilities/BarLinks';
+import { Table } from 'react-bootstrap';
 const ReleasedProjects = () => {
 
         // side bar toggle
@@ -157,7 +158,7 @@ const ReleasedProjects = () => {
         <section className='container' style={{marginTop:'20px', padding:'10px'}}>
             <h6>Released Project: </h6>
             <div className="table-responsive">
-                <table style={{backgroundColor:'#fff'}} className="table responsive-table table-hover my-1">
+                <Table striped bordered hover style={{backgroundColor:'#fff'}} className="table responsive-table table-hover my-1">
                     <thead style={{backgroundColor:'#075670', textAlign:'center', color:"#fff"}} className="thead-dark">
                     <tr>
                         <th>#</th>
@@ -185,7 +186,7 @@ const ReleasedProjects = () => {
                         </tr>
                     ))}
                     </tbody>
-                </table>
+                </Table>
                 {releasedProjectRequest && 
                     <div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
                         <RotatingLines

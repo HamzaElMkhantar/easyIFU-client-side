@@ -7,6 +7,7 @@ import { logoutAction } from '../redux/actions/authActions';
 import { toast } from 'react-toastify';
 import LogoutModal from '../utilities/LogoutModal';
 import { useState } from 'react';
+import jwtDecode from 'jwt-decode';
 
 
 const RequireAuth = () => {
@@ -28,37 +29,37 @@ const RequireAuth = () => {
           setShowLogoutModal(true);
           return;
         }
-        if (accessToken) {
-          const decodedAccessToken = jwt_decode(accessToken);
+        // if (accessToken) {
+        //   const decodedAccessToken = jwtDecode(accessToken);
 
-          if (decodedAccessToken.exp) {
-            const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-          console.log('Refresh Token expires at:', new Date(decodedAccessToken.exp * 1000));
+        //   if (decodedAccessToken.exp) {
+        //     const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+        //   // console.log('Refresh Token expires at:', new Date(decodedAccessToken.exp * 1000));
 
-            if (decodedAccessToken.exp < currentTimeInSeconds) {
-              console.log('Access Token has expired');
-              // <LogoutModal openValue={true} />
-              toast.info('Your Session is Expired, Please LogIn Again');
-              dispatch(logoutAction());
-              // setShowLogoutModal(true);
-              return;
-            }
-          }
+        //     if (decodedAccessToken.exp < currentTimeInSeconds) {
+        //       console.log('Access Token has expired');
+        //       // <LogoutModal openValue={true} />
+        //       toast.info('Your Session is Expired, Please LogIn Again AT');
+        //       dispatch(logoutAction());
+        //       // setShowLogoutModal(true);
+        //       return;
+        //     }
+        //   }
           
-        }
+        // }
 
         // Check Refresh Token expiration
         if (!refreshToken) {
           // console.log('Refresh Token not found');
           // setShowLogoutModal(true);
-          toast.info('Your Session is Expired, Please LogIn Again');
+          toast.info('Your Session is Expired, Please LogIn Again RT');
           dispatch(logoutAction());
           // <Navigate to="/login" state={{ from: location }} replace />;
           return;
         }
         if (refreshToken) {
-          const decodedRefreshToken = jwt_decode(refreshToken);
-          console.log('Refresh Token expires at:', new Date(decodedRefreshToken.exp * 1000));
+          const decodedRefreshToken = jwtDecode(refreshToken);
+          // console.log('Refresh Token expires at:', new Date(decodedRefreshToken.exp * 1000));
 
           if (decodedRefreshToken.exp) {
             const currentTimeInSeconds = Math.floor(Date.now() / 1000);
@@ -96,7 +97,7 @@ const RequireAuth = () => {
   return (
     <>
       {/* {showLogoutModal && <LogoutModal />} */}
-      { refreshToken ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />}
+      { accessToken ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />}
       {/* <Outlet /> */}
       {/* {(showLogoutModal) && <LogoutModal />} */}
     </>

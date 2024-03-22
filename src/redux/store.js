@@ -29,6 +29,7 @@ import {IVDDiagnosticReducer,
         deleteProjectReducer, 
         documentByIdReducer, 
         documentsReducer, 
+        duplicateProjectReducer, 
         getAllProjectsReducer, 
         getArchivedProjectsReducer, 
         getProjectReducer, 
@@ -51,6 +52,8 @@ import { dashboardCompanyInfoReducer, getCompanyInfoReducer,
         paymentPricesCompanyReducer, 
         updateCompanyInfoReducer } from './reducers/companyReducers';
 import { changeCompanyPermissionReducer, companiesReducer, companyByIdReducer, contactByIdReducer, contactsReducer, deleteCompanyReducer, deleteContactReducer, projectsReducer, usersReducer } from './reducers/supperAdminReducers';
+import { createLabelReducer, getAllLabelsReducer, getLabelReducer } from './reducers/labelReducers';
+import { createProductReducer, getProductByProjectIdReducer } from './reducers/productReducers';
 
 
 const reducer = combineReducers({
@@ -84,11 +87,23 @@ const reducer = combineReducers({
     paymentCompany: paymentCompanyReducer,
     paymentPricesCompany: paymentPricesCompanyReducer,
 
-    // project reducers
+    // projects reducers
     getAllProjects: getAllProjectsReducer,
     getProject: getProjectReducer,
     startProject: startProjectReducer,
     deleteProject: deleteProjectReducer,
+    sendingProjectToOtherRole: sendingProjectToOtherRoleReducer,
+    ProjectByRoleId: ProjectByRoleIdReducer,
+    ReleasedProject: ReleasedProjectReducer,
+    ReleaseTheProject: ReleaseTheProjectReducer,
+    getArchivedProjects: getArchivedProjectsReducer,
+    archivedProjectToggle: archivedProjectToggleReducer,
+    duplicateProject: duplicateProjectReducer,
+    
+    // label reducers
+    getAllLabels: getAllLabelsReducer,
+    getLabel: getLabelReducer,
+    createLabel: createLabelReducer,
     manufacturerInformation: manufacturerInformationReducer,
     legislation: legislationReducer,
     productInformation: productInformationReducer,
@@ -100,13 +115,11 @@ const reducer = combineReducers({
     transfusionInfusion: transfusionInfusionReducer,
     others: othersReducer,
     translationAndRepackaging: translationAndRepackagingReducer,
-    sendingProjectToOtherRole: sendingProjectToOtherRoleReducer,
-    ProjectByRoleId: ProjectByRoleIdReducer,
-    ReleasedProject: ReleasedProjectReducer,
-    ReleaseTheProject: ReleaseTheProjectReducer,
-    getArchivedProjects: getArchivedProjectsReducer,
-    archivedProjectToggle: archivedProjectToggleReducer,
-    
+
+    // products reducers
+    getProductByProjectId: getProductByProjectIdReducer,
+    createProduct: createProductReducer,
+
     // document reducers
     saveDocument: saveDocumentReducer,
     documents: documentsReducer,

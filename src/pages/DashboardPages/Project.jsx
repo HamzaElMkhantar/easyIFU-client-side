@@ -7,16 +7,22 @@ import '../../components/header/header.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { Table } from 'react-bootstrap';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { archivedProjectToggleAction, deleteProjectAction, getAllProjectsAction, startProjectAction } from '../../redux/actions/projectActions';
+import {archivedProjectToggleAction, 
+        deleteProjectAction, 
+        duplicateProjectAction, 
+        getAllProjectsAction, 
+        startProjectAction } from '../../redux/actions/projectActions';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
-
+import ArchiveIcon from '@mui/icons-material/Archive';
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -26,6 +32,8 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
+import { Popover } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -33,6 +41,7 @@ import easyIFUlogo from '../../assets/easyIFU_Logo.png'
 import BarLinks from '../../utilities/BarLinks';
 import NavDashboard from '../../components/header/NavDashboard';
 import { logoutAction } from '../../redux/actions/authActions';
+import { getAllLabelsAction } from '../../redux/actions/labelActions';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -63,7 +72,7 @@ const Project = () => {
       localStorage.setItem('sideToggle', JSON.stringify(newToggleState));
     };
 
-  // -- component logic --
+  // --- component logic ---
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
   const companyId = decodedToken && decodedToken?.userInfo?.companyId
@@ -71,13 +80,25 @@ const Project = () => {
   const navigate = useNavigate()
 
   const [allProjects, setAllProjects] = useState([])
-  const {startProject, getAllProjects, deleteProject, logout, archivedProjectToggle} = useSelector(state => state)
+  
+  const {startProject, 
+        getAllProjects, 
+        deleteProject, 
+        logout, 
+        archivedProjectToggle, 
+        duplicateProject, 
+        getAllLabels} = useSelector(state => state)
+
   const {getAllProjectsRequest, getAllProjectsSuccess, getAllProjectsFail, projects} = getAllProjects
   const {startProjectRequest, startProjectSuccess, startProjectFail, projectId} = startProject
   const {deleteProjectRequest, deleteProjectSuccess, deleteProjectFail} = deleteProject
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const {archiveToggleProjectRequest, archiveToggleProjectSuccess, archiveToggleProjectFail, archiveToggleData} = archivedProjectToggle
+  const {duplicateProjectRequest, duplicateProjectSuccess, duplicateProjectFail} = duplicateProject
 
+  const {labelRequest, labelSuccess, labelFail, labelsData} = getAllLabels
+
+  console.log(labelRequest, labelSuccess, labelFail, labelsData)
   const handleLogout = () => {
     dispatch(logoutAction())
   }
@@ -95,10 +116,10 @@ const Project = () => {
   }, [])
 
   useEffect(() => {
-    if(deleteProjectSuccess || archiveToggleProjectSuccess){
+    if(deleteProjectSuccess || archiveToggleProjectSuccess || duplicateProjectSuccess || startProjectSuccess){
       dispatch(getAllProjectsAction(companyId, token))
     }
-  }, [deleteProjectSuccess , archiveToggleProjectSuccess])
+  }, [deleteProjectSuccess , archiveToggleProjectSuccess, duplicateProjectSuccess, startProjectSuccess])
 
 
   useEffect(() => {
@@ -126,10 +147,9 @@ const Project = () => {
   const [projectSizes, setProjectSizes] = useState(Array(numElements).fill(0));
   const [formData, setFormData] = useState({
     companyId: decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId,
-    createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id ,
+    createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id,
     projectName: '',
-    projectDescription: '',
-    labelSizes: [],
+    projectDescription: ''
   });
   
   // handleNumElementsChange function
@@ -198,46 +218,21 @@ const Project = () => {
 
   useEffect(() => {
     if(startProjectSuccess){
-      navigate(`/dashboard/create-project/step1/${projectId}`)
+      toast.success("project created !")
+      handleClose()
+      setFormData({
+        projectName: '',
+        projectDescription: ''
+      })
     }
     if(startProjectFail){
-      toast.error("Fields are Empty !")
+      toast.error(`${startProjectFail.message}`)
     }
   }, [ startProjectSuccess, startProjectFail])
   
 
 
-    //  dynamic input
-    const [serviceList, setServiceList] = useState([""]);
-
-    const handleServiceChange = (e, index) => {
-      const { value } = e.target;
-      const list = [...serviceList];
-      list[index] = value;
-      setServiceList(list);
-      setFormData((prevData) => ({
-          ...prevData,
-          labelSizes: list
-      }));
-    };
-    
-    const handleServiceRemove = (index) => {
-      const list = [...serviceList];
-      list.splice(index, 1);
-      setServiceList(list);
-      setFormData((prevData) => ({
-        ...prevData,
-        labelSizes: list
-      }));
-    };
-    
-    const handleServiceAdd = () => {
-      setServiceList([...serviceList, ""]);
-      setFormData((prevData) => ({
-          ...prevData,
-              labelSizes: serviceList,
-      }));
-    };
+  
 
 
     // ------ headers ------
@@ -254,6 +249,36 @@ const Project = () => {
     const handleCloseAnchor = () => {
       setAnchorEl(null);
     };
+
+
+    // table menu
+    const [anchorETable, setAnchorElTable] = useState(null);
+
+    const handleMenuClick = (event) => {
+      setAnchorElTable(event.currentTarget);
+    };
+  
+    const handleCloseMenu = () => {
+      setAnchorElTable(null);
+    };
+  
+    const handleArchive = (_id) => {
+      dispatch(archivedProjectToggleAction(_id, token));
+      handleCloseMenu();
+    };
+
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const seconds = date.getSeconds().toString().padStart(2, '0');
+  
+      return `${day}/${month}/${year}  ${hours}:${minutes}:${seconds}`;
+    }
 
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
@@ -327,8 +352,7 @@ const Project = () => {
 
 
         {/* Dashboard  content   */}
-        <section className='container' style={{marginTop:'15px'}}>
-
+        <section className='container pb-5' style={{marginTop:'15px'}}>
           {/* modal */}
           <Modal
             open={open}
@@ -361,48 +385,7 @@ const Project = () => {
                         onChange={(e) => setFormData({ ...formData, projectDescription: e.target.value })}
                         />
                     </div>
-                    <div className="form-field">
-                    <label htmlFor="service">4- Enter Project Sizes (By Centimeter):</label>
-                    {serviceList.map((singleService, index) => (
-                    <div key={index} className="services">
-                        <div className="first-division mb-1" style={{display:'flex',}}>
-                        <input
-                            name="service"
-                            style={{width:'50%', height:'35px', border:'1px solid lightgray', borderRadius:'5px'}}
-                            type="Number"
-                            min="0"
-                            id="service"
-                            value={singleService}
-                            placeholder={`Size ${index + 1}`}
-                            onChange={(e) => handleServiceChange(e, index)}
-                        />
-                        {serviceList.length !== 1 && (
-                              <button
-                                  type="button"
-                                  style={{backgroundColor:'#FBB8B8', borderRadius:'6px'}}
-                                  onClick={() => handleServiceRemove(index)}
-                                  className="remove-btn mx-2"
-                                  >
-                                  <span><DeleteIcon style={{color:'#2D2D2E'}} /></span>
-                              </button>
-                          )}
-                        </div>
-                        <div className="second-division">
-       
-                        {serviceList.length - 1 === index && (
-                            <button
-                                    type="button"
-                                    style={{borderRadius:'5px', backgroundColor:'#79D4A3', fontSize:'14px'}}
-                                    onClick={handleServiceAdd}
-                                    className="add-btn"
-                                >
-                                <span>Add Content</span>
-                            </button>
-                        )}
-                        </div>
-                    </div>
-                    ))}
-                </div>
+
                     {!startProjectRequest 
                       ? <div style={{display:'flex', justifyContent:'space-between'}}>
                         <button style={{marginTop:'20px', padding:'5px 20px', fontWeight:'600', fontSize:'18px', borderRadius:'5px', backgroundColor:'#011d41', color:'#fff'}}>Start Creating</button>
@@ -426,8 +409,11 @@ const Project = () => {
           </Modal>
 
           {/* <Link to='/dashboard/create-project/step1'> */}
-           { decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
-           <button onClick={handleOpen}
+           {decodedToken 
+              && decodedToken?.userInfo 
+              && (decodedToken?.userInfo?.role.includes("Admin") 
+              || decodedToken?.userInfo?.role.includes("Creator")) 
+              &&<button onClick={handleOpen}
                     style={{
                       padding: "8px 20px",
                       backgroundColor:"#9a3b3a",
@@ -438,74 +424,88 @@ const Project = () => {
                 New Project</button>}
           {/* </Link> */}
           <div>
-            <table style={{backgroundColor:'#fff'}} className="table table-hover my-1">
+            <Table striped bordered hover style={{backgroundColor:'#fff'}} className="table table-hover my-1">
               <thead style={{backgroundColor:'#075670', textAlign:'center'}} className="thead-dark">
                   <tr style={{color:'#fff'}}>
                   <th scope="col">#</th>
                   <th scope="col">Project Name</th>
                   <th scope="col">Description</th>
-                  <th scope="col">Status</th>
-                  {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
-                  
-                  <>
-                    <th scope="col">Details</th>
-                    <th scope="col">Manage</th>
-                  </>}
+                  <th scope="col">createdAt</th>
+                  <th scope="col">Details</th>
                   </tr>
               </thead>
               <tbody style={{ textAlign:'center'}}>
                 {allProjects &&
-                  allProjects.map((item, index) => {
+                  allProjects?.map((item, index) => {
                     return (
-                      <tr>
+                      <tr key={index}>
                         <th scope="row">{index+1}</th>
+                        {/* <td>{item.projectName}{item.projectVersion && (item.projectVersion > 1)?  "(V" +item.projectVersion +")" : null}</td> */}
                         <td>{item.projectName}</td>
-                        <td >{item.projectDescription.length > 20 
-                                ? item.projectDescription.substring(0, 20) + '...' 
-                                : item.projectDescription}</td>
-                  <td scope="col">{item.released ? "Released": "processing..."}</td>
-                        {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
+                        <td >{item?.projectDescription?.length > 20  
+                                ? item?.projectDescription?.substring(0, 20) + '...' 
+                                : item?.projectDescription}</td>
+                        <td>{formatDate(item?.createdAt)}</td>
+                        {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") 
+                          || decodedToken?.userInfo?.role.includes("Creator")) &&
                         
                         <td>
-                          {item.projectStep < 10
-                          ? <Link to={`/dashboard/create-project/step${item.projectStep}/${item._id}`}
-                            style={{backgroundColor:'#0C458F', 
-                              color:"#fff", 
+                           <Link to={`/dashboard/products/${item._id}`}
+                            style={{color:'#021D41', 
+                              backgroundColor:"#efefef", 
                               padding:'2px 10px', 
                               borderRadius:'4px'
                             }}>
-                              Continue
+                              <VisibilityIcon style={{paddingBottom:'3px', fontSize:'24px'}} />
                           </Link>
-                          : <Link to={`/dashboard/project-information/${item._id}`}
-                            style={{backgroundColor:'#0C458F', 
-                              color:"#fff", 
-                              padding:'2px 10px', 
-                              borderRadius:'4px'
-                            }}>
-                              <VisibilityIcon style={{paddingBottom:'3px'}} />
-                          </Link>}
                         </td>}
-                        {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
+                        
+                        {/* {decodedToken && decodedToken?.userInfo 
+                          && (decodedToken?.userInfo?.role.includes("Admin") 
+                          || decodedToken?.userInfo?.role.includes("Creator")) &&
                           <td>{item.projectStep < 10
-                             ? <button style={{backgroundColor:'#E97472', borderRadius:'5px'}} onClick={() => handleDelete(item._id)}>delete</button>
+                             ? <button 
+                                    style={{borderRadius:'4px'}} 
+                                    onClick={() => handleDelete(item._id)}> 
+                                <DeleteIcon style={{color:'#e97372', fontSize:'24px'}}/>
+                              </button>
                              :<button disabled={archiveToggleProjectRequest ? true : false}
                              onClick={() => dispatch(archivedProjectToggleAction(item._id, token))} 
-                             style={{backgroundColor:'#021D41', color:'#d6d9dc', fontSize:'14px', fontWeight:'500', width:'80px', borderRadius:'5px'}}>
-                                  {!archiveToggleProjectRequest ? "Archive" :  <RotatingLines
-                                              strokeColor="#fff"
+                             style={{borderRadius:'4px'}}>
+                                  {!archiveToggleProjectRequest 
+                                  ? <ArchiveIcon style={{marginLeft:'', fontSize:'24px', color:'#021D41'}}/>
+                                  : <RotatingLines
+                                              strokeColor="#021D41"
                                               strokeWidth="5"
                                               animationDuration="0.75"
                                               width="23"
                                               visible={true}
                                           /> }
                                   </button>
-                          }</td>}
+                          }</td>
+                          } */}
+                          {/* <td>
+                              <button disabled={item?.projectStep === 11 ? false : true}
+                                  onClick={() => dispatch(duplicateProjectAction(item?._id, token))}
+                                  style={item?.projectStep === 11 ? {borderRadius:'4px'}: {borderRadius:'4px', opacity:'0.5'}} > 
+                                  {!duplicateProjectRequest 
+                                  ? <ContentCopyRoundedIcon style={{color:'#021D41', fontSize:'24px'}}/>
+                                  : <RotatingLines
+                                              strokeColor="#021D41"
+                                              strokeWidth="5"
+                                              animationDuration="0.75"
+                                              width="23"
+                                              visible={true}
+                                          /> }
+                                
+                              </button>
+                          </td> */}
                       </tr>
                     )
                   })
                 }
               </tbody>
-            </table>
+            </Table>
               {(getAllProjectsRequest || deleteProjectRequest) && 
                 <div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
                   <RotatingLines

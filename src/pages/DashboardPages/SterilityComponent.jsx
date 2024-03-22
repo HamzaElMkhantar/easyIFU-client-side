@@ -19,7 +19,7 @@ const SterilityComponent = () => {
 
 
     const [formData, setFormData] = useState({
-        projectId,
+        labelId: projectId,
         isUpdate: false,
         isSterile: false,
         hasSterilizationProcess: false,
@@ -56,7 +56,7 @@ const SterilityComponent = () => {
         // Set formData with existing project information
         setFormData({
             isUpdate: false,
-            projectId,
+            labelId: projectId,
             isSterile: projectInformation?.labelData?.isSterile || false,
             hasSterilizationProcess: projectInformation?.labelData?.hasSterilizationProcess || false,
             hasAsepticProcessing: projectInformation?.labelData?.hasAsepticProcessing || false,

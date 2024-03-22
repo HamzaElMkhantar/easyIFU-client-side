@@ -19,7 +19,7 @@ const StorageComponent = () => {
 
   // °F
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId,
     isUpdate: false,
     temperatureUnite: '°C',
     requiresCarefulHandling: false,
@@ -55,7 +55,7 @@ const StorageComponent = () => {
     // Set formData with existing project information
     setFormData({
       isUpdate: false,
-      projectId,
+      labelId: projectId,
       temperatureUnite : projectInformation?.labelData?.temperatureUnite || '°C',
       requiresCarefulHandling: projectInformation?.labelData?.requiresCarefulHandling || false,
       requiresProtectionFromLight: projectInformation?.labelData?.requiresProtectionFromLight || false,

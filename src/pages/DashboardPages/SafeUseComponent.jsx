@@ -22,7 +22,7 @@ const SafeUseComponent = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId,
     isUpdate: false,
     hasBiologicalRisks: false,
     isIntendedForSingleUse: false,
@@ -55,7 +55,7 @@ const SafeUseComponent = () => {
     // Set formData with existing project information
     setFormData({
       isUpdate: false,
-      projectId,
+      labelId: projectId,
       hasBiologicalRisks: projectInformation?.labelData?.hasBiologicalRisks || false,
       isIntendedForSingleUse: projectInformation?.labelData?.isIntendedForSingleUse || false,
       needInstructionsForUse: projectInformation?.labelData?.needInstructionsForUse || false,

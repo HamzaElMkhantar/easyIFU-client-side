@@ -1180,8 +1180,8 @@ useEffect(() => {
                                 <h5>{projectInfo.labelData.productName}</h5>}
                              {projectInfo && 
                                 projectInfo.labelData && 
-                                  projectInfo.labelData.intendedPurpose &&
-                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                                projectInfo.labelData.intendedPurpose.length > 0 &&
+                                <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
                             </div>
                             {projectInfo &&
                                projectInfo.labelData && 
@@ -1320,8 +1320,8 @@ useEffect(() => {
                                 <h3>{projectInfo.labelData.productName}</h3>}
                             {projectInfo && 
                         projectInfo.labelData && 
-                                  projectInfo.labelData.intendedPurpose &&
-                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                        projectInfo.labelData.intendedPurpose.length > 0 &&
+                        <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
                         </div>
                         <div className='label-MD-QTY-info' style={{display:'flex', flexDirection:'column'}}> 
                         {projectInfo &&
@@ -1435,8 +1435,8 @@ useEffect(() => {
                                 <h3>{projectInfo.labelData.productName}</h3>}
                              {projectInfo && 
                                 projectInfo.labelData && 
-                                  projectInfo.labelData.intendedPurpose &&
-                              <p>{projectInfo.labelData.intendedPurpose}</p>}
+                                projectInfo.labelData.intendedPurpose.length > 0 &&
+                                <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
                     </div>
                     <div className='template-3-top-content'>
                       <div className='template-3-code-bar'>

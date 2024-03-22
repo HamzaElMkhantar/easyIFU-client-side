@@ -16,6 +16,7 @@ const ManufacturerInfoComponent = () => {
     const {projectId} = useParams()
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
+    const companyId = decodedToken?.userInfo?.companyId
 
     const {manufacturerInformation, getCompanyInfo, getProject} = useSelector(state => state)
     const {manufacturerRequest, manufacturerSuccess, manufacturerFail, projectInfo} = manufacturerInformation;
@@ -24,7 +25,7 @@ const ManufacturerInfoComponent = () => {
   const [formData, setFormData] = useState({
     projectId,
     isUpdate: false,
-    companyId: decodedToken && decodedToken.userInfo ? decodedToken.userInfo.companyId : null,
+    companyId,
     hasDistributor: false,
     distributorName: '',
     distributorAddress: '',
@@ -36,6 +37,7 @@ const ManufacturerInfoComponent = () => {
     // productClass: 'Class I',
     // notifiedBodyNumber: '',
   });
+  console.log(formData)
 
       // get prev project info
       const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
@@ -52,8 +54,8 @@ const ManufacturerInfoComponent = () => {
     // Set formData with existing project information
     setFormData({
         isUpdate: false,
-        projectId,
-        companyId: decodedToken && decodedToken.userInfo ? decodedToken.userInfo.companyId : null,
+        labelId: projectId,
+        companyId,
         hasDistributor:projectInformation?.labelData?.hasDistributor || false,
         distributorName: projectInformation?.labelData?.distributorName || '',
         distributorAddress: projectInformation?.labelData?.distributorAddress || '',
@@ -107,7 +109,7 @@ const ManufacturerInfoComponent = () => {
     dispatch(manufacturerInformationAction(formData, token))
 
     setFormData({
-        projectId,
+        labelId: projectId,
         isOutsideEU: false,
         hasDistributor: false,
         distributorName: '',

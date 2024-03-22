@@ -43,23 +43,23 @@ const SideBar = ({isSidebarOpen}) => {
       <div id="sidebar-wrapper" style={{ height:'100vh'}}>
         <img  src={sidebarBG} className='bg-sidebar-img' />
         <div className="sidebar-nav">
-          <Link style={{ marginBottom:'20px', display:'flex', justifyContent:'center'}} to='/' className='navbar-brand mx-auto'>
+          <Link style={{marginBottom:'20px', display:'flex', justifyContent:'center'}} to='/' className='navbar-brand mx-auto'>
             <img src={headerLogo} alt='Logo' width='100' height='100' style={{marginLeft:'-50px', padding:'0', borderRadius:'4px'}} />
           </Link>
           <div className='sideBrd-user-info'>
             <h4>{decodedToken && decodedToken.userInfo && `${decodedToken && decodedToken.userInfo && decodedToken.userInfo.firstName} ${decodedToken && decodedToken.userInfo && decodedToken.userInfo.lastName}`}</h4>
             <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.email}</p>
           </div>
-          <div style={{ height:'67vh', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+          <div style={{ height:'', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
 
-            <div style={{height:'63vh', overflowY:'scroll'}} className='navList' >
-                {<Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
-                {<Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>Projects</Link>}
+            <div style={{height:'', overflowY:'scroll'}} className='navList' >
+                {<Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
+                {<Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>Projects</Link>}
                 {/* <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/received-project"><CallReceivedIcon style={{color:'#44638C'}}/> received project</Link>
                 <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/project/released"><LastPageIcon style={{color:'#9A3B3A'}}/> released project</Link> */}
                 {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Release") || decodedToken?.userInfo?.role.includes("Admin") )&&
                 <>
-                  <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/>Labels</Link>
+                  <Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/>Labels</Link>
                 </>}
                 {/* <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link> */}
 
@@ -69,7 +69,7 @@ const SideBar = ({isSidebarOpen}) => {
                 {/* {<Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/company"><StoreRoundedIcon style={{color:'#E5D283'}}/>My Company</Link>}
 
                 <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link> */}
-                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/contact"><ContactsIcon style={{color:'#3992B0'}}/> contact Us</Link>
+                <Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/contact"><ContactsIcon style={{color:'#3992B0'}}/> contact Us</Link>
 
 
             </div>

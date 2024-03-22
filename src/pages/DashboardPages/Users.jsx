@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import SideBar from '../../components/header/SideBar'
 import Avatar from '@mui/material/Avatar';
 import { Link } from 'react-router-dom';
+import { Table } from 'react-bootstrap';
 import '../../components/header/header.css';
 import easyIFUlogo from '../../assets/easyIFU_Logo.png' 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -204,7 +205,7 @@ const Users = () => {
               <h6>total users: {users ? users?.length : <>No users</>}</h6>
               <div className="table-responsive">
 
-                <table style={{ backgroundColor: '#fff' }} className="table table-hover my-1">
+                <Table striped bordered hover style={{ backgroundColor: '#fff' }} className="table table-hover my-1">
                   <thead style={{ backgroundColor: '#c08260' }} className="thead-dark">
                     <tr style={{ color: '#fff' }}>
                       <th scope="col">#</th>
@@ -265,7 +266,7 @@ const Users = () => {
                         );
                       })}
                   </tbody>
-                </table>
+                </Table>
               </div>
               
             </div>

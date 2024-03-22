@@ -67,26 +67,79 @@ import UpdateIVDDiagnosticComponent from './pages/DashboardPages/UpdateIVDDiagno
 import UpdateTransfusionInfusionComponent from './pages/DashboardPages/UpdateTransfusionInfusionComponent';
 import UpdateOthersComponent from './pages/DashboardPages/UpdateOthersComponent';
 import Contact from './pages/DashboardPages/Contact';
-// import jwtDecode from 'jwt-decode';
 
-import jwt_decode from 'jwt-decode';
+
 import LegislationComponent from './pages/DashboardPages/LegislationComponent';
 import TranslationAndRepackaging from './pages/DashboardPages/TranslationAndRepackaging';
 import UpdateLegislationComponent from './pages/DashboardPages/UpdateLegislationComponent';
 import UpdateTranslationAndRepackaging from './pages/DashboardPages/UpdateTranslationAndRepackaging';
 import ArchivedProject from './pages/DashboardPages/ArchivedProject';
+import Products from './pages/DashboardPages/Products';
+import LabelsByProject from './pages/DashboardPages/LabelsByProductId';
 
+
+// import { Navigate, Outlet, useLocation } from 'react-router-dom';
+// import Cookies from 'js-cookie';
+import jwt_decode from 'jwt-decode';
+// import { useDispatch } from 'react-redux';
+import { logoutAction } from './redux/actions/authActions';
+import { toast } from 'react-toastify';
+import LogoutModal from './utilities/LogoutModal';
+// import { useState } from 'react';
 function App() {
 
   const location = useLocation();
   const dispatch = useDispatch();
 
-  useEffect( () => {
-    const fetch = async() =>{
-      await dispatch(refreshAction());
-    }
-     fetch()
-  }, [location.pathname]);
+  useEffect(() => {
+    dispatch(refreshAction());
+    console.log("refreshAction!!")
+  }, [])
+  
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      const refreshToken = Cookies.get('eIfu_RTK') || null;
+      try {
+        // Check Refresh Token expiration
+        if (!refreshToken) {
+          // console.log('Refresh Token not found');
+          // setShowLogoutModal(true);
+          // toast.info('Your Session is Expired, Please LogIn Again RT');
+          dispatch(logoutAction());
+          // <Navigate to="/login" state={{ from: location }} replace />;
+          return;
+        }
+        if (refreshToken) {
+          const decodedRefreshToken = jwtDecode(refreshToken);
+          // console.log('Refresh Token expires at:', new Date(decodedRefreshToken.exp * 1000));
+
+          if (decodedRefreshToken.exp) {
+            const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+            if (decodedRefreshToken.exp < currentTimeInSeconds) {
+              // console.log('Refresh Token has expired');
+              // toast.info('Your Session is Expired, Please LogIn Again');
+              dispatch(logoutAction());
+              return;
+            }
+          }
+        }
+
+      } catch (error) {
+        // console.error('Error decoding token:', error);
+      }
+    };
+
+
+    // Check token expiration when the component mounts
+    checkTokenExpiration();
+
+    // Set up an interval to check token expiration every 5 minutes
+    const intervalId = setInterval(checkTokenExpiration, 20 * 60 * 1000);
+
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
 
 
   const [showNav, setShowNav] = useState(true);
@@ -126,69 +179,18 @@ function App() {
   const decodedToken = A_Token ? jwtDecode(A_Token) : null
   const decodedToken_R = A_Token ? jwtDecode(R_Token) : null
 
-  console.log("decoded tokens : ",decodedToken,  decodedToken_R)
-  console.log(" tokens : ",R_Token,  A_Token)
   const intervalRef = useRef(null);
-
-   // Memoize the interval setup function to prevent re-renders
-  //  const setupInterval = useMemo(() => {
-  //   return () => {
-  //     if (R_Token || A_Token) {
-  //       intervalRef.current = setInterval(() => {
-  //         dispatch(refreshAction());
-  //         console.log('Token refresh scheduled.');
-  //       }, 900000); // Refresh every 15 minute (900000 milliseconds)
-  //     }
-  //   };
-  // }, [dispatch]);
-  
-  // useEffect(() => {
-  //   setupInterval();
-  //   return () => {
-  //     if(intervalRef.current){
-  //       clearInterval(intervalRef.current);
-  //     }
-  //   };
-  // }, [dispatch]);
-
-    const setupInterval = useMemo(() => {
+  //  Memoize the interval setup function to prevent re-renders
+   const setupInterval = useMemo(() => {
     return () => {
-      if (R_Token || A_Token) {
-        const refresh = () => {
-          if (document.visibilityState === 'visible') {
-            // Dispatch the refresh action only when the document is visible
-            dispatch(refreshAction());
-            // console.log('Token refresh scheduled.');
-          }
-        };
-  
-        // Setup a timeout to refresh the token after a certain idle period
-        let timeoutId;
-  
-        const setupTimeout = () => {
-          timeoutId = setTimeout(() => {
-            refresh();
-            setupTimeout(); // Reset the timeout for the next idle period
-          }, 900000); // Refresh every 15 minutes (900,000 milliseconds)
-        };
-  
-        // Set up initial timeout
-        setupTimeout();
-  
-        // Set up an event listener to reset the timeout on user activity
-        const resetTimeout = () => {
-          clearTimeout(timeoutId);
-          setupTimeout();
-        };
-  
-        window.addEventListener('mousemove', resetTimeout);
-        window.addEventListener('keydown', resetTimeout);
-  
-        intervalRef.current = { refresh, resetTimeout };
+      if (R_Token && A_Token) {
+        intervalRef.current = setInterval(() => {
+          dispatch(refreshAction());
+          console.log('Token refresh scheduled.');
+        }, 900000); // (900000 = 15min ) \ Refresh every 0.25 minute (6000 milliseconds)
       }
     };
-  }, [dispatch, R_Token, A_Token]);
-  
+  }, [dispatch]);
   
   useEffect(() => {
     setupInterval();
@@ -198,6 +200,53 @@ function App() {
       }
     };
   }, [dispatch]);
+
+  //   const setupInterval = useMemo(() => {
+  //   return () => {
+  //     if (R_Token || A_Token) {
+  //       const refresh = () => {
+  //         if (document.visibilityState === 'visible') {
+  //           // Dispatch the refresh action only when the document is visible
+  //           dispatch(refreshAction());
+  //         }
+  //       };
+  
+  //       // Setup a timeout to refresh the token after a certain idle period
+  //       let timeoutId;
+  
+  //       const setupTimeout = () => {
+  //         timeoutId = setTimeout(() => {
+  //           refresh();
+  //           setupTimeout(); // Reset the timeout for the next idle period
+  //         }, 600); // Refresh every 15 minutes (900,000 milliseconds)
+  //       };
+  
+  //       // Set up initial timeout
+  //       setupTimeout();
+  
+  //       // Set up an event listener to reset the timeout on user activity
+  //       const resetTimeout = () => {
+  //         clearTimeout(timeoutId);
+  //         setupTimeout();
+  //       };
+  
+  //       window.addEventListener('mousemove', resetTimeout);
+  //       window.addEventListener('keydown', resetTimeout);
+  
+  //       intervalRef.current = { refresh, resetTimeout };
+  //     }
+  //   };
+  // }, [dispatch, R_Token, A_Token]);
+  
+  
+  // useEffect(() => {
+  //   setupInterval();
+  //   return () => {
+  //     if(intervalRef.current){
+  //       clearInterval(intervalRef.current);
+  //     }
+  //   };
+  // }, [dispatch]);
 
   return (
     <div className="App">
@@ -281,6 +330,8 @@ function App() {
            
                 <Route path='/dashboard' element={<Dashboard />} />
                 <Route path='/dashboard/project' element={<Project />} />
+                <Route path='/dashboard/products/:projectId' element={<Products />} />
+                <Route path='/dashboard/labels/:productId' element={<LabelsByProject />} />
                 <Route path='/dashboard/archived-project' element={<ArchivedProject />} />
                 <Route path='/dashboard/contact' element={<Contact />} />
                 <Route path='/dashboard/users' element={<Users />} />
