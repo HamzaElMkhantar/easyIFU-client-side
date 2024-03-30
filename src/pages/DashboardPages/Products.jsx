@@ -174,12 +174,28 @@ const Products = () => {
   }
 
     // ------ headers ------
-    const barLinks = [
-      {title: 'Projects', link: '/dashboard/project'},
-      {title: 'Released', link: '/dashboard/project/released'},
-      {title: 'Received', link: '/dashboard/received-project'},
-      {title: 'Archived', link: '/dashboard/archived-project'},
-    ];
+    // ------ headers ------
+    let barLinks = []
+    
+    if(decodedToken &&
+      decodedToken?.userInfo && 
+      (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator"))){
+        barLinks = [
+          {title: 'Projects', link: '/dashboard/project'},
+          {title: 'Released', link: '/dashboard/project/released'},
+          {title: 'Received', link: '/dashboard/received-project'},
+          {title: 'Archived', link: '/dashboard/archived-project'},
+        ];
+    } else if(decodedToken &&
+      decodedToken?.userInfo && 
+      (!decodedToken?.userInfo?.role.includes("Admin") || !decodedToken?.userInfo?.role.includes("Creator"))){
+        barLinks = [
+          // {title: 'Projects', link: '/dashboard/project'},
+          {title: 'Released', link: '/dashboard/project/released'},
+          {title: 'Received', link: '/dashboard/received-project'},
+          {title: 'Archived', link: '/dashboard/archived-project'},
+        ];
+    }
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleMenu = (event) => {
       setAnchorEl(event.currentTarget);

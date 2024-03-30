@@ -101,12 +101,27 @@ const ArchivedProject = () => {
   
 
     // ------ headers ------
-    const barLinks = [
-      {title: 'Projects', link: '/dashboard/project'},
-      {title: 'Released', link: '/dashboard/project/released'},
-      {title: 'Received', link: '/dashboard/received-project'},
-      {title: 'Archived', link: '/dashboard/archived-project'},
-    ];
+    let barLinks = []
+    
+    if(decodedToken &&
+      decodedToken?.userInfo && 
+      (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator"))){
+        barLinks = [
+          {title: 'Projects', link: '/dashboard/project'},
+          {title: 'Released', link: '/dashboard/project/released'},
+          {title: 'Received', link: '/dashboard/received-project'},
+          {title: 'Archived', link: '/dashboard/archived-project'},
+        ];
+    } else if(decodedToken &&
+      decodedToken?.userInfo && 
+      (!decodedToken?.userInfo?.role.includes("Admin") || !decodedToken?.userInfo?.role.includes("Creator"))){
+        barLinks = [
+          // {title: 'Projects', link: '/dashboard/project'},
+          {title: 'Released', link: '/dashboard/project/released'},
+          {title: 'Received', link: '/dashboard/received-project'},
+          {title: 'Archived', link: '/dashboard/archived-project'},
+        ];
+    }
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleMenu = (event) => {
       setAnchorEl(event.currentTarget);
@@ -193,7 +208,7 @@ const ArchivedProject = () => {
               <thead style={{backgroundColor:'#075670', textAlign:'center'}} className="thead-dark">
                   <tr style={{color:'#fff'}}>
                   <th scope="col">#</th>
-                  <th scope="col">Project Name</th>
+                  <th scope="col">label Name</th>
                   <th scope="col">Description</th>
                   <th scope="col">Status</th>
                   {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
@@ -208,10 +223,10 @@ const ArchivedProject = () => {
                     return (
                       <tr>
                         <th scope="row">{index+1}</th>
-                        <td>{item.projectName}</td>
-                        <td >{item.projectDescription.length > 20 
-                                ? item.projectDescription.substring(0, 20) + '...' 
-                                : item.projectDescription}</td>
+                        <td>{item.labelName}</td>
+                        <td >{item.labelDescription.length > 20 
+                                ? item.labelDescription.substring(0, 20) + '...' 
+                                : item.labelDescription}</td>
                   <td scope="col">{item.released ? "Released": "processing..."}</td>
                       <td>
                         <button disabled={archiveToggleProjectRequest ? true : false}

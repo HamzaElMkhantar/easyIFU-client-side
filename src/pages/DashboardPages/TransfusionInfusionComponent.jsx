@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectAction, transfusionInfusionAction } from '../../redux/actions/projectActions';
+import { transfusionInfusionAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
 import { getLabelAction } from '../../redux/actions/labelActions';
 

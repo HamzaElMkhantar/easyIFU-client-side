@@ -3,7 +3,7 @@ import './project.css'
 import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectAction, manufacturerInformationAction } from '../../redux/actions/projectActions';
+import { manufacturerInformationAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import Cookies from 'js-cookie';
@@ -11,6 +11,7 @@ import jwtDecode from 'jwt-decode';
 
 import { GOOGLE_MAPS_API_KEY } from '../../config';
 import { getCompanyInfoAction } from '../../redux/actions/companyAcions';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const ManufacturerInfoComponent = () => {
     const {projectId} = useParams()
@@ -18,7 +19,7 @@ const ManufacturerInfoComponent = () => {
     const decodedToken = token ? jwtDecode(token) : null
     const companyId = decodedToken?.userInfo?.companyId
 
-    const {manufacturerInformation, getCompanyInfo, getProject} = useSelector(state => state)
+    const {manufacturerInformation, getCompanyInfo, getLabel} = useSelector(state => state)
     const {manufacturerRequest, manufacturerSuccess, manufacturerFail, projectInfo} = manufacturerInformation;
     const {companyRequest, companySuccess, companyFail, companyInfo} = getCompanyInfo;
 
@@ -39,17 +40,17 @@ const ManufacturerInfoComponent = () => {
   });
   console.log(formData)
 
-      // get prev project info
-      const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+      // get prev label info
+      const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
       const [projectInformation, setProjectInformation] = useState({});
       useEffect(() =>{
-        dispatch(getProjectAction(projectId, token))
+        dispatch(getLabelAction(projectId, token))
       }, [])
       useEffect(() =>{
-        if(getProjectSuccess){
-          setProjectInformation(project)
+        if(getLabelSuccess){
+          setProjectInformation(label)
         }
-      }, [getProjectSuccess])
+      }, [getLabelSuccess])
   useEffect(() => {
     // Set formData with existing project information
     setFormData({

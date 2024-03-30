@@ -54,40 +54,20 @@ const SideBar = ({isSidebarOpen}) => {
 
             <div style={{height:'', overflowY:'scroll'}} className='navList' >
                 {<Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
-                {<Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>Projects</Link>}
-                {/* <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/received-project"><CallReceivedIcon style={{color:'#44638C'}}/> received project</Link>
-                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/project/released"><LastPageIcon style={{color:'#9A3B3A'}}/> released project</Link> */}
-                {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Release") || decodedToken?.userInfo?.role.includes("Admin") )&&
+                {decodedToken &&
+                  decodedToken?.userInfo && 
+                  (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator"))
+                  ?<Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/project"><InventoryRoundedIcon style={{color:'#088395'}}/>Projects</Link>
+                  :<Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/received-project"><InventoryRoundedIcon style={{color:'#088395'}}/>Projects</Link>}
+
+                {decodedToken && 
+                decodedToken?.userInfo && 
+                (decodedToken?.userInfo?.role.includes("Release") || decodedToken?.userInfo?.role.includes("Admin")) &&
                 <>
                   <Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/>Labels</Link>
                 </>}
-                {/* <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/users"><GroupRoundedIcon style={{color:'#C08261'}}/> Users</Link> */}
-
-                {/* {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") )&&
-                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/user/create"><GroupRoundedIcon style={{color:'#C08261'}}/> Create User</Link>} */}
-
-                {/* {<Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/company"><StoreRoundedIcon style={{color:'#E5D283'}}/>My Company</Link>}
-
-                <Link style={{fontSize:"", padding:'5px 3px'}} to="/dashboard/account"><ManageAccountsRoundedIcon style={{color:'#61677A'}}/> Account</Link> */}
                 <Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/contact"><ContactsIcon style={{color:'#3992B0'}}/> contact Us</Link>
-
-
             </div>
-
-            {/* <div style={{ position:'absolute', bottom:'20px', left:'35%'}}>
-                <button disabled={logoutRequest ? true : false} onClick={() => handleLogout()} style={{backgroundColor:'#0E2F78', color:'#fff', borderRadius:'5px', padding:'2px 10px', fontWeight:'600'}}>
-                        {logoutRequest 
-                        ? <RotatingLines
-                          strokeColor="#FFFFFF"
-                          strokeWidth="5"
-                          animationDuration="0.75"
-                          width="30"
-                          visible={true}
-                        /> 
-                        : "LogOut"}
-                        <LogoutIcon style={{marginLeft:'10px'}}/>
-                </button>
-            </div> */}
           </div>
         </div>
       </div>

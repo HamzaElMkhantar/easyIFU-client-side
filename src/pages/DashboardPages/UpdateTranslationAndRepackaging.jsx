@@ -5,15 +5,16 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RotatingLines } from 'react-loader-spinner';
-import { getProjectAction, translationAndRepackagingAction } from '../../redux/actions/projectActions';
+import { translationAndRepackagingAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const UpdateTranslationAndRepackaging = () => {
     const {projectId} = useParams()
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {translationAndRepackaging, getProject} = useSelector(state => state);
+    const {translationAndRepackaging, getLabel} = useSelector(state => state);
 
     const {translationAndRepackagingRequest, translationAndRepackagingSuccess, translationAndRepackagingFail, translationAndRepackagingInfo} = translationAndRepackaging;
 
@@ -32,17 +33,17 @@ const UpdateTranslationAndRepackaging = () => {
       repackagingEntityAddress: '',
     });
     
-       // get prev project info
- const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
- const [projectInformation, setProjectInformation] = useState({});
- useEffect(() =>{
-   dispatch(getProjectAction(projectId, token))
- }, [])
- useEffect(() =>{
-   if(getProjectSuccess){
-     setProjectInformation(project)
-   }
- }, [getProjectSuccess])
+    // get prev project info
+    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
+    const [projectInformation, setProjectInformation] = useState({});
+    useEffect(() =>{
+      dispatch(getLabelAction(projectId, token))
+    }, [])
+    useEffect(() =>{
+      if(getLabelSuccess){
+        setProjectInformation(label)
+      }
+    }, [getLabelSuccess])
 
   useEffect(() => {
     // Set formData with existing project information

@@ -5,17 +5,18 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectAction, productInformationAction, uploadManufacturerLogoAction } from '../../redux/actions/projectActions';
+import { productInformationAction, uploadManufacturerLogoAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const UpdateProductInfoComponent = () => {
     const {projectId} = useParams()
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {productInformation, uploadManufacturerLogo, getProject} = useSelector(state => state);
+    const {productInformation, uploadManufacturerLogo, getLabel} = useSelector(state => state);
     const {productRequest, productSuccess, productFail, projectInfo} = productInformation;
     const {uploadLogoRequest, uploadLogoSuccess, uploadLogoFail} = uploadManufacturerLogo;
 
@@ -82,16 +83,17 @@ const UpdateProductInfoComponent = () => {
 
 
     // get prev project info
-    const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+
+    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
     const [projectInformation, setProjectInformation] = useState({});
     useEffect(() =>{
-        dispatch(getProjectAction(projectId, token))
+      dispatch(getLabelAction(projectId, token))
     }, [])
     useEffect(() =>{
-        if(getProjectSuccess){
-        setProjectInformation(project)
-        }
-    }, [getProjectSuccess])
+      if(getLabelSuccess){
+        setProjectInformation(label)
+      }
+    }, [getLabelSuccess])
 
 
 

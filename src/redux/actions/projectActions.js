@@ -100,7 +100,7 @@ import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST,
             TRANSLATION_REPACKAGING_SUCCESS} from '../constants/projectConstants';
 
 
-export const getAllProjectsAction = (companyId, token) => async (dispatch) => {
+export const getAllProjectsAction = (companyId, createdBy, token) => async (dispatch) => {
     try {
     
         dispatch({ 
@@ -113,7 +113,7 @@ export const getAllProjectsAction = (companyId, token) => async (dispatch) => {
             }
         }
     
-        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/project-company/${companyId}`, config);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/project-company/${companyId}/${createdBy}`, config);
 
         dispatch({ 
             type: ALL_PROJECTS_SUCCESS, 

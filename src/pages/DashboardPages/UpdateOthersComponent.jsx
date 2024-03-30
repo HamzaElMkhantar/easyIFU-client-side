@@ -6,9 +6,10 @@ import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
 import { RotatingLines } from 'react-loader-spinner';
-import { getProjectAction, othersAction } from '../../redux/actions/projectActions';
+import { othersAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 
 const UpdateOthersComponent = () => {
@@ -16,7 +17,7 @@ const UpdateOthersComponent = () => {
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {others, getProject} = useSelector(state => state);
+  const {others, getLabel} = useSelector(state => state);
   const {othersRequest, othersSuccess, othersFail, projectInfo} = others;
 
 
@@ -99,18 +100,18 @@ const UpdateOthersComponent = () => {
     quantitativeInformation: ''
   });
 
-  console.log(formData)
-  // get prev project info
-  const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
-  const [projectInformation, setProjectInformation] = useState({});
-     useEffect(() =>{
-       dispatch(getProjectAction(projectId, token))
-     }, [])
-     useEffect(() =>{
-       if(getProjectSuccess){
-         setProjectInformation(project)
-       }
-     }, [getProjectSuccess])
+
+    // get prev project info
+    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
+    const [projectInformation, setProjectInformation] = useState({});
+    useEffect(() =>{
+      dispatch(getLabelAction(projectId, token))
+    }, [])
+    useEffect(() =>{
+      if(getLabelSuccess){
+        setProjectInformation(label)
+      }
+    }, [getLabelSuccess])
 
   useEffect(() => {
     // Set formData with existing project information

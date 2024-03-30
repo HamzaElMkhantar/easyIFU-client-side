@@ -3,18 +3,19 @@ import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
 import './project.css'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectAction, sterilityAction } from '../../redux/actions/projectActions';
+import { sterilityAction } from '../../redux/actions/projectActions';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const UpdateSterilityComponent = () => {
     const {projectId} = useParams();
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {sterility, getProject} = useSelector(state => state);
+    const {sterility, getLabel} = useSelector(state => state);
     const {sterilityRequest, sterilitySuccess, sterilityFail, projectInfo} = sterility
 
 
@@ -40,17 +41,17 @@ const UpdateSterilityComponent = () => {
         hasSingleSterileBarrierSystemWithProtectiveOutside: false,
     });
 
-          // get prev project info
-          const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
-          const [projectInformation, setProjectInformation] = useState({});
-          useEffect(() =>{
-              dispatch(getProjectAction(projectId, token))
-          }, [])
-          useEffect(() =>{
-              if(getProjectSuccess){
-              setProjectInformation(project)
-              }
-          }, [getProjectSuccess])
+    // get prev project info
+    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
+    const [projectInformation, setProjectInformation] = useState({});
+    useEffect(() =>{
+      dispatch(getLabelAction(projectId, token))
+    }, [])
+    useEffect(() =>{
+      if(getLabelSuccess){
+        setProjectInformation(label)
+      }
+    }, [getLabelSuccess])
 
     useEffect(() => {
         // Set formData with existing project information

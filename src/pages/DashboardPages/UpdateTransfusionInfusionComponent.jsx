@@ -6,34 +6,38 @@ import Cookies from 'js-cookie';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectAction, transfusionInfusionAction } from '../../redux/actions/projectActions';
+import { transfusionInfusionAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const UpdateTransfusionInfusionComponent = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {transfusionInfusion, getProject} = useSelector(state => state);
+  const {transfusionInfusion, getLabel} = useSelector(state => state);
   const {transfusionInfusionRequest, transfusionInfusionSuccess, transfusionInfusionFail, projectInfo} = transfusionInfusion
-  const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+
 
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
 
-  const [projectInformation, setProjectInformation] = useState({})
 
-  useEffect(() => {
-    dispatch(getProjectAction(projectId))
+  // get prev project info
+  const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
+  const [projectInformation, setProjectInformation] = useState({});
+  useEffect(() =>{
+    dispatch(getLabelAction(projectId, token))
   }, [])
-
-  useEffect(() => {
-    if(getProjectSuccess){
-      setProjectInformation(project)
+  useEffect(() =>{
+    if(getLabelSuccess){
+      setProjectInformation(label)
     }
-  }, [getProjectSuccess])
+  }, [getLabelSuccess])
+
+
   const [formData, setFormData] = useState({
     projectId,
     isUpdate: true,

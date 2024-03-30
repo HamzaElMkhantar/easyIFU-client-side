@@ -187,7 +187,7 @@ function App() {
         intervalRef.current = setInterval(() => {
           dispatch(refreshAction());
           console.log('Token refresh scheduled.');
-        }, 900000); // (900000 = 15min ) \ Refresh every 0.25 minute (6000 milliseconds)
+        }, 300000); // (900000 = 15min ) \ Refresh every 0.25 minute (6000 milliseconds)
       }
     };
   }, [dispatch]);
@@ -329,7 +329,11 @@ function App() {
                 </>}
            
                 <Route path='/dashboard' element={<Dashboard />} />
-                <Route path='/dashboard/project' element={<Project />} />
+                {decodedToken &&
+                 decodedToken?.userInfo && 
+                 (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
+                 <Route path='/dashboard/project' element={<Project />} />}
+                 
                 <Route path='/dashboard/products/:projectId' element={<Products />} />
                 <Route path='/dashboard/labels/:productId' element={<LabelsByProject />} />
                 <Route path='/dashboard/archived-project' element={<ArchivedProject />} />

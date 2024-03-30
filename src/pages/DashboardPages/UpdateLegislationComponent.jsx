@@ -4,11 +4,12 @@ import './project.css'
 
 import HorizontalLinearStepper from '../../utilities/HorizontalLinearStepper';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectAction, legislationAction } from '../../redux/actions/projectActions';
+import { legislationAction } from '../../redux/actions/projectActions';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const UpdateLegislationComponent = () => {
 
@@ -16,7 +17,7 @@ const UpdateLegislationComponent = () => {
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
   
-    const {legislation, getProject} = useSelector(state => state);
+    const {legislation, getLabel} = useSelector(state => state);
     const {legislationRequest, legislationSuccess, legislationFail, legislationInfo} = legislation;
 
 
@@ -38,18 +39,16 @@ const UpdateLegislationComponent = () => {
     })
 
     // get prev project info
-    const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
     const [projectInformation, setProjectInformation] = useState({});
-    console.log("get old data :", projectInformation)
     useEffect(() =>{
-        dispatch(getProjectAction(projectId, token))
+      dispatch(getLabelAction(projectId, token))
     }, [])
     useEffect(() =>{
-        if(getProjectSuccess){
-        setProjectInformation(project)
-        }
-    }, [getProjectSuccess])
-    console.log(formData)
+      if(getLabelSuccess){
+        setProjectInformation(label)
+      }
+    }, [getLabelSuccess])
 
     useEffect(() =>{
         setFormData({

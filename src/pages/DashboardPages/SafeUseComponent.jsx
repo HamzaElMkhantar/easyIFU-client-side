@@ -5,16 +5,17 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectAction, safeUseAction } from '../../redux/actions/projectActions';
+import { safeUseAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const SafeUseComponent = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {safeUse, getProject} = useSelector(state => state);
+  const {safeUse, getLabel} = useSelector(state => state);
   const {safeUseRequest, safeUseSuccess, safeUseFail, projectInfo} = safeUse;
 
 
@@ -40,16 +41,16 @@ const SafeUseComponent = () => {
   });
 
    // get prev project info
- const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+ const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
  const [projectInformation, setProjectInformation] = useState({});
  useEffect(() =>{
-   dispatch(getProjectAction(projectId, token))
+   dispatch(getLabelAction(projectId, token))
  }, [])
  useEffect(() =>{
-   if(getProjectSuccess){
-     setProjectInformation(project)
+   if(getLabelSuccess){
+     setProjectInformation(label)
    }
- }, [getProjectSuccess])
+ }, [getLabelSuccess])
 
   useEffect(() => {
     // Set formData with existing project information

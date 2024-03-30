@@ -5,7 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { getProjectAction, sendingProjectToOtherRoleAction } from '../../redux/actions/projectActions';
+import { sendingProjectToOtherRoleAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 

@@ -5,16 +5,17 @@ import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProjectAction, storageAction } from '../../redux/actions/projectActions';
+import {storageAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
+import { getLabelAction } from '../../redux/actions/labelActions';
 
 const StorageComponent = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {storage, getProject} = useSelector(state => state);
+  const {storage, getLabel} = useSelector(state => state);
   const {storageRequest, storageSuccess, storageFail, projectInfo} = storage
 
   // °F
@@ -40,17 +41,17 @@ const StorageComponent = () => {
 
   console.log(formData)
 
-    // get prev project info
-    const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
-    const [projectInformation, setProjectInformation] = useState({});
-    useEffect(() =>{
-      dispatch(getProjectAction(projectId, token))
-    }, [])
-    useEffect(() =>{
-      if(getProjectSuccess){
-        setProjectInformation(project)
+  // get prev project info
+  const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
+  const [projectInformation, setProjectInformation] = useState({});
+  useEffect(() =>{
+      dispatch(getLabelAction(projectId, token))
+  }, [])
+  useEffect(() =>{
+      if(getLabelSuccess){
+      setProjectInformation(label)
       }
-    }, [getProjectSuccess])
+  }, [getLabelSuccess])
   useEffect(() => {
     // Set formData with existing project information
     setFormData({

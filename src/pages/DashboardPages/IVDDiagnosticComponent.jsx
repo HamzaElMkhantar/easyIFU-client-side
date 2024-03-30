@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { IVDDiagnosticAction, getProjectAction } from '../../redux/actions/projectActions';
+import { IVDDiagnosticAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
 import { getLabelAction } from '../../redux/actions/labelActions';
 
@@ -36,7 +36,9 @@ const IVDDiagnosticComponent = () => {
   });
 
     // get prev project info
-    const {getLabelRequest, getLabelSuccess, getProjectFail, label} = getLabel;
+
+    // projectInfo : search on it !!!!!
+    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
     const [projectInformation, setProjectInformation] = useState({});
     useEffect(() =>{
       dispatch(getLabelAction(projectId, token))

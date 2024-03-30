@@ -98,19 +98,20 @@ import bwipjs from 'bwip-js';
 import { useDispatch, useSelector } from 'react-redux'
 import Cookies from 'js-cookie'
 import jwtDecode from 'jwt-decode'
-import { ReleaseTheProjectAction, getProjectAction, sendingProjectToOtherRoleAction } from '../../redux/actions/projectActions'
+import { ReleaseTheProjectAction, sendingProjectToOtherRoleAction } from '../../redux/actions/projectActions'
 import { usersCompanyAction } from '../../redux/actions/userActions'
 import { toast } from 'react-toastify'
 import { RotatingLines } from 'react-loader-spinner';
 import { Modal } from 'react-bootstrap';
+import { getLabelAction } from '../../redux/actions/labelActions';
 const CreatorReview = () => {
     const {projectId} = useParams();
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {getProject, usersCompany, sendingProjectToOtherRole, ReleaseTheProject} = useSelector(state => state);
+    const {getLabel, usersCompany, sendingProjectToOtherRole, ReleaseTheProject} = useSelector(state => state);
+    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
     const {usersCompanyRequest, usersCompanySuccess, usersCompanyFail, allUsers} = usersCompany;
-    const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
     const {sendingProjectRequest, sendingProjectSuccess, sendingProjectFail, sendingProjectMessage} = sendingProjectToOtherRole
     const [projectInfo, setProjectInfo] = useState({});
     const [allUsersCompany, setAllUsersCompany] = useState([]);
@@ -150,7 +151,7 @@ const CreatorReview = () => {
       },  [sendingProjectSuccess, sendingProjectFail])
 
     useEffect(() => {
-        dispatch(getProjectAction(projectId, token))
+        dispatch(getLabelAction(projectId, token))
         dispatch(usersCompanyAction({
             _id:decodedToken && decodedToken.userInfo && decodedToken.userInfo._id, 
             companyId: decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId 
@@ -158,30 +159,30 @@ const CreatorReview = () => {
     }, [])
 
     useEffect(() => {
-        if(getProjectSuccess){
-          setProjectInfo(project)
+        if(getLabelSuccess){
+          setProjectInfo(label)
         }
         if(usersCompanySuccess){
           setAllUsersCompany(allUsers)
         }
     
-        if(getProjectFail){
-          toast.warning(`${getProjectFail.message}`)
+        if(getLabelFail){
+          toast.warning(`${getLabelFail.message}`)
         }
-      }, [getProjectSuccess, getProjectFail, usersCompanySuccess])
+      }, [getLabelSuccess, getLabelFail, usersCompanySuccess])
 
       useEffect(() => {
-        if(getProjectSuccess){
-          setProjectInfo(project)
+        if(getLabelSuccess){
+          setProjectInfo(label)
         }
         if(usersCompanySuccess){
           setAllUsersCompany(allUsers)
         }
     
-        if(getProjectFail){
-          toast.warning(`${getProjectFail.message}`)
+        if(getLabelFail){
+          toast.warning(`${getLabelFail.message}`)
         }
-      }, [getProjectSuccess, getProjectFail, usersCompanySuccess])
+      }, [getLabelSuccess, getLabelFail, usersCompanySuccess])
 
 
       // release project
@@ -1114,11 +1115,11 @@ useEffect(() => {
                   <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
        </div>
         <Link to='/dashboard/received-project' className='label-info-link'><ArrowBackIcon /> Back</Link>
-        {!getProjectRequest && 
-            <h3 className='label-info-title' style={{color:'#'}}>{projectInfo && projectInfo.projectName}</h3>
+        {!getLabelRequest && 
+            <h3 className='label-info-title' style={{color:'#'}}>{projectInfo && projectInfo.labelName}</h3>
         }
         <div className='mt-1'>
-            {!getProjectRequest
+            {!getLabelRequest
             ?<div>
                 <div>
                     <div >

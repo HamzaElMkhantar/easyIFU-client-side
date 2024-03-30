@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersCompanyAction } from '../../redux/actions/userActions';
-import { getProjectAction, saveDocumentAction } from '../../redux/actions/projectActions';
+import { saveDocumentAction } from '../../redux/actions/projectActions';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { Avatar } from '@mui/material';
@@ -111,13 +111,14 @@ import JsBarcode from 'jsbarcode';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import axios from 'axios';
+import { getLabelAction } from '../../redux/actions/labelActions';
 const ReleasedProject = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {getProject, saveDocument} = useSelector(state => state);
-  const {getProjectRequest, getProjectSuccess, getProjectFail, project} = getProject;
+  const {getLabel, saveDocument} = useSelector(state => state);
+    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
   const {documentRequest, documentSuccess, documentFail, documentMessage} = saveDocument;
 
 
@@ -126,7 +127,7 @@ const ReleasedProject = () => {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getProjectAction(projectId, token))
+    dispatch(getLabelAction(projectId, token))
 
 }, [])
 
@@ -142,15 +143,15 @@ useEffect(() => {
   }, [ documentSuccess, documentFail,])
 
   useEffect(() => {
-    if(getProjectSuccess){
-      setProjectInfo(project)
+    if(getLabelSuccess){
+      setProjectInfo(label)
     }
 
 
-    if(getProjectFail){
-      toast.warning(`${getProjectFail.message}`)
+    if(getLabelFail){
+      toast.warning(`${getLabelFail.message}`)
     }
-  }, [getProjectSuccess, getProjectFail])
+  }, [getLabelSuccess, getLabelFail])
 
     //  handle dynamic data for label
 
@@ -1140,6 +1141,7 @@ useEffect(() => {
             console.error('Error generating image:', error);
           });
       };
+      
       const [loader, setLoader] = useState(false);
       const downloadPDF = async () => {
         try {
@@ -1381,7 +1383,7 @@ useEffect(() => {
 
                   <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
         </div>
-      {!getProjectRequest ? 
+      {!getLabelRequest ? 
       <div style={{marginTop:'30px'}}>
 
           <div className='label-info-content-item' style={{display:'flex', justifyContent:'space-between', flexWrap:'wrap', gridGap:'10px', alignItems:'flex-start', flexDirection:'row-reverse'}}>
