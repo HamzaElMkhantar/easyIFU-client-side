@@ -42,6 +42,7 @@ import BarLinks from '../../utilities/BarLinks';
 import NavDashboard from '../../components/header/NavDashboard';
 import { logoutAction } from '../../redux/actions/authActions';
 import { getAllLabelsAction } from '../../redux/actions/labelActions';
+import Delete from '@mui/icons-material/Delete';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -117,7 +118,7 @@ const Project = () => {
 
   useEffect(() => {
     if(deleteProjectSuccess || archiveToggleProjectSuccess || duplicateProjectSuccess || startProjectSuccess){
-      dispatch(getAllProjectsAction(companyId, token))
+      dispatch(getAllProjectsAction(companyId, decodedToken?.userInfo?._id, token))
     }
   }, [deleteProjectSuccess , archiveToggleProjectSuccess, duplicateProjectSuccess, startProjectSuccess])
 
@@ -447,6 +448,7 @@ const Project = () => {
                   <th scope="col">Description</th>
                   <th scope="col">createdAt</th>
                   <th scope="col">Details</th>
+                  <th scope="col">Delete</th>
                   </tr>
               </thead>
               <tbody style={{ textAlign:'center'}}>
@@ -499,12 +501,12 @@ const Project = () => {
                                   </button>
                           }</td>
                           } */}
-                          {/* <td>
-                              <button disabled={item?.projectStep === 11 ? false : true}
-                                  onClick={() => dispatch(duplicateProjectAction(item?._id, token))}
+                           <td>
+                              <button disabled={!deleteProjectRequest ? false : true}
+                                  onClick={() => handleDelete(item?._id)}
                                   style={item?.projectStep === 11 ? {borderRadius:'4px'}: {borderRadius:'4px', opacity:'0.5'}} > 
-                                  {!duplicateProjectRequest 
-                                  ? <ContentCopyRoundedIcon style={{color:'#021D41', fontSize:'24px'}}/>
+                                  {!deleteProjectRequest 
+                                  ? <Delete style={{color:'#CA0502', fontSize:'24px'}}/>
                                   : <RotatingLines
                                               strokeColor="#021D41"
                                               strokeWidth="5"
@@ -512,9 +514,8 @@ const Project = () => {
                                               width="23"
                                               visible={true}
                                           /> }
-                                
                               </button>
-                          </td> */}
+                          </td> 
                       </tr>
                     )
                   })

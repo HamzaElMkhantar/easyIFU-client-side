@@ -178,6 +178,7 @@ function App() {
 
   const decodedToken = A_Token ? jwtDecode(A_Token) : null
   const decodedToken_R = A_Token ? jwtDecode(R_Token) : null
+  console.log(decodedToken)
 
   const intervalRef = useRef(null);
   //  Memoize the interval setup function to prevent re-renders
@@ -266,7 +267,7 @@ function App() {
         </Route>
 
         <Route element={<RequireAuth />}>
-          {/* <Route element={<IsVerified /> }> */}
+          {/* <Route element={<IsVerified /> }>   */}
             {/* <Route element={<SubscriptionChecker  /> }> */}
 
               {/* routes for creator */}
@@ -347,7 +348,7 @@ function App() {
                 <Route path='/dashboard/project/released' element={<ReleasedProjects />} />
 
             {/* </Route> */}
-          {/* </Route> */}
+           {/* </Route> */}
 
             {/* easyIFU Admin routes */}
             {decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.role.includes("superAdmin") &&

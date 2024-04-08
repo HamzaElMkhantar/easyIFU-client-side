@@ -42,7 +42,7 @@ const ProjectByRole = () => {
     // -- component logic --
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
-    const roleId = decodedToken && decodedToken.userInfo && decodedToken.userInfo._id
+    const roleId = decodedToken && decodedToken?.userInfo && decodedToken?.userInfo._id
 
     const [projectsRole, setProjectsRole] = useState([])
     const {ProjectByRoleId} = useSelector(state => state)
@@ -188,15 +188,15 @@ const ProjectByRole = () => {
                         {projectsRole.map((item, index) => (
                         <tr key={item.id}>
                         <td >{index + 1}</td>
-                        <td >{item.projectName}</td>
-                        <td >{item.projectDescription.length > 20 
-                                ? item.projectDescription.substring(0, 20) + '...' 
-                                : item.projectDescription}</td>
-                        <td ><Link to={token && decodedToken && decodedToken.userInfo &&
-                                (decodedToken.userInfo.role.includes("Approver") || decodedToken.userInfo.role.includes("Release")) &&
-                                    decodedToken.userInfo.role.includes("Approver") 
+                        <td >{item.labelName}</td>
+                        <td >{item.labelDescription.length > 20 
+                                ? item.labelDescription.substring(0, 20) + '...' 
+                                : item.labelDescription}</td>
+                        <td ><Link to={token && decodedToken && decodedToken?.userInfo &&
+                                (decodedToken?.userInfo?.role?.includes("Approver") || decodedToken?.userInfo?.role?.includes("Release")) &&
+                                    decodedToken?.userInfo?.role?.includes("Approver") 
                                     ?`/dashboard/project/review-approver/${item._id}`
-                                    : decodedToken.userInfo.role.includes("Release") 
+                                    : decodedToken?.userInfo?.role?.includes("Release") 
                                     ?`/dashboard/project/review-release/${item._id}`
                                     :`/dashboard/project/review-creator/${item._id}`}
                             style={{backgroundColor:'#0C458F', 

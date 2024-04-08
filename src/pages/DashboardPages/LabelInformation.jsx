@@ -140,7 +140,7 @@ const LabelInformation = () => {
     if(sendingProjectFail){
       toast.error(`${sendingProjectFail.message}`)
     }
-  },  [sendingProjectSuccess, sendingProjectFail])
+  }, [sendingProjectSuccess, sendingProjectFail])
   useEffect(() => {
     dispatch(getLabelAction(projectId, token))
     dispatch(usersCompanyAction({
@@ -1620,10 +1620,6 @@ const LabelInformation = () => {
         )
       }
     }
-
-    //  ---- end update ----
-
-    
 
   //  ----------- download functions ---------------
     const componentRef = useRef();

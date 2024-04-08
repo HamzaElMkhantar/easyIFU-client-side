@@ -187,10 +187,10 @@ const ReleasedProjects = () => {
                         {releasedProject.map((item, index) => (
                         <tr key={item.id}>
                         <td >{index + 1}</td>
-                        <td >{item.projectName}</td>
-                        <td >{item.projectDescription.length > 20 
-                                ? item.projectDescription.substring(0, 20) + '...' 
-                                : item.projectDescription}</td>
+                        <td >{item.labelName}</td>
+                        <td >{item.labelDescription.length > 20 
+                                ? item.labelDescription.substring(0, 20) + '...' 
+                                : item.labelDescription}</td>
                         {(decodedToken?.userInfo?.role.includes("Release") ||decodedToken?.userInfo?.role.includes("Admin") )&&<td ><Link to={`/dashboard/project-released/${item._id}`}
                             style={{backgroundColor:'#0C458F', 
                               color:"#fff", 
