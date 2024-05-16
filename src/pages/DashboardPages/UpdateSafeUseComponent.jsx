@@ -23,7 +23,7 @@ const UpdateSafeUseComponent = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId,
     isUpdate: true,
     hasBiologicalRisks: false,
     isIntendedForSingleUse: false,
@@ -56,7 +56,7 @@ const UpdateSafeUseComponent = () => {
     // Set formData with existing project information
     setFormData({
       isUpdate: true,
-      projectId,
+      labelId: projectId,
       hasBiologicalRisks: projectInformation?.labelData?.hasBiologicalRisks || false,
       isIntendedForSingleUse: projectInformation?.labelData?.isIntendedForSingleUse || false,
       needInstructionsForUse: projectInformation?.labelData?.needInstructionsForUse || false,
@@ -132,6 +132,7 @@ const UpdateSafeUseComponent = () => {
                 value="Yes"
                 checked={formData.hasBiologicalRisks}
                 onChange={() => handleCheckboxChange('hasBiologicalRisks', 'Yes')}
+                disabled
               />
             </div>
             <div className="form-check">
@@ -143,6 +144,7 @@ const UpdateSafeUseComponent = () => {
                 value="No"
                 checked={!formData.hasBiologicalRisks}
                 onChange={() => handleCheckboxChange('hasBiologicalRisks', 'No')}
+                disabled
               />
             </div>
           </div>
@@ -160,6 +162,7 @@ const UpdateSafeUseComponent = () => {
                 value="Yes"
                 checked={formData.isIntendedForSingleUse}
                 onChange={() => handleCheckboxChange('isIntendedForSingleUse', 'Yes')}
+                disabled
               />
             </div>
             <div className="form-check">
@@ -171,6 +174,7 @@ const UpdateSafeUseComponent = () => {
                 value="No"
                 checked={!formData.isIntendedForSingleUse}
                 onChange={() => handleCheckboxChange('isIntendedForSingleUse', 'No')}
+                disabled
               />
             </div>
           </div>
@@ -188,6 +192,7 @@ const UpdateSafeUseComponent = () => {
                 value="Yes"
                 checked={formData.needInstructionsForUse}
                 onChange={() => handleCheckboxChange('needInstructionsForUse', 'Yes')}
+                disabled
               />
             </div>
             <div className="form-check">
@@ -199,6 +204,7 @@ const UpdateSafeUseComponent = () => {
                 value="No"
                 checked={!formData.needInstructionsForUse}
                 onChange={() => handleCheckboxChange('needInstructionsForUse', 'No')}
+                disabled
               />
             </div>
           </div>
@@ -214,6 +220,7 @@ const UpdateSafeUseComponent = () => {
               name="eIFULink"
               value={formData.eIFULink}
               onChange={(e) => handleInputChange('eIFULink', e.target.value)}
+              readOnly
             />
           </div>
          )}
@@ -230,6 +237,7 @@ const UpdateSafeUseComponent = () => {
                 value="Yes"
                 checked={formData.needCaution}
                 onChange={() => handleCheckboxChange('needCaution', 'Yes')}
+                disabled
               />
             </div>
             <div className="form-check">
@@ -241,6 +249,7 @@ const UpdateSafeUseComponent = () => {
                 value="No"
                 checked={!formData.needCaution}
                 onChange={() => handleCheckboxChange('needCaution', 'No')}
+                disabled
               />
             </div>
           </div>
@@ -462,6 +471,7 @@ const UpdateSafeUseComponent = () => {
                 value="Yes"
                 checked={formData.multipleUsesOnSinglePatient}
                 onChange={() => handleCheckboxChange('multipleUsesOnSinglePatient', 'Yes')}
+                disabled
             />
             </div>
             <div className="form-check">
@@ -473,6 +483,7 @@ const UpdateSafeUseComponent = () => {
                 value="No"
                 checked={!formData.multipleUsesOnSinglePatient}
                 onChange={() => handleCheckboxChange('multipleUsesOnSinglePatient', 'No')}
+                disabled
             />
             </div>
         </div>

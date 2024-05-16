@@ -39,7 +39,7 @@ const UpdateTransfusionInfusionComponent = () => {
 
 
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId,
     isUpdate: true,
     isMedicalDeviceForSampleCollection: false,
     hasFluidPath: false,
@@ -55,11 +55,11 @@ const UpdateTransfusionInfusionComponent = () => {
     // Set formData with existing project information
     setFormData({
       isUpdate: true,
-      projectId,
+      labelId: projectId,
       isMedicalDeviceForSampleCollection: projectInformation?.labelData?.isMedicalDeviceForSampleCollection ||  false,
       hasFluidPath: projectInformation?.labelData?.hasFluidPath ||  false,
       isNonPyrogenic: projectInformation?.labelData?.isNonPyrogenic ||  false,
-      numberOfDropsPerMilliliter: projectInformation?.labelData?.isNonPyrogenic ||  '',
+      numberOfDropsPerMilliliter: projectInformation?.labelData?.numberOfDropsPerMilliliter ||  '',
       liquidFilterPoreSize: projectInformation?.labelData?.liquidFilterPoreSize ||  '',
       hasOneWayValve: projectInformation?.labelData?.hasOneWayValve ||  false,
     });

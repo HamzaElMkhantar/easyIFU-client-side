@@ -9,13 +9,14 @@ import {storageAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import { getLabelAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 
 const StorageComponent = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {storage, getLabel} = useSelector(state => state);
+  const {storage, productById} = useSelector(state => state);
   const {storageRequest, storageSuccess, storageFail, projectInfo} = storage
 
   // °F
@@ -39,19 +40,18 @@ const StorageComponent = () => {
     atmosphericPressureMax: 0,
   });
 
-  console.log(formData)
 
-  // get prev project info
-  const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
+  // get prev label info
+  const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById;
   const [projectInformation, setProjectInformation] = useState({});
   useEffect(() =>{
-      dispatch(getLabelAction(projectId, token))
+    dispatch(getProductByIdAction(projectId, token))
   }, [])
   useEffect(() =>{
-      if(getLabelSuccess){
-      setProjectInformation(label)
-      }
-  }, [getLabelSuccess])
+    if(productByIdSuccess){
+      setProjectInformation(productByIdData)
+    }
+  }, [productByIdSuccess])
   useEffect(() => {
     // Set formData with existing project information
     setFormData({
@@ -111,8 +111,8 @@ const StorageComponent = () => {
       console.log(formData)
 
         // Convert temperature values to numbers
-          const lowerTemperature = parseFloat(formData.lowerTemperatureLimit);
-          const upperTemperature = parseFloat(formData.upperTemperatureLimit);
+          const lowerTemperature = parseInt(formData.lowerTemperatureLimit);
+          const upperTemperature = parseInt(formData.upperTemperatureLimit);
 
           if (!isNaN(lowerTemperature) && !isNaN(upperTemperature)) {
             if (lowerTemperature >= upperTemperature) {
@@ -121,8 +121,8 @@ const StorageComponent = () => {
           }
 
           // Convert humidity values to numbers
-          const humidityMin = parseFloat(formData.humidityMin);
-          const humidityMax = parseFloat(formData.humidityMax);
+          const humidityMin = parseInt(formData.humidityMin);
+          const humidityMax = parseInt(formData.humidityMax);
 
           if (!isNaN(humidityMin) && !isNaN(humidityMax)) {
             if (humidityMin >= humidityMax) {
@@ -131,8 +131,8 @@ const StorageComponent = () => {
           }
 
           // Convert atmospheric pressure values to numbers
-          const atmosphericPressureMin = parseFloat(formData.atmosphericPressureMin);
-          const atmosphericPressureMax = parseFloat(formData.atmosphericPressureMax);
+          const atmosphericPressureMin = parseInt(formData.atmosphericPressureMin);
+          const atmosphericPressureMax = parseInt(formData.atmosphericPressureMax);
 
           if (!isNaN(atmosphericPressureMin) && !isNaN(atmosphericPressureMax)) {
             if (atmosphericPressureMin >= atmosphericPressureMax) {
@@ -140,14 +140,13 @@ const StorageComponent = () => {
             }
           }
 
-          console.log("formData : ", formData)
+
       dispatch(storageAction(formData, token))
   }
 
   useEffect(() => {
       if(storageSuccess){
-          navigate(`/dashboard/create-project/step6/${projectInfo._id}`)
-          console.log(projectInfo)
+          navigate(`/dashboard/create-project/step7/${projectInfo._id}`)
       }
 
       if(storageFail){
@@ -168,7 +167,7 @@ const StorageComponent = () => {
                                   borderRadius:'5px'
                                   }}>
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step4/${projectId}`} className='label-info-link'>Back</Link>
-                <HorizontalLinearStepper step={4}/>
+                <HorizontalLinearStepper step={5}/>
                 <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
       <form onSubmit={handleSubmit} className="storage-form">

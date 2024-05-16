@@ -383,11 +383,13 @@ const Project = () => {
                 <form onSubmit={handleSubmit}>
                   <div className="form-group">
                         <label>1- Project Name:</label>
-                        <input
+                        <input 
                         type="text"
                         className="form-control"
                         name="projectName"
                         value={formData.projectName}
+                        // readOnly
+                        // placeholder='wfjwef'
                         onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
                         />
                     </div>

@@ -10,6 +10,7 @@ import { othersAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getLabelAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 
 
 const OthersComponent = () => {
@@ -17,7 +18,7 @@ const OthersComponent = () => {
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {others, getLabel} = useSelector(state => state);
+  const {others, productById} = useSelector(state => state);
   const {othersRequest, othersSuccess, othersFail, projectInfo} = others;
 
 
@@ -74,6 +75,8 @@ const OthersComponent = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  
   const [formData, setFormData] = useState({
     labelId: projectId,
     isUpdate: false,
@@ -100,18 +103,17 @@ const OthersComponent = () => {
     quantitativeInformation: ''
   });
 
-  console.log(formData)
   // get prev label info
-  const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
+  const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById;
   const [projectInformation, setProjectInformation] = useState({});
-     useEffect(() =>{
-       dispatch(getLabelAction(projectId, token))
-     }, [])
-     useEffect(() =>{
-       if(getLabelSuccess){
-         setProjectInformation(label)
-       }
-     }, [getLabelSuccess])
+  useEffect(() =>{
+    dispatch(getProductByIdAction(projectId, token))
+  }, [])
+  useEffect(() =>{
+    if(productByIdSuccess){
+      setProjectInformation(productByIdData)
+    }
+  }, [productByIdSuccess])
 
   useEffect(() => {
     // Set formData with existing project information
@@ -177,7 +179,7 @@ const OthersComponent = () => {
 
   useEffect(() => {
     if(othersSuccess){
-        navigate(`/dashboard/create-project/step10/${projectInfo._id}`)
+        navigate(`/dashboard/create-project/step11/${projectInfo._id}`)
     }
 
     if(othersFail){
@@ -202,7 +204,7 @@ const OthersComponent = () => {
                                   borderRadius:'5px'
                                   }}>
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step8/${projectId}`} className='label-info-link'>Back</Link>
-                <HorizontalLinearStepper step={8}/>
+                <HorizontalLinearStepper step={9}/>
                 <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
       <form className="others-form" onSubmit={handleSubmit}>

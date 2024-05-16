@@ -20,7 +20,7 @@ const UpdateStorageComponent = () => {
 
   // °F
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId,
     isUpdate: true,
     temperatureUnite: '°C',
     requiresCarefulHandling: false,
@@ -54,7 +54,7 @@ const UpdateStorageComponent = () => {
     // Set formData with existing project information
     setFormData({
       isUpdate: true,
-      projectId,
+      labelId: projectId,
       temperatureUnite : projectInformation?.labelData?.temperatureUnite || '°C',
       requiresCarefulHandling: projectInformation?.labelData?.requiresCarefulHandling || false,
       requiresProtectionFromLight: projectInformation?.labelData?.requiresProtectionFromLight || false,
@@ -75,7 +75,8 @@ const UpdateStorageComponent = () => {
 
   const handleCheckboxChange = (name, value) => {
 
-    if(name === "Temperature-Celsius" || name === "Temperature-Fahrenheit"){
+    if( name === "Temperature-Celsius" 
+        || name === "Temperature-Fahrenheit"){
       setFormData({
         ...formData,
         temperatureUnite: value,

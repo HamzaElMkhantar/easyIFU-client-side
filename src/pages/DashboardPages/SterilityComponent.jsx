@@ -9,13 +9,14 @@ import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import { getLabelAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 
 const SterilityComponent = () => {
     const {projectId} = useParams();
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {sterility, getLabel} = useSelector(state => state);
+    const {sterility, productById} = useSelector(state => state);
     const {sterilityRequest, sterilitySuccess, sterilityFail, projectInfo} = sterility
 
 
@@ -41,17 +42,17 @@ const SterilityComponent = () => {
         hasSingleSterileBarrierSystemWithProtectiveOutside: false,
     });
 
-          // get prev project info
-          const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
-          const [projectInformation, setProjectInformation] = useState({});
-          useEffect(() =>{
-              dispatch(getLabelAction(projectId, token))
-          }, [])
-          useEffect(() =>{
-              if(getLabelSuccess){
-              setProjectInformation(label)
-              }
-          }, [getLabelSuccess])
+    // get prev label info
+    const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById;
+    const [projectInformation, setProjectInformation] = useState({});
+    useEffect(() =>{
+    dispatch(getProductByIdAction(projectId, token))
+    }, [])
+    useEffect(() =>{
+    if(productByIdSuccess){
+        setProjectInformation(productByIdData)
+    }
+    }, [productByIdSuccess])
 
     useEffect(() => {
         // Set formData with existing project information
@@ -184,7 +185,7 @@ const SterilityComponent = () => {
 
     useEffect(() => {
         if(sterilitySuccess){
-            navigate(`/dashboard/create-project/step5/${projectInfo._id}`)
+            navigate(`/dashboard/create-project/step6/${projectInfo._id}`)
         }
 
         if(sterilityFail){
@@ -203,7 +204,7 @@ const SterilityComponent = () => {
                                   borderRadius:'5px'
                                   }}>
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step3/${projectId}`} className='label-info-link'>Back</Link>
-                <HorizontalLinearStepper step={3}/>
+                <HorizontalLinearStepper step={4}/>
                 <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
         <form onSubmit={handleSubmit} className='sterility-form'>

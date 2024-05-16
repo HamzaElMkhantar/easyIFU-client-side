@@ -54,6 +54,10 @@ import {ALL_PROJECTS_FAILED,
         PRODUCT_INFORMATION_REQUEST,
         PRODUCT_INFORMATION_RESET,
         PRODUCT_INFORMATION_SUCCESS,
+        PRODUCT_INTEDED_PURPOSE_FAILED,
+        PRODUCT_INTEDED_PURPOSE_REQUEST,
+        PRODUCT_INTEDED_PURPOSE_RESET,
+        PRODUCT_INTEDED_PURPOSE_SUCCESS,
         RELEASED_PROJECT_FAILED,
         RELEASED_PROJECT_REQUEST,
         RELEASED_PROJECT_RESET,
@@ -131,6 +135,7 @@ const archiveToggleProject = {
 const duplicateProject = {
     duplicateProjectRequest : false,
     duplicateProjectSuccess :  false,
+    deplicatedProject: null,
     duplicateProjectFail : null,
 }
 
@@ -165,6 +170,13 @@ const productInfo = {
     productRequest : false,
     productSuccess :  false,
     productFail : null,
+    projectInfo: null
+}
+
+const intendedPurpose = {
+    intendedPurposeRequest : false,
+    intendedPurposeSuccess :  false,
+    intendedPurposeFail : null,
     projectInfo: null
 }
 
@@ -391,6 +403,7 @@ export const duplicateProjectReducer = (state = duplicateProject, action) => {
                 ...state,
                 duplicateProjectRequest : false,
                 duplicateProjectSuccess : true,
+                deplicatedProject: action.payload
             } ;
         case DUPLICATE_PROJECTS_FAILED :
             return {
@@ -589,6 +602,36 @@ export const productInformationReducer = (state = productInfo, action) => {
             } ;
         case PRODUCT_INFORMATION_RESET :
             return productInfo;
+        default :
+            return state ;
+    }
+}
+
+export const intendedPurposeReducer = (state = intendedPurpose, action) => {
+    switch(action.type){
+        case PRODUCT_INTEDED_PURPOSE_REQUEST:
+            return {
+                ...state,
+                intendedPurposeRequest : true,
+                intendedPurposeSuccess :  false,
+                intendedPurposeFail : null,
+            } ;
+        case PRODUCT_INTEDED_PURPOSE_SUCCESS :
+            return {
+                ...state,
+                intendedPurposeRequest : false,
+                intendedPurposeSuccess : true,
+                projectInfo: action.payload
+            } ;
+        case PRODUCT_INTEDED_PURPOSE_FAILED :
+            return {
+                ...state,
+                intendedPurposeFail : action.payload,
+                intendedPurposeSuccess :  false,
+                intendedPurposeRequest : false
+            } ;
+        case PRODUCT_INTEDED_PURPOSE_RESET :
+            return intendedPurpose;
         default :
             return state ;
     }

@@ -85,6 +85,8 @@ import jwt_decode from 'jwt-decode';
 import { logoutAction } from './redux/actions/authActions';
 import { toast } from 'react-toastify';
 import LogoutModal from './utilities/LogoutModal';
+import IntendedPurpose from './pages/DashboardPages/IntendedPurpose';
+import UpdateIntendedPurpose from './pages/DashboardPages/UpdateIntendedPurpose';
 // import { useState } from 'react';
 function App() {
 
@@ -271,49 +273,53 @@ function App() {
             {/* <Route element={<SubscriptionChecker  /> }> */}
 
               {/* routes for creator */}
-              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
+              {decodedToken && 
+                decodedToken?.userInfo && 
+                (decodedToken?.userInfo?.role.includes("Admin") 
+                  || decodedToken?.userInfo?.role.includes("Creator")) &&
                 <>
+                  {/* create projects steps */}
                   <Route path='/dashboard/create-project/step1/:projectId' element={<ManufacturerInfoComponent />} />
                   <Route path='/dashboard/create-project/step2/:projectId' element={<LegislationComponent />} />
                   <Route path='/dashboard/create-project/step3/:projectId' element={<ProductInfoComponent />} />
-                  <Route path='/dashboard/create-project/step4/:projectId' element={<SterilityComponent />} />
-                  <Route path='/dashboard/create-project/step5/:projectId' element={<StorageComponent />} />
-                  <Route path='/dashboard/create-project/step6/:projectId' element={<SafeUseComponent />} />
-                  <Route path='/dashboard/create-project/step7/:projectId' element={<IVDDiagnosticComponent />} />
-                  <Route path='/dashboard/create-project/step8/:projectId' element={<TransfusionInfusionComponent />} />
-                  <Route path='/dashboard/create-project/step9/:projectId' element={<OthersComponent />} />
-                  <Route path='/dashboard/create-project/step10/:projectId' element={<TranslationAndRepackaging />} />
+                  <Route path='/dashboard/create-project/step4/:projectId' element={<IntendedPurpose />} />
+                  <Route path='/dashboard/create-project/step5/:projectId' element={<SterilityComponent />} />
+                  <Route path='/dashboard/create-project/step6/:projectId' element={<StorageComponent />} />
+                  <Route path='/dashboard/create-project/step7/:projectId' element={<SafeUseComponent />} />
+                  <Route path='/dashboard/create-project/step8/:projectId' element={<IVDDiagnosticComponent />} />
+                  <Route path='/dashboard/create-project/step9/:projectId' element={<TransfusionInfusionComponent />} />
+                  <Route path='/dashboard/create-project/step10/:projectId' element={<OthersComponent />} />
+                  <Route path='/dashboard/create-project/step11/:projectId' element={<TranslationAndRepackaging />} />
 
                   <Route path='/dashboard/project-information/:projectId' element={<LabelInformation />} />
                   <Route path='/dashboard/project/review-creator/:projectId' element={<CreatorReview />} />
 
-                  {/* update projects */}
-
-                  {/* isUpdate: true, */}
-                  {/* toast.success(`updated success`) */}
-
+                  {/* update projects steps */}
                   <Route path='/dashboard/update-project/step1/:projectId' element={<UpdateManufacturerInfoComponent />} />
                   <Route path='/dashboard/update-project/step2/:projectId' element={<UpdateLegislationComponent />} />
                   <Route path='/dashboard/update-project/step3/:projectId' element={<UpdateProductInfoComponent />} />
-                  <Route path='/dashboard/update-project/step4/:projectId' element={<UpdateSterilityComponent />} />
-                  <Route path='/dashboard/update-project/step5/:projectId' element={<UpdateStorageComponent />} />
-                  <Route path='/dashboard/update-project/step6/:projectId' element={<UpdateSafeUseComponent />} />
-                  <Route path='/dashboard/update-project/step7/:projectId' element={<UpdateIVDDiagnosticComponent />} />
-                  <Route path='/dashboard/update-project/step8/:projectId' element={<UpdateTransfusionInfusionComponent />} />
-                  <Route path='/dashboard/update-project/step9/:projectId' element={<UpdateOthersComponent />} />
-                  <Route path='/dashboard/update-project/step10/:projectId' element={<UpdateTranslationAndRepackaging />} />
-                  {/* 
-                   */}
+                  <Route path='/dashboard/update-project/step4/:projectId' element={<UpdateIntendedPurpose />} />
+                  <Route path='/dashboard/update-project/step5/:projectId' element={<UpdateSterilityComponent />} />
+                  <Route path='/dashboard/update-project/step6/:projectId' element={<UpdateStorageComponent />} />
+                  <Route path='/dashboard/update-project/step7/:projectId' element={<UpdateSafeUseComponent />} />
+                  <Route path='/dashboard/update-project/step8/:projectId' element={<UpdateIVDDiagnosticComponent />} />
+                  <Route path='/dashboard/update-project/step9/:projectId' element={<UpdateTransfusionInfusionComponent />} />
+                  <Route path='/dashboard/update-project/step10/:projectId' element={<UpdateOthersComponent />} />
+                  <Route path='/dashboard/update-project/step11/:projectId' element={<UpdateTranslationAndRepackaging />} />
               </>}
 
               {/* routes for Approver */}
-              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Approver")) &&
+              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") 
+                || decodedToken?.userInfo?.role.includes("Approver")) &&
                 <>
                 <Route path='/dashboard/project/review-approver/:projectId' element={<ApproverReview />} />
               </>}
 
               {/* routes for Release */}
-              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Release")) &&
+              {decodedToken 
+                && decodedToken?.userInfo 
+                && (decodedToken?.userInfo?.role.includes("Admin") 
+                || decodedToken?.userInfo?.role.includes("Release")) &&
                 <>
                   <Route path='/dashboard/project/review-release/:projectId' element={<ReleaseReview />} />
                   <Route path='/dashboard/documents' element={<Documents />} />
@@ -323,17 +329,22 @@ function App() {
                 </>}
 
               {/* this routes for admin users */}
-              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin")) &&
-                <>
+              {decodedToken 
+                && decodedToken?.userInfo 
+                && (decodedToken?.userInfo?.role.includes("Admin")) 
+                && <>
                     <Route path='/dashboard/user/:userId' element={<ManageUser />} />
                     <Route path='/dashboard/user/create' element={<CreateUser />} />
                 </>}
            
                 <Route path='/dashboard' element={<Dashboard />} />
+
                 {decodedToken &&
-                 decodedToken?.userInfo && 
-                 (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
-                 <Route path='/dashboard/project' element={<Project />} />}
+                  decodedToken?.userInfo && 
+                  (decodedToken?.userInfo?.role.includes("Admin") 
+                  || decodedToken?.userInfo?.role.includes("Creator")) &&
+                 <Route path='/dashboard/project' element={<Project />} />
+                }
                  
                 <Route path='/dashboard/products/:projectId' element={<Products />} />
                 <Route path='/dashboard/labels/:productId' element={<LabelsByProject />} />
@@ -351,8 +362,10 @@ function App() {
            {/* </Route> */}
 
             {/* easyIFU Admin routes */}
-            {decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.role.includes("superAdmin") &&
-              <>
+            {decodedToken 
+              && decodedToken?.userInfo 
+              && decodedToken?.userInfo?.role.includes("superAdmin") 
+              && <>
               <Route path='/eIFU-admin/companies' element={<Companies />} />
               <Route path='/eIFU-admin/projects' element={<ProjectsCompanies />} />
               <Route path='/eIFU-admin/users' element={<UsersCompanies />} />

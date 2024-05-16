@@ -24,7 +24,7 @@ const UpdateIVDDiagnosticComponent = () => {
  
 
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId,
     isUpdate: true,
     hasControlMaterial: false,
     isControlMaterial: false,
@@ -51,7 +51,7 @@ const UpdateIVDDiagnosticComponent = () => {
     // Set formData with existing project information
     setFormData({
       isUpdate: true,
-      projectId,
+      labelId: projectId,
       hasControlMaterial: projectInformation?.labelData?.hasControlMaterial || false,
       isControlMaterial: projectInformation?.labelData?.isControlMaterial || false,
       isControlMaterialForNegativeRange: projectInformation?.labelData?.isControlMaterialForNegativeRange || false,

@@ -4,7 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import '../../components/header/header.css';
 import easyIFUlogo from '../../assets/easyIFU_Logo.png'
 import '../../components/header/header.css';
-import { Card } from 'react-bootstrap';
+import { Card, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import TurnedInRoundedIcon from '@mui/icons-material/TurnedInRounded';
@@ -30,6 +30,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 
 const Documents = () => {
@@ -47,7 +48,17 @@ const Documents = () => {
       setIsOpen(!isOpen);
     };
 
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const seconds = date.getSeconds().toString().padStart(2, '0');
   
+      return `${day}/${month}/${year}  ${hours}:${minutes}:${seconds}`;
+    }
 
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
@@ -179,12 +190,44 @@ console.log(documentsCompany && documentsCompany.length)
         {/* Dashboard  content   */}
         <section  className='container py-5' style={{paddingTop:'20px', overflowY:'scroll', height:'94.3vh'}}> 
         <div className="row row_branchen">
-        {!companyDocument.length > 0 && <div style={{textAlign:'center', width:'100%', backgroundColor:'#09566F', color:"#fff"}}>
-          <h4>No Labels Created</h4>
+        {!companyDocument.length > 0 && <div style={{textAlign:'center', width:'100%'}}>
+          <h5>No Labels Created</h5>
         </div>}
-        {companyDocument?.map((document, index) => (
-          <div  key={index} style={{position:'relative'}} className="col-lg-4 col-md-6 col-sm-6 card-wrapper">
-            <button onClick={() => handleDeleteDocument(document._id)} style={{position:'absolute', top:'0', right:'0', zIndex:'999', backgroundColor:'#FAC9C3', padding:'3px', margin:'2px', borderRadius:'5px'}}>
+        <div>{companyDocument.length > 0 && 
+            <Table striped bordered hover style={{backgroundColor:'#fff'}} className="table table-hover my-1">
+              <thead style={{backgroundColor:'#075670', textAlign:'center'}} className="thead-dark">
+                <tr style={{color:'#fff'}}>
+                  <th scope="col">#</th>
+                  <th scope="col">label Name</th>
+                  <th scope="col">label Description</th>
+                  <th scope="col">createdAt</th>
+                  <th scope="col">Details</th>
+                  <th scope="col">delete</th>
+                </tr>
+              </thead>
+              <tbody style={{ textAlign:'center'}}>
+                 {companyDocument &&
+                  companyDocument?.map((item, index) => {
+                    return (
+                      <tr key={index}>
+                        <th scope="row">{index+1}</th>
+                          <td>{item?.projectId?.labelName}</td>
+                          <td>{item?.projectId?.labelDescription?.length > 20 
+                            ? item?.projectId?.labelDescription.substring(0, 20) + '...' 
+                            :item?.projectId?.labelDescription 
+                          }</td>
+                          <td>{formatDate(item?.createdAt)}</td>
+                          <td>
+                            <Link to={`/dashboard/document-sizes/${item._id}`} 
+                                style={{color:'#021D41', 
+                                backgroundColor:"#efefef", 
+                                padding:'2px 10px', 
+                                borderRadius:'4px'}}>
+                              <VisibilityIcon style={{paddingBottom:'', fontSize:'24px', color:"#03295C"}} />
+                            </Link>
+                          </td>
+                          <td>
+                          <button onClick={() => handleDeleteDocument(item._id)} style={{ backgroundColor:'#FAC9C3', padding:'3px', margin:'2px', borderRadius:'5px'}}>
               {deleteDocumentsRequest 
               ? <RotatingLines
                   strokeColor="#011d41"
@@ -195,19 +238,14 @@ console.log(documentsCompany && documentsCompany.length)
                   /> 
                :<DeleteIcon/>}
               </button>
-            <Link to={`/dashboard/document-sizes/${document._id}`} 
-                  className="card mb-3 card-document">
-                <div className="image__wrapper" style={{borderBottom:'.1px solid lightGray'}}>
-                  <div className="card__shadow--1"></div>
-                  <img className="card-img-top" src={`${process.env.REACT_APP_BASE_URL}/assets/documents/${document.imageUrl}`}alt={document.projectName} />
-                </div>
-                <div className="card-body pb-4">
-                  <h6 style={{color:'black'}}   className="card-title text-center">{document?.projectName}</h6>
-                  <p style={{color:'gray', fontSize:'13px'}} className="card-text">{document?.projectDescription.length > 20 ? document?.projectDescription.slice(0, 20) + "..." : document?.projectDescription} </p>
-                </div>
-            </Link>
+                          </td>
+                      </tr>
+                    )
+                  })
+                }
+              </tbody>
+            </Table>}
           </div>
-        ))}
       </div>
         </section>
       </main>

@@ -54,6 +54,10 @@ import { ALL_PROJECTS_FAILED, ALL_PROJECTS_REQUEST,
             PRODUCT_INFORMATION_REQUEST,
             PRODUCT_INFORMATION_RESET,
             PRODUCT_INFORMATION_SUCCESS,
+            PRODUCT_INTEDED_PURPOSE_FAILED,
+            PRODUCT_INTEDED_PURPOSE_REQUEST,
+            PRODUCT_INTEDED_PURPOSE_RESET,
+            PRODUCT_INTEDED_PURPOSE_SUCCESS,
             RELEASED_PROJECT_FAILED,
             RELEASED_PROJECT_REQUEST,
             RELEASED_PROJECT_RESET,
@@ -217,7 +221,7 @@ export const archivedProjectToggleAction = (projectId, token) => async (dispatch
       }
 };
 
-export const duplicateProjectAction = (projectId, token) => async (dispatch) => {
+export const duplicateLabelAction = (labelId, token) => async (dispatch) => {
   try {
    
       dispatch({ 
@@ -230,8 +234,9 @@ export const duplicateProjectAction = (projectId, token) => async (dispatch) => 
           }
       }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/duplicate-project/${projectId}`, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/duplicate-label/${labelId}`, config);
 
+      console.log(response)
       dispatch({ 
           type: DUPLICATE_PROJECTS_SUCCESS, 
           payload: response.data
@@ -379,7 +384,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/manufacturer-information`, manufacturerData, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/manufacturer-information`, manufacturerData, config);
   
       dispatch({ 
             type: MANUFACTURER_INFORMATION_SUCCESS, 
@@ -414,7 +419,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/label-legislation`, formData, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/legislation`, formData, config);
   
       dispatch({ 
             type: LEGISLATION_SUCCESS, 
@@ -441,7 +446,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
   export const productInformationAction = (productInfoData, token) => async (dispatch) => {
     try {
   
-      dispatch({ type: PRODUCT_INFORMATION_REQUEST});
+      dispatch({type: PRODUCT_INFORMATION_REQUEST});
 
 
         const config = {
@@ -450,7 +455,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
           }
         };
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/product-information`, productInfoData, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/product-information`, productInfoData, config);
   
       dispatch({ 
             type: PRODUCT_INFORMATION_SUCCESS, 
@@ -475,11 +480,47 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
       }
   };
 
+  export const intendedPurposeAction = (data, token) => async (dispatch) => {
+    try {
+  
+      dispatch({type: PRODUCT_INTEDED_PURPOSE_REQUEST});
+
+
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        };
+  
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/intended-purpose`, data, config);
+
+      dispatch({ 
+            type: PRODUCT_INTEDED_PURPOSE_SUCCESS,
+            payload: response.data
+        });
+
+      setTimeout(() =>{
+        dispatch({ 
+          type: PRODUCT_INTEDED_PURPOSE_RESET
+        });
+      }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: PRODUCT_INTEDED_PURPOSE_FAILED, 
+            payload: error?.response?.data });
+        setTimeout(() =>{
+          dispatch({ 
+            type: PRODUCT_INTEDED_PURPOSE_RESET
+          });
+        }, 1500)
+      }
+  };
+
   export const uploadManufacturerLogoAction = (formDATA, token) => async (dispatch) => {
     try {
   
-      dispatch({ type: "UPLOAD-LOGO-REQUEST"});
-
+      dispatch({ type: "UPLOAD-LOGO-REQUEST" }) ;
 
         const config = {
           headers: {
@@ -524,7 +565,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/label-sterility`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/sterility`, data, config);
   
       dispatch({ 
             type: STERILITY_SUCCESS, 
@@ -560,7 +601,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/label-storage`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/storage`, data, config);
   
       dispatch({ 
             type: STORAGE_SUCCESS, 
@@ -596,7 +637,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/safeUse`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/safeUse`, data, config);
   
       dispatch({ 
             type: SAFE_USE_SUCCESS, 
@@ -632,7 +673,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/IVD-diagnostic`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/IVD-diagnostic`, data, config);
   
       dispatch({ 
             type: IVD_DIAGNOSTIC_SUCCESS, 
@@ -668,7 +709,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/transfusion-infusion`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/transfusion-infusion`, data, config);
       console.log(response)
   
       dispatch({ 
@@ -705,7 +746,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/others`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/others`, data, config);
   
       dispatch({ 
             type: OTHERS_SUCCESS, 
@@ -741,7 +782,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/translation-repackaging`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/translation-repackaging`, data, config);
   
       dispatch({ 
             type: TRANSLATION_REPACKAGING_SUCCESS, 

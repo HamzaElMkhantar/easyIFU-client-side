@@ -12,6 +12,7 @@ import jwtDecode from 'jwt-decode';
 import { GOOGLE_MAPS_API_KEY } from '../../config';
 import { getCompanyInfoAction } from '../../redux/actions/companyAcions';
 import { getLabelAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 
 const ManufacturerInfoComponent = () => {
     const {projectId} = useParams()
@@ -19,12 +20,14 @@ const ManufacturerInfoComponent = () => {
     const decodedToken = token ? jwtDecode(token) : null
     const companyId = decodedToken?.userInfo?.companyId
 
-    const {manufacturerInformation, getCompanyInfo, getLabel} = useSelector(state => state)
+    const {manufacturerInformation, 
+            getCompanyInfo, 
+            productById} = useSelector(state => state)
     const {manufacturerRequest, manufacturerSuccess, manufacturerFail, projectInfo} = manufacturerInformation;
     const {companyRequest, companySuccess, companyFail, companyInfo} = getCompanyInfo;
 
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId,
     isUpdate: false,
     companyId,
     hasDistributor: false,
@@ -34,30 +37,27 @@ const ManufacturerInfoComponent = () => {
     europeanAuthorizedRepName: '',
     europeanAuthorizedRepAddress: '',
     importerName: '',
-    importerAddress: '',
-    // productClass: 'Class I',
-    // notifiedBodyNumber: '',
+    importerAddress: ''
   });
-  console.log(formData)
 
-      // get prev label info
-      const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
-      const [projectInformation, setProjectInformation] = useState({});
-      useEffect(() =>{
-        dispatch(getLabelAction(projectId, token))
-      }, [])
-      useEffect(() =>{
-        if(getLabelSuccess){
-          setProjectInformation(label)
-        }
-      }, [getLabelSuccess])
+  // get prev label info
+  const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById;
+  const [projectInformation, setProjectInformation] = useState({});
+  useEffect(() =>{
+    dispatch(getProductByIdAction(projectId, token))
+  }, [])
+  useEffect(() =>{
+    if(productByIdSuccess){
+      setProjectInformation(productByIdData)
+    }
+  }, [productByIdSuccess])
   useEffect(() => {
     // Set formData with existing project information
     setFormData({
         isUpdate: false,
         labelId: projectId,
         companyId,
-        hasDistributor:projectInformation?.labelData?.hasDistributor || false,
+        hasDistributor: projectInformation?.labelData?.hasDistributor || false,
         distributorName: projectInformation?.labelData?.distributorName || '',
         distributorAddress: projectInformation?.labelData?.distributorAddress || '',
         isOutsideEU: projectInformation?.labelData?.isOutsideEU || false,

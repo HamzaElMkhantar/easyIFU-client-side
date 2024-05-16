@@ -42,7 +42,7 @@ import BarLinks from '../../utilities/BarLinks';
 import NavDashboard from '../../components/header/NavDashboard';
 import { logoutAction } from '../../redux/actions/authActions';
 import { getAllLabelsAction } from '../../redux/actions/labelActions';
-import { createProductAction, getProductByProjectIdAction } from '../../redux/actions/productActions';
+import { createProductAction, getProductByIdAction, getProductByProjectIdAction } from '../../redux/actions/productActions';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -92,6 +92,7 @@ const Products = () => {
   const [allProjects, setAllProjects] = useState([])
   const {logout, 
         getProductByProjectId,
+        getProductById,
         createProduct} = useSelector(state => state)
 
 
@@ -100,7 +101,7 @@ const Products = () => {
   const {productRequest, productSuccess, productsData, productFail} = getProductByProjectId
 
 
-  console.log(createProductRequest, createProductSuccess, createProductFail)
+
 
   const [formData, setFormData] = useState({
     companyId: decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId,
@@ -173,7 +174,6 @@ const Products = () => {
     }
   }
 
-    // ------ headers ------
     // ------ headers ------
     let barLinks = []
     
@@ -413,14 +413,23 @@ const Products = () => {
                         {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") 
                           || decodedToken?.userInfo?.role.includes("Creator")) &&
                         
-                        <td><Link to={`/dashboard/labels/${item._id}`}
+                        <td>{item.labelStep < 12
+                          ? <Link to={`/dashboard/create-project/step${item.labelStep}/${item._id}`}
+                            style={{backgroundColor:'#021D41', 
+                              color:"#fff", 
+                              padding:'2px 10px', 
+                              borderRadius:'4px'
+                            }}>
+                              Continue
+                          </Link>
+                          : <Link to={`/dashboard/labels/${item._id}`}
                             style={{color:'#021D41', 
                               backgroundColor:"#efefef", 
                               padding:'2px 10px', 
                               borderRadius:'4px'
                             }}>
                               <VisibilityIcon style={{paddingBottom:'3px', fontSize:'24px'}} />
-                          </Link>
+                          </Link>}
                         </td>}
                       </tr>
                     )

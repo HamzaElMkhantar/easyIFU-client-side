@@ -36,7 +36,7 @@ const UpdateManufacturerInfoComponent = () => {
 
   const [formData, setFormData] = useState({
     isUpdate: true,
-    projectId,
+    labelId: projectId,
     companyId: decodedToken && decodedToken.userInfo ? decodedToken.userInfo.companyId : null,
     hasDistributor: false,
     distributorName: '',
@@ -50,7 +50,7 @@ const UpdateManufacturerInfoComponent = () => {
   useEffect(() => {
     // Set formData with existing project information
     setFormData({
-        projectId,
+        labelId: projectId,
         isUpdate: true,
         companyId: decodedToken && decodedToken.userInfo ? decodedToken.userInfo.companyId : null,
         hasDistributor:projectInformation?.labelData?.hasDistributor || false,

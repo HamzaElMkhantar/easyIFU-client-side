@@ -9,33 +9,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { transfusionInfusionAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
 import { getLabelAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 
 const TransfusionInfusionComponent = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {transfusionInfusion, getLabel} = useSelector(state => state);
+  const {transfusionInfusion, productById} = useSelector(state => state);
   const {transfusionInfusionRequest, transfusionInfusionSuccess, transfusionInfusionFail, projectInfo} = transfusionInfusion
-  const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
-
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-
-  const [projectInformation, setProjectInformation] = useState({})
-  console.log(projectInformation)
-
-  useEffect(() => {
-    dispatch(getLabelAction(projectId))
-  }, [])
-
-  useEffect(() => {
-    if(getLabelSuccess){
-      setProjectInformation(label)
-    }
-  }, [getLabelSuccess])
   const [formData, setFormData] = useState({
     labelId: projectId,
     isUpdate: false,
@@ -46,9 +32,18 @@ const TransfusionInfusionComponent = () => {
     liquidFilterPoreSize: '',
     hasOneWayValve: false,
   });
-
   
-
+  // get prev label info
+  const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById;
+  const [projectInformation, setProjectInformation] = useState({});
+  useEffect(() =>{
+    dispatch(getProductByIdAction(projectId, token))
+  }, [])
+  useEffect(() =>{
+    if(productByIdSuccess){
+      setProjectInformation(productByIdData)
+    }
+  }, [productByIdSuccess])
   useEffect(() => {
     // Set formData with existing project information
     setFormData({
@@ -102,7 +97,7 @@ const TransfusionInfusionComponent = () => {
 
   useEffect(() => {
     if(transfusionInfusionSuccess){
-        navigate(`/dashboard/create-project/step9/${projectInfo._id}`)
+        navigate(`/dashboard/create-project/step10/${projectInfo._id}`)
     }
 
     if(transfusionInfusionFail){
@@ -124,7 +119,7 @@ const TransfusionInfusionComponent = () => {
               ? `/dashboard/create-project/step6/${projectId}`
               : `/dashboard/create-project/step7/${projectId}`} 
               className='label-info-link'> Back</Link>
-                <HorizontalLinearStepper step={7}/>
+                <HorizontalLinearStepper step={8}/>
                 <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
       <form className="transfusion-infusion-form" onSubmit={handleSubmit}>

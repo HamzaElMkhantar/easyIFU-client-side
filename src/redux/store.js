@@ -33,6 +33,7 @@ import {IVDDiagnosticReducer,
         getAllProjectsReducer, 
         getArchivedProjectsReducer, 
         getProjectReducer, 
+        intendedPurposeReducer, 
         legislationReducer, 
         manufacturerInformationReducer, 
         othersReducer, 
@@ -53,7 +54,7 @@ import { dashboardCompanyInfoReducer, getCompanyInfoReducer,
         updateCompanyInfoReducer } from './reducers/companyReducers';
 import { changeCompanyPermissionReducer, companiesReducer, companyByIdReducer, contactByIdReducer, contactsReducer, deleteCompanyReducer, deleteContactReducer, projectsReducer, usersReducer } from './reducers/supperAdminReducers';
 import { createLabelReducer, getAllLabelsReducer, getLabelReducer } from './reducers/labelReducers';
-import { createProductReducer, getProductByProjectIdReducer } from './reducers/productReducers';
+import { createProductReducer, getProductByIdReducer, getProductByProjectIdReducer } from './reducers/productReducers';
 
 
 const reducer = combineReducers({
@@ -115,9 +116,11 @@ const reducer = combineReducers({
     transfusionInfusion: transfusionInfusionReducer,
     others: othersReducer,
     translationAndRepackaging: translationAndRepackagingReducer,
+    intendedPurpose: intendedPurposeReducer,
 
     // products reducers
     getProductByProjectId: getProductByProjectIdReducer,
+    productById: getProductByIdReducer ,
     createProduct: createProductReducer,
 
     // document reducers

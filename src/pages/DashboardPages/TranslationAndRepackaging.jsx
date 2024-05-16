@@ -8,13 +8,14 @@ import { RotatingLines } from 'react-loader-spinner';
 import { translationAndRepackagingAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { getLabelAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 
 const TranslationAndRepackaging = () => {
     const {projectId} = useParams()
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {translationAndRepackaging, getLabel} = useSelector(state => state);
+    const {translationAndRepackaging, productById} = useSelector(state => state);
 
     const {translationAndRepackagingRequest, translationAndRepackagingSuccess, translationAndRepackagingFail, translationAndRepackagingInfo} = translationAndRepackaging;
 
@@ -33,17 +34,17 @@ const TranslationAndRepackaging = () => {
       repackagingEntityAddress: '',
     });
     
-    // get prev project info
-    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
-    const [projectInformation, setProjectInformation] = useState({});
-    useEffect(() =>{
-      dispatch(getLabelAction(projectId, token))
-    }, [])
-    useEffect(() =>{
-      if(getLabelSuccess){
-        setProjectInformation(label)
-      }
-    }, [getLabelSuccess])
+ // get prev label info
+ const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById;
+ const [projectInformation, setProjectInformation] = useState({});
+ useEffect(() =>{
+   dispatch(getProductByIdAction(projectId, token))
+ }, [])
+ useEffect(() =>{
+   if(productByIdSuccess){
+     setProjectInformation(productByIdData)
+   }
+ }, [productByIdSuccess])
 
   useEffect(() => {
     // Set formData with existing project information
@@ -85,7 +86,7 @@ const TranslationAndRepackaging = () => {
   
   useEffect(() => {
       if(translationAndRepackagingSuccess){
-          navigate(`/dashboard/project-information/${projectId}`)
+          navigate(`/dashboard/labels/${projectId}`)
       }
   
       if(translationAndRepackagingFail){
@@ -105,7 +106,7 @@ const TranslationAndRepackaging = () => {
                                   borderRadius:'5px'
                                   }}>
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step9/${projectId}`} className='label-info-link'>Back</Link>
-                <HorizontalLinearStepper step={9}/>
+                <HorizontalLinearStepper step={10}/>
                 <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
       <form onSubmit={handleSubmit} className="others-form">

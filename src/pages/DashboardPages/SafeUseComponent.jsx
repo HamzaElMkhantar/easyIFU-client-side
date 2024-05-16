@@ -9,13 +9,14 @@ import { safeUseAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { getLabelAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 
 const SafeUseComponent = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
 
-  const {safeUse, getLabel} = useSelector(state => state);
+  const {safeUse, productById} = useSelector(state => state);
   const {safeUseRequest, safeUseSuccess, safeUseFail, projectInfo} = safeUse;
 
 
@@ -40,17 +41,17 @@ const SafeUseComponent = () => {
     multipleUsesOnSinglePatient: false,
   });
 
-   // get prev project info
- const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
- const [projectInformation, setProjectInformation] = useState({});
- useEffect(() =>{
-   dispatch(getLabelAction(projectId, token))
- }, [])
- useEffect(() =>{
-   if(getLabelSuccess){
-     setProjectInformation(label)
-   }
- }, [getLabelSuccess])
+  // get prev label info
+  const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById;
+  const [projectInformation, setProjectInformation] = useState({});
+  useEffect(() =>{
+    dispatch(getProductByIdAction(projectId, token))
+  }, [])
+  useEffect(() =>{
+    if(productByIdSuccess){
+      setProjectInformation(productByIdData)
+    }
+  }, [productByIdSuccess])
 
   useEffect(() => {
     // Set formData with existing project information
@@ -97,12 +98,12 @@ const SafeUseComponent = () => {
   useEffect(() => {
     if(safeUseSuccess){
       if(projectInfo.labelData.productType === "In Vitro Diagnostic (IVD) Medical Device"){
-        navigate(`/dashboard/create-project/step7/${projectInfo._id}`)
+        navigate(`/dashboard/create-project/step8/${projectInfo._id}`)
         console.log(projectInfo.labelData.productType)
       }
 
       if(projectInfo.labelData.productType === "Medical device"){
-        navigate(`/dashboard/create-project/step8/${projectInfo._id}`)
+        navigate(`/dashboard/create-project/step9/${projectInfo._id}`)
         console.log(projectInfo.labelData.productType)
       }
 
@@ -124,7 +125,7 @@ const SafeUseComponent = () => {
                                   borderRadius:'5px'
                                   }}>
             <Link style={{height:'35px'}} to={`/dashboard/create-project/step5/${projectId}`} className='label-info-link'>Back</Link>
-                <HorizontalLinearStepper step={5}/>
+                <HorizontalLinearStepper step={6}/>
                 <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
       <form className="safe-use-form" onSubmit={handleSubmit}>

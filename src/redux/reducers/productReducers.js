@@ -6,13 +6,25 @@ import {PRODUCTS_FAILED,
         CREATE_PRODUCT_REQUEST,
         CREATE_PRODUCT_SUCCESS,
         CREATE_PRODUCT_FAILED,
-        CREATE_PRODUCT_RESET } from "../constants/productConstants";
+        CREATE_PRODUCT_RESET, 
+        PRODUCT_BY_ID_REQUEST,
+        PRODUCT_BY_ID_SUCCESS,
+        PRODUCT_BY_ID_FAILED,
+        PRODUCT_BY_ID_RESET} from "../constants/productConstants";
 
 const products = {
     productRequest: false,
     productSuccess:  false,
     productsData: null,
     productFail: null,
+}
+
+
+const productById = {
+    productByIdRequest: false,
+    productByIdSuccess:  false,
+    productByIdData: null,
+    productByIdFail: null,
 }
 
 const createProduct = {
@@ -48,6 +60,37 @@ export const getProductByProjectIdReducer = (state = products, action) => {
             } ;
         case PRODUCTS_RESET :
             return products;
+        default :
+            return state ;
+    }
+}
+
+export const getProductByIdReducer = (state = productById, action) => {
+
+    switch(action.type){
+        case PRODUCT_BY_ID_REQUEST:
+            return {
+                ...state,
+                productByIdRequest: true,
+                productByIdSuccess:  false,
+                productByIdFail: null,
+            } ;
+        case PRODUCT_BY_ID_SUCCESS :
+            return {
+                ...state,
+                productByIdRequest: false,
+                productByIdSuccess: true,
+                productByIdData: action.payload
+            } ;
+        case PRODUCT_BY_ID_FAILED :
+            return {
+                ...state,
+                productByIdFail: action.payload,
+                productByIdSuccess:  false,
+                productByIdRequest: false
+            } ;
+        case PRODUCT_BY_ID_RESET :
+            return productById;
         default :
             return state ;
     }

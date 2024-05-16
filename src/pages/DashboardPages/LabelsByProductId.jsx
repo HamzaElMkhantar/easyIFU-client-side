@@ -6,6 +6,7 @@ import {Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
 import '../../components/header/header.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Table } from 'react-bootstrap';
 
@@ -14,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import {archivedProjectToggleAction, 
         deleteProjectAction, 
-        duplicateProjectAction, 
+        duplicateLabelAction, 
         getAllProjectsAction, 
         startProjectAction } from '../../redux/actions/projectActions';
 import Cookies from 'js-cookie';
@@ -42,6 +43,7 @@ import BarLinks from '../../utilities/BarLinks';
 import NavDashboard from '../../components/header/NavDashboard';
 import { logoutAction } from '../../redux/actions/authActions';
 import { createLabelAction, getAllLabelsAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -56,6 +58,17 @@ const style = {
   borderRadius: '3px'
 };
 
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  return `${day}/${month}/${year}  ${hours}:${minutes}:${seconds}`;
+}
 const LabelsByProject = () => {
   const {productId} = useParams()
 
@@ -64,10 +77,6 @@ const LabelsByProject = () => {
     setIsOpen(!isOpen);
   };
 
-     // toggle form 
-     const [open, setOpen] = React.useState(false);
-     const handleOpen = () => setOpen(true);
-     const handleClose = () => setOpen(false);
 
   // side bar toggle
   const [isSidebarOpen, setIsSidebarOpen] = useState(
@@ -87,26 +96,71 @@ const LabelsByProject = () => {
   const navigate = useNavigate()
 
    const [allProjects, setAllProjects] = useState([])
+   const [intendedPurpose, setIntendedPurpose] = useState([])
+   const [intendedData, setIntendedData] = useState([]);
+
    const [formData, setFormData] = useState({
-     companyId: decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId,
-     createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id,
-     productId,
-     labelName: '',
-     labelDescription: '',
-     labelSizes: [],
-   });
+    companyId: decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId,
+    createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id,
+    productId,
+    labelName: '',
+    labelDescription: '',
+    intendedPurpose: intendedData
+  });
+
+    // toggle form 
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+    setOpen(false)
+    setIntendedData([])
+    setFormData({
+      companyId: decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId,
+      createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id,
+      productId,
+      labelName: '',
+      labelDescription: '',
+      intendedPurpose: intendedData
+    })
+    };
+
+
+   const handleIntendedPurpose = (item) => {
+     // Check if the item is already in intendedData
+     const isItemSelected = intendedData.some((dataItem) => dataItem._id === item._id);
+ 
+     if (isItemSelected) {
+       // If item exists in intendedData, remove it
+       const updatedData = intendedData.filter((dataItem) => dataItem._id !== item._id);
+       setIntendedData(updatedData);
+       setFormData({...formData, intendedPurpose: updatedData});
+     } else {
+       // Otherwise, add the item to intendedData
+       setIntendedData([...intendedData, item]);
+       setFormData({...formData, intendedPurpose: [...intendedData, item]});
+     }
+   };
+ 
+   const isItemChecked = (item) => {
+     // Check if the item is present in intendedData
+     return intendedData.some((dataItem) => dataItem._id === item._id);
+   };
+
   const {createLabel,
         deleteProject, 
         logout, 
         archivedProjectToggle, 
         duplicateProject, 
+        productById,
         getAllLabels} = useSelector(state => state)
+
+  const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById
 
   const {createLabelRequest, createLabelSuccess, createLabelFail, label} = createLabel
   const {deleteProjectRequest, deleteProjectSuccess, deleteProjectFail} = deleteProject
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const {archiveToggleProjectRequest, archiveToggleProjectSuccess, archiveToggleProjectFail, archiveToggleData} = archivedProjectToggle
-  const {duplicateProjectRequest, duplicateProjectSuccess, duplicateProjectFail} = duplicateProject
+  const {duplicateProjectRequest, duplicateProjectSuccess, duplicateProjectFail, deplicatedProject} = duplicateProject
   const {labelRequest, labelSuccess, labelFail, labelsData} = getAllLabels
 
   const handleLogout = () => {
@@ -119,30 +173,43 @@ const LabelsByProject = () => {
     }
   },[logoutSuccess])
 
+  // handle duplicate project for update it
+  useEffect(() => {
+    if(duplicateProjectSuccess){
+      navigate(`/dashboard/project-information/${deplicatedProject._id}`)
+    }
+
+    if(duplicateProjectFail){
+      toast.warning(`${duplicateProjectFail?.message}`)
+    }
+  },[duplicateProjectFail, duplicateProjectSuccess])
 
   // get all projects
   useEffect(() => {
     dispatch(getAllLabelsAction(productId, companyId, decodedToken?.userInfo?._id, token))
+    dispatch(getProductByIdAction(productId, token))
   }, [])
 
   useEffect(() => {
     if(createLabelSuccess){
-      // dispatch(getAllLabelsAction(productId, companyId, decodedToken?.userInfo?._id, token))
-      // handleClose()
+      setOpen(false)
+      dispatch(getAllLabelsAction(productId, companyId, decodedToken?.userInfo?._id, token))
+      setFormData({
+        companyId: decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId,
+        createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id,
+        productId,
+        labelName: '',
+        labelDescription: '',
+        intendedPurpose: []
+      })
+      setIntendedData([])
+    }
 
-      // setFormData({
-      //   productId,
-      //   labelName: '',
-      //   labelDescription: '',
-      //   labelSizes: [],
-      // })
-      // navigate(`/dashboard/create-project/step1/${label?._id}`)
+
+    if(productByIdSuccess){
+      setIntendedPurpose(productByIdData.labelData.intendedPurpose)
     }
-    if(label){
-      navigate(`/dashboard/create-project/step1/${label?._id}`)
-    }
-  }, [createLabelSuccess, label])
-  console.log(label)
+  }, [createLabelSuccess, productByIdSuccess])
 
 
   useEffect(() => {
@@ -326,6 +393,29 @@ const LabelsByProject = () => {
       handleCloseMenu();
     };
 
+
+    // ----  Label Version Model ----
+
+
+
+
+
+    const [openLabelVersionModel, setOpenLabelVersionModel] = useState(false)
+
+    const handleLabelVersionSubmit = (e) => {
+      e.preventDefault();
+
+    };
+    const handleLabelVersionClose = () => {
+      setOpenLabelVersionModel(false)
+    };
+
+    const [oldVersionId, setOldVersionId] = useState('')
+    const handleLabelVersionOpen = (oldLabelVersionId) => {
+      setOpenLabelVersionModel(true)
+
+      setOldVersionId(oldLabelVersionId)
+    };
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
@@ -432,46 +522,19 @@ const LabelsByProject = () => {
                         />
                     </div>
                     <div className="form-field">
-                    <label htmlFor="service">4- Enter Project Sizes (By Centimeter):</label>
-                    {serviceList.map((singleService, index) => (
-                    <div key={index} className="services">
-                        <div className="first-division mb-1" style={{display:'flex',}}>
-                        <input
-                            name="service"
-                            style={{width:'50%', height:'35px', border:'1px solid lightgray', borderRadius:'5px'}}
-                            type="Number"
-                            min="0"
-                            id="service"
-                            value={singleService}
-                            placeholder={`Size ${index + 1}`}
-                            onChange={(e) => handleServiceChange(e, index)}
-                        />
-                        {serviceList.length !== 1 && (
-                              <button
-                                  type="button"
-                                  style={{backgroundColor:'#FBB8B8', borderRadius:'6px'}}
-                                  onClick={() => handleServiceRemove(index)}
-                                  className="remove-btn mx-2"
-                                  >
-                                  <span><DeleteIcon style={{color:'#2D2D2E'}} /></span>
-                              </button>
-                          )}
-                        </div>
-                        <div className="second-division">
-       
-                        {serviceList.length - 1 === index && (
-                            <button
-                                    type="button"
-                                    style={{borderRadius:'5px', backgroundColor:'#79D4A3', fontSize:'14px'}}
-                                    onClick={handleServiceAdd}
-                                    className="add-btn"
-                                >
-                                <span>Add size</span>
-                            </button>
-                        )}
-                        </div>
-                    </div>
-                    ))}
+                      <label htmlFor="service">3- choose the intended purpose for this label:</label>
+                      {intendedPurpose?.map((item, index) => (
+                              <div key={index} style={{}}>
+                                <input
+                                  type="checkbox"
+                                  checked={isItemChecked(item)}
+                                  onChange={() => handleIntendedPurpose(item)}
+                                />
+                                <label htmlFor={`language-${item._id}`} className="px-2">
+                                  {item.language}
+                                </label>
+                              </div>
+                            ))}
                 </div>
                     {!createLabelRequest 
                       ? <div style={{display:'flex', justifyContent:'space-between'}}>
@@ -502,6 +565,48 @@ const LabelsByProject = () => {
             </Box>
           </Modal>
 
+          {/* modal for new label version*/}
+          <Modal className='' 
+                  open={openLabelVersionModel}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description">
+            <Box sx={style} style={{backgroundColor:'#FFD631', border:'0'}}>
+              <h5 className='text-center' style={{color:'#08408B', textAlign:'center', fontWeight:'600'}}>
+                Please be aware that updating certain information will require creating a new product with a new  Unique 
+                <br/>Device Identification (UDI) code. Changes have 
+                <br/>been made to the following aspects :
+              </h5>
+              <ul>
+                <li>• Name or trade name of the device</li>
+                <li>• Device version or model</li>
+                <li>• Labelled as single use</li>
+                <li>• Packaged sterile</li>
+                <li>• Need for sterilization before use</li>
+                <li>• Quantity of devices provided in a package</li>
+                <li>• Critical warning or contra-indications</li>
+              </ul>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                {!duplicateProjectRequest 
+                  ? <div style={{display:'flex', justifyContent:'space-between'}}>
+
+                    <button onClick={() => dispatch(duplicateLabelAction(oldVersionId, token))} style={{marginTop:'20px', padding:'5px 20px', fontWeight:'600', fontSize:'18px', borderRadius:'5px', backgroundColor:'#011d41', color:'#fff'}}>Continue</button>
+                    <button
+                      onClick={handleLabelVersionClose}
+                      style={{marginTop:'20px', padding:'5px 20px', fontWeight:'600', fontSize:'18px', borderRadius:'5px', backgroundColor:'#1753A2', color:'#fff'}}>Close</button>
+                  </div> 
+                  : <div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
+                      <RotatingLines
+                        strokeColor="#011d41"
+                        strokeWidth="5"
+                        animationDuration="0.75"
+                        width="40"
+                        visible={true}
+                      /> 
+                  </div>}
+              </Typography>
+            </Box>
+          </Modal>
+
           {/* <Link to='/dashboard/create-project/step1'> */}
            {decodedToken 
               && decodedToken?.userInfo 
@@ -522,17 +627,20 @@ const LabelsByProject = () => {
               <thead style={{backgroundColor:'#075670', textAlign:'center'}} className="thead-dark">
                   <tr style={{color:'#fff'}}>
                   <th scope="col">#</th>
-                  <th scope="col">Project Name</th>
+                  <th scope="col">Label Name</th>
+                  <th scope="col">Version</th>
                   <th scope="col">Description</th>
                   <th scope="col">Status</th>
+
                   {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") 
                     || decodedToken?.userInfo?.role.includes("Creator")) &&
                   
                   <>
                     <th scope="col">Details</th>
-                    <th scope="col">Manage</th>
-                    <th scope="col">Duplicate</th>
+                    {/* <th scope="col">Manage</th> */}
+                    <th scope="col">Update</th>
                   </>}
+                  <th scope="col">createdAt</th>
                   </tr>
               </thead>
               <tbody style={{ textAlign:'center'}}>
@@ -541,8 +649,9 @@ const LabelsByProject = () => {
                     return (
                       <tr key={index}>
                         <th scope="row">{index+1}</th>
-                        <td>{item.labelName}{item.projectVersion && (item.projectVersion > 1)?  "(V" +item.projectVersion +")" : null}</td>
-                        <td >{item.labelDescription.length > 20  
+                        <td>{item.labelName}</td>
+                        <td> V{(item.labelVersion)}</td>
+                        <td >{item?.labelDescription?.length > 20  
                                 ? item.labelDescription.substring(0, 20) + '...' 
                                 : item.labelDescription}</td>
                   <td scope="col">{item.released ? "Released": "processing..."}</td>
@@ -568,7 +677,7 @@ const LabelsByProject = () => {
                               <VisibilityIcon style={{paddingBottom:'3px', fontSize:'24px'}} />
                           </Link>}
                         </td>}
-                        {decodedToken && decodedToken?.userInfo 
+                        {/* {decodedToken && decodedToken?.userInfo 
                           && (decodedToken?.userInfo?.role.includes("Admin") 
                           || decodedToken?.userInfo?.role.includes("Creator")) &&
                           <td>{item.projectStep < 10
@@ -591,13 +700,13 @@ const LabelsByProject = () => {
                                           /> }
                                   </button>
                           }</td>
-                          }
+                          } */}
                           <td>
-                              <button disabled={item?.projectStep === 11 ? false : true}
-                                  onClick={() => dispatch(duplicateProjectAction(item?._id, token))}
-                                  style={item?.projectStep === 11 ? {borderRadius:'4px'}: {borderRadius:'4px', opacity:'0.5'}} > 
+                              <button 
+                                  onClick={() => handleLabelVersionOpen(item._id)}
+                                  > 
                                   {!duplicateProjectRequest 
-                                  ? <ContentCopyRoundedIcon style={{color:'#021D41', fontSize:'24px'}}/>
+                                  ? <ContentCopyRoundedIcon style={{color:'#021D41',  Size:'24px'}}/>
                                   : <RotatingLines
                                               strokeColor="#021D41"
                                               strokeWidth="5"
@@ -608,6 +717,7 @@ const LabelsByProject = () => {
                                 
                               </button>
                           </td>
+                          <td>{formatDate(item?.createdAt)}</td>
                       </tr>
                     )
                   })

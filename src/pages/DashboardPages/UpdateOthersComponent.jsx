@@ -75,7 +75,7 @@ const UpdateOthersComponent = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    projectId,
+    labelId: projectId ,
     isUpdate: true,
     associatedWithIndividualPatient: false,
     hasPatientNumber: false,
@@ -117,7 +117,7 @@ const UpdateOthersComponent = () => {
     // Set formData with existing project information
     setFormData({
       isUpdate: true,
-      projectId,
+      labelId: projectId,
       associatedWithIndividualPatient: projectInformation?.labelData?.associatedWithIndividualPatient || false,
       hasPatientNumber: projectInformation?.labelData?.hasPatientNumber || false,
       patientNumber:projectInformation?.labelData?.patientNumber || '',

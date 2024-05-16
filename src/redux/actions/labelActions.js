@@ -62,7 +62,7 @@ export const getLabelAction = (labelId, token) => async (dispatch) => {
       }
   
       const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/${labelId}`, config);
-    console.log(response.data)
+
       dispatch({ 
           type: GET_LABEL_SUCCESS, 
           payload: response.data

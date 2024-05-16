@@ -27,7 +27,7 @@ const UpdateLegislationComponent = () => {
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         isUpdate: true,
-        projectId,
+        labelId: projectId,
         customMadeDevice: false,
         clinicalInvestigationOnly: false,
         IsItForEurope: false ,
@@ -42,7 +42,7 @@ const UpdateLegislationComponent = () => {
     const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
     const [projectInformation, setProjectInformation] = useState({});
     useEffect(() =>{
-      dispatch(getLabelAction(projectId, token))
+        dispatch(getLabelAction(projectId, token))
     }, [])
     useEffect(() =>{
       if(getLabelSuccess){
@@ -53,7 +53,7 @@ const UpdateLegislationComponent = () => {
     useEffect(() =>{
         setFormData({
             isUpdate: true,
-            projectId,
+            labelId: projectId,
             customMadeDevice: projectInformation?.labelData?.customMadeDevice ? true : false,
             clinicalInvestigationOnly: projectInformation?.labelData?.clinicalInvestigationOnly ? true : false,
             IsItForEurope: projectInformation?.labelData?.IsItForEurope || false,

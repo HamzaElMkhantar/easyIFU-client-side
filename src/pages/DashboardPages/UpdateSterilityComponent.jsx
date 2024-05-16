@@ -20,7 +20,7 @@ const UpdateSterilityComponent = () => {
 
 
     const [formData, setFormData] = useState({
-        projectId,
+        labelId: projectId,
         isUpdate: true,
         isSterile: false,
         hasSterilizationProcess: false,
@@ -57,7 +57,7 @@ const UpdateSterilityComponent = () => {
         // Set formData with existing project information
         setFormData({
             isUpdate: true,
-            projectId,
+            labelId: projectId,
             isSterile: projectInformation?.labelData?.isSterile || false,
             hasSterilizationProcess: projectInformation?.labelData?.hasSterilizationProcess || false,
             hasAsepticProcessing: projectInformation?.labelData?.hasAsepticProcessing || false,
@@ -211,7 +211,7 @@ const UpdateSterilityComponent = () => {
                                 name="isSterile"
                                 value="Yes"
                                 checked={formData.isSterile}
-                                onChange={handleCheckboxChange}
+                                disabled
                             />
                         </div>
                         <div className="form-check">
@@ -221,7 +221,7 @@ const UpdateSterilityComponent = () => {
                                 name="isSterile"
                                 value="No"
                                 checked={!formData.isSterile}
-                                onChange={handleCheckboxChange}
+                                disabled
                             />
                             <label className="form-check-label">No</label>
                         </div>
@@ -240,7 +240,7 @@ const UpdateSterilityComponent = () => {
                             name="hasSterilizationProcess"
                             value="Yes"
                             checked={formData.hasSterilizationProcess}
-                            onChange={handleCheckboxChange}
+                            disabled
                         />
                         </div>
                         <div className="form-check">
@@ -250,7 +250,7 @@ const UpdateSterilityComponent = () => {
                             name="hasSterilizationProcess"
                             value="No"
                             checked={!formData.hasSterilizationProcess}
-                            onChange={handleCheckboxChange}
+                            disabled
                         />
                         <label className="form-check-label">No</label>
                         </div>
@@ -270,7 +270,7 @@ const UpdateSterilityComponent = () => {
                                 name="hasAsepticProcessing"
                                 value="Yes"
                                 checked={formData.hasAsepticProcessing}
-                                onChange={handleCheckboxChange}
+                                disabled
                             />
                             </div>
                             <div className="form-check">
@@ -280,7 +280,7 @@ const UpdateSterilityComponent = () => {
                                 name="hasAsepticProcessing"
                                 value="No"
                                 checked={!formData.hasAsepticProcessing}
-                                onChange={handleCheckboxChange}
+                                disabled
                             />
                             <label className="form-check-label">No</label>
                             </div>
@@ -298,7 +298,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasEthyleneOxide"
                                     value="Yes"
                                     checked={formData.hasEthyleneOxide}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 </div>
                                 <div className="form-check">
@@ -308,7 +308,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasEthyleneOxide"
                                     value="No"
                                     checked={!formData.hasEthyleneOxide}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
@@ -326,7 +326,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasIrradiation"
                                     value="Yes"
                                     checked={formData.hasIrradiation}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 </div>
                                 <div className="form-check">
@@ -336,7 +336,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasIrradiation"
                                     value="No"
                                     checked={!formData.hasIrradiation}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
@@ -354,7 +354,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasSteamOrDryHeat"
                                     value="Yes"
                                     checked={formData.hasSteamOrDryHeat}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 </div>
                                 <div className="form-check">
@@ -364,7 +364,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasSteamOrDryHeat"
                                     value="No"
                                     checked={!formData.hasSteamOrDryHeat}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
@@ -382,7 +382,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasVaporizedHydrogenPeroxide"
                                     value="Yes"
                                     checked={formData.hasVaporizedHydrogenPeroxide}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 </div>
                                 <div className="form-check">
@@ -392,7 +392,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasVaporizedHydrogenPeroxide"
                                     value="No"
                                     checked={!formData.hasVaporizedHydrogenPeroxide}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
@@ -412,7 +412,7 @@ const UpdateSterilityComponent = () => {
                                     name="isIntendedToBeResterilized"
                                     value="Yes"
                                     checked={formData.isIntendedToBeResterilized}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 </div>
                                 <div className="form-check">
@@ -422,7 +422,7 @@ const UpdateSterilityComponent = () => {
                                     name="isIntendedToBeResterilized"
                                     value="No"
                                     checked={!formData.isIntendedToBeResterilized}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
@@ -442,7 +442,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasSterileFluidPath"
                                     value="Yes"
                                     checked={formData.hasSterileFluidPath}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 </div>
                                 <div className="form-check">
@@ -452,7 +452,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasSterileFluidPath"
                                     value="No"
                                     checked={!formData.hasSterileFluidPath}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
@@ -471,7 +471,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasEthyleneOxideFluid"
                                     value="Yes"
                                     checked={formData.hasEthyleneOxideFluid}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 </div>
                                 <div className="form-check">
@@ -481,7 +481,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasEthyleneOxideFluid"
                                     value="No"
                                     checked={!formData.hasEthyleneOxideFluid}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
@@ -498,7 +498,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasIrradiationFluid"
                                     value="Yes"
                                     checked={formData.hasIrradiationFluid}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 </div>
                                 <div className="form-check">
@@ -508,7 +508,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasIrradiationFluid"
                                     value="No"
                                     checked={!formData.hasIrradiationFluid}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
@@ -525,7 +525,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasSteamOrDryHeatFluid"
                                     value="Yes"
                                     checked={formData.hasSteamOrDryHeatFluid}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 </div>
                                 <div className="form-check">
@@ -535,7 +535,7 @@ const UpdateSterilityComponent = () => {
                                     name="hasSteamOrDryHeatFluid"
                                     value="No"
                                     checked={!formData.hasSteamOrDryHeatFluid}
-                                    onChange={handleCheckboxChange}
+                                    disabled
                                 />
                                 <label className="form-check-label">No</label>
                                 </div>
@@ -554,7 +554,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasSterileBarrierSystem"
                                         value="Yes"
                                         checked={formData.hasSterileBarrierSystem}
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     </div>
                                     <div className="form-check">
@@ -564,7 +564,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasSterileBarrierSystem"
                                         value="No"
                                         checked={!formData.hasSterileBarrierSystem}
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     <label className="form-check-label">No</label>
                                     </div>
@@ -583,7 +583,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasSingleSterileBarrierSystem"
                                         value="Yes"
                                         checked={formData.hasSingleSterileBarrierSystem}
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     </div>
                                     <div className="form-check">
@@ -593,7 +593,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasSingleSterileBarrierSystem"
                                         value="No"
                                         checked={!formData.hasSingleSterileBarrierSystem}
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     <label className="form-check-label">No</label>
                                     </div>
@@ -611,7 +611,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasTwoSterileBarrierSystems"
                                         value="Yes"
                                         checked={formData.hasTwoSterileBarrierSystems}
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     </div>
                                     <div className="form-check">
@@ -621,7 +621,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasTwoSterileBarrierSystems"
                                         value="No"
                                         checked={!formData.hasTwoSterileBarrierSystems }
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     <label className="form-check-label">No</label>
                                     </div>
@@ -639,7 +639,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasSingleSterileBarrierSystemWithProtectiveInside"
                                         value="Yes"
                                         checked={formData.hasSingleSterileBarrierSystemWithProtectiveInside}
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     </div>
                                     <div className="form-check">
@@ -649,7 +649,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasSingleSterileBarrierSystemWithProtectiveInside"
                                         value="No"
                                         checked={!formData.hasSingleSterileBarrierSystemWithProtectiveInside}
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     <label className="form-check-label">No</label>
                                     </div>
@@ -667,7 +667,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasSingleSterileBarrierSystemWithProtectiveOutside"
                                         value="Yes"
                                         checked={formData.hasSingleSterileBarrierSystemWithProtectiveOutside}
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     </div>
                                     <div className="form-check">
@@ -677,7 +677,7 @@ const UpdateSterilityComponent = () => {
                                         name="hasSingleSterileBarrierSystemWithProtectiveOutside"
                                         value="No"
                                         checked={!formData.hasSingleSterileBarrierSystemWithProtectiveOutside}
-                                        onChange={handleCheckboxChange}
+                                        disabled
                                     />
                                     <label className="form-check-label">No</label>
                                     </div>

@@ -24,7 +24,7 @@ const UpdateProductInfoComponent = () => {
     const [numbersData, setNumbersData] = useState('')
     const [manufacturerLogo, setManufacturerLogo] = useState('')
     const [formData, setFormData] = useState({
-        projectId,
+        labelId: projectId,
         isUpdate: true,
         productName: '' ,
         intendedPurpose: '',
@@ -87,7 +87,7 @@ const UpdateProductInfoComponent = () => {
     const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
     const [projectInformation, setProjectInformation] = useState({});
     useEffect(() =>{
-      dispatch(getLabelAction(projectId, token))
+        dispatch(getLabelAction(projectId, token))
     }, [])
     useEffect(() =>{
       if(getLabelSuccess){
@@ -100,7 +100,7 @@ const UpdateProductInfoComponent = () => {
     useEffect(() =>{
         setFormData({
             isUpdate: true,
-            projectId,
+            labelId: projectId,
             productName: projectInformation?.labelData?.productName ||'',
             intendedPurpose: projectInformation?.labelData?.intendedPurpose || '',
             productType: projectInformation?.labelData?.productType || '',
@@ -119,7 +119,7 @@ const UpdateProductInfoComponent = () => {
             hasLotNumber: projectInformation?.labelData?.hasLotNumber || false ,
             catalogueNumber: projectInformation?.labelData?.catalogueNumber || '',
             modelNumber: projectInformation?.labelData?.modelNumber || '',
-            // packagingContents: projectInformation?.labelData?.packagingContents || [''],
+            packagingContents:  [''],
             addManufacturerLogo: projectInformation?.labelData?.addManufacturerLogo || false,
             quantity: projectInformation?.labelData?.quantity || 0,
             canBeUsedIfDamaged: projectInformation?.labelData?.canBeUsedIfDamaged || false,
@@ -204,6 +204,7 @@ const UpdateProductInfoComponent = () => {
 
     const handleSubmit = async(e) => {
         e.preventDefault();
+        if(formData.productType == "") return toast.warning("missing Product Type!")
         await dispatch(productInformationAction(formData, token))
     }
 
@@ -235,28 +236,18 @@ const UpdateProductInfoComponent = () => {
                     className="form-control"
                     name="productName"
                     value={formData.productName}
-                    onChange={handleInputChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label className='question-bg mb-1'>- Intended purpose of the device:</label>
-                    <input
-                    type="text"
-                    className="form-control"
-                    name="intendedPurpose"
-                    value={formData.intendedPurpose}
-                    onChange={handleInputChange}
+                    // onChange={handleInputChange}
+                    readOnly
                     />
                 </div>
                 <div className="form-group">
                     <label className='question-bg mb-1'>- Is your product a*:</label>
-                    <select
-                        className="form-control"
-                        name="productType"
-                        value={formData.productType}
-                        onChange={handleInputChange}
-                    >
-                        <option value="">Select</option>
+                    <select className="form-control"
+                            name="productType"
+                            value={formData.productType}
+                            onChange={handleInputChange} 
+                        >
+                        <option value="">--- Select Product Type ---</option>
                         <option value="Medical device">Medical device</option>
                         <option value="In Vitro Diagnostic (IVD) Medical Device">In Vitro Diagnostic (IVD) Medical Device</option>
                     </select>
@@ -362,6 +353,7 @@ const UpdateProductInfoComponent = () => {
                         name="udiDI"
                         value={formData.udiDI}
                         onChange={handleInputChange}
+                        readOnly
                     />
                 </div>
                 <div className="form-group">
@@ -401,12 +393,7 @@ const UpdateProductInfoComponent = () => {
                         </div>
                 </div>
                 </div>
-                
-                </div>
 
-
-                <div className="col-md-6">
-                
                 <div className="form-group">
                     <label className='question-bg mb-1'>- Do you want to write the country of origin? :</label>
                     <div className="form-group" style={{display:'flex'}}>
@@ -432,6 +419,7 @@ const UpdateProductInfoComponent = () => {
                         </div>
                 </div>
                 </div>
+                
                {formData.hasCountryOfManufacture &&
                     <div className="form-group">
                         <label>Two Or tree letter of the Country Name:</label>
@@ -444,6 +432,12 @@ const UpdateProductInfoComponent = () => {
                                 onChange={(e) => setFormData({...formData, countryOfManufacture: (e.target.value).toUpperCase() })}
                             />
                     </div>}
+                </div>
+
+
+                <div className="col-md-6">
+                
+
                     <div className="form-group">
                             <label className='question-bg mb-1'>- Can your product be used if the package is damaged ?</label>
                             <div style={{display:'flex'}}>
@@ -474,11 +468,12 @@ const UpdateProductInfoComponent = () => {
                     <div className="form-group">
                         <label className='question-bg mb-1'>- Quantity of product per packaging:</label>
                         <input
-                        type="number"
-                        className="form-control"
-                        name="quantity"
-                        value={formData.quantity}
-                        onChange={(e) => setFormData({...formData, quantity: e.target.value})}
+                            type="number"
+                            className="form-control"
+                            name="quantity"
+                            value={formData.quantity}
+                            onChange={(e) => setFormData({...formData, quantity: e.target.value})}
+                            readOnly
                         />
                     </div>
                 <p className='form-group-paragraph' style={{fontSize:'14px'}}>In case where there is no specified expiration date, you can add the manufacture date*</p>
@@ -497,6 +492,7 @@ const UpdateProductInfoComponent = () => {
                             value="Yes"
                             checked={formData.hasLotNumber}
                             onChange={handleRadioButtonChange}
+                            disabled
                         />
                         </div>
                         <div className="form-check">
@@ -507,6 +503,7 @@ const UpdateProductInfoComponent = () => {
                             value="No"
                             checked={!formData.hasLotNumber}
                             onChange={handleRadioButtonChange}
+                            disabled
                         />
                         <label className="form-check-label">No</label>
                         </div>
@@ -529,6 +526,7 @@ const UpdateProductInfoComponent = () => {
                             value="Yes"
                             checked={formData.haSerialNumber}
                             onChange={handleRadioButtonChange}
+                            disabled
                         />
                         </div>
                         <div className="form-check">
@@ -539,6 +537,7 @@ const UpdateProductInfoComponent = () => {
                             value="No"
                             checked={!formData.haSerialNumber}
                             onChange={handleRadioButtonChange}
+                            disabled
                         />
                         <label className="form-check-label">No</label>
                         </div>

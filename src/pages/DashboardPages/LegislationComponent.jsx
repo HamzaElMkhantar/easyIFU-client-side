@@ -10,6 +10,7 @@ import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import { getLabelAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 
 const LegislationComponent = () => {
 
@@ -17,7 +18,7 @@ const LegislationComponent = () => {
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
   
-    const {legislation, getLabel} = useSelector(state => state);
+    const {legislation, productById} = useSelector(state => state);
     const {legislationRequest, legislationSuccess, legislationFail, legislationInfo} = legislation;
 
 
@@ -37,19 +38,17 @@ const LegislationComponent = () => {
         UK_notifiedBodyNumber: '',
     })
 
-    // get prev project info
-    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
-    const [projectInformation, setProjectInformation] = useState({});
-    console.log("get old data :", projectInformation)
-    useEffect(() =>{
-        dispatch(getLabelAction(projectId, token))
-    }, [])
-    useEffect(() =>{
-        if(getLabelSuccess){
-        setProjectInformation(label)
+      // get prev label info
+      const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById;
+      const [projectInformation, setProjectInformation] = useState({});
+      useEffect(() =>{
+        dispatch(getProductByIdAction(projectId, token))
+      }, [])
+      useEffect(() =>{
+        if(productByIdSuccess){
+          setProjectInformation(productByIdData)
         }
-    }, [getLabelSuccess])
-    console.log(formData)
+      }, [productByIdSuccess])
 
     useEffect(() =>{
         setFormData({

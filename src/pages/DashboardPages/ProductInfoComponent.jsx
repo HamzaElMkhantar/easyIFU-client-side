@@ -10,13 +10,14 @@ import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getLabelAction } from '../../redux/actions/labelActions';
+import { getProductByIdAction } from '../../redux/actions/productActions';
 
 const ProductInfoComponent = () => {
     const {projectId} = useParams()
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
-    const {productInformation, uploadManufacturerLogo, getLabel} = useSelector(state => state);
+    const {productInformation, uploadManufacturerLogo, productById} = useSelector(state => state);
     const {productRequest, productSuccess, productFail, projectInfo} = productInformation;
     const {uploadLogoRequest, uploadLogoSuccess, uploadLogoFail} = uploadManufacturerLogo;
 
@@ -27,8 +28,6 @@ const ProductInfoComponent = () => {
         labelId: projectId,
         isUpdate: false,
         productName: '' ,
-        intendedPurpose: [],
-        // intendedPurposeMultiLang: [],
         productType: '',
         udiDI: '',
         udiFormat: '',
@@ -48,6 +47,50 @@ const ProductInfoComponent = () => {
         quantity: 0,
 
     });
+
+
+          // get prev label info
+          const {productByIdRequest, productByIdSuccess, productByIdFail, productByIdData} = productById;
+          const [projectInformation, setProjectInformation] = useState({});
+          useEffect(() =>{
+            dispatch(getProductByIdAction(projectId, token))
+          }, [])
+          useEffect(() =>{
+            if(productByIdSuccess){
+              setProjectInformation(productByIdData)
+            }
+          }, [productByIdSuccess])
+    
+        useEffect(() =>{
+            setFormData({
+                isUpdate: false,
+                labelId: projectId,
+                productName: projectInformation?.labelData?.productName ||'',
+                productType: projectInformation?.labelData?.productType || '',
+                udiDI: projectInformation?.labelData?.udiDI || '',
+                udiFormat: projectInformation?.labelData?.udiFormat || '',
+                udiType: projectInformation?.labelData?.udiType || '',
+                useByDate: projectInformation?.labelData?.useByDate || '',
+                hasUseByDate: projectInformation?.labelData?.hasUseByDate || false,
+                dateOfManufacture: projectInformation?.labelData?.dateOfManufacture || '',
+                haDateOfManufacture: projectInformation?.labelData?.haDateOfManufacture || false,
+                countryOfManufacture: projectInformation?.labelData?.countryOfManufacture || '',
+                hasCountryOfManufacture: projectInformation?.labelData?.hasCountryOfManufacture || false,
+                serialNumber: projectInformation?.labelData?.serialNumber || '',
+                haSerialNumber: projectInformation?.labelData?.haSerialNumber || false,
+                LOTNumber: projectInformation?.labelData?.LOTNumber || '',
+                hasLotNumber: projectInformation?.labelData?.hasLotNumber || false ,
+                catalogueNumber: projectInformation?.labelData?.catalogueNumber || '',
+                modelNumber: projectInformation?.labelData?.modelNumber || '',
+                addManufacturerLogo: projectInformation?.labelData?.addManufacturerLogo || false,
+                quantity: projectInformation?.labelData?.quantity || 0,
+                canBeUsedIfDamaged: projectInformation?.labelData?.canBeUsedIfDamaged || false,
+            })
+    
+            setServiceList(projectInformation?.labelData?.packagingContents.length > 0 ? projectInformation?.labelData?.packagingContents : [''])
+            // setIntendedPurposeData(projectInformation?.labelData?.intendedPurpose.length > 0 ? projectInformation?.labelData?.intendedPurpose : [''])
+        }, [projectInformation])
+    
 
 
     //  dynamic input
@@ -78,324 +121,6 @@ const ProductInfoComponent = () => {
         }));
     };
 
-
-    const languages = [
-        { languageName: "Abkhazian", abbreviation: "AB" },
-        { languageName: "Afar", abbreviation: "AA" },
-        { languageName: "Afrikaans", abbreviation: "AF" },
-        { languageName: "Akan", abbreviation: "AK" },
-        { languageName: "Albanian", abbreviation: "SQ" },
-        { languageName: "Amharic", abbreviation: "AM" },
-        { languageName: "Arabic", abbreviation: "AR" },
-        { languageName: "Aragonese", abbreviation: "AN" },
-        { languageName: "Armenian", abbreviation: "HY" },
-        { languageName: "Assamese", abbreviation: "AS" },
-        { languageName: "Avaric", abbreviation: "AV" },
-        { languageName: "Avestan", abbreviation: "AE" },
-        { languageName: "Aymara", abbreviation: "AY" },
-        { languageName: "Azerbaijani", abbreviation: "AZ" },
-        { languageName: "Bambara", abbreviation: "BM" },
-        { languageName: "Bashkir", abbreviation: "BA" },
-        { languageName: "Basque", abbreviation: "EU" },
-        { languageName: "Belarusian", abbreviation: "BE" },
-        { languageName: "Bengali", abbreviation: "BN" },
-        { languageName: "Bihari languages", abbreviation: "BH" },
-        { languageName: "Bislama", abbreviation: "BI" },
-        { languageName: "Bosnian", abbreviation: "BS" },
-        { languageName: "Breton", abbreviation: "BR" },
-        { languageName: "Bulgarian", abbreviation: "BG" },
-        { languageName: "Burmese", abbreviation: "MY" },
-        { languageName: "Catalan; Valencian", abbreviation: "CA" },
-        { languageName: "Chamorro", abbreviation: "CH" },
-        { languageName: "Chechen", abbreviation: "CE" },
-        { languageName: "Chichewa; Chewa; Nyanja", abbreviation: "NY" },
-        { languageName: "Chinese", abbreviation: "ZH" },
-        { languageName: "Chuvash", abbreviation: "CV" },
-        { languageName: "Cornish", abbreviation: "KW" },
-        { languageName: "Corsican", abbreviation: "CO" },
-        { languageName: "Cree", abbreviation: "CR" },
-        { languageName: "Croatian", abbreviation: "HR" },
-        { languageName: "Czech", abbreviation: "CS" },
-        { languageName: "Danish", abbreviation: "DA" },
-        { languageName: "Divehi; Dhivehi; Maldivian", abbreviation: "DV" },
-        { languageName: "Dutch", abbreviation: "NL" },
-        { languageName: "English", abbreviation: "EN" },
-        { languageName: "Esperanto", abbreviation: "EO" },
-        { languageName: "Estonian", abbreviation: "ET" },
-        { languageName: "Ewe", abbreviation: "EE" },
-        { languageName: "Faroese", abbreviation: "FO" },
-        { languageName: "Fijian", abbreviation: "FJ" },
-        { languageName: "Finnish", abbreviation: "FI" },
-        { languageName: "French", abbreviation: "FR" },
-        { languageName: "Fula; Fulah; Pulaar; Pular", abbreviation: "FF" },
-        { languageName: "Galician", abbreviation: "GL" },
-        { languageName: "Georgian", abbreviation: "KA" },
-        { languageName: "German", abbreviation: "DE" },
-        { languageName: "Greek, Modern (1453-)", abbreviation: "EL" },
-        { languageName: "Guaraní", abbreviation: "GN" },
-        { languageName: "Gujarati", abbreviation: "GU" },
-        { languageName: "Haitian; Haitian Creole", abbreviation: "HT" },
-        { languageName: "Hausa", abbreviation: "HA" },
-        { languageName: "Hebrew (modern)", abbreviation: "HE" },
-        { languageName: "Herero", abbreviation: "HZ" },
-        { languageName: "Hindi", abbreviation: "HI" },
-        { languageName: "Hiri Motu", abbreviation: "HO" },
-        { languageName: "Hungarian", abbreviation: "HU" },
-        { languageName: "Interlingua", abbreviation: "IA" },
-        { languageName: "Indonesian", abbreviation: "ID" },
-        { languageName: "Interlingue; Occidental", abbreviation: "IE" },
-        { languageName: "Irish", abbreviation: "GA" },
-        { languageName: "Igbo", abbreviation: "IG" },
-        { languageName: "Inupiaq", abbreviation: "IK" },
-        { languageName: "Ido", abbreviation: "IO" },
-        { languageName: "Icelandic", abbreviation: "IS" },
-        { languageName: "Italian", abbreviation: "IT" },
-        { languageName: "Inuktitut", abbreviation: "IU" },
-        { languageName: "Japanese", abbreviation: "JA" },
-        { languageName: "Javanese", abbreviation: "JV" },
-        { languageName: "Kalaallisut, Greenlandic", abbreviation: "KL" },
-        { languageName: "Kannada", abbreviation: "KN" },
-        { languageName: "Kanuri", abbreviation: "KR" },
-        { languageName: "Kashmiri", abbreviation: "KS" },
-        { languageName: "Kazakh", abbreviation: "KK" },
-        { languageName: "Khmer", abbreviation: "KM" },
-        { languageName: "Kikuyu, Gikuyu", abbreviation: "KI" },
-        { languageName: "Kinyarwanda", abbreviation: "RW" },
-        { languageName: "Kirghiz, Kyrgyz", abbreviation: "KY" },
-        { languageName: "Komi", abbreviation: "KV" },
-        { languageName: "Kongo", abbreviation: "KG" },
-        { languageName: "Korean", abbreviation: "KO" },
-        { languageName: "Kurdish", abbreviation: "KU" },
-        { languageName: "Kwanyama, Kuanyama", abbreviation: "KJ" },
-        { languageName: "Latin", abbreviation: "LA" },
-        { languageName: "Luxembourgish, Letzeburgesch", abbreviation: "LB" },
-        { languageName: "Luganda", abbreviation: "LG" },
-        { languageName: "Limburgish, Limburgan, Limburger", abbreviation: "LI" },
-        { languageName: "Lingala", abbreviation: "LN" },
-        { languageName: "Lao", abbreviation: "LO" },
-        { languageName: "Lithuanian", abbreviation: "LT" },
-        { languageName: "Luba-Katanga", abbreviation: "LU" },
-        { languageName: "Latvian", abbreviation: "LV" },
-        { languageName: "Manx", abbreviation: "GV" },
-        { languageName: "Macedonian", abbreviation: "MK" },
-        { languageName: "Malagasy", abbreviation: "MG" },
-        { languageName: "Malay", abbreviation: "MS" },
-        { languageName: "Malayalam", abbreviation: "ML" },
-        { languageName: "Maltese", abbreviation: "MT" },
-        { languageName: "Maori", abbreviation: "MI" },
-        { languageName: "Marathi", abbreviation: "MR" },
-        { languageName: "Marshallese", abbreviation: "MH" },
-        { languageName: "Mongolian", abbreviation: "MN" },
-        { languageName: "Nauru", abbreviation: "NA" },
-        { languageName: "Navajo, Navaho", abbreviation: "NV" },
-        { languageName: "Norwegian Bokmål", abbreviation: "NB" },
-        { languageName: "North Ndebele", abbreviation: "ND" },
-        { languageName: "Nepali", abbreviation: "NE" },
-        { languageName: "Ndonga", abbreviation: "NG" },
-        { languageName: "Norwegian Nynorsk", abbreviation: "NN" },
-        { languageName: "Norwegian", abbreviation: "NO" },
-        { languageName: "Nuosu, Sichuan Yi", abbreviation: "II" },
-        { languageName: "South Ndebele", abbreviation: "NR" },
-        { languageName: "Occitan", abbreviation: "OC" },
-        { languageName: "Ojibwe, Ojibwa", abbreviation: "OJ" },
-        { languageName: "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old Slavonic", abbreviation: "CU" },
-        { languageName: "Oromo", abbreviation: "OM" },
-        { languageName: "Oriya", abbreviation: "OR" },
-        { languageName: "Ossetian, Ossetic", abbreviation: "OS" },
-        { languageName: "Panjabi, Punjabi", abbreviation: "PA" },
-        { languageName: "Pali", abbreviation: "PI" },
-        { languageName: "Persian", abbreviation: "FA" },
-        { languageName: "Polish", abbreviation: "PL" },
-        { languageName: "Pashto, Pushto", abbreviation: "PS" },
-        { languageName: "Portuguese", abbreviation: "PT" },
-        { languageName: "Quechua", abbreviation: "QU" },
-        { languageName: "Romansh", abbreviation: "RM" },
-        { languageName: "Kirundi", abbreviation: "RN" },
-        { languageName: "Romanian, Moldavian, Moldovan", abbreviation: "RO" },
-        { languageName: "Russian", abbreviation: "RU" },
-        { languageName: "Sanskrit", abbreviation: "SA" },
-        { languageName: "Sardinian", abbreviation: "SC" },
-        { languageName: "Sindhi", abbreviation: "SD" },
-        { languageName: "Northern Sami", abbreviation: "SE" },
-        { languageName: "Samoan", abbreviation: "SM" },
-        { languageName: "Sango", abbreviation: "SG" },
-        { languageName: "Serbian", abbreviation: "SR" },
-        { languageName: "Scottish Gaelic; Gaelic", abbreviation: "GD" },
-        { languageName: "Shona", abbreviation: "SN" },
-        { languageName: "Sinhala, Sinhalese", abbreviation: "SI" },
-        { languageName: "Slovak", abbreviation: "SK" },
-        { languageName: "Slovene", abbreviation: "SL" },
-        { languageName: "Somali", abbreviation: "SO" },
-        { languageName: "Southern Sotho", abbreviation: "ST" },
-        { languageName: "Spanish; Castilian", abbreviation: "ES" },
-        { languageName: "Sundanese", abbreviation: "SU" },
-        { languageName: "Swahili", abbreviation: "SW" },
-        { languageName: "Swati", abbreviation: "SS" },
-        { languageName: "Swedish", abbreviation: "SV" },
-        { languageName: "Tamil", abbreviation: "TA" },
-        { languageName: "Telugu", abbreviation: "TE" },
-        { languageName: "Tajik", abbreviation: "TG" },
-        { languageName: "Thai", abbreviation: "TH" },
-        { languageName: "Tigrinya", abbreviation: "TI" },
-        { languageName: "Tibetan", abbreviation: "BO" },
-        { languageName: "Turkmen", abbreviation: "TK" },
-        { languageName: "Tagalog", abbreviation: "TL" },
-        { languageName: "Tswana", abbreviation: "TN" },
-        { languageName: "Tonga (Tonga Islands)", abbreviation: "TO" },
-        { languageName: "Turkish", abbreviation: "TR" },
-        { languageName: "Tsonga", abbreviation: "TS" },
-        { languageName: "Tatar", abbreviation: "TT" },
-        { languageName: "Twi", abbreviation: "TW" },
-        { languageName: "Tahitian", abbreviation: "TY" },
-        { languageName: "Uighur, Uyghur", abbreviation: "UG" },
-        { languageName: "Ukrainian", abbreviation: "UK" },
-        { languageName: "Urdu", abbreviation: "UR" },
-        { languageName: "Uzbek", abbreviation: "UZ" },
-        { languageName: "Venda", abbreviation: "VE" },
-        { languageName: "Vietnamese", abbreviation: "VI" },
-        { languageName: "Volapük", abbreviation: "VO" },
-        { languageName: "Walloon", abbreviation: "WA" },
-        { languageName: "Welsh", abbreviation: "CY" },
-        { languageName: "Wolof", abbreviation: "WO" },
-        { languageName: "Western Frisian", abbreviation: "FY" },
-        { languageName: "Xhosa", abbreviation: "XH" },
-        { languageName: "Yiddish", abbreviation: "YI" },
-        { languageName: "Yoruba", abbreviation: "YO" },
-        { languageName: "Zhuang, Chuang", abbreviation: "ZA" },
-        { languageName: "Zulu", abbreviation: "ZU" }
-    ];
-    
-    //  dynamic input
-    const [intendedPurposeData, setIntendedPurposeData] = useState(
-        [{
-            language: '',
-            abbreviation: '',
-            intendedPurposeValue: ''
-        }]);
-
-    const handleIntendedPurposeData = (e, index) => {
-        const { value, name } = e.target;
-
-        let updatedIntendedPurposeData = null ;
-
-        // Create a copy of the intendedPurposeData array
-        if(name == "language"){
-               // Find the matching language object
-               let selectedLanguage = {}; // Initialize an empty object to hold the selected language
-               languages.forEach(lang => {
-                   if (lang.languageName === value) {
-                       selectedLanguage = lang; // Assign the matching language object to selectedLanguage
-                   }
-               });
-               // Now, selectedLanguage contains the object of the selected language
-               const selectedLanguageAbbreviation = selectedLanguage ? selectedLanguage.abbreviation : '';
-
-             updatedIntendedPurposeData = intendedPurposeData.map((item, idx) => {
-                if (idx === index) {
-                    return {
-                        ...item,
-                        language: value,
-                        abbreviation: selectedLanguageAbbreviation
-                    };
-                }
-                return item;
-            });
-
-                    // Update the formData state
-                    setFormData((prevData) => ({
-                        ...prevData,
-                        intendedPurpose: updatedIntendedPurposeData
-                    }));
-                
-                    // Update the intendedPurposeData state
-                    setIntendedPurposeData(updatedIntendedPurposeData);
-            return;
-        }
-         updatedIntendedPurposeData = intendedPurposeData.map((item, idx) => {
-            if (idx === index) {
-                return {
-                    ...item,
-                    [name]: value
-                };
-            }
-            return item;
-        });
-    
-        // Update the formData state
-        setFormData((prevData) => ({
-            ...prevData,
-            intendedPurpose: updatedIntendedPurposeData
-        }));
-    
-        // Update the intendedPurposeData state
-        setIntendedPurposeData(updatedIntendedPurposeData);
-
-    };
-    
-    const handleIntendedPurposeDataRemove = (index) => {
-        const list = [...intendedPurposeData];
-        list.splice(index, 1);
-        setIntendedPurposeData(list);
-        setFormData((prevData) => ({
-            ...prevData,
-            intendedPurpose: list,
-        }));
-    console.log(intendedPurposeData)
-    };
-    
-    const handleIntendedPurposeDataAdd = () => {
-        setIntendedPurposeData([...intendedPurposeData, ""]);
-        setFormData((prevData) => ({
-            ...prevData,
-            intendedPurpose: intendedPurposeData,
-        }));
-    console.log(intendedPurposeData)
-    };
-
-
-    // get prev project info
-    const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
-    const [projectInformation, setProjectInformation] = useState({});
-    useEffect(() =>{
-        dispatch(getLabelAction(projectId, token))
-    }, [])
-    useEffect(() =>{
-        if(getLabelSuccess){
-        setProjectInformation(label)
-        }
-    }, [getLabelSuccess])
-
-    useEffect(() =>{
-        setFormData({
-            isUpdate: false,
-            labelId: projectId,
-            productName: projectInformation?.labelData?.productName ||'',
-            // intendedPurpose: projectInformation?.labelData?.intendedPurpose || '',
-            // intendedPurpose: projectInformation?.labelData?.intendedPurposeMultiLang.length > 0 ? projectInformation?.labelData?.intendedPurposeMultiLang : [''],
-            productType: projectInformation?.labelData?.productType || '',
-            udiDI: projectInformation?.labelData?.udiDI || '',
-            udiFormat: projectInformation?.labelData?.udiFormat || '',
-            udiType: projectInformation?.labelData?.udiType || '',
-            useByDate: projectInformation?.labelData?.useByDate || '',
-            hasUseByDate: projectInformation?.labelData?.hasUseByDate || false,
-            dateOfManufacture: projectInformation?.labelData?.dateOfManufacture || '',
-            haDateOfManufacture: projectInformation?.labelData?.haDateOfManufacture || false,
-            countryOfManufacture: projectInformation?.labelData?.countryOfManufacture || '',
-            hasCountryOfManufacture: projectInformation?.labelData?.hasCountryOfManufacture || false,
-            serialNumber: projectInformation?.labelData?.serialNumber || '',
-            haSerialNumber: projectInformation?.labelData?.haSerialNumber || false,
-            LOTNumber: projectInformation?.labelData?.LOTNumber || '',
-            hasLotNumber: projectInformation?.labelData?.hasLotNumber || false ,
-            catalogueNumber: projectInformation?.labelData?.catalogueNumber || '',
-            modelNumber: projectInformation?.labelData?.modelNumber || '',
-            addManufacturerLogo: projectInformation?.labelData?.addManufacturerLogo || false,
-            quantity: projectInformation?.labelData?.quantity || 0,
-            canBeUsedIfDamaged: projectInformation?.labelData?.canBeUsedIfDamaged || false,
-        })
-
-        setServiceList(projectInformation?.labelData?.packagingContents.length > 0 ? projectInformation?.labelData?.packagingContents : [''])
-        setIntendedPurposeData(projectInformation?.labelData?.intendedPurpose.length > 0 ? projectInformation?.labelData?.intendedPurpose : [''])
-    }, [projectInformation])
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -469,8 +194,10 @@ const ProductInfoComponent = () => {
       };
 
     const dispatch = useDispatch()
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if(formData.productType == "") return toast.warning("missing Product Type!")
         await dispatch(productInformationAction(formData, token))
     }
 
@@ -521,59 +248,7 @@ const ProductInfoComponent = () => {
                     onChange={handleInputChange}
                     />
                 </div>
-                {/* <div className="form-group">
-                    <label className='question-bg mb-1'>- Intended purpose of the device:</label>
-                    <input
-                    type="text"
-                    className="form-control"
-                    name="intendedPurpose"
-                    value={formData.intendedPurpose}
-                    onChange={handleInputChange}
-                    />
-                </div> */}
-                <div className="form-field">
-                    <label htmlFor="service" className='question-bg mb-1'>- Intended purpose of the device:</label>
-                    {intendedPurposeData?.map((singleIntendedPurpose, index) => (
-                    <div key={index} className="services">
-                        <div className="first-division mb-1 mx-2" style={{display:'flex'}}>
-                            <select onChange={(e) => handleIntendedPurposeData(e, index)} name="language" id="language" className='' style={{border:'1px solid lightGray', borderRadius:'5px', marginRight:'5px', minWidth:'120px', maxWidth:'200px', backgroundColor:'lightGray', cursor:'pointer'}}>
-                                <option  value=''>Language</option>
-                                {languages?.map(lang => <option value={singleIntendedPurpose.language}>{lang.languageName}</option>)}
-                            </select>
-                            <input
-                                name="intendedPurposeValue"
-                                style={{width:'90%', height:'35px', border:'1px solid lightgray', borderRadius:'5px'}}
-                                type="text"
-                                id="service"
-                                value={singleIntendedPurpose.intendedPurposeValue}
-                                onChange={(e) => handleIntendedPurposeData(e, index)}
-                            />
-                            {intendedPurposeData.length !== 1 && (
-                                        <button
-                                            type="button"
-                                            style={{backgroundColor:'#FBB8B8', borderRadius:'6px'}}
-                                            onClick={() => handleIntendedPurposeDataRemove(index)}
-                                            className="remove-btn mx-2"
-                                            >
-                                            <span><DeleteIcon style={{color:'#2D2D2E'}} /></span>
-                                        </button>
-                                    )}
-                        </div>
-                        <div className="second-division">
-                        {intendedPurposeData.length - 1 === index && (
-                            <button
-                                    type="button"
-                                    style={{borderRadius:'5px', backgroundColor:'#79D4A3', fontSize:'14px'}}
-                                    onClick={handleIntendedPurposeDataAdd}
-                                    className="add-btn mx-2 mb-1"
-                                >
-                                <span>Add</span>
-                            </button>
-                        )}
-                        </div>
-                    </div>
-                    ))}
-                </div>
+
                 <div className="form-group">
                     <label className='question-bg mb-1'>- Is your product a*:</label>
                     <select
@@ -583,7 +258,7 @@ const ProductInfoComponent = () => {
                         required
                         onChange={handleInputChange}
                     >
-                        <option value="">Select</option>
+                        <option value="">--- Select Product Type ---</option>
                         <option value="Medical device">Medical device</option>
                         <option value="In Vitro Diagnostic (IVD) Medical Device">In Vitro Diagnostic (IVD) Medical Device</option>
                     </select>
@@ -729,11 +404,6 @@ const ProductInfoComponent = () => {
                 </div>
                 </div>
                 
-                </div>
-
-
-                <div className="col-md-6">
-                
                 <div className="form-group">
                     <label className='question-bg mb-1'>- Do you want to write the country of origin? :</label>
                     <div className="form-group" style={{display:'flex'}}>
@@ -759,18 +429,23 @@ const ProductInfoComponent = () => {
                         </div>
                 </div>
                 </div>
-               {formData.hasCountryOfManufacture &&
-                    <div className="form-group">
-                        <label>Two Or tree letter of the Country Name:</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="countryOfManufacture"
-                                maxLength="3"
-                                value={formData.countryOfManufacture}
-                                onChange={(e) => setFormData({...formData, countryOfManufacture: (e.target.value).toUpperCase() })}
-                            />
-                    </div>}
+                {formData.hasCountryOfManufacture &&
+                        <div className="form-group">
+                            <label>Two Or tree letter of the Country Name:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="countryOfManufacture"
+                                    maxLength="3"
+                                    value={formData.countryOfManufacture}
+                                    onChange={(e) => setFormData({...formData, countryOfManufacture: (e.target.value).toUpperCase() })}
+                                />
+                        </div>}
+                </div>
+
+
+                <div className="col-md-6">
+                
                     <div className="form-group">
                             <label className='question-bg mb-1'>- Can your product be used if the package is damaged ?</label>
                             <div style={{display:'flex'}}>
