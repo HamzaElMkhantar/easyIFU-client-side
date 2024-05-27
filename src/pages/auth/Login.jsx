@@ -86,7 +86,7 @@ const Login = () => {
                       <h6>Please login to your account</h6>
                       <div className="form-outline mb-2 mt-3">
                         <input
-                          type="email"
+                          type="text"
                           id="email"
                           ref={userRef}
                           value={userEmail}

@@ -654,7 +654,7 @@ const LabelsByProject = () => {
                         <td >{item?.labelDescription?.length > 20  
                                 ? item.labelDescription.substring(0, 20) + '...' 
                                 : item.labelDescription}</td>
-                  <td scope="col">{item.released ? "Released": "processing..."}</td>
+                  <td scope="col">{item.status ? item.status: "Draft"}</td>
                         {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") 
                           || decodedToken?.userInfo?.role.includes("Creator")) &&
                         
@@ -677,30 +677,6 @@ const LabelsByProject = () => {
                               <VisibilityIcon style={{paddingBottom:'3px', fontSize:'24px'}} />
                           </Link>}
                         </td>}
-                        {/* {decodedToken && decodedToken?.userInfo 
-                          && (decodedToken?.userInfo?.role.includes("Admin") 
-                          || decodedToken?.userInfo?.role.includes("Creator")) &&
-                          <td>{item.projectStep < 10
-                             ? <button 
-                                    style={{borderRadius:'4px'}} 
-                                    onClick={() => handleDelete(item._id)}> 
-                                <DeleteIcon style={{color:'#e97372', fontSize:'24px'}}/>
-                              </button>
-                             :<button disabled={archiveToggleProjectRequest ? true : false}
-                             onClick={() => dispatch(archivedProjectToggleAction(item._id, token))} 
-                             style={{borderRadius:'4px'}}>
-                                  {!archiveToggleProjectRequest 
-                                  ? <ArchiveIcon style={{marginLeft:'', fontSize:'24px', color:'#021D41'}}/>
-                                  : <RotatingLines
-                                              strokeColor="#021D41"
-                                              strokeWidth="5"
-                                              animationDuration="0.75"
-                                              width="23"
-                                              visible={true}
-                                          /> }
-                                  </button>
-                          }</td>
-                          } */}
                           <td>
                               <button 
                                   onClick={() => handleLabelVersionOpen(item._id)}

@@ -13,6 +13,7 @@ const LabelSizes = () => {
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
+    let documentSizes = [14, 17]
 
     const {documentById} = useSelector(state => state)
     const {documentByIdRequest, documentByIdSuccess, documentByIdFail, document} = documentById
@@ -41,7 +42,7 @@ const LabelSizes = () => {
     </div>
       <div className='' style={{display:'flex', justifyContent:'center', alignItems:'flex-start', flexWrap:'wrap', margin:'auto', gridGap:''}}>
        {!documentByIdRequest 
-       ? documentInfo && documentInfo?.documentSizes?.map((item, index) =>{
+       ? documentSizes?.map((item, index) =>{
         return (
         <Link to={`/dashboard/document/${documentInfo?._id}/${item}cm`}  className='card-wrapper' style={{width:'32%', textAlign:'center', paddingRight:'1%', margin:'0', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
             <p style={{fontSize:'14px', color:'gray', margin:'0', padding:'0'}}>with size:{item}cm</p>

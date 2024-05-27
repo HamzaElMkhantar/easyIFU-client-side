@@ -818,7 +818,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/project/sending-project-to-other-role`, data, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/sent-to-approver`, data, config);
 
       dispatch({ 
             type: SENDING_PROJECT_SUCCESS, 

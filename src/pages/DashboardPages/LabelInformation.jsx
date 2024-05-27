@@ -123,7 +123,7 @@ const LabelInformation = () => {
   const [allUsersCompany, setAllUsersCompany] = useState([]);
   const [imageSrc, setImageSrc] = useState('');
   const [sendTo, setSendTo] = useState({
-    projectId,
+    labelId: projectId,
     senderId: decodedToken && decodedToken.userInfo && decodedToken.userInfo._id,
     receivedId: '',
     template: activeTemplate
@@ -2276,8 +2276,7 @@ const LabelInformation = () => {
                     <h4 style={{color:"#062D60", fontWeight:'700'}}>Description :</h4>
                         {projectInfo &&
                           <p  className='label-info-description'>
-                              {projectInfo?.projectDescription}
-                              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim sed faucibus turpis in eu mi. Fermentum odio eu feugiat pretium nibh ipsum consequat nisl. At quis risus sed vulputate odio ut enim blandit volutpat. Leo vel fringilla est ullamcorper eget. Nunc sed augue lacus viverra vitae congue eu consequat. Mi proin sed libero enim sed faucibus turpis in. Nisl tincidunt eget nullam non nisi est sit amet.
+                              {projectInfo?.labelDescription}
                           </p>
                         }
                     </div>

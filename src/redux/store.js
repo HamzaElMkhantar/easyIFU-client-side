@@ -53,7 +53,7 @@ import { dashboardCompanyInfoReducer, getCompanyInfoReducer,
         paymentPricesCompanyReducer, 
         updateCompanyInfoReducer } from './reducers/companyReducers';
 import { changeCompanyPermissionReducer, companiesReducer, companyByIdReducer, contactByIdReducer, contactsReducer, deleteCompanyReducer, deleteContactReducer, projectsReducer, usersReducer } from './reducers/supperAdminReducers';
-import { createLabelReducer, getAllLabelsReducer, getLabelReducer } from './reducers/labelReducers';
+import { approveLabelReducer, createLabelReducer, getAllLabelsReducer, getLabelReducer, releaseLabelReducer, sendToApproverReducer, sendToReleaserReducer } from './reducers/labelReducers';
 import { createProductReducer, getProductByIdReducer, getProductByProjectIdReducer } from './reducers/productReducers';
 
 
@@ -117,6 +117,11 @@ const reducer = combineReducers({
     others: othersReducer,
     translationAndRepackaging: translationAndRepackagingReducer,
     intendedPurpose: intendedPurposeReducer,
+    sendToApprover: sendToApproverReducer ,
+    approveLabel: approveLabelReducer ,
+    sendToReleaser: sendToReleaserReducer ,
+    releaseLabel: releaseLabelReducer ,
+
 
     // products reducers
     getProductByProjectId: getProductByProjectIdReducer,
