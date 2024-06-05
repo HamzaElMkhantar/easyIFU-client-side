@@ -98,7 +98,7 @@ const LabelsByProject = () => {
    const [allProjects, setAllProjects] = useState([])
    const [intendedPurpose, setIntendedPurpose] = useState([])
    const [intendedData, setIntendedData] = useState([]);
-
+console.log("project : ", allProjects)
    const [formData, setFormData] = useState({
     companyId: decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId,
     createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id,
@@ -163,6 +163,8 @@ const LabelsByProject = () => {
   const {duplicateProjectRequest, duplicateProjectSuccess, duplicateProjectFail, deplicatedProject} = duplicateProject
   const {labelRequest, labelSuccess, labelFail, labelsData} = getAllLabels
 
+  console.log(labelRequest, labelSuccess, labelFail, labelsData)
+
   const handleLogout = () => {
     dispatch(logoutAction())
   }
@@ -209,7 +211,11 @@ const LabelsByProject = () => {
     if(productByIdSuccess){
       setIntendedPurpose(productByIdData.labelData.intendedPurpose)
     }
-  }, [createLabelSuccess, productByIdSuccess])
+
+    if(createLabelFail){
+      toast.warning(`${createLabelFail.message}`)
+    }
+  }, [createLabelSuccess, productByIdSuccess, createLabelFail])
 
 
   useEffect(() => {
@@ -347,16 +353,22 @@ const LabelsByProject = () => {
 
 
     // ------ headers ------
-    let barLinks = []
+    let barLinks = [
+      {title: 'All Labels', link: '/dashboard/labels/'+productId},
+      {title: 'Draft', link: '/dashboard/project/draft/'+productId},
+      {title: 'Approved', link: '/dashboard/project/approved/'+productId},
+      {title: 'Released', link: '/dashboard/project/released/'+productId},
+      {title: 'Rejected', link: '/dashboard/project/rejected/'+productId}]
     
     if(decodedToken &&
       decodedToken?.userInfo && 
       (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator"))){
         barLinks = [
-          {title: 'Projects', link: '/dashboard/project'},
-          {title: 'Released', link: '/dashboard/project/released'},
-          {title: 'Received', link: '/dashboard/received-project'},
-          {title: 'Archived', link: '/dashboard/archived-project'},
+          {title: 'All Labels', link: `/dashboard/labels/${productId}`},
+          {title: 'Draft', link: `/dashboard/project/draft/${productId}`},
+          {title: 'Approved', link: `/dashboard/project/approved/${productId}`},
+          {title: 'Released', link: '/dashboard/project/released/'+productId},
+          {title: 'Rejected', link: `/dashboard/project/rejected/${productId}`},
         ];
     } else if(decodedToken &&
       decodedToken?.userInfo && 
@@ -364,8 +376,6 @@ const LabelsByProject = () => {
         barLinks = [
           // {title: 'Projects', link: '/dashboard/project'},
           {title: 'Released', link: '/dashboard/project/released'},
-          {title: 'Received', link: '/dashboard/received-project'},
-          {title: 'Archived', link: '/dashboard/archived-project'},
         ];
     }
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -638,7 +648,7 @@ const LabelsByProject = () => {
                   <>
                     <th scope="col">Details</th>
                     {/* <th scope="col">Manage</th> */}
-                    <th scope="col">Update</th>
+                    <th scope="col">Edit</th>
                   </>}
                   <th scope="col">createdAt</th>
                   </tr>
@@ -647,14 +657,20 @@ const LabelsByProject = () => {
                 {allProjects &&
                   allProjects?.map((item, index) => {
                     return (
-                      <tr key={index}>
+                      <tr key={item._id}>
                         <th scope="row">{index+1}</th>
                         <td>{item.labelName}</td>
-                        <td> V{(item.labelVersion)}</td>
+                        <td> {(item.labelVersion)}</td>
                         <td >{item?.labelDescription?.length > 20  
                                 ? item.labelDescription.substring(0, 20) + '...' 
                                 : item.labelDescription}</td>
-                  <td scope="col">{item.status ? item.status: "Draft"}</td>
+                  <td style={item?.status == "rejected" 
+                            ? {color:'#921212', fontWeight:'700'} 
+                            : ( item?.status == "released" 
+                                            ? {color:'#066136', fontWeight:'700'} 
+                                            : {fontWeight:'600'})  } >
+                              
+                              {item?.status}</td>
                         {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") 
                           || decodedToken?.userInfo?.role.includes("Creator")) &&
                         

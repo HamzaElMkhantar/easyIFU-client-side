@@ -108,7 +108,6 @@ const ArchivedProject = () => {
       (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator"))){
         barLinks = [
           {title: 'Projects', link: '/dashboard/project'},
-          {title: 'Released', link: '/dashboard/project/released'},
           {title: 'Received', link: '/dashboard/received-project'},
           {title: 'Archived', link: '/dashboard/archived-project'},
         ];
@@ -116,8 +115,6 @@ const ArchivedProject = () => {
       decodedToken?.userInfo && 
       (!decodedToken?.userInfo?.role.includes("Admin") || !decodedToken?.userInfo?.role.includes("Creator"))){
         barLinks = [
-          // {title: 'Projects', link: '/dashboard/project'},
-          {title: 'Released', link: '/dashboard/project/released'},
           {title: 'Received', link: '/dashboard/received-project'},
           {title: 'Archived', link: '/dashboard/archived-project'},
         ];
@@ -129,7 +126,17 @@ const ArchivedProject = () => {
     const handleCloseAnchor = () => {
       setAnchorEl(null);
     };
-
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const seconds = date.getSeconds().toString().padStart(2, '0');
+    
+      return `${day}/${month}/${year}  ${hours}:${minutes}:${seconds}`;
+    }
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
@@ -204,45 +211,37 @@ const ArchivedProject = () => {
         {/* Dashboard  content   */}
         <section className='container' style={{marginTop:'15px'}}>
           <div>
-            <Table striped bordered hover style={{backgroundColor:'#fff'}} className="table table-hover my-1">
+          <Table striped bordered hover style={{backgroundColor:'#fff'}} className="table table-hover my-1">
               <thead style={{backgroundColor:'#075670', textAlign:'center'}} className="thead-dark">
                   <tr style={{color:'#fff'}}>
                   <th scope="col">#</th>
-                  <th scope="col">label Name</th>
+                  <th scope="col">Label Name</th>
+                  <th scope="col">Version</th>
                   <th scope="col">Description</th>
                   <th scope="col">Status</th>
-                  {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator")) &&
-                    <>
-                        <th scope="col">unArchive</th>
-                    </>}
+                  <th scope="col">createdAt</th>
                   </tr>
               </thead>
               <tbody style={{ textAlign:'center'}}>
                 {allProjects &&
-                  allProjects.map((item, index) => {
+                  allProjects?.map((item, index) => {
                     return (
-                      <tr>
+                      <tr key={item._id}>
                         <th scope="row">{index+1}</th>
                         <td>{item.labelName}</td>
-                        <td >{item.labelDescription.length > 20 
+                        <td> {(item.labelVersion)}</td>
+                        <td >{item?.labelDescription?.length > 20  
                                 ? item.labelDescription.substring(0, 20) + '...' 
                                 : item.labelDescription}</td>
-                  <td scope="col">{item.released ? "Released": "processing..."}</td>
-                      <td>
-                        <button disabled={archiveToggleProjectRequest ? true : false}
-                            onClick={() => dispatch(archivedProjectToggleAction(item._id, token))} 
-                            style={{color:'#021D41', borderRadius:'4px',  fontSize:''}}>
-                        {!archiveToggleProjectRequest 
-                          ?<UnarchiveRoundedIcon />
-                          :<RotatingLines
-                                    strokeColor="#021D41"
-                                    strokeWidth="5"
-                                    animationDuration="0.75"
-                                    width="23"
-                                    visible={true}
-                                /> }
-                        </button>
-                      </td>
+                  <td style={item?.status == "rejected" 
+                            ? {color:'#921212', fontWeight:'700'} 
+                            : ( item?.status == "released" 
+                                            ? {color:'#066136', fontWeight:'700'} 
+                                            : {fontWeight:'600'})  } >
+                              
+                              {item?.status}</td>
+                       
+                          <td>{formatDate(item?.createdAt)}</td>
                       </tr>
                     )
                   })

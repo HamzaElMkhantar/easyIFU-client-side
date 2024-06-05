@@ -435,3 +435,29 @@
 .collapsible-header:hover {
   background-color: #0a3164;
 }
+
+
+/* swal library popup style */
+
+
+.custom-swal-bg{
+  background-color: #ecf0f3 !important;
+  color: black;
+}
+
+.custom-swal-button{
+  background-color: #FFE5E5 !important;
+  color: black;
+}
+
+.custom-swal-button {
+  background-color: #072c59 !important; 
+  color: rgb(241, 241, 241) !important; 
+  border: 0 !important;
+}
+
+.custom-swal-icon {
+  color: #fcfcfc !important;
+  background-color: #072c59;
+  border: 0;
+}

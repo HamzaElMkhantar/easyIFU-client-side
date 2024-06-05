@@ -6,7 +6,7 @@ import Avatar from '@mui/material/Avatar';
 import { useDispatch, useSelector } from 'react-redux';
 import easyIFUlogo from '../../assets/easyIFU_Logo.png' 
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ProjectByRoleIdAction, releasedProjectAction } from '../../redux/actions/projectActions';
 import { RotatingLines } from 'react-loader-spinner';
@@ -26,82 +26,96 @@ import BarLinks from '../../utilities/BarLinks';
 import { Table } from 'react-bootstrap';
 const ReleasedProjects = () => {
 
-        // side bar toggle
-        const [isSidebarOpen, setIsSidebarOpen] = useState(
-            JSON.parse(localStorage.getItem('sideToggle')) || false
-        );
-        const toggleSidebar = () => {
-            const newToggleState = !isSidebarOpen;
-            setIsSidebarOpen(newToggleState);
-            localStorage.setItem('sideToggle', JSON.stringify(newToggleState));
-        }; 
-    
-        const [isOpen, setIsOpen] = useState(false);
-        const toggleDropdown = () => {
-            setIsOpen(!isOpen);
-        };
-        
-        // -- component logic --
-        const token = Cookies.get("eIfu_ATK") || null;
-        const decodedToken = token ? jwtDecode(token) : null
-        const companyId = decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId
-    
-        const [releasedProject, setReleasedProject] = useState([])
-        const {ReleasedProject} = useSelector(state => state)
-        const {releasedProjectRequest, releasedProjectSuccess, releasedProjectFail, releasedProjects} = ReleasedProject;
+  const {productId} = useParams()
 
-        const dispatch = useDispatch()
-        useEffect(() => {
-            dispatch(releasedProjectAction(companyId,token))
-        }, [])
-        useEffect(() => {
-            if(releasedProjectSuccess){
-                setReleasedProject(releasedProjects)
-            }
-            if(releasedProjectFail){
-                    toast.error(`${releasedProjectFail.message}`)
-            }
-        }, [releasedProjectSuccess, releasedProjectFail])
+  // side bar toggle
+  const [isSidebarOpen, setIsSidebarOpen] = useState(
+      JSON.parse(localStorage.getItem('sideToggle')) || false
+  );
+  const toggleSidebar = () => {
+      const newToggleState = !isSidebarOpen;
+      setIsSidebarOpen(newToggleState);
+      localStorage.setItem('sideToggle', JSON.stringify(newToggleState));
+  }; 
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDropdown = () => {
+      setIsOpen(!isOpen);
+  };
+  
+  // -- component logic --
+  const token = Cookies.get("eIfu_ATK") || null;
+  const decodedToken = token ? jwtDecode(token) : null
+  const companyId = decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId
+  const userId = decodedToken && decodedToken.userInfo && decodedToken.userInfo._id
+
+  const [releasedProject, setReleasedProject] = useState([])
+  const {ReleasedProject} = useSelector(state => state)
+  const {releasedProjectRequest, releasedProjectSuccess, releasedProjectFail, releasedProjects} = ReleasedProject;
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+      dispatch(releasedProjectAction({companyId, productId, createdBy: userId},token))
+  }, [])
+  useEffect(() => {
+      if(releasedProjectSuccess){
+          setReleasedProject(releasedProjects)
+      }
+      if(releasedProjectFail && releasedProjectFail.message != "no label found!"){
+          toast.error(`${releasedProjectFail.message}`)
+      }
+  }, [releasedProjectSuccess, releasedProjectFail])
 
 
 
 
-              // ------ headers ------
+  // ------ headers ------
   const {logout} = useSelector(state => state)
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const handleLogout = () => {
     dispatch(logoutAction())
   }
-    // ------ headers ------
-    let barLinks = []
-    
-    if(decodedToken &&
-      decodedToken?.userInfo && 
-      (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator"))){
-        barLinks = [
-          {title: 'Projects', link: '/dashboard/project'},
-          {title: 'Released', link: '/dashboard/project/released'},
-          {title: 'Received', link: '/dashboard/received-project'},
-          {title: 'Archived', link: '/dashboard/archived-project'},
-        ];
-    } else if(decodedToken &&
-      decodedToken?.userInfo && 
-      (!decodedToken?.userInfo?.role.includes("Admin") || !decodedToken?.userInfo?.role.includes("Creator"))){
-        barLinks = [
-          // {title: 'Projects', link: '/dashboard/project'},
-          {title: 'Released', link: '/dashboard/project/released'},
-          {title: 'Received', link: '/dashboard/received-project'},
-          {title: 'Archived', link: '/dashboard/archived-project'},
-        ];
-    }
+  let barLinks = [
+    {title: 'All Labels', link: '/dashboard/labels/'+productId},
+    {title: 'Draft', link: '/dashboard/project/draft/'+productId},
+    {title: 'Approved', link: '/dashboard/project/approved/'+productId},
+    {title: 'Released', link: '/dashboard/project/released/'+productId},
+    {title: 'Rejected', link: '/dashboard/project/rejected/'+productId}]
+  
+  // if(decodedToken &&
+  //   decodedToken?.userInfo && 
+  //   (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator"))){
+  //     barLinks = [
+  //       {title: 'All Labels', link: '/dashboard/labels/'+productId},
+  //       {title: 'Draft', link: '/dashboard/project/draft/'+productId},
+  //       {title: 'Approved', link: '/dashboard/project/approved/'+productId},
+  //       {title: 'Released', link: '/dashboard/project/released/'+productId},
+  //       {title: 'Rejected', link: '/dashboard/project/rejected/'+productId},
+  //       {title: 'Received', link: '/dashboard/received-project'},
+  //       {title: 'Archived', link: '/dashboard/archived-project'},
+  //     ];
+  // } else if(decodedToken &&
+  //   decodedToken?.userInfo && 
+  //   (!decodedToken?.userInfo?.role.includes("Admin") || !decodedToken?.userInfo?.role.includes("Creator"))){
+  //     barLinks = [
+  //       {title: 'All Labels', link: '/dashboard/labels/'+productId},
+  //       {title: 'Draft', link: '/dashboard/project/draft/'+productId},
+  //       {title: 'Approved', link: '/dashboard/project/approved/'+productId},
+  //       {title: 'Released', link: '/dashboard/project/released/'+productId},
+  //       {title: 'Rejected', link: '/dashboard/project/rejected/'+productId},
+  //       {title: 'Received', link: '/dashboard/received-project'},
+  //       {title: 'Archived', link: '/dashboard/archived-project'},
+  //     ];
+  // }
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleMenu = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const handleCloseAnchor = () => {
-      setAnchorEl(null);
-    };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseAnchor = () => {
+    setAnchorEl(null);
+  };
+  
   return (
     <div style={{height:'70vh', width:'100%', display:'flex'}}>
       <SideBar isSidebarOpen={isSidebarOpen} />

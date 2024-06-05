@@ -194,6 +194,16 @@ console.log(projectInformation)
         dispatch(intendedPurposeAction(formData, token))
     }
 
+
+if(projectInformation){
+    if(projectInformation?.status == "released" 
+    || projectInformation?.status == "rejected" 
+    || projectInformation?.status == "pending_release" 
+    || projectInformation?.status == "pending_approval"){
+        navigate(`/dashboard/project-information/${projectId}`)
+    }
+}
+
   return (
     <div className="container productInfo">
                 <div className='' style={{display:'flex',

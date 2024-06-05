@@ -2,6 +2,10 @@ import {ALL_LABELS_FAILED,
         ALL_LABELS_REQUEST, 
         ALL_LABELS_RESET, 
         ALL_LABELS_SUCCESS,
+        APPROVED_LABEL_FAILED,
+        APPROVED_LABEL_REQUEST,
+        APPROVED_LABEL_RESET,
+        APPROVED_LABEL_SUCCESS,
         APPROVE_LABEL_FAILED,
         APPROVE_LABEL_REQUEST,
         APPROVE_LABEL_RESET,
@@ -10,10 +14,18 @@ import {ALL_LABELS_FAILED,
         CREATE_LABEL_REQUEST,
         CREATE_LABEL_RESET,
         CREATE_LABEL_SUCCESS,
+        DRAFT_LABEL_FAILED,
+        DRAFT_LABEL_REQUEST,
+        DRAFT_LABEL_RESET,
+        DRAFT_LABEL_SUCCESS,
         GET_LABEL_FAILED,
         GET_LABEL_REQUEST,
         GET_LABEL_RESET,
         GET_LABEL_SUCCESS,
+        REJECTED_LABEL_FAILED,
+        REJECTED_LABEL_REQUEST,
+        REJECTED_LABEL_RESET,
+        REJECTED_LABEL_SUCCESS,
         RELEASE_LABEL_FAILED,
         RELEASE_LABEL_REQUEST,
         RELEASE_LABEL_RESET,
@@ -75,6 +87,127 @@ const releaseLabel = {
     releaseLabelMessage : null,
     releaseLabelFail : null,
 }
+
+
+const draftLabels = {
+    draftLabelsRequest : false,
+    draftLabelsSuccess :  false,
+    draftLabels : null,
+    draftLabelsFail : null,
+}
+
+const approvedLabels = {
+    approvedLabelsRequest : false,
+    approvedLabelsSuccess :  false,
+    approvedLabels : null,
+    approvedLabelsFail : null,
+}
+
+const rejectedLabels = {
+    rejectedLabelsRequest : false,
+    rejectedLabelsSuccess :  false,
+    rejectedLabels : null,
+    rejectedLabelsFail : null,
+}
+
+
+export const drafLabelsReducer = (state = draftLabels, action) => {
+
+    switch(action.type){
+        case DRAFT_LABEL_REQUEST:
+            return {
+                ...state,
+                draftLabelsRequest : true,
+                draftLabelsSuccess :  false,
+                draftLabelsFail : null,
+            } ;
+        case DRAFT_LABEL_SUCCESS :
+            return {
+                ...state,
+                draftLabelsRequest : false,
+                draftLabelsSuccess : true,
+                draftLabels: action.payload
+            } ;
+        case DRAFT_LABEL_FAILED :
+            return {
+                ...state,
+                draftLabelsFail : action.payload,
+                draftLabelsSuccess :  false,
+                draftLabelsRequest : false
+            } ;
+        case DRAFT_LABEL_RESET :
+            return draftLabels;
+        default :
+            return state ;
+    }
+
+}
+
+export const approvedLabelsReducer = (state = approvedLabels, action) => {
+
+    switch(action.type){
+        case APPROVED_LABEL_REQUEST:
+            return {
+                ...state,
+                approvedLabelsRequest : true,
+                approvedLabelsSuccess :  false,
+                approvedLabelsFail : null,
+            } ;
+        case APPROVED_LABEL_SUCCESS :
+            return {
+                ...state,
+                approvedLabelsRequest : false,
+                approvedLabelsSuccess : true,
+                approvedLabel: action.payload
+            } ;
+        case APPROVED_LABEL_FAILED :
+            return {
+                ...state,
+                approvedLabelsFail : action.payload,
+                approvedLabelsSuccess :  false,
+                approvedLabelsRequest : false
+            } ;
+        case APPROVED_LABEL_RESET :
+            return approvedLabels;
+        default :
+            return state ;
+    }
+
+}
+
+export const rejectedLabelsReducer = (state = rejectedLabels, action) => {
+
+    switch(action.type){
+        case REJECTED_LABEL_REQUEST:
+            return {
+                ...state,
+                rejectedLabelsRequest : true,
+                rejectedLabelsSuccess :  false,
+                rejectedLabelsFail : null,
+            } ;
+        case REJECTED_LABEL_SUCCESS :
+            return {
+                ...state,
+                rejectedLabelsRequest : false,
+                rejectedLabelsSuccess : true,
+                rejectedLabel: action.payload
+            } ;
+        case REJECTED_LABEL_FAILED :
+            return {
+                ...state,
+                rejectedLabelsFail : action.payload,
+                rejectedLabelsSuccess :  false,
+                rejectedLabelsRequest : false
+            } ;
+        case REJECTED_LABEL_RESET :
+            return rejectedLabels;
+        default :
+            return state ;
+    }
+
+}
+
+
 
 export const getAllLabelsReducer = (state = labels, action) => {
 

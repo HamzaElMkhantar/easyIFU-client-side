@@ -19,9 +19,10 @@ import { RotatingLines } from 'react-loader-spinner';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode'; 
 import { Accordion } from 'react-bootstrap';
+import Swal from 'sweetalert2'
 
 
-const SideBarLabelInfo = ({isSidebarOpen, projectInfo, projectId, onTemplateChange}) => {
+const SideBarLabelInfo = ({isSidebarOpen, projectInfo, projectId, onTemplateChange, status}) => {
   const {logout} = useSelector(state => state);
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const dispatch = useDispatch()
@@ -63,7 +64,7 @@ const SideBarLabelInfo = ({isSidebarOpen, projectInfo, projectId, onTemplateChan
   const [isCollapsed, setIsCollapsed] = useState(true);
 //   const [activeTemplate, setActiveTemplate] = useState('');
 
-  const [activeTemplate, setActiveTemplate] = useState('template-1')
+  const [activeTemplate, setActiveTemplate] = useState('Template1')
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -76,6 +77,23 @@ const handleTemplateChange = (template) => {
     onTemplateChange(template);
   }
 };
+
+
+const handleMessageUpdate = () => {
+  if(status !== "Draft"){
+    Swal.fire({
+      title: "Update only for Draft labels!",
+      text: "Please use the Edit button for new Draft edition",
+      icon: "info",
+      customClass: {
+        popup: 'custom-swal-bg',
+        confirmButton: 'custom-swal-button',
+        icon: 'custom-swal-icon'
+      }
+    });
+  }
+}
+
   return (
     <div id="wrapper" className={!isSidebarOpen ? '' : 'toggled'}>
       <div id="sidebar-wrapper" style={{ height:'100vh'}}>
@@ -99,38 +117,38 @@ const handleTemplateChange = (template) => {
                 {/* Collapsible content */}
                 {
                 <div className={`collapsible-update update ${!collapsed.update ? 'collapsed' : 'expanded'}`}>
-                    <Link style={{ margin:'0', padding:' 5px'}} to={!projectInfo && `/dashboard/update-project/step1/${projectId}`}>
+                    <Link onClick={handleMessageUpdate} style={{ margin:'0', padding:' 5px'}} to={status == "Draft" && `/dashboard/update-project/step1/${projectId}`}>
                         Manufacturer Info
                     </Link>
-                    <Link to={!projectInfo && `/dashboard/update-project/step2/${projectId}`}>
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step2/${projectId}`}>
                         Legislation
                     </Link>
-                    <Link to={!projectInfo && `/dashboard/update-project/step3/${projectId}`}>
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step3/${projectId}`}>
                         Product Info
                     </Link>
-                    <Link to={!projectInfo && `/dashboard/update-project/step4/${projectId}`}>
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step4/${projectId}`}>
                       Intended Purpose
                     </Link>
-                    <Link to={!projectInfo && `/dashboard/update-project/step5/${projectId}`} >
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step5/${projectId}`} >
                         Sterility
                     </Link>
-                    <Link to={!projectInfo && `/dashboard/update-project/step6/${projectId}`} >
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step6/${projectId}`} >
                         Storage
                     </Link>
-                    <Link to={!projectInfo && `/dashboard/update-project/step7/${projectId}`} >
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step7/${projectId}`} >
                         Safe Use
                     </Link>
                     {projectInfo?.labelData && projectInfo?.labelData?.productType === "In Vitro Diagnostic (IVD) Medical Device" && 
-                    <Link to={!projectInfo && `/dashboard/update-project/step8/${projectId}`} style={{backgroundColor:'rd', marginBottom:"5px", borderRadius:'4px'}}>
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step8/${projectId}`} style={{backgroundColor:'rd', marginBottom:"5px", borderRadius:'4px'}}>
                         IVD Diagnostic
                     </Link>}
-                    <Link to={!projectInfo && `/dashboard/update-project/step9/${projectId}`} >
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step9/${projectId}`} >
                         Transfusion-Infusion
                     </Link>
-                    <Link to={!projectInfo && `/dashboard/update-project/step10/${projectId}`} >
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step10/${projectId}`} >
                         Others
                     </Link>
-                    <Link to={!projectInfo && `/dashboard/update-project/step11/${projectId}`} >
+                    <Link onClick={handleMessageUpdate} to={status == "Draft" && `/dashboard/update-project/step11/${projectId}`} >
                         Translation/Repackaging
                     </Link>
                 
@@ -151,20 +169,20 @@ const handleTemplateChange = (template) => {
       >
         {/* Links */}
         <button
-          className={`template-button ${activeTemplate === 'template-1' ? 'active' : ''}`}
-          onClick={() => handleTemplateChange('template-1')}
+          className={`template-button ${activeTemplate === 'Template1' ? 'active' : ''}`}
+          onClick={() => handleTemplateChange('Template1')}
         >
           Template 1
         </button>
         <button
-          className={`template-button ${activeTemplate === 'template-2' ? 'active' : ''}`}
-          onClick={() => handleTemplateChange('template-2')}
+          className={`template-button ${activeTemplate === 'Template2' ? 'active' : ''}`}
+          onClick={() => handleTemplateChange('Template2')}
         >
           Template 2
         </button>
         <button
-          className={`template-button ${activeTemplate === 'template-3' ? 'active' : ''}`}
-          onClick={() => handleTemplateChange('template-3')}
+          className={`template-button ${activeTemplate === 'Template3' ? 'active' : ''}`}
+          onClick={() => handleTemplateChange('Template3')}
         >
           Template 3
         </button>

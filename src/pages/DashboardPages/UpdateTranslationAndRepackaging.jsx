@@ -94,6 +94,15 @@ const UpdateTranslationAndRepackaging = () => {
   }, [translationAndRepackagingSuccess, translationAndRepackagingFail])
     
 
+  if(projectInformation){
+    if(projectInformation?.status == "released" 
+    || projectInformation?.status == "rejected" 
+    || projectInformation?.status == "pending_release" 
+    || projectInformation?.status == "pending_approval"){
+        navigate(`/dashboard/project-information/${projectId}`)
+    }
+  }
+
   return (
     <div className='container others'>
         <div className='mb-2' style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%'}}>

@@ -52,9 +52,28 @@ import { dashboardCompanyInfoReducer, getCompanyInfoReducer,
         paymentCompanyReducer, 
         paymentPricesCompanyReducer, 
         updateCompanyInfoReducer } from './reducers/companyReducers';
-import { changeCompanyPermissionReducer, companiesReducer, companyByIdReducer, contactByIdReducer, contactsReducer, deleteCompanyReducer, deleteContactReducer, projectsReducer, usersReducer } from './reducers/supperAdminReducers';
-import { approveLabelReducer, createLabelReducer, getAllLabelsReducer, getLabelReducer, releaseLabelReducer, sendToApproverReducer, sendToReleaserReducer } from './reducers/labelReducers';
-import { createProductReducer, getProductByIdReducer, getProductByProjectIdReducer } from './reducers/productReducers';
+import { changeCompanyPermissionReducer, 
+        companiesReducer, 
+        companyByIdReducer, 
+        contactByIdReducer, 
+        contactsReducer, 
+        deleteCompanyReducer, 
+        deleteContactReducer, 
+        projectsReducer, 
+        usersReducer } from './reducers/supperAdminReducers';
+import { approveLabelReducer, 
+        approvedLabelsReducer, 
+        createLabelReducer, 
+        drafLabelsReducer, 
+        getAllLabelsReducer, 
+        getLabelReducer, 
+        rejectedLabelsReducer, 
+        releaseLabelReducer, 
+        sendToApproverReducer, 
+        sendToReleaserReducer } from './reducers/labelReducers';
+import { createProductReducer, 
+        getProductByIdReducer, 
+        getProductByProjectIdReducer } from './reducers/productReducers';
 
 
 const reducer = combineReducers({
@@ -121,6 +140,9 @@ const reducer = combineReducers({
     approveLabel: approveLabelReducer ,
     sendToReleaser: sendToReleaserReducer ,
     releaseLabel: releaseLabelReducer ,
+    approvedLabels: approvedLabelsReducer ,
+    drafLabels: drafLabelsReducer ,
+    rejectedLabels: rejectedLabelsReducer ,
 
 
     // products reducers

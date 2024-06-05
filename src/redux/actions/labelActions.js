@@ -3,6 +3,10 @@ import {ALL_LABELS_FAILED,
         ALL_LABELS_REQUEST, 
         ALL_LABELS_RESET, 
         ALL_LABELS_SUCCESS, 
+        APPROVED_LABEL_FAILED, 
+        APPROVED_LABEL_REQUEST, 
+        APPROVED_LABEL_RESET, 
+        APPROVED_LABEL_SUCCESS, 
         APPROVE_LABEL_FAILED, 
         APPROVE_LABEL_REQUEST, 
         APPROVE_LABEL_RESET, 
@@ -11,10 +15,18 @@ import {ALL_LABELS_FAILED,
         CREATE_LABEL_REQUEST, 
         CREATE_LABEL_RESET, 
         CREATE_LABEL_SUCCESS, 
+        DRAFT_LABEL_FAILED, 
+        DRAFT_LABEL_REQUEST, 
+        DRAFT_LABEL_RESET, 
+        DRAFT_LABEL_SUCCESS, 
         GET_LABEL_FAILED, 
         GET_LABEL_REQUEST,
         GET_LABEL_RESET,
         GET_LABEL_SUCCESS,
+        REJECTED_LABEL_FAILED,
+        REJECTED_LABEL_REQUEST,
+        REJECTED_LABEL_RESET,
+        REJECTED_LABEL_SUCCESS,
         RELEASE_LABEL_FAILED,
         RELEASE_LABEL_REQUEST,
         RELEASE_LABEL_RESET,
@@ -118,7 +130,7 @@ export const createLabelAction = ( labelData, token) => async (dispatch) => {
         }
     
         const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/create-label`, {labelData}, config);
-      console.log(response.data)
+      console.log(response?.data)
         dispatch({ 
             type: CREATE_LABEL_SUCCESS, 
             payload: response.data
@@ -274,7 +286,7 @@ export const releaseLabelAction = (data, token) => async (dispatch) => {
         }
     
         const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/release-label`, data, config);
-        console.log(response.data)
+
         dispatch({ 
             type: RELEASE_LABEL_SUCCESS, 
             payload: response.data
@@ -294,6 +306,125 @@ export const releaseLabelAction = (data, token) => async (dispatch) => {
         setTimeout(() =>{
             dispatch({ 
             type: RELEASE_LABEL_RESET
+            });
+        }, 1500)
+    }
+};
+
+export const drafLabelsAction = ({companyId, productId: projectId, createdBy}, token) => async (dispatch) => {
+    try {
+
+
+
+        dispatch({ 
+            type: DRAFT_LABEL_REQUEST
+        });
+    
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/draft/${projectId}/${companyId}/${createdBy}`, config);
+        console.log(response.data)
+        dispatch({ 
+            type: DRAFT_LABEL_SUCCESS, 
+            payload: response.data
+        });
+        setTimeout(() =>{
+        dispatch({ 
+            type: DRAFT_LABEL_RESET
+        });
+        }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: DRAFT_LABEL_FAILED, 
+            payload: error?.response?.data 
+        });
+    
+        setTimeout(() =>{
+            dispatch({ 
+            type: DRAFT_LABEL_RESET
+            });
+        }, 1500)
+    }
+};
+
+export const approvedLabelsAction = ({productId, companyId, createdBy}, token) => async (dispatch) => {
+    try {
+
+        dispatch({ 
+            type: APPROVED_LABEL_REQUEST
+        });
+    
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/approved/${productId}/${companyId}/${createdBy}`, config);
+        console.log(response.data)
+        dispatch({ 
+            type: APPROVED_LABEL_SUCCESS, 
+            payload: response.data
+        });
+        setTimeout(() =>{
+        dispatch({ 
+            type: APPROVED_LABEL_RESET
+        });
+        }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: APPROVED_LABEL_FAILED, 
+            payload: error?.response?.data 
+        });
+    
+        setTimeout(() =>{
+            dispatch({ 
+            type: APPROVED_LABEL_RESET
+            });
+        }, 1500)
+    }
+};
+
+export const rejectedLabelsAction = ({productId, companyId, createdBy}, token) => async (dispatch) => {
+    try {
+
+        dispatch({ 
+            type: REJECTED_LABEL_REQUEST
+        });
+    
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/rejected/${productId}/${companyId}/${createdBy}`, config);
+        console.log(response.data)
+        dispatch({ 
+            type: REJECTED_LABEL_SUCCESS, 
+            payload: response.data
+        });
+        setTimeout(() =>{
+        dispatch({ 
+            type: REJECTED_LABEL_RESET
+        });
+        }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: REJECTED_LABEL_FAILED, 
+            payload: error?.response?.data 
+        });
+    
+        setTimeout(() =>{
+            dispatch({ 
+            type: REJECTED_LABEL_RESET
             });
         }, 1500)
     }

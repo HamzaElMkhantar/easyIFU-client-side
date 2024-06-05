@@ -8,6 +8,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { sendingProjectToOtherRoleAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 // manufacturer and product info symbols
 import Manufacturer from '../../assets/eIFUSymbols/Manufacturer.png'
@@ -116,8 +117,8 @@ const LabelInformation = () => {
   const {usersCompanyRequest, usersCompanySuccess, usersCompanyFail, allUsers} = usersCompany;
   const {sendingProjectRequest, sendingProjectSuccess, sendingProjectFail, sendingProjectMessage} = sendingProjectToOtherRole
 
-  const [activeTemplate, setActiveTemplate] = useState('template-1')
-  const isTemplate3 = activeTemplate === "template-3" ? true : false
+  const [activeTemplate, setActiveTemplate] = useState('Template1')
+  const isTemplate3 = activeTemplate === "Template3" ? true : false
 
   const [projectInfo, setProjectInfo] = useState({});
   const [allUsersCompany, setAllUsersCompany] = useState([]);
@@ -128,7 +129,6 @@ const LabelInformation = () => {
     receivedId: '',
     template: activeTemplate
   });
-
 
   const dispatch = useDispatch()
   const  handleSendLabel = () => {
@@ -151,7 +151,7 @@ const LabelInformation = () => {
       companyId: decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId 
     }, token))
   }, [])
-
+console.log(projectInfo)
   useEffect(() => {
     if(getLabelSuccess){
       setProjectInfo(label)
@@ -1728,10 +1728,13 @@ const LabelInformation = () => {
    const handleTemplateChange = (templateId) => {
     setActiveTemplate(templateId);
   };
+
+
   return (
     <div className="label-information" style={{padding:'0', height:'70vh', width:'100%', display:'flex'}}>
         <SideBarLabelInfo isSidebarOpen={true} 
                           projectInfo={projectInfo.released}
+                          status={projectInfo.status}
                           onTemplateChange={handleTemplateChange}
                           projectId={projectId}/>
 
@@ -1767,8 +1770,9 @@ const LabelInformation = () => {
               <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'><ArrowBackIcon /> Back</Link>
               {!getLabelRequest && 
               <>
+              <h5 style={{color:'gray'}}>{projectInfo?.shortId}</h5>
                 <div style={{marginTop:'0px', alignItems:'center'}}>
-                  {!projectInfo?.released && <>
+                  {projectInfo?.status == "Draft" && <>
                         <h6>Send Project To:</h6>
                         <div style={{display:'flex',  height:'35px', alignItems:'center', width:'250px'}}>
                           <select  value={sendTo.receivedId} onChange={(e) => setSendTo({...sendTo,receivedId: e.target.value})} style={{width:'100%', padding:'2px 10px', borderRadius:'10px', outline:'none', border:'2px solid lightGray'}}>
@@ -1817,10 +1821,10 @@ const LabelInformation = () => {
             <div className='label-info-content row'>
               {/* label */}
               <div className='col-lg-8'>
-                <div  className='label-info-content-item' style={{borderRadius:'5px', display:"flex", justifyContent:'space-between'}}>
+                <div  className='label-info-content-item' style={{borderRadius:'5px', display:"flex", justifyContent:'space-between', overflow:'scroll'}}>
                   {projectInfo && 
                     <div className='label-info-data' style={{display:'flex', justifyContent:'flex-end'}} >
-                      <div style={activeTemplate === "template-1" ? {} : {display:'none'}} className='template-1'>
+                      <div style={activeTemplate === "Template1" ? {} : {display:'none'}} className='template-1'>
                         <div className='template-1-content'>
                           <div className='template-1-content-top'>
                             <div className='template-1-content-top-left'>
@@ -1950,7 +1954,7 @@ const LabelInformation = () => {
                         </div>
                       </div>
 
-                      <div style={activeTemplate === "template-2" ? {} : {display:'none'}} className='template-2'>
+                      <div style={activeTemplate === "Template2" ? {} : {display:'none'}} className='template-2'>
                         <div className='template-2-content-top'>
                           <div className='template-1-content-top-header'>
                             <div className='ce-mark-and-website-content'>
@@ -2066,7 +2070,7 @@ const LabelInformation = () => {
                         </div>
                       </div>
 
-                      <div style={activeTemplate === "template-3" ? {} : {display:'none'}} className='template-3'>
+                      <div style={activeTemplate === "Template3" ? {} : {display:'none'}} className='template-3'>
                         <div className='header'>
                               <div className='medical-device-symbol-header' style={{width:'5%'}}>
                                         {projectInfo && 
@@ -2273,13 +2277,53 @@ const LabelInformation = () => {
               </div>
               <div className='col-lg-4'>
                {/* label description */}
-                    <h4 style={{color:"#062D60", fontWeight:'700'}}>Description :</h4>
+              <div className='card p-2 mb-3'>
+                    <h5>Description :</h5>
+                <div className='card-bpdy'>
                         {projectInfo &&
                           <p  className='label-info-description'>
                               {projectInfo?.labelDescription}
                           </p>
                         }
-                    </div>
+                </div>
+              </div>
+              {/* <div className='card p-2 mb-3'> */}
+
+                <div className='card-bpdy'>
+                <div style={{display:'', gridGap:'10px'}}>
+                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> Version: {projectInfo?.labelVersion}</p>
+                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> createdBy: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
+                            {(projectInfo?.status == "approved" || projectInfo?.status == "pending_release" || projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
+                            {(projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> ReleasedBy: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>}
+                          </div>
+                </div>
+                
+                
+              {/* </div> */}
+              {/* rejecting message */}
+                  {projectInfo?.comments?.length > 0 &&
+                  <div className='card p-2'>
+                    <h5>Rejected For :</h5>
+                      <div className='card-body'>
+                      {projectInfo?.comments?.map(item => (
+                        <div style={{borderBottom:'1px solid lightgray'}}>
+                          <div style={{marginBottom:'5px' ,display:'flex', alignItems:'', backgroundColor:'#EFEFEF', borderRadius:'4px'}}>
+                            <AccountCircleIcon style={{fontSize:'45px', marginRight:'6px'}} />
+                          <div>
+                            <h6 style={{padding:'0', margin:'0 '}}>{item.name} 
+                                <p style={{padding:'0', margin:'3px 0', fontSize:'12px'}}>({item.role.join("-")})</p>
+                            </h6>
+                          </div>
+                          </div>
+                          <p style={{border:''}}>
+                            {item.comment}
+                          </p>
+                        </div>
+                      ))}
+                      </div>
+                    </div>}
+                </div>
+
             </div>
           </div>)
 

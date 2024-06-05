@@ -878,7 +878,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
         }, 1500)
       }
   };
-  export const releasedProjectAction = (companyId, token) => async (dispatch) => {
+  export const releasedProjectAction = ({companyId, productId, createdBy}, token) => async (dispatch) => {
     try {
   
       dispatch({ type: RELEASED_PROJECT_REQUEST});
@@ -889,7 +889,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/released-project/${companyId}`, config);
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/released-project/${companyId}/${productId}/${createdBy}`, config);
   console.log(response.data)
       dispatch({ 
             type: RELEASED_PROJECT_SUCCESS, 

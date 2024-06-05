@@ -87,6 +87,9 @@ import { toast } from 'react-toastify';
 import LogoutModal from './utilities/LogoutModal';
 import IntendedPurpose from './pages/DashboardPages/IntendedPurpose';
 import UpdateIntendedPurpose from './pages/DashboardPages/UpdateIntendedPurpose';
+import DraftLabels from './pages/DashboardPages/DraftLabels';
+import ApprovedLabels from './pages/DashboardPages/ApprovedLabels';
+import RejectedLabels from './pages/DashboardPages/RejectedLabels';
 // import { useState } from 'react';
 function App() {
 
@@ -356,7 +359,10 @@ function App() {
 
                 {/* route for all roles */}
                 <Route path='/dashboard/received-project' element={<ProjectByRole />} />
-                <Route path='/dashboard/project/released' element={<ReleasedProjects />} />
+                <Route path='/dashboard/project/released/:productId' element={<ReleasedProjects />} />
+                <Route path='/dashboard/project/draft/:productId' element={<DraftLabels />} />
+                <Route path='/dashboard/project/approved/:productId' element={<ApprovedLabels />} />
+                <Route path='/dashboard/project/rejected/:productId' element={<RejectedLabels />} />
 
             {/* </Route> */}
            {/* </Route> */}

@@ -95,8 +95,8 @@ const UpdateProductInfoComponent = () => {
       }
     }, [getLabelSuccess])
 
-
-
+    const navigate = useNavigate()
+    
     useEffect(() =>{
         setFormData({
             isUpdate: true,
@@ -127,6 +127,7 @@ const UpdateProductInfoComponent = () => {
 
         setServiceList(projectInformation?.labelData?.packagingContents.length > 0 ? projectInformation?.labelData?.packagingContents : [''])
     }, [projectInformation])
+
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -208,7 +209,6 @@ const UpdateProductInfoComponent = () => {
         await dispatch(productInformationAction(formData, token))
     }
 
-    const navigate = useNavigate()
     useEffect(() => {
         if(productSuccess){
             toast.success(`Update Success`)
@@ -219,6 +219,14 @@ const UpdateProductInfoComponent = () => {
         }
     }, [productSuccess, productFail])
 
+    if(projectInformation){
+        if(projectInformation?.status == "released" 
+        || projectInformation?.status == "rejected" 
+        || projectInformation?.status == "pending_release" 
+        || projectInformation?.status == "pending_approval"){
+            navigate(`/dashboard/project-information/${projectId}`)
+        }
+    }
 
   return (
     <div className="container productInfo">
