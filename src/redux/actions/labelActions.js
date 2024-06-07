@@ -39,7 +39,7 @@ import {ALL_LABELS_FAILED,
         SEND_TO_RELEASER_REQUEST,
         SEND_TO_RELEASER_RESET,
         SEND_TO_RELEASER_SUCCESS} from '../constants/labelConstants';
-        import { navigate } from 'react-router-dom';
+
 export const getAllLabelsAction = (productId, companyId, createdBy, token) => async (dispatch) => {
     try {
 

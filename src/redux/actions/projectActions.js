@@ -223,6 +223,8 @@ export const archivedProjectToggleAction = (projectId, token) => async (dispatch
 
 export const duplicateLabelAction = (labelId, token) => async (dispatch) => {
   try {
+
+    console.log("duplicate labelId : ",labelId)
    
       dispatch({ 
           type: DUPLICATE_PROJECTS_REQUEST
@@ -234,9 +236,9 @@ export const duplicateLabelAction = (labelId, token) => async (dispatch) => {
           }
       }
   
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/duplicate-label/${labelId}`, config);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/duplicate-label`, {labelId}, config);
 
-      console.log(response)
+      console.log("duplicate response : ", response)
       dispatch({ 
           type: DUPLICATE_PROJECTS_SUCCESS, 
           payload: response.data
@@ -247,7 +249,7 @@ export const duplicateLabelAction = (labelId, token) => async (dispatch) => {
       });
       }, 1500)
   } catch (error) {
-      console.error(error);
+      console.log(error);
       dispatch({
           type: DUPLICATE_PROJECTS_FAILED, 
           payload: error?.response?.data 
