@@ -387,7 +387,7 @@ function App() {
         <Route path='/payment-failed' element={<PaymentFailed />} />
        <Route path='/check-subscription' element={<CheckSubscription />} />
         <Route path='/not-found' element={<NoFoundPage />} />
-        {/* <Route path='*' element={<NoFoundPage />} /> */}
+        <Route path='/-dqsd' element={<NoFoundPage />} />
         <Redirect to="/not-found" />
       </Routes>
 
