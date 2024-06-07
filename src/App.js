@@ -387,8 +387,9 @@ function App() {
         <Route path='/payment-failed' element={<PaymentFailed />} />
        <Route path='/check-subscription' element={<CheckSubscription />} />
         <Route path='/not-found' element={<NoFoundPage />} />
-        <Route path='/-dqsd' element={<NoFoundPage />} />
-        <Redirect to="/not-found" />
+        {/* <Route path='*' element={<NoFoundPage />} /> */}
+         {/* Wildcard route to catch all other routes */}
+        <Route path='*' element={<Navigate to="/not-found" />} />
       </Routes>
 
 
