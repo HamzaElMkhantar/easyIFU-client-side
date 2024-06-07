@@ -386,7 +386,7 @@ function App() {
         <Route path='/payment-succeed' element={<PaymentSucceed />} />
         <Route path='/payment-failed' element={<PaymentFailed />} />
        <Route path='/check-subscription' element={<CheckSubscription />} />
-        <Route path='/not-found' element={<NoFoundPage />} />
+        <Route  element={<NoFoundPage />} />
         {/* <Route path='*' element={<NoFoundPage />} /> */}
       </Routes>
 
