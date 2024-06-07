@@ -23,7 +23,7 @@ export const usersCompanyAction = (user, token) => async (dispatch) => {
     const userId = user._id;
     const companyId = user.companyId
 
-        const {data} = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/user/companyUsers/${companyId}/${userId}`);
+        const {data} = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/user/companyUsers/${companyId}/${userId}`, config);
 
     dispatch({ 
         type: USERS_COMPANY_SUCCESS, 
