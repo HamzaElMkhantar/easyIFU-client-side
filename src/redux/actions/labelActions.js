@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axios';
 import {ALL_LABELS_FAILED, 
         ALL_LABELS_REQUEST, 
         ALL_LABELS_RESET, 
@@ -39,7 +39,7 @@ import {ALL_LABELS_FAILED,
         SEND_TO_RELEASER_REQUEST,
         SEND_TO_RELEASER_RESET,
         SEND_TO_RELEASER_SUCCESS} from '../constants/labelConstants';
-
+        import { navigate } from 'react-router-dom';
 export const getAllLabelsAction = (productId, companyId, createdBy, token) => async (dispatch) => {
     try {
 
@@ -102,6 +102,7 @@ export const getLabelAction = (labelId, token) => async (dispatch) => {
       }, 1500)
   } catch (error) {
       console.error(error);
+      
       dispatch({
           type: GET_LABEL_FAILED, 
           payload: error?.response?.data 

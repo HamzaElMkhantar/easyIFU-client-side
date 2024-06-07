@@ -130,9 +130,12 @@ const LabelInformation = () => {
     template: activeTemplate
   });
 
+
   const dispatch = useDispatch()
   const  handleSendLabel = () => {
-    dispatch(sendingProjectToOtherRoleAction(sendTo, token))
+
+    setSendTo({...sendTo, template: activeTemplate})
+    dispatch(sendingProjectToOtherRoleAction({...sendTo, template: activeTemplate}, token))
   }
 
 
@@ -151,7 +154,7 @@ const LabelInformation = () => {
       companyId: decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId 
     }, token))
   }, [])
-console.log(projectInfo)
+
   useEffect(() => {
     if(getLabelSuccess){
       setProjectInfo(label)
