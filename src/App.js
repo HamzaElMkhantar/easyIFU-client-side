@@ -163,6 +163,7 @@ function App() {
         || currentPage === 'verify' 
         || currentPage === 'payment-succeed' 
         || currentPage === 'payment-failed'
+        || currentPage === 'not-found'
         || currentPage === 'check-subscription'
         || currentPage === 'eIFU-admin') {
       setShowNav(false);
@@ -170,7 +171,13 @@ function App() {
       setShowNav(true);
     }
 
-    if(currentPage === 'dashboard' || currentPage === 'eIFU-admin' || currentPage === 'verify' || currentPage === 'payment-succeed' || currentPage === 'payment-failed'|| currentPage === 'check-subscription' ){
+    if(currentPage === 'dashboard' 
+      || currentPage === 'eIFU-admin' 
+      || currentPage === 'verify' 
+      || currentPage === 'not-found'
+      || currentPage === 'payment-succeed' 
+      || currentPage === 'payment-failed'
+      || currentPage === 'check-subscription' ){
       setShowFooter(false)
     }else{
       setShowFooter(true)
@@ -272,8 +279,8 @@ function App() {
         </Route>
 
         <Route element={<RequireAuth />}>
-          {/* <Route element={<IsVerified /> }>   */}
-            {/* <Route element={<SubscriptionChecker  /> }> */}
+          <Route element={<IsVerified /> }>  
+            <Route element={<SubscriptionChecker  /> }>
 
               {/* routes for creator */}
               {decodedToken && 
@@ -364,8 +371,8 @@ function App() {
                 <Route path='/dashboard/project/approved/:productId' element={<ApprovedLabels />} />
                 <Route path='/dashboard/project/rejected/:productId' element={<RejectedLabels />} />
 
-            {/* </Route> */}
-           {/* </Route> */}
+            </Route>
+           </Route>
 
             {/* easyIFU Admin routes */}
             {decodedToken 

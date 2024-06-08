@@ -350,7 +350,7 @@ export const resetPasswordReducer = (state = resetPassword, action) => {
         case RESET_PASSWORD_FAILED :
             return {
                 ...state,
-                resetPasswordFail: true,
+                resetPasswordFail: action.payload,
                 resetPasswordRequest : false
             } ;
         case "RESET_PASSWORD_RESET" :

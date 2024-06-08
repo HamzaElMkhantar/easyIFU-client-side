@@ -9,7 +9,6 @@ import jwtDecode from 'jwt-decode';
 
 const ResetPassword= () => {
     const {token, email, id} = useParams()
-    console.log(token)
 
     const [otpCode, setOtpCode] = useState('')
     const [showPasswordForm, setShowPasswordForm] = useState(false)
@@ -48,7 +47,13 @@ const ResetPassword= () => {
     const handleResetForm = e => {
       e.preventDefault();
       if(newPassword == repeatPassword){
-        dispatch(resetPasswordAction(email, newPassword))
+        const data = {
+          email, 
+          newPassword,
+          id,
+          token
+        }
+        dispatch(resetPasswordAction(data))
         setNewPassword("")
         setRepeatPassword("")
       }else{
@@ -72,7 +77,7 @@ const ResetPassword= () => {
 
     useEffect(() => {
       if(resetPasswordFail){
-          toast.info('Reset Failed');
+          toast.info(`${resetPasswordFail?.response?.data?.message}`);
       }
   }, [resetPasswordFail])
   useEffect(() => {

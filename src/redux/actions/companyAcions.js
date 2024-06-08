@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { BaseUrl } from '../../config';
 import { DASHBOARD_COMPANY_FAILED, 
         DASHBOARD_COMPANY_REQUEST, 
         DASHBOARD_COMPANY_RESET, 
@@ -140,7 +139,7 @@ export const updateCompanyInfoAction = (data, token) => async (dispatch) => {
 
 export const paymentCompanyAction = (data, token) => async (dispatch) => {
     try {
-    
+    console.log(data)
         dispatch({ 
             type: PAYMENT_COMPANY_REQUEST
         });
@@ -148,11 +147,12 @@ export const paymentCompanyAction = (data, token) => async (dispatch) => {
         const config = {
             headers: {
                 'Authorization': `Bearer ${token}`
-            }
+            },
+            proxy: false
         }
     
-        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/company/subscription-payment`, data, config);
-
+        const response = await axios.post(process.env.REACT_APP_BASE_URL + `/api/v1/company/subscription-payment`, data, config);
+        console.log(response)
         dispatch({ 
             type: PAYMENT_COMPANY_SUCCESS, 
             payload: response.data

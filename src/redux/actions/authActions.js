@@ -320,15 +320,16 @@ export const resetPassOTPVerificationAction = (email, otpCode) => async (dispatc
 }
 
 
-export const resetPasswordAction = (email, newPassword) => async (dispatch) => {
+export const resetPasswordAction = (data) => async (dispatch) => {
   try {
+    console.log(data)
       dispatch({ type: RESET_PASSWORD_REQUEST});
 
-      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/resetPassword',{email, newPassword})
-      console.log(data)
+      const res = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/resetPassword',data)
+      console.log(res.data)
       dispatch({ 
         type: RESET_PASSWORD_SUCCESS,
-        payload: data
+        payload: res.data
       });
       setTimeout(() =>{
         dispatch({ 
