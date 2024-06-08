@@ -177,8 +177,8 @@ export const logoutAction = () => async (dispatch) => {
       console.log(data)
   
       dispatch({ type: LOGOUT_SUCCESS });
-      Cookies.remove('eIfu_ATK');
-      Cookies.remove('eIfu_RTK');
+      // Cookies.remove('eIfu_ATK');
+      // Cookies.remove('eIfu_RTK');
       setTimeout(() =>{
         dispatch({ 
           type: 'LOGOUT_RESET'
@@ -233,9 +233,18 @@ export const logoutAction = () => async (dispatch) => {
   
       dispatch({ type: "OTP_VERIFY_REQUEST"});
 
-      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/verifyOTP',{id, VerificationOTP})
+      const config =    {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+        credentials: 'include', 
+        responseType: 'json'
+      }
 
-      Cookies.set('eIfu_ATK', data.accessToken);
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/verifyOTP',{id, VerificationOTP}, config)
+
+      // Cookies.set('eIfu_ATK', data.accessToken);
       dispatch({ 
         type: "OTP_VERIFY_SUCCESS",
         payload: data
