@@ -45,7 +45,7 @@ const ProductInfoComponent = () => {
         packagingContents: [] ,
         addManufacturerLogo: false,
         quantity: 0,
-
+        image: null
     });
 
 
@@ -147,6 +147,14 @@ const ProductInfoComponent = () => {
         }
         if(name == "manufacturerLogo"){
             newValue = e.target.files[0]
+            // image
+            setFormData((prevData) => ({
+                ...prevData,
+                image: newValue,
+              }));
+  
+          
+              return;
         }
 
         if (name === 'packagingContents') {
@@ -196,9 +204,18 @@ const ProductInfoComponent = () => {
     const dispatch = useDispatch()
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const newFormData = new FormData();
+
+        for (const key in formData) {
+            if (key === 'image') {
+                newFormData.append(key, formData[key]);
+            } else {
+                newFormData.append(key, String(formData[key]));
+            }
+        }
 
         if(formData.productType == "") return toast.warning("missing Product Type!")
-        await dispatch(productInformationAction(formData, token))
+        await dispatch(productInformationAction(newFormData, token))
     }
 
     const navigate = useNavigate()
@@ -234,7 +251,7 @@ const ProductInfoComponent = () => {
                 <HorizontalLinearStepper step={2}/>
                 <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'>escape</Link>
         </div>
-        <form className='productInfo-form' onSubmit={handleSubmit}>
+        <form className='productInfo-form' encType='multipart/form-data' onSubmit={handleSubmit}>
             <h2>Product Information</h2>            
             <div className="row">
                 <div className="col-md-6">
@@ -610,7 +627,7 @@ const ProductInfoComponent = () => {
                     </div>
                     ))}
                 </div>
-                {/* <div className="form-group">
+                <div className="form-group">
                     <label>11- Do you want to add your manufacturer logo in the label ?</label>
                     <div className="form-check">
                     <input
@@ -622,8 +639,8 @@ const ProductInfoComponent = () => {
                     />
                     <label className="form-check-label">Yes</label>
                     </div>
-                </div> */}
-                {/* {formData.addManufacturerLogo && (
+                </div> 
+                {formData.addManufacturerLogo && (
                     <div className="form-group">
                     <label>Insert your logo:</label>
                     <input
@@ -634,7 +651,7 @@ const ProductInfoComponent = () => {
                         onChange={handleInputChange}
                     />
                     </div>
-                )} */}
+                )}
                 </div>
             </div>
            {!productRequest 

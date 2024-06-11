@@ -39,18 +39,18 @@ const SideBar = ({isSidebarOpen}) => {
 
     
   return (
-    <div id="wrapper" className={!isSidebarOpen ? '' : 'toggled'}>
-      <div id="sidebar-wrapper" style={{ height:'100vh'}}>
+    <div id="wrapper" className={!isSidebarOpen ? '' : 'toggled'} >
+      <div id="sidebar-wrapper" style={{ height:'100%'}}>
         <img  src={sidebarBG} className='bg-sidebar-img' />
-        <div className="sidebar-nav">
+        <div className="sidebar-nav" style={{position:''}}>
           <Link style={{marginBottom:'20px', display:'flex', justifyContent:'center'}} to='/' className='navbar-brand mx-auto'>
             <img src={headerLogo} alt='Logo' width='100' height='100' style={{marginLeft:'-50px', padding:'0', borderRadius:'4px'}} />
           </Link>
-          <div className='sideBrd-user-info'>
+          <div className='sideBrd-user-info' style={{backgroundColor:''}}>
             <h4>{decodedToken && decodedToken.userInfo && `${decodedToken && decodedToken.userInfo && decodedToken.userInfo.firstName} ${decodedToken && decodedToken.userInfo && decodedToken.userInfo.lastName}`}</h4>
             <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.email}</p>
           </div>
-          <div style={{ height:'', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+          <div style={{backgroundColor:'' ,height:'', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
 
             <div style={{height:'', overflowY:'scroll'}} className='navList' >
                 {<Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard"><HomeRoundedIcon style={{color:'#9A3B3B'}}/>Home</Link>}
@@ -70,7 +70,13 @@ const SideBar = ({isSidebarOpen}) => {
             </div>
           </div>
         </div>
+          <div style={{position:'absolute', color:'white', bottom:'20px', marginLeft:'10px'}}>
+            <p style={{fontSize:'14px', margin:'4px', color:'rgb(81,90,104, 0.5)'}}>Subscription Info:</p>
+            <p style={{fontSize:'11px', margin:'0 20px', color:'rgb(81,90,104, 0.5)'}}>Start Date: {decodedToken?.userInfo?.companySubscriptionInfo?.startDate}</p>
+            <p style={{fontSize:'11px', margin:'0 20px', color:'rgb(81,90,104, 0.5)'}}>End Date: {decodedToken?.userInfo?.companySubscriptionInfo?.endDate}</p>
+          </div>
       </div>
+      
   </div>
   );
 };

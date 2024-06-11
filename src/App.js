@@ -92,6 +92,13 @@ import ApprovedLabels from './pages/DashboardPages/ApprovedLabels';
 import RejectedLabels from './pages/DashboardPages/RejectedLabels';
 // import { useState } from 'react';
 function App() {
+if(process.env.NODE_ENV == "production"){
+}
+console.log = () => {};
+console.war = () => {};
+console.info = () => {};
+console.debug = () => {};
+console.error = () => {};
 
   const location = useLocation();
   const dispatch = useDispatch();
@@ -279,9 +286,14 @@ function App() {
         </Route>
 
         <Route element={<RequireAuth />}>
+          <Route path='/verify' element={<EmailVerification />} />
           <Route element={<IsVerified /> }>  
-            <Route element={<SubscriptionChecker  /> }>
+          
+            <Route path='/payment-succeed' element={<PaymentSucceed />} />
+            <Route path='/payment-failed' element={<PaymentFailed />} />
+            <Route path='/check-subscription' element={<CheckSubscription />} />
 
+            <Route element={<SubscriptionChecker  /> }>
               {/* routes for creator */}
               {decodedToken && 
                 decodedToken?.userInfo && 
@@ -386,13 +398,8 @@ function App() {
               <Route path='/eIFU-admin/contact/:contactId' element={<ContactDetails />} />
               <Route path='/eIFU-admin/account' element={<SuperAdminAccount />} />
             </>}
-
-            <Route path='/verify' element={<EmailVerification />} />
         </Route>
         
-        <Route path='/payment-succeed' element={<PaymentSucceed />} />
-        <Route path='/payment-failed' element={<PaymentFailed />} />
-       <Route path='/check-subscription' element={<CheckSubscription />} />
         <Route path='/not-found' element={<NoFoundPage />} />
         {/* <Route path='*' element={<NoFoundPage />} /> */}
          {/* Wildcard route to catch all other routes */}

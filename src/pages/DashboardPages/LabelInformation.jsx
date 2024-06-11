@@ -117,9 +117,9 @@ const LabelInformation = () => {
   const {usersCompanyRequest, usersCompanySuccess, usersCompanyFail, allUsers} = usersCompany;
   const {sendingProjectRequest, sendingProjectSuccess, sendingProjectFail, sendingProjectMessage} = sendingProjectToOtherRole
 
-  const [activeTemplate, setActiveTemplate] = useState('Template1')
+  
+  const [activeTemplate, setActiveTemplate] = useState("Template1")
   const isTemplate3 = activeTemplate === "Template3" ? true : false
-
   const [projectInfo, setProjectInfo] = useState({});
   const [allUsersCompany, setAllUsersCompany] = useState([]);
   const [imageSrc, setImageSrc] = useState('');
@@ -1729,10 +1729,20 @@ const LabelInformation = () => {
     };
 
    const handleTemplateChange = (templateId) => {
-    setActiveTemplate(templateId);
+    if(projectInfo.status == "Draft"){
+      setActiveTemplate(templateId);
+    }
   };
 
+  useEffect(() => {
+    if(projectInfo.status == "Draft"){
+      setActiveTemplate("Template1");
+    }else{
+      setActiveTemplate(projectInfo?.labelTemplate);
+    }
+  }, [projectInfo])
 
+console.log(projectInfo?.labelData)
   return (
     <div className="label-information" style={{padding:'0', height:'70vh', width:'100%', display:'flex'}}>
         <SideBarLabelInfo isSidebarOpen={true} 
@@ -1770,7 +1780,7 @@ const LabelInformation = () => {
                       <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
           </div>
           <div style={{display:'flex', justifyContent:'space-between', backgroundColor:''}}>
-              <Link style={{height:'35px'}} to='/dashboard/project' className='label-info-link'><ArrowBackIcon /> Back</Link>
+              <Link style={{height:'35px'}} to={`/dashboard/labels/${projectInfo?.productId}`} className='label-info-link'><ArrowBackIcon /> Back</Link>
               {!getLabelRequest && 
               <>
               <h5 style={{color:'gray'}}>{projectInfo?.shortId}</h5>
@@ -1901,7 +1911,8 @@ const LabelInformation = () => {
                                   {projectInfo &&
                                       projectInfo.labelData && 
                                       projectInfo.labelData.manufacturerLogo &&
-                                    <img src={`${process.env.REACT_APP_BASE_URL}/assets/images/${projectInfo.labelData.manufacturerLogo}`} alt="" />}
+                                    <img src={"data:image/jpeg;base64,"+projectInfo?.labelData?.manufacturerLogo} alt="" />}
+                                     {/* <img style={{ width: '100%', height: '300px' }} src={"data:image/jpeg;base64,"+projectInfo?.labelData?.manufacturerLogo} alt="" /> */}
                               </div>
                               {projectInfo && projectInfo.labelData &&  projectInfo.labelData.addWebsite &&
                               projectInfo.labelData.website &&
@@ -2278,6 +2289,7 @@ const LabelInformation = () => {
                 </div>
 
               </div>
+             {
               <div className='col-lg-4'>
                {/* label description */}
               <div className='card p-2 mb-3'>
@@ -2289,6 +2301,7 @@ const LabelInformation = () => {
                           </p>
                         }
                 </div>
+                  {/* <img style={{ width: '100%', height: '300px' }} src={"data:image/jpeg;base64,"+projectInfo?.labelData?.manufacturerLogo} alt="" /> */}
               </div>
               {/* <div className='card p-2 mb-3'> */}
 
@@ -2325,7 +2338,7 @@ const LabelInformation = () => {
                       ))}
                       </div>
                     </div>}
-                </div>
+                </div>}
 
             </div>
           </div>)

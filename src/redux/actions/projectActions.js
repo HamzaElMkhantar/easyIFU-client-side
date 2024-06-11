@@ -453,12 +453,13 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
 
         const config = {
           headers: {
+            'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`
           }
         };
   
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/product/product-information`, productInfoData, config);
-  
+      console.log(response.data)
       dispatch({ 
             type: PRODUCT_INFORMATION_SUCCESS, 
             payload: response.data

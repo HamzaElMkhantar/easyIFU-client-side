@@ -97,11 +97,14 @@ export const getUserAction = (userId, token) => async (dispatch) => {
       const config = {
           headers: {
               'Authorization': `Bearer ${token}`
-          }
+          },
+          withCredentials: true, // Include cookies
+          credentials: 'include', 
+          responseType: 'json'
       }
       const {data} = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/user/update`, userInfo, config);
-      console.log(data)
-        Cookies.set('eIfu_ATK', data.accessToken);
+      // console.log(data)
+        // Cookies.set('eIfu_ATK', data.accessToken);
       dispatch({ 
           type: UPDATE_USER_SUCCESS,
           payload: data.user

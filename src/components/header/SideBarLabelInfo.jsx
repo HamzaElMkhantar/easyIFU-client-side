@@ -71,11 +71,25 @@ const SideBarLabelInfo = ({isSidebarOpen, projectInfo, projectId, onTemplateChan
 
 
 const handleTemplateChange = (template) => {
-  setActiveTemplate(template);
-
-  if (typeof onTemplateChange === 'function') {
-    onTemplateChange(template);
+  
+  if(status == "Draft"){
+    if (typeof onTemplateChange === 'function') {
+      onTemplateChange(template);
+      }
+    setActiveTemplate(template);
+  }else{
+    Swal.fire({
+      title: "Changing Template only for Draft labels!",
+      text: "Please use the Edit button for new Draft edition",
+      icon: "info",
+      customClass: {
+        popup: 'custom-swal-bg',
+        confirmButton: 'custom-swal-button',
+        icon: 'custom-swal-icon'
+      }
+    });
   }
+
 };
 
 

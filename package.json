@@ -4,7 +4,6 @@
   "private": true,
   "homepage": "https://easyifu.com",
   "dependencies": {
-    "@babel/preset-env": "^7.23.3",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.8",
@@ -80,6 +79,10 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "jest": "^27.5.1"
   }
 }
