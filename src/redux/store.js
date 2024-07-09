@@ -69,6 +69,7 @@ import { approveLabelReducer,
         getLabelReducer, 
         rejectedLabelsReducer, 
         releaseLabelReducer, 
+        saveOrderLabelReducer, 
         sendToApproverReducer, 
         sendToReleaserReducer } from './reducers/labelReducers';
 import { createProductReducer, 
@@ -143,7 +144,7 @@ const reducer = combineReducers({
     approvedLabels: approvedLabelsReducer ,
     drafLabels: drafLabelsReducer ,
     rejectedLabels: rejectedLabelsReducer ,
-
+    saveOrderLabel: saveOrderLabelReducer,
 
     // products reducers
     getProductByProjectId: getProductByProjectIdReducer,

@@ -69,29 +69,29 @@ const Documents = () => {
     const {documentsRequest, documentsSuccess, documentsFail, documentsCompany} = documents
     const {deleteDocumentsRequest, deleteDocumentsSuccess, deleteDocumentsFail, deleteDocumentMessage} = deleteDocument
 
-    const companyId = decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId
+    const companyId = decodedToken && decodedToken?.userInfo?.companyId
+    const producerId = decodedToken && decodedToken?.userInfo._id
+
     const dispatch = useDispatch()
     useEffect(() => {
-      dispatch(documentsAction(companyId, token))
+      dispatch(documentsAction(companyId, producerId, token))
     }, [])
 
 
-console.log(documentsCompany && documentsCompany)
-console.log(documentsCompany && documentsCompany.length)
     useEffect(() => {
       if(documentsSuccess){
         setCompanyDocument(documentsCompany)
        
       }
      
-      if(documentsFail && documentsFail.message == "didn't found any document"){
+      if(documentsFail){
         setCompanyDocument([])
       }
     }, [documentsSuccess, documentsFail])
 
     useEffect(() => {
       if(deleteDocumentsSuccess){
-        dispatch(documentsAction(companyId, token))
+        dispatch(documentsAction(companyId, producerId, token))
         toast.success(`Document deleted`)
       }
       if(deleteDocumentsFail && deleteDocumentsFail.message !== "didn't found any document"){

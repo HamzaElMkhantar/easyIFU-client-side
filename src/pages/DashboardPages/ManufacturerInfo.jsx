@@ -88,11 +88,6 @@ const ManufacturerInfoComponent = () => {
         // console.log("Is Included:", isIncluded);
         return isIncluded;
     };
-    
-
-
-
-
 
 
   const handleInputChange = (e) => {

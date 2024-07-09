@@ -30,6 +30,10 @@ import {ALL_LABELS_FAILED,
         RELEASE_LABEL_REQUEST,
         RELEASE_LABEL_RESET,
         RELEASE_LABEL_SUCCESS,
+        SAVE_ORDER_LABEL_FAILED,
+        SAVE_ORDER_LABEL_REQUEST,
+        SAVE_ORDER_LABEL_RESET,
+        SAVE_ORDER_LABEL_SUCCESS,
         SEND_TO_APPROVER_FAILED,
         SEND_TO_APPROVER_REQUEST,
         SEND_TO_APPROVER_RESET,
@@ -110,6 +114,11 @@ const rejectedLabels = {
     rejectedLabelsFail : null,
 }
 
+const saveOrderLabel = {
+    saveOrderLabelRequest : false,
+    saveOrderLabelSuccess :  false,
+    saveOrderLabelFail : null,
+}
 
 export const drafLabelsReducer = (state = draftLabels, action) => {
 
@@ -427,6 +436,37 @@ export const releaseLabelReducer = (state = releaseLabel, action) => {
             } ;
         case RELEASE_LABEL_RESET :
             return releaseLabel;
+        default :
+            return state ;
+    }
+}
+
+export const saveOrderLabelReducer = (state = saveOrderLabel, action) => {
+
+    switch(action.type){
+        case SAVE_ORDER_LABEL_REQUEST:
+            return {
+                ...state,
+                saveOrderLabelRequest : true,
+                saveOrderLabelSuccess :  false,
+                saveOrderLabelFail : null,
+            } ;
+        case SAVE_ORDER_LABEL_SUCCESS :
+            return {
+                ...state,
+                saveOrderLabelRequest : false,
+                saveOrderLabelSuccess : true,
+                releaseLabelMessage: action.payload
+            } ;
+        case SAVE_ORDER_LABEL_FAILED :
+            return {
+                ...state,
+                saveOrderLabelFail : action.payload,
+                saveOrderLabelSuccess :  false,
+                saveOrderLabelRequest : false
+            } ;
+        case SAVE_ORDER_LABEL_RESET :
+            return saveOrderLabel;
         default :
             return state ;
     }

@@ -293,9 +293,9 @@ console.error = () => {};
             <Route path='/payment-failed' element={<PaymentFailed />} />
             <Route path='/check-subscription' element={<CheckSubscription />} />
 
-            <Route element={<SubscriptionChecker  /> }>
+            {/* <Route element={<SubscriptionChecker  /> }> */}
               {/* routes for creator */}
-              {decodedToken && 
+              {decodedToken &&
                 decodedToken?.userInfo && 
                 (decodedToken?.userInfo?.role.includes("Admin") 
                   || decodedToken?.userInfo?.role.includes("Creator")) &&
@@ -331,8 +331,10 @@ console.error = () => {};
               </>}
 
               {/* routes for Approver */}
-              {decodedToken && decodedToken?.userInfo && (decodedToken?.userInfo?.role.includes("Admin") 
-                || decodedToken?.userInfo?.role.includes("Approver")) &&
+              {decodedToken && decodedToken?.userInfo 
+                && (decodedToken?.userInfo?.role.includes("Admin") 
+                || decodedToken?.userInfo?.role.includes("Approver")
+                || decodedToken?.userInfo?.role.includes("Release")) &&
                 <>
                 <Route path='/dashboard/project/review-approver/:projectId' element={<ApproverReview />} />
               </>}
@@ -383,7 +385,7 @@ console.error = () => {};
                 <Route path='/dashboard/project/approved/:productId' element={<ApprovedLabels />} />
                 <Route path='/dashboard/project/rejected/:productId' element={<RejectedLabels />} />
 
-            </Route>
+            {/* </Route> */}
            </Route>
 
             {/* easyIFU Admin routes */}

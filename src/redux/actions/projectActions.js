@@ -990,7 +990,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
       }
   };
 
-  export const documentsAction = (companyId, token) => async (dispatch) => {
+  export const documentsAction = (companyId, producerId, token) => async (dispatch) => {
     try {
   
       dispatch({ type: DOCUMENTS_REQUEST});
@@ -1002,7 +1002,7 @@ export const startProjectAction = (projectData, token) => async (dispatch) => {
             }
         }
   
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/project/documents-company/${companyId}`, config);
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/produced-labels/${companyId}/${producerId}`, config);
     console.log(response)
       dispatch({ 
             type: DOCUMENTS_SUCCESS, 

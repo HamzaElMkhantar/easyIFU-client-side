@@ -136,6 +136,8 @@ const Products = () => {
       dispatch(getProductByProjectIdAction(projectId, companyId, decodedToken?.userInfo?._id, token))
       handleClose()
       setFormData({
+        companyId: decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?.companyId,
+        createdBy:decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id,
         projectId,
         productDescription: '',
         productName: ''

@@ -1,0 +1,119 @@
+.Template1 {
+    padding: 0px 2px;
+    box-sizing: border-box !important;
+    margin: auto;
+    background-color: rgb(255, 255, 255);
+    /* width:  calc(100mm * 1.2) ;
+    height: calc(150mm * 1.2) ; */
+    border: 1px solid rgb(217, 217, 217);
+}
+
+.Template1 .top-content {
+    /* background-color: red; */
+}
+
+.Template1 .top-content  .header{
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    justify-content: space-between;
+}
+
+.Template1 .header .Patient_information_website,
+.Template1 .header .header-item.right{
+    flex:0.2;
+}
+.Template1 .header .product-title{
+    flex:0.6;
+    text-align: center;
+}
+
+.Template1 
+.top-content
+.header 
+.Patient_information_website{
+    /* background-color: red; */
+
+}
+.Template1 
+.top-content
+.header 
+.header-item.right{
+    margin-left: auto;
+    display: flex; /* Use flexbox to align items inside */
+    align-items:flex-start;
+    justify-content: right;
+}
+.Template1 
+.top-content
+.header 
+.header-item.right .header-img{
+    width: 35px;
+    margin-right: 0
+}
+.Template1 
+.top-content
+.header 
+.Patient_information_website .header-img{
+    width: 35px;
+    }
+.Template1 
+.top-content
+.header 
+.Patient_information_website p{
+    padding: 0;
+    margin: 0;
+    font-size: 8px;
+}
+
+.Template1 
+.top-content
+.header .product-title h3{
+    font-size: 18px;
+    margin-top: -8px;
+    margin-bottom: 2px;
+    padding: 0;
+}
+
+.Template1 
+.top-content
+.header .product-title p{
+    font-size: 8px;
+    color: gray;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+
+.Template1 .top-content  .intended-purpose{
+    margin: 0;
+    padding: 1px;
+    border: 0.1px solid lightgray;
+    display: flex;
+    flex-wrap: wrap;
+}
+.Template1 .top-content  .intended-purpose .ntended-purpose-item{
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 1.4;
+    display: flex;
+    margin-right: 5px;
+}
+.Template1 .top-content  .intended-purpose .ntended-purpose-item p{
+    margin: 0; 
+    padding: 0;
+}
+
+.Template1 .top-content  .packagin-content{
+    margin: 1px 0;
+    padding: 1px;
+    display: flex;
+    /* background-color: red; */
+    justify-content: center;
+}
+.Template1 .top-content  .packagin-content .packagin-content-item{
+    font-size: 6px;
+    text-align: center !important;
+}

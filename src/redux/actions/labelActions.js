@@ -31,6 +31,10 @@ import {ALL_LABELS_FAILED,
         RELEASE_LABEL_REQUEST,
         RELEASE_LABEL_RESET,
         RELEASE_LABEL_SUCCESS,
+        SAVE_ORDER_LABEL_FAILED,
+        SAVE_ORDER_LABEL_REQUEST,
+        SAVE_ORDER_LABEL_RESET,
+        SAVE_ORDER_LABEL_SUCCESS,
         SEND_TO_APPROVER_FAILED,
         SEND_TO_APPROVER_REQUEST,
         SEND_TO_APPROVER_RESET,
@@ -118,7 +122,6 @@ export const getLabelAction = (labelId, token) => async (dispatch) => {
 
 export const createLabelAction = ( labelData, token) => async (dispatch) => {
     try {
-        console.log(labelData)
     
         dispatch({ 
             type: CREATE_LABEL_REQUEST
@@ -131,7 +134,7 @@ export const createLabelAction = ( labelData, token) => async (dispatch) => {
         }
     
         const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/create-label`, {labelData}, config);
-      console.log(response?.data)
+      console.log(response)
         dispatch({ 
             type: CREATE_LABEL_SUCCESS, 
             payload: response.data
@@ -426,6 +429,46 @@ export const rejectedLabelsAction = ({productId, companyId, createdBy}, token) =
         setTimeout(() =>{
             dispatch({ 
             type: REJECTED_LABEL_RESET
+            });
+        }, 1500)
+    }
+};
+
+
+export const saveLabelOrderAction = (data, token) => async (dispatch) => {
+    try {
+
+        dispatch({ 
+            type: SAVE_ORDER_LABEL_REQUEST
+        });
+    
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/save-order`, data, config);
+        console.log(response.data)
+        dispatch({ 
+            type: SAVE_ORDER_LABEL_SUCCESS, 
+            payload: response.data
+        });
+        setTimeout(() =>{
+        dispatch({ 
+            type: SAVE_ORDER_LABEL_RESET
+        });
+        }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: SAVE_ORDER_LABEL_FAILED, 
+            payload: error?.response?.data 
+        });
+    
+        setTimeout(() =>{
+            dispatch({ 
+            type: SAVE_ORDER_LABEL_RESET
             });
         }, 1500)
     }

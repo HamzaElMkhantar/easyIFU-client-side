@@ -39,7 +39,7 @@ const ManageUser = () => {
         firstName: '',
         lastName: '',
         password: '',
-        role: []
+        role:  []
       })
     
       const dispatch = useDispatch();
@@ -87,6 +87,13 @@ const ManageUser = () => {
       useEffect(() => {
         if(user){
             setUserState(user)
+            setUserInfo({
+              ...userInfo,
+              firstName: '',
+              lastName: '',
+              password: '',
+              role: user.role || []
+            })
         }
         if(updatedUser){
             setUserState(updatedUser)
@@ -135,6 +142,7 @@ const ManageUser = () => {
         const formattedDate = `${day}/${month}/${year}`;
         return formattedDate;
       };
+
   return (
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>
     <SideBar isSidebarOpen={isSidebarOpen} />
@@ -239,7 +247,7 @@ const ManageUser = () => {
                 <p style={{fontSize:'14px', color:'gray'}}>FirstName: {userState && userState.firstName} </p>
                 <p style={{fontSize:'14px', color:'gray'}}>LastName: {userState && userState.lastName} </p>
                 <p style={{fontSize:'14px', color:'gray'}}>Email: {userState && userState.email} </p>
-                <p style={{fontSize:'14px', color:'gray'}}>Role: {userState && userState.role} </p>
+                <p style={{fontSize:'14px', color:'gray'}}>Role: {userState && userState.role.join(", ")} </p>
                 <p style={{fontSize:'14px', color:'gray'}}>Status: {userState && userState.isActive ? "active" : "not Active"} </p>
                 <p style={{fontSize:'14px', color:'gray'}}>Created: {userState && dateFormat(userState.createdAt)} </p>
 
@@ -326,14 +334,14 @@ const ManageUser = () => {
                         <div className="col-md-6 mt-2">
                               <div className="form-outline mb-2">
                                 <label className="form-label" htmlFor="roles">
-                                  User Roles
+                                  User Roles:
                                 </label>
                                 <div>
                                   <label>
                                     <input className='mx-1'
                                       type="checkbox"
                                       id="Admin"
-                                      checked={userInfo.role.includes('Admin')}
+                                      checked={userInfo?.role?.includes('Admin') ? true : false}
                                       onChange={() => handleCheckboxChange('Admin')}
                                     />
                                     Admin
@@ -342,7 +350,7 @@ const ManageUser = () => {
                                     <input className='mx-1'
                                       type="checkbox"
                                       id="Creator"
-                                      checked={userInfo.role.includes('Creator')}
+                                      checked={userInfo?.role?.includes('Creator') ? true : false}
                                       onChange={() => handleCheckboxChange('Creator')}
                                     />
                                     Creator
@@ -351,7 +359,7 @@ const ManageUser = () => {
                                     <input className='mx-1'
                                       type="checkbox"
                                       id="Approver"
-                                      checked={userInfo.role.includes('Approver')}
+                                      checked={userInfo?.role?.includes('Approver') ? true : false}
                                       onChange={() => handleCheckboxChange('Approver')}
                                     />
                                     Approver
@@ -360,10 +368,19 @@ const ManageUser = () => {
                                     <input className='mx-1'
                                       type="checkbox"
                                       id="Release"
-                                      checked={userInfo.role.includes('Release')}
+                                      checked={userInfo?.role?.includes('Release') ? true : false}
                                       onChange={() => handleCheckboxChange('Release')}
                                     />
                                     Release
+                                  </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Producer"
+                                      checked={userInfo?.role?.includes('Producer') ? true : false}
+                                      onChange={() => handleCheckboxChange('Producer')}
+                                    />
+                                    Producer
                                   </label>
                                 </div>
                               </div>

@@ -105,6 +105,18 @@ import { usersCompanyAction } from '../../redux/actions/userActions'
 import { toast } from 'react-toastify'
 import { RotatingLines } from 'react-loader-spinner';
 import { Modal } from 'react-bootstrap';
+
+// handle  zoom
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+
+// import label Templates
+import Template1 from '../../templates/template1/Template1';
+
+const componentMapping = {
+  'Template1': Template1,
+
+  // Add other mappings as needed
+};
 const ApproverReview = () => {
     const {projectId} = useParams();
     const token = Cookies.get("eIfu_ATK") || null;
@@ -172,18 +184,19 @@ const ApproverReview = () => {
             }, token))
     }, [])
 
-    useEffect(() => {
-        if(getLabelSuccess){
-          setProjectInfo(label)
-        }
-        if(usersCompanySuccess){
-          setAllUsersCompany(allUsers)
-        }
+    // useEffect(() => {
+    //     if(getLabelSuccess){
+    //       setProjectInfo(label)
+    //     }
+    //     if(usersCompanySuccess){
+    //       setAllUsersCompany(allUsers)
+    //     }
     
-        if(getLabelFail){
-          toast.warning(`${getLabelFail.message}`)
-        }
-      }, [getLabelSuccess, getLabelFail, usersCompanySuccess])
+    //     if(getLabelFail){
+    //       toast.warning(`${getLabelFail.message}`)
+    //     }
+    //   }, [getLabelSuccess, getLabelFail, usersCompanySuccess])
+
 
       useEffect(() => {
         if(getLabelSuccess){
@@ -451,7 +464,7 @@ useEffect(() => {
     }, [projectInfo])
 
     // data matrix
-    const [dataMatrixValue, setDataMatrixValue] = useState('61297564251294350845');
+    const [dataMatrixValue, setDataMatrixValue] = useState('123');
     useEffect(() => {
       let canvas = document.createElement("canvas");
       bwipjs.toCanvas(canvas, {
@@ -1115,36 +1128,6 @@ useEffect(() => {
       }
       </div>)
     }
-
-    // if(userRole?.includes("Release") && projectInfo.status == "released"){
-    //   // -----
-    //   return(<div className='card mb-3'>
-    //     <div className='card-body'>
-    //     <p>Release the label or send it back if further changes are needed.</p>
-    //     <button style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'green', color:'white', fontWeight:'600'}}>Accept</button>
-    //     <button style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>Reject</button>
-    //     </div>
-    //   </div>)
-    // }
-
-    // if((userRole?.includes("Release") || userRole?.includes("Approver"  || projectInfo?.status == "Draft"))
-    //     && projectInfo.status == "Draft"){
-    //   // send back to the creator with a cooment explianing why rejecting the label !
-    //   return(<div className='card mb-3 p-2'>
-    //       <div className='card-body p-1'>
-    //         <p>Review the label. You can accept or reject it.</p>
-    //         {!rejectToggle &&
-    //           <button style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'green', color:'white', fontWeight:'600'}}>Accept</button>}
-    //         <button disabled={false} onClick={() => setRejectTogle(!rejectToggle)} style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>{rejectToggle ? "X" :"Reject"}</button>
-    //       </div>
-    //       {rejectToggle &&
-    //         <>
-    //           <textarea style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px'}} placeholder='Describe label rejection!'></textarea>
-    //           <button disabled={false} style={{padding:'2px 15px', margin:'0 6px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>Continue</button>
-    //         </>
-    //       }
-    //     </div>)
-    // }
   }
   
   labelHandleStatus(rejectToggle)
@@ -1361,6 +1344,7 @@ useEffect(() => {
             </div>
 
                   <div className='row'>
+                  <h2>temp : {activeTemplate }</h2>
 
                           <div style={{display:'flex', gridGap:'10px'}}>
                             <p className='' style={{color:'gray', fontSize:'16px', fontWeight:'500'}}> Version: {projectInfo?.labelVersion}</p>
@@ -1368,454 +1352,33 @@ useEffect(() => {
                             {(projectInfo?.status == "approved" || projectInfo?.status == "pending_release") && <p className='' style={{color:'gray', fontSize:'16px', fontWeight:'500'}}> ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
                           </div>
                     <div className='col-md-8' style={{overflow:'scroll'}}>
-                        <div className='label-info-content-item' style={{display:'flex', justifyContent:'space-between', flexWrap:'wrap'}}>
-                            {projectInfo && 
-                              <div className='label-info-data' style={{display:'flex', justifyContent:'flex-end'}} >
-                                  <div style={projectInfo?.labelTemplate === "Template1" ? {} : {display:'none'}} className='template-1'>
-                                    <div className='template-1-content'>
-                                      <div className='template-1-content-top'>
-                                        <div className='template-1-content-top-left'>
-                                          <div className='template-1-content-top-left-header'>
-                                            <div style={{width:'15%'}}>
-                                              {projectInfo && 
-                                                projectInfo.labelData && 
-                                                  projectInfo.labelData.productType == "Medical device" &&
-                                                    <img className='symbol-img' src={Medical_deviceSymbol} />
-                                                  }
-                                            </div>
-                                            <div style={{width:'70%', textAlign:'center'}}>
-                                              {projectInfo && 
-                                                projectInfo.labelData && 
-                                                projectInfo.labelData.productName &&
-                                                <h5>{projectInfo.labelData.productName}</h5>}
-                                            {projectInfo && 
-                                                projectInfo.labelData && 
-                                                projectInfo.labelData.intendedPurpose.length > 0 &&
-                                                <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
-                                            </div>
-                                            {projectInfo &&
-                                              projectInfo.labelData && 
-                                                projectInfo.labelData.productClass == 'Class I'
-                                                ?(<img style={{width:'8%'}} className='symbol-img' src={CE_mark} />)
-                                    
-                                                :( <div style={{width:'8%'}}  className=''>
-                                                      <img style={{width:'100%'}} className='' src={CE_mark} />
-                                                        {projectInfo &&
-                                                          projectInfo.labelData && 
-                                                        <p style={{fontSize:'60%', marginTop:'3px',  marginRight:'10px'}} >{projectInfo.labelData.notifiedBodyNumber}</p>}
-                                                  </div>)}
-                                          </div>
-                                          <ul className='template-1-content-top-left-body'>
-                                          {projectInfo &&
-                                            projectInfo.labelData && 
-                                              projectInfo.labelData.intendedForIntroduction &&
-                                            <>
-                                                {projectInfo.labelData.qualitativeComposition &&
-                                                  <li>{projectInfo.labelData.qualitativeComposition}</li>}
-                                              {projectInfo.labelData.quantitativeInformation && 
-                                                <li>{projectInfo.labelData.quantitativeInformation}</li>}
-                                            </>
-                                            }
-                                            {projectInfo &&
-                                              projectInfo.labelData && 
-                                              projectInfo.labelData.containsCMRSubstances &&
-                                              <div className='symbol-content-item'>
-                                                {projectInfo.labelData.cmrSubstancesList &&
-                                                  <li>{projectInfo.labelData.cmrSubstancesList}</li>}
-                                              </div>}
-                                            </ul>
-                                        </div>
-
-                                        <div className='template-1-content-top-right'>
-                                          <div className='template-1-content-top-right-top'>
-                                            <div style={{display:'flex', flexDirection:'column'}}>
-                                              {projectInfo &&
-                                                projectInfo.labelData && 
-                                                  projectInfo.labelData.quantity > 0 
-                                                ?  <p style={{flex:'0.95'}}>QTY: {projectInfo.labelData.quantity}</p>
-                                                : <p style={{flex:'0.95'}}></p>}
-                                              <div >
-                                                {projectInfo &&
-                                                  projectInfo.labelData && 
-                                                  (projectInfo.labelData.addManufacturerLogo
-                                                  || projectInfo.labelData.addWebsite) &&
-                                                  <img style={{width:'25%', marginTop:''}} className='symbol-img' src={Patient_information_website} />}
-                                              </div>
-                                            </div>
-                                              {projectInfo &&
-                                                  projectInfo.labelData && 
-                                                  projectInfo.labelData.manufacturerLogo &&
-                                                <img src={`${process.env.REACT_APP_BASE_URL}/assets/images/${projectInfo.labelData.manufacturerLogo}`} alt="" />}
-                                          </div>
-                                          {projectInfo && projectInfo.labelData &&  projectInfo.labelData.addWebsite &&
-                                          projectInfo.labelData.website &&
-                                            <p>{projectInfo.labelData.website}</p>}
-                                        </div>
-                                      </div>
-                                      <div className='template-1-content-mid'>
-                                        <div className='template-1-content-mid-fist-item'>
-                                          {projectInfo && 
-                                            projectInfo.labelData && 
-                                            (projectInfo.labelData.packagingContents || projectInfo.labelData.packagingContents.length !== 0)&& projectInfo.labelData.packagingContents[0] !== '' &&
-                                          <ul className='template-1-content-mid-fist-item-top' style={{ display:'flex', flexWrap:'wrap', gridGap:'2%', padding:'5px  0px', justifyContent:'center', borderTop:'0.1px solid lightGray' , borderBottom:'0.1px solid lightGray', fontSize:'10px'}}>
-                                            {projectInfo?.labelData?.packagingContents?.map((item => {
-                                              return (
-                                                  <li style={{listStyle:'circle !important'}}>- {item}</li>
-                                              )
-                                            }))}
-                                          </ul>}
-                                          <div className='template-1-content-mid-fist-item-bottom'>
-                                          {projectInfo && 
-                                            projectInfo.labelData && 
-                                              projectInfo.labelData.customMadeDevice &&
-                                              <p>custom-made device</p>}
-                                          {projectInfo && 
-                                            projectInfo.labelData && 
-                                              projectInfo.labelData.clinicalInvestigationOnly &&
-                                              <p className='mx-4'>exclusively for clinical investigation</p>}
-                                          </div>
-                                        </div>
-                                        <div className='template-1-content-mid-second-item'>
-                                          {projectOwnerInfo()}
-                                        </div>
-                                      </div>
-                                      <div className='template-1-content-bottom'>
-                                        <div className='rest-of-the-symbols'>
-                                          {symbolsWithTextBehind()}
-                                        </div>
-                                        <div className="code-bar">
-                                        {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' && handleUDI()}
-                                          {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
-                                              imageSrc &&
-                                            <div style={{display:'flex', alignItems:'center', marginTop:'1%'}}>
-                                              <img style={{width:'100px', height:'100px'}} src={imageSrc} alt={`data matrix from`} />
-                                              <div style={{fontSize:'12px'}}>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.haDateOfManufacture && projectInfo.labelData.dateOfManufacture}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.useByDate}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.hasLotNumber && projectInfo.labelData.LOTNumber}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.haSerialNumber && projectInfo.labelData.serialNumber}</p>
-                                              </div>
-                                            </div>}
-                                        </div>
-                                      </div>
-                                    </div>
+                    <div className='test col-md-8' style={{display:'flex',flexDirection:'column-reverse', alignItems:'center', justifyContent:'center', borderRadius:'', borderRight:'1px solid lightGray'}}>
+                        <TransformWrapper initialScale={1}>
+                              {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+                                <React.Fragment>
+                                  <div className="" style={{backgroundColor:'',marginTop:'30px', width:'100%'}}>
+                                    <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => zoomIn()}>+</button>
+                                    <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => zoomOut()}>-</button>
+                                    <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => resetTransform()}>reset</button>
                                   </div>
-
-                                  <div style={projectInfo?.labelTemplate === "Template2" ? {} : {display:'none'}} className='template-2'>
-                                    <div className='template-2-content-top'>
-                                      <div className='template-1-content-top-header'>
-                                        <div className='ce-mark-and-website-content'>
-                                        {projectInfo && projectInfo.labelData &&  projectInfo.labelData.addWebsite &&
-                                          projectInfo.labelData.website &&
-                                          <p>
-                                              <img style={{width:'25%', marginTop:''}} className='symbol-img' src={Patient_information_website} />
-                                              <p style={{fontSize:'70%'}}>{projectInfo.labelData.website}</p>
-                                          </p>}
-                                          {projectInfo &&
-                                              projectInfo.labelData && 
-                                                projectInfo.labelData.productClass == 'Class I'
-                                                ?(<img style={{width:'12%', margin:'0', padding:'0'}} className='symbol-img' src={CE_mark} />)
-                                    
-                                                :( <div style={{width:'12%', margin:'0', padding:'0'}}  className=''>
-                                                      <img style={{width:'100%'}} className='' src={CE_mark} />
-                                                        {projectInfo &&
-                                                          projectInfo.labelData && 
-                                                        <p style={{fontSize:'65%', margin:'0', padding:'0', textAlign:'center'}} >{projectInfo.labelData.notifiedBodyNumber}</p>}
-                                                  </div>)}
-                                        </div>
-                                        <div className='label-header-info'>
-                                        {projectInfo && 
-                                                projectInfo.labelData && 
-                                                projectInfo.labelData.productName &&
-                                                <h3>{projectInfo.labelData.productName}</h3>}
-                                            {projectInfo && 
-                                        projectInfo.labelData && 
-                                        projectInfo.labelData.intendedPurpose.length > 0 &&
-                                        <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
-                                        </div>
-                                        <div className='label-MD-QTY-info' style={{display:'flex', flexDirection:'column'}}> 
-                                        {projectInfo &&
-                                                projectInfo.labelData && 
-                                                  projectInfo.labelData.quantity > 0 
-                                                ?  <p style={{marginBottom:'10%'}}>QTY: {projectInfo.labelData.quantity}</p>
-                                                : <p style={{marginBottom:'10%'}}></p>}
-                                        <p >
-                                        {projectInfo && 
-                                                projectInfo.labelData && 
-                                                  projectInfo.labelData.productType == "Medical device" &&
-                                                    <img className='symbol-img' src={Medical_deviceSymbol} />
-                                                  }
-                                        </p>
-                                        </div>
-                                      </div>
-                                      <div className='template-2-content-top-rest-content'>
-                                      {projectInfo && 
-                                            projectInfo.labelData && 
-                                            (projectInfo.labelData.packagingContents || projectInfo.labelData.packagingContents.length !== 0)&& projectInfo.labelData.packagingContents[0] !== '' &&
-                                          <ul className='template-1-content-mid-fist-item-top' style={{ display:'flex', flexWrap:'wrap', gridGap:'2%', padding:'5px  0px', justifyContent:'center', borderTop:'0.1px solid lightGray' , borderBottom:'0.1px solid lightGray', fontSize:'10px'}}>
-                                            {projectInfo?.labelData?.packagingContents?.map((item => {
-                                              return (
-                                                  <li style={{listStyle:'circle !important'}}>- {item}</li>
-                                              )
-                                            }))}
-                                          </ul>}
-                                        <ul className='intended-for-intro-and-cmr-substance'>
-                                        {projectInfo &&
-                                            projectInfo.labelData && 
-                                              projectInfo.labelData.intendedForIntroduction &&
-                                            <>
-                                                {projectInfo.labelData.qualitativeComposition &&
-                                                  <li>{projectInfo.labelData.qualitativeComposition}</li>}
-                                              {projectInfo.labelData.quantitativeInformation && 
-                                                <li>{projectInfo.labelData.quantitativeInformation}</li>}
-                                            </>
-                                            }
-                                            {projectInfo &&
-                                              projectInfo.labelData && 
-                                              projectInfo.labelData.containsCMRSubstances &&
-                                              <div className='symbol-content-item'>
-                                                {projectInfo.labelData.cmrSubstancesList &&
-                                                  <li>{projectInfo.labelData.cmrSubstancesList}</li>}
-                                              </div>}
-                                        </ul>
-                                        <div className='template-2-content-top-rest-content-bottom'>
-                                        {projectInfo && 
-                                            projectInfo.labelData && 
-                                              projectInfo.labelData.customMadeDevice &&
-                                              <p className='mx-1'>custom-made device</p>}
-                                          {projectInfo && 
-                                            projectInfo.labelData && 
-                                              projectInfo.labelData.clinicalInvestigationOnly &&
-                                              <p className='mx-1'>exclusively for clinical investigation</p>}
-                                        </div>
-                                      </div>
+                                  <TransformComponent >
+                                    <div style={{backgroundColor:'', width:'53vw', height:'', cursor:'zoom-in'}}>
+                                      {/* displaying label should be dynamic ...! */}
+                                           {activeTemplate === "Template1" && 
+                                           <Template1
+                                                scale={'1'}
+                                                width={"calc(100mm)"}
+                                                height={"calc(150mm)"} 
+                                                projectInfo={projectInfo}
+                                                handleUDI={handleUDI}
+                                                imageSrc={imageSrc}
+                                            />}
                                     </div>
-                                    <div className='template-2-content-mid'>
-                                      <div className='project-owner-info-content'>
-                                        {projectOwnerInfo()}
-                                      </div>
-                                      <div className='symbols-with-text-behind-content'>
-                                        {symbolsWithTextBehind()}
-                                      </div>
-                                    </div>
-                                    <div className='template-2-content-bottom'>
-                                    <div className="code-bar" style={{ width:'100%'}}>
-                                        {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' && handleUDI()}
-                                          {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
-                                              imageSrc &&
-                                            <div style={{display:'flex', alignItems:'center', marginTop:'1%'}}>
-                                              <img style={{width:'100px', height:'100px'}} src={imageSrc} alt={`data matrix from`} />
-                                              <div style={{fontSize:'12px'}}>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.haDateOfManufacture && projectInfo.labelData.dateOfManufacture}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.useByDate}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.hasLotNumber && projectInfo.labelData.LOTNumber}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.haSerialNumber && projectInfo.labelData.serialNumber}</p>
-                                              </div>
-                                            </div>}
-                                        </div>
-                                      
-                                    </div>
-                                  </div>
-
-                                  <div style={projectInfo?.labelTemplate === "Template3" ? {} : {display:'none'}} className='template-3'>
-                                    <div className='header'>
-                                          <div className='medical-device-symbol-header' style={{width:'5%'}}>
-                                                    {projectInfo && 
-                                                      projectInfo.labelData && 
-                                                        projectInfo.labelData.productType == "Medical device" &&
-                                                          <img className='symbol-img' src={Medical_deviceSymbol} />
-                                                        }
-                                            </div>
-                                            <div className='medical-device-symbol-header' style={{width:'8%', right:'0', top:'0', marginTop:'-5px'}}>
-                                              {projectInfo &&
-                                                projectInfo.labelData && 
-                                                  projectInfo.labelData.productClass == 'Class I'
-                                                  ?(<img style={{width:'100%'}} className='symbol-img' src={CE_mark} />)
-                                      
-                                                  :( <div style={{width:'100%', padding:'0', display:'flex', alignItems:'center', flexDirection:'column'}}  className=''>
-                                                        <img style={{width:'100%'}} className='' src={CE_mark} />
-                                                          {projectInfo &&
-                                                            projectInfo.labelData && 
-                                                          <p style={{fontSize:'70%', marginTop:'-5px'}} >{projectInfo.labelData.notifiedBodyNumber}</p>}
-                                                    </div>)}
-                                            </div>
-                                    {projectInfo && 
-                                                projectInfo.labelData && 
-                                                projectInfo.labelData.productName &&
-                                                <h3>{projectInfo.labelData.productName}</h3>}
-                                            {projectInfo && 
-                                                projectInfo.labelData && 
-                                                projectInfo.labelData.intendedPurpose.length > 0 &&
-                                                <p>{projectInfo.labelData.intendedPurpose.map(item => "-"+ item.intendedPurposeValue)}</p>}
-                                    </div>
-                                    <div className='template-3-top-content'>
-                                      <div className='template-3-code-bar'>
-                                        <div style={{marginBottom:"1%"}}>
-                                        {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType !== 'GS1 (Data Matrix)' && handleUDI()}
-                                          {projectInfo && projectInfo.labelData && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
-                                              imageSrc &&
-                                            <div style={{display:'flex', alignItems:'center', marginTop:'1%'}}>
-                                              <img style={{width:'70px', height:'70px'}}  src={imageSrc} alt={`data matrix from`} />
-                                              <div style={{fontSize:'12px'}}>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.haDateOfManufacture && projectInfo.labelData.dateOfManufacture}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.useByDate}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.hasLotNumber && projectInfo.labelData.LOTNumber}</p>
-                                                <p style={{margin:'2px 10px'}}>{projectInfo.labelData && projectInfo.labelData.haSerialNumber && projectInfo.labelData.serialNumber}</p>
-                                              </div>
-                                            </div>}
-                                        </div>
-                                        <div className='barcode-projectOwner'>
-                                          <div className='symbol-content-item' style={{width:''}}>
-                                              <img className='symbol-img' src={Manufacturer} />
-                                              <div className=''>
-                                                <p>{projectInfo?.labelData?.manufacturerName}</p>
-                                                <p>{projectInfo?.labelData?.manufacturerAddress}</p>
-                                                <p>{projectInfo?.labelData?.manufacturerCity}</p>
-                                                <p>{projectInfo?.labelData?.manufacturerCountry}</p>
-                                              </div>
-                                            </div>
-
-                                          {projectInfo?.labelData?.hasDistributor &&
-                                              <div className='symbol-content-item' style={{width:''}}>
-                                                <img className='symbol-img' src={Distributor} />
-                                                <div className=''>
-                                                  <p>{projectInfo.labelData.distributorName}</p>
-                                                  <p>{projectInfo.labelData.distributorAddress}</p> 
-                                                </div>
-                                              </div>
-                                            }
-                                          </div>
-                                      </div>
-                                      <div className='template-3-manufacturer-logo'>
-                                          <div className='template-1-content-top-right-top'>
-
-                                            <div style={{display:'flex', flexDirection:'column', marginLeft:'5px'}}>
-                                              {projectInfo &&
-                                                projectInfo.labelData && 
-                                                  projectInfo.labelData.quantity > 0 
-                                                ?  <p style={{fontSize:'80%', marginBottom:"17%"}}>QTY: {projectInfo.labelData.quantity}</p>
-                                                : <p style={{fontSize:'80%', marginBottom:"17%"}}></p>}
-                                              <div >
-                                                
-                                                {projectInfo &&
-                                                  projectInfo.labelData && 
-                                                  (projectInfo.labelData.addManufacturerLogo
-                                                  || projectInfo.labelData.addWebsite) &&
-                                                  <img style={{width:'17%'}} className='symbol-img' src={Patient_information_website} />}
-                                              </div>
-                                            </div>
-                                              {projectInfo &&
-                                                  projectInfo.labelData && 
-                                                  projectInfo.labelData.manufacturerLogo &&
-                                                <img src={`${process.env.REACT_APP_BASE_URL}/assets/images/${projectInfo.labelData.manufacturerLogo}`} alt="" />}
-                                          </div>
-                                          {projectInfo && projectInfo.labelData &&  projectInfo.labelData.addWebsite &&
-                                          projectInfo.labelData.website &&
-                                            <p style={{fontSize:'70%', marginLeft:'5px'}}>{projectInfo.labelData.website}</p>}
-                                      </div>
-                                    </div>
-
-                                    <div>
-                                    <div className='template-3-content-mid-fist-item symbols-with-text-behind'>
-                                          {projectInfo && 
-                                            projectInfo.labelData && 
-                                              projectInfo.labelData.customMadeDevice &&
-                                              <p>custom-made device</p>}
-                                          {projectInfo && 
-                                            projectInfo.labelData && 
-                                              projectInfo.labelData.clinicalInvestigationOnly &&
-                                              <p className='mx-'>exclusively for clinical investigation</p>}
-                                      </div>
-                                      <div className='template-3-content-mid-second-item'>
-                                      {projectInfo?.labelData?.useByDate &&
-                                          <div className='symbol-content-item'>
-                                            <img className='symbol-img' src={Use_by_date} />
-                                            <div className=''>
-                                              <p>{projectInfo?.labelData?.useByDate}</p>
-                                            </div>
-                                          </div>}
-
-                                        {projectInfo?.labelData?.haDateOfManufacture &&
-                                          <div className='symbol-content-item'>
-                                            <img className='symbol-img manufacture-img' src={Date_of_manufactureSymbol} />
-                                            <div className=''>
-                                              <p>{projectInfo?.labelData?.dateOfManufacture}</p>
-                                            </div>
-                                          </div>}
-
-                                        {projectInfo?.labelData?.hasLotNumber &&
-                                          <div className='symbol-content-item'>
-                                            <img className='symbol-img' src={Batch_codeSymbol} />
-                                            <div className=''>
-                                              <p>{projectInfo?.labelData?.LOTNumber}</p>
-                                            </div>
-                                          </div>}
-
-                                        {projectInfo?.labelData?.haSerialNumber &&
-                                          <div className='symbol-content-item'>
-                                            <img className='symbol-img' src={Serial_numberSymbol} />
-                                            <div className=''>
-                                              <p>{projectInfo?.labelData?.serialNumber}</p>
-                                            </div>
-                                          </div>}
-
-                                        {(projectInfo?.labelData?.catalogueNumber || projectInfo?.labelData?.modelNumber)&&
-                                              <div className='symbol-content-item'>
-                                                <img className='symbol-img' src={catalogueNumberSymbol} />
-                                                <div className=''>
-                                                  <p>{projectInfo?.labelData?.catalogueNumber}</p>
-                                                </div>
-                                              </div>}
-
-                                        {projectInfo?.labelData?.modelNumber &&
-                                              <div className='symbol-content-item'>
-                                                <img className='symbol-img' src={modelNumberSymbol} />
-                                                <div className=''>
-                                                  <p>{projectInfo?.labelData?.modelNumber}</p>
-                                                </div>
-                                              </div>}
-                                          
-
-                                          {/* if outside of EUROPE */}
-                                        {!projectInfo?.labelData?.isOutsideEU &&
-                                            <div className='symbol-content-item'>
-                                              <img className='symbol-img Authorized_Representative' src={Authorized_Representative} />
-                                              <div className=''>
-                                                <p>{projectInfo?.labelData?.europeanAuthorizedRepName}</p>
-                                                <p>{projectInfo?.labelData?.europeanAuthorizedRepAddress}</p> 
-                                              </div>
-                                            </div>
-                                          }
-                                        {!projectInfo?.labelData?.isOutsideEU &&
-                                            <div className='symbol-content-item'>
-                                              <img className='symbol-img' src={Importer} />
-                                              <div className=''>
-                                                <p>{projectInfo?.labelData?.importerName}</p>
-                                                <p>{projectInfo?.labelData?.importerAddress}</p> 
-                                              </div>
-                                            </div>
-                                          }
-                                      </div>
-                                      {projectInfo && 
-                                            projectInfo.labelData && 
-                                            (projectInfo.labelData.packagingContents || projectInfo.labelData.packagingContents.length !== 0)&& projectInfo.labelData.packagingContents[0] !== '' &&
-                                          <ul className='template-3-content-mid-fist-item-top' style={{ display:'flex', flexWrap:'wrap', gridGap:'2%', padding:'5px  0px', justifyContent:'center',fontSize:'10px', marginBottom:'0'}}>
-                                            {projectInfo?.labelData?.packagingContents?.map((item => {
-                                              return (
-                                                  <li style={{listStyle:'circle !important'}}>- {item}</li>
-                                              )
-                                            }))}
-                                          </ul>}
-                                    </div>
-
-                                    <div className='template3-bottom-content'>
-                                    <div className='rest-of-the-symbols'>
-                                          {symbolsWithTextBehind()}
-                                        </div>
-                                    </div>
-                                  </div>
-                              </div>}
-                        </div>
+                                    </TransformComponent>
+                                </React.Fragment>
+                              )}
+                        </TransformWrapper>
+                    </div>
                     </div>
                     <div className='col-md-4'>
                       {(userRole?.includes("Approver") && projectInfo.status == "pending_approval")&&

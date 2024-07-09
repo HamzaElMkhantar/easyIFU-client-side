@@ -1,4 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Space } from 'react-zoomable-ui';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+
+
 import './project.css'
 import { Link, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -107,6 +111,11 @@ import { usersCompanyAction } from '../../redux/actions/userActions';
 import { Button } from 'react-bootstrap';
 import { getLabelAction } from '../../redux/actions/labelActions';
 import SideBarLabelInfo from '../../components/header/SideBarLabelInfo';
+
+// import label Templates
+import Template1 from '../../templates/template1/Template1';
+import { convertDateToYYMMDD } from '../../utilities/convertDateToYYMMDD';
+
 const LabelInformation = () => {
 
   const {projectId} = useParams();
@@ -912,29 +921,7 @@ const LabelInformation = () => {
 
     // ---- UDI handler functions ----
 
-    const convertDateToYYMMDD = (inputDate) => {
-      // Split the input date into day, month, and year
-      const [year, month, day ] = inputDate.split('-');
-    
-      // Ensure the date components are valid
-      if (day && month && year) {
-        // Create a JavaScript Date object
-        const jsDate = new Date(`${year}-${month}-${day}`);
-    
-        // Extract the year, month, and day components
-        const yy = jsDate.getFullYear().toString().slice(-2);
-        const mm = (jsDate.getMonth() + 1).toString().padStart(2, '0');
-        const dd = jsDate.getDate().toString().padStart(2, '0');
-    
-        // Concatenate the components in "yymmdd" format
-        const yymmdd = `${yy}${mm}${dd}`;
-    
-        return yymmdd;
-      } else {
-        // Return null for invalid input
-        return null;
-      }
-    };
+ 
 
     //  ---- update ----
     const handleUDI = () => {
@@ -957,7 +944,7 @@ const LabelInformation = () => {
           if(projectInfo.labelData.udiType == 'GS1 (1D Bar Code)'){
             JsBarcode('#gs1-barcode', udiData, { 
               format: 'CODE128',
-              width: isTemplate3 ? 0.4 : 0.9, // Set the width of the bars
+              width: 0.4, // Set the width of the bars
               height: 40, // Set the height of the bars
               displayValue: false, // Show the human-readable value below the barcode
               background: 'white', // Set the background color of the SVG
@@ -969,14 +956,14 @@ const LabelInformation = () => {
             return (
               <div style={{textAlign:'center', width:'100%'}}>
                 <svg id='gs1-barcode' style={{ width: '100%' }}></svg>
-                <p style={isTemplate3 ? {fontSize: "9px", fontWeight:"600"} :{fontSize:'12px', fontWidth:'20px'}}>{udiData}</p>
+                <p style={{fontSize: "7px", fontWeight:"600"}}>{udiData}</p>
               </div>
               )
           }
           if(projectInfo.labelData.udiType == 'GS1 (Separate Bar Code)'){
             JsBarcode('#gs1-barcode-udiDI', udiDI, { 
               format: 'CODE128',
-              width: isTemplate3 ? 0.4 : 0.9, // Set the width of the bars
+              width: 0.4, // Set the width of the bars
               height: 40, // Set the height of the bars
               displayValue: false, // Show the human-readable value below the barcode
               background: 'white', // Set the background color of the SVG
@@ -986,7 +973,7 @@ const LabelInformation = () => {
 
             JsBarcode('#gs1-barcode-udiPI', udiPI, { 
               format: 'CODE128',
-              width: isTemplate3 ? 0.4 : 0.9, // Set the width of the bars
+              width: 0.35, // Set the width of the bars
               height: 40, // Set the height of the bars
               displayValue: false, // Show the human-readable value below the barcode
               background: 'white', // Set the background color of the SVG
@@ -997,11 +984,11 @@ const LabelInformation = () => {
               <div style={{display:'flex', justifyContent:'', alignItems:'center', flexWrap:'wrap', gridGap:'5px', width: '100%' }}>
                 <div style={{textAlign:'center', margin:'0'}}>
                   <svg id='gs1-barcode-udiDI' style={{ width: '100%' }}></svg>
-                  <p style={isTemplate3 ? {fontSize: "9px", fontWeight:"600"} :{fontSize:'12px', fontWeight:'500', margin:'0'}}>(01){udiDI}</p>
+                  <p style={{fontSize: "6px", fontWeight:"900"}}>(01){udiDI}</p>
                 </div>
                 <div style={{textAlign:'center', margin:'0'}}>
                   <svg id='gs1-barcode-udiPI' style={{ width: '100%' }}></svg>
-                  <p style={isTemplate3 ? {fontSize: "9px", fontWeight:"600"} :{fontSize:'12px', fontWeight:'500', margin:'0'}}>{udiPI}</p>
+                  <p style={{fontSize: "6px", fontWeight:"900"}}>{udiPI}</p>
                 </div>
               </div>
             )
@@ -1038,7 +1025,7 @@ const LabelInformation = () => {
         if(projectInfo.labelData.udiFormat == 'HIBCC'){
           JsBarcode('#hibcc-barcode', udiData, { 
             format: 'CODE128',
-            width: isTemplate3 ? 0.4 : 0.9, // Set the width of the bars
+            width: 0.4, // Set the width of the bars
             height: 40, // Set the height of the bars
             displayValue: false, // Show the human-readable value below the barcode
             background: 'white', // Set the background color of the SVG
@@ -1048,14 +1035,14 @@ const LabelInformation = () => {
           return(
             <div style={{textAlign:'center', width: '100%' }}>
               <svg id='hibcc-barcode' style={{ width: '100%' }}></svg>
-              <p style={isTemplate3 ? {fontSize: "9px", fontWeight:"600"} :{fontSize:'12px', fontWeight:'500'}}>{udiData}</p>
+              <p style={{fontSize: "7px", fontWeight:"600"}}>{udiData}</p>
             </div>
             )
         }
         if(projectInfo.labelData.udiFormat == 'ICCBBA'){
           JsBarcode('#iccbba-barcode', udiData, { 
             format: 'CODE128',
-            width: isTemplate3 ? 0.4 : 0.9, // Set the width of the bars
+            width: 0.4, // Set the width of the bars
             height: 40, // Set the height of the bars
             displayValue: false, // Show the human-readable value below the barcode
             background: 'white', // Set the background color of the SVG
@@ -1065,14 +1052,14 @@ const LabelInformation = () => {
           return (
             <div style={{textAlign:'center', width: '100%' }}>
               <svg id='iccbba-barcode' style={{ width: '100%' }}></svg>
-              <p style={isTemplate3 ? {fontSize: "9px", fontWeight:"600"} :{fontSize:'12px', fontWeight:'500'}}>{udiData}</p>
+              <p style={{fontSize: "7px", fontWeight:"600"}}>{udiData}</p>
             </div>
             )
         }
         if(projectInfo.labelData.udiFormat == 'IFA'){
           JsBarcode('#ifa-barcode', udiData, { 
             format: 'CODE128',
-            width: isTemplate3 ? 0.4 : 0.9, // Set the width of the bars
+            width: 0.4, // Set the width of the bars
             height: 40, // Set the height of the bars
             displayValue: false, // Show the human-readable value below the barcode
             background: 'white', // Set the background color of the SVG
@@ -1082,28 +1069,39 @@ const LabelInformation = () => {
           return(
             <div style={{textAlign:'center', width: '100%' }}>
               <svg id='ifa-barcode' style={{ width: '100%' }}></svg>
-              <p style={isTemplate3 ? {fontSize: "9px", fontWeight:"600"} :{fontSize:'12px', fontWeight:'500'}}>{udiData}</p>
+              <p style={{fontSize: "7px", fontWeight:"600"}}>{udiData}</p>
             </div>
             )
         }
       }
       return null;
     }
+
+
+    // data matri
+    const [dataMatrixValue, setDataMatrixValue] = useState('123');
     useEffect(() => {
         handleUDI() 
         if(projectInfo && projectInfo.labelData){
-          const {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc, haDateOfManufacture, haLOTNumber, haSerialNumber} = projectInfo.labelData
-  
+
+          const {udiDI, dateOfManufacture, useByDate, serialNumber, LOTNumber, aidc, haDateOfManufacture, hasLotNumber, haSerialNumber} = projectInfo.labelData
+
           let udiData = (udiDI && udiDI !== '' ? "(01)" + udiDI : '') +
                         (haDateOfManufacture && dateOfManufacture && dateOfManufacture !== '' ? "(11)" + "XXXXXXXX" : '') +
                         (useByDate && useByDate !== '' ? "(17)" + convertDateToYYMMDD(useByDate) : '') +
-                        (haLOTNumber &&  LOTNumber && LOTNumber !== '' ? "(10)" + "XXXXXXXX" : '') +
+                        (hasLotNumber &&  LOTNumber && LOTNumber !== '' ? "(10)" + "XXXXXXXX" : '') +
                         (haSerialNumber && serialNumber && serialNumber !== '' ? "(21)" + "XXXXXXXX" : '');
-                      }
+          let udiPI =
+                    (haDateOfManufacture && dateOfManufacture && dateOfManufacture !== '' ? "(11)" + "XXXXXXXX" : '') +
+                    (useByDate && useByDate !== '' ? "(17)" + convertDateToYYMMDD(useByDate) : '') +
+                    (hasLotNumber && LOTNumber && LOTNumber !== '' ? "(10)" + "XXXXXXXX" : '') +
+                    (haSerialNumber && serialNumber && serialNumber !== '' ? "(21)" + "XXXXXXXX" : '');
+
+      setDataMatrixValue(udiData || '123')
+      }
     }, [projectInfo])
 
-    // data matrix
-    const [dataMatrixValue, setDataMatrixValue] = useState('61297564251294350845');
+
     useEffect(() => {
       let canvas = document.createElement("canvas");
       bwipjs.toCanvas(canvas, {
@@ -1742,7 +1740,9 @@ const LabelInformation = () => {
     }
   }, [projectInfo])
 
-console.log(projectInfo?.labelData)
+  // handling zoom of templates
+
+
   return (
     <div className="label-information" style={{padding:'0', height:'70vh', width:'100%', display:'flex'}}>
         <SideBarLabelInfo isSidebarOpen={true} 
@@ -1828,11 +1828,93 @@ console.log(projectInfo?.labelData)
           <div>
           </div>
           {!getLabelRequest
-          ?(<div>
+          ?(<div className='container'>
+
+            {/* --------------------------------------------------------- */}
+            
+              {activeTemplate == 'Template1' &&<p style={{color: 'gray', fontSize:'14px'}}>size: 150mm x 100mm</p>}
+            <div className='row'>
+            <div className='test col-md-8' style={{display:'flex',flexDirection:'column-reverse', alignItems:'center', justifyContent:'center', borderRadius:'', borderRight:'1px solid lightGray'}}>
+                <TransformWrapper initialScale={1}>
+                      {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+                        <React.Fragment>
+                          <div className="" style={{backgroundColor:'',marginTop:'30px', width:'100%'}}>
+                            <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => zoomIn()}>+</button>
+                            <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => zoomOut()}>-</button>
+                            <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => resetTransform()}>reset</button>
+                          </div>
+                          <TransformComponent >
+                            <div style={{backgroundColor:'', width:'53vw', height:'', cursor:'zoom-in'}}>
+                                    <Template1
+                                        scale={'1'}
+                                        width={"calc(100mm)"}
+                                        height={"calc(150mm)"}
+                                        projectInfo={projectInfo}
+                                        handleUDI={handleUDI}
+                                        imageSrc={imageSrc}
+                                    />
+                            </div>
+                            </TransformComponent>
+                        </React.Fragment>
+                      )}
+                    </TransformWrapper>
+            </div>
+
+     
+              <div className='col-lg-4'>
+              <div className='card p-2 mb-3'>
+                    <h5>Description :</h5>
+                <div className='card-bpdy'>
+                        {projectInfo &&
+                          <p  className='label-info-description'>
+                              {projectInfo?.labelDescription}
+                          </p>
+                        }
+                </div>
+              </div>
+
+                <div className='card-bpdy'>
+                <div style={{display:'', gridGap:'10px'}}>
+                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> Version: {projectInfo?.labelVersion}</p>
+                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> createdBy: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
+                            {(projectInfo?.status == "approved" || projectInfo?.status == "pending_release" || projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
+                            {(projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> ReleasedBy: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>}
+                          </div>
+                </div>
+                
+
+                  {projectInfo?.comments?.length > 0 &&
+                  <div className='card p-2'>
+                    <h5>Rejected :</h5>
+                      <div className='card-body'>
+                      {projectInfo?.comments?.map(item => (
+                        <div style={{borderBottom:'1px solid lightgray'}}>
+                          <div style={{marginBottom:'5px' ,display:'flex', alignItems:'', backgroundColor:'#EFEFEF', borderRadius:'4px'}}>
+                            <AccountCircleIcon style={{fontSize:'45px', marginRight:'6px'}} />
+                          <div>
+                            <h6 style={{padding:'0', margin:'0 '}}>{item.name} 
+                                <p style={{padding:'0', margin:'3px 0', fontSize:'12px'}}>({item.role.join("-")})</p>
+                            </h6>
+                          </div>
+                          </div>
+                          <p style={{border:''}}>
+                            {item.comment}
+                          </p>
+                        </div>
+                      ))}
+                      </div>
+                    </div>}
+                </div>
+
+            </div>
+            
+            {/*  */}
+            {/* --------------------------------------------------------- */}
+
             <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap'}}>
             </div>
             <div className='label-info-content row'>
-              {/* label */}
+
               <div className='col-lg-8'>
                 <div  className='label-info-content-item' style={{borderRadius:'5px', display:"flex", justifyContent:'space-between', overflow:'scroll'}}>
                   {projectInfo && 
@@ -1912,7 +1994,6 @@ console.log(projectInfo?.labelData)
                                       projectInfo.labelData && 
                                       projectInfo.labelData.manufacturerLogo &&
                                     <img src={"data:image/jpeg;base64,"+projectInfo?.labelData?.manufacturerLogo} alt="" />}
-                                     {/* <img style={{ width: '100%', height: '300px' }} src={"data:image/jpeg;base64,"+projectInfo?.labelData?.manufacturerLogo} alt="" /> */}
                               </div>
                               {projectInfo && projectInfo.labelData &&  projectInfo.labelData.addWebsite &&
                               projectInfo.labelData.website &&
@@ -2291,7 +2372,6 @@ console.log(projectInfo?.labelData)
               </div>
              {
               <div className='col-lg-4'>
-               {/* label description */}
               <div className='card p-2 mb-3'>
                     <h5>Description :</h5>
                 <div className='card-bpdy'>
@@ -2301,9 +2381,7 @@ console.log(projectInfo?.labelData)
                           </p>
                         }
                 </div>
-                  {/* <img style={{ width: '100%', height: '300px' }} src={"data:image/jpeg;base64,"+projectInfo?.labelData?.manufacturerLogo} alt="" /> */}
               </div>
-              {/* <div className='card p-2 mb-3'> */}
 
                 <div className='card-bpdy'>
                 <div style={{display:'', gridGap:'10px'}}>
@@ -2311,6 +2389,7 @@ console.log(projectInfo?.labelData)
                             <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> createdBy: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
                             {(projectInfo?.status == "approved" || projectInfo?.status == "pending_release" || projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
                             {(projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> ReleasedBy: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>}
+                            {(projectInfo?.status == "rejected") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> RejectedBy: {projectInfo?.rejectedBy?.lastName} {projectInfo?.rejectedBy?.firstName}</p>}
                           </div>
                 </div>
                 
@@ -2352,7 +2431,8 @@ console.log(projectInfo?.labelData)
                   width="90"
                   visible={true}
                   /> 
-          </div>)}
+          </div>)
+          }
         </main>
     </div>
   );
