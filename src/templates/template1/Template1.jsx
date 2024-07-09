@@ -532,7 +532,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 <img className='symbol-img manufacture-' src={Date_of_manufactureSymbol} style={{...customStyles.image, ...DynamicStyleForOwnerInfo.imageDateOfMan}} />
                 <div className='' style={customStyles.paragraphWrapper}>
                   <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>
-                    {dynamicData.manufacturerDate ? dynamicData.manufacturerDate : projectInfo.labelData.dateOfManufacture}</p>
+                    {dynamicData?.manufacturerDate ? dynamicData?.manufacturerDate : projectInfo.labelData.dateOfManufacture}</p>
                 </div>
               </div>}
 
@@ -541,7 +541,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 <img className='symbol-img' src={Use_by_date} style={{...customStyles.image, ...DynamicStyleForOwnerInfo.image}} />
                 <div className='' style={customStyles.paragraphWrapper}>
                   <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>
-                    {dynamicData.useByDate ? dynamicData.useByDate  : projectInfo.labelData.useByDate}
+                    {dynamicData?.useByDate ? dynamicData?.useByDate  : projectInfo?.labelData?.useByDate}
                   </p>
                 </div>
               </div>}
@@ -551,7 +551,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 <img className='symbol-img' src={Batch_codeSymbol} style={{...customStyles.image, ...DynamicStyleForOwnerInfo.image}} />
                 <div className='' style={customStyles.paragraphWrapper}>
                   <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>
-                    {dynamicData.LotNumber ? dynamicData.LotNumber : projectInfo.labelData.LOTNumber}
+                    {dynamicData?.LotNumber ? dynamicData?.LotNumber : projectInfo.labelData.LOTNumber}
                   </p>
                 </div>
               </div>}
@@ -561,7 +561,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 <img className='symbol-img' src={Serial_numberSymbol} style={{...customStyles.image, ...DynamicStyleForOwnerInfo.image}} />
                 <div className='' style={customStyles.paragraphWrapper}>
                   <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>
-                    {dynamicData.serialNumber ? dynamicData.serialNumber : projectInfo.labelData.serialNumber}</p>
+                    {dynamicData?.serialNumber ? dynamicData?.serialNumber : projectInfo.labelData.serialNumber}</p>
                 </div>
               </div>}
 
