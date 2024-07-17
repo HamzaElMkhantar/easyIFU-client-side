@@ -105,9 +105,7 @@ const Documents = () => {
     }
 
 
-            // ------ headers ------
-    const {logout} = useSelector(state => state)
-    const {logoutRequest, logoutSuccess, logoutFail} = logout
+    // ------ headers ------
     const handleLogout = () => {
       dispatch(logoutAction())
     }
@@ -186,12 +184,21 @@ const Documents = () => {
           </Box>
         </div>
 
-
         {/* Dashboard  content   */}
         <section  className='container py-5' style={{paddingTop:'20px', overflowY:'scroll', height:'94.3vh'}}> 
-        <div className="row row_branchen">
+        <Link to='/dashboard/templates'>
+          <button style={{
+                        padding: "8px 20px",
+                        backgroundColor:"#9a3b3a",
+                        borderRadius:'3px',
+                        color: "#ecf0f3",
+                        fontWeight:'700'
+                      }}>
+                  New Order</button>
+        </Link>
+        {!documentsRequest ? <div className="row row_branchen">
         {!companyDocument.length > 0 && <div style={{textAlign:'center', width:'100%'}}>
-          <h5>No Labels Created</h5>
+          <h5>No Order Created</h5>
         </div>}
         <div>{companyDocument.length > 0 && 
             <Table striped bordered hover style={{backgroundColor:'#fff'}} className="table table-hover my-1">
@@ -200,9 +207,9 @@ const Documents = () => {
                   <th scope="col">#</th>
                   <th scope="col">label Name</th>
                   <th scope="col">label Description</th>
+                  <th scope="col">label Size</th>
                   <th scope="col">createdAt</th>
                   <th scope="col">Details</th>
-                  <th scope="col">delete</th>
                 </tr>
               </thead>
               <tbody style={{ textAlign:'center'}}>
@@ -211,11 +218,12 @@ const Documents = () => {
                     return (
                       <tr key={index}>
                         <th scope="row">{index+1}</th>
-                          <td>{item?.projectId?.labelName}</td>
-                          <td>{item?.projectId?.labelDescription?.length > 20 
-                            ? item?.projectId?.labelDescription.substring(0, 20) + '...' 
-                            :item?.projectId?.labelDescription 
+                          <td>{item?.labelName}</td>
+                          <td>{item?.labelDescription?.length > 20 
+                            ? item?.labelDescription.substring(0, 20) + '...' 
+                            :item?.labelDescription 
                           }</td>
+                          <td>{item.labelSize}mm</td>
                           <td>{formatDate(item?.createdAt)}</td>
                           <td>
                             <Link to={`/dashboard/document-sizes/${item._id}`} 
@@ -226,19 +234,6 @@ const Documents = () => {
                               <VisibilityIcon style={{paddingBottom:'', fontSize:'24px', color:"#03295C"}} />
                             </Link>
                           </td>
-                          <td>
-                          <button onClick={() => handleDeleteDocument(item._id)} style={{ backgroundColor:'#FAC9C3', padding:'3px', margin:'2px', borderRadius:'5px'}}>
-              {deleteDocumentsRequest 
-              ? <RotatingLines
-                  strokeColor="#011d41"
-                  strokeWidth="5"
-                  animationDuration="0.75"
-                  width="20"
-                  visible={true}
-                  /> 
-               :<DeleteIcon/>}
-              </button>
-                          </td>
                       </tr>
                     )
                   })
@@ -246,7 +241,16 @@ const Documents = () => {
               </tbody>
             </Table>}
           </div>
-      </div>
+      </div> 
+      :(<div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
+        <RotatingLines
+            strokeColor="#011d41"
+            strokeWidth="5"
+            animationDuration="0.75"
+            width="50"
+            visible={true}
+          /> 
+      </div>) }
         </section>
       </main>
 

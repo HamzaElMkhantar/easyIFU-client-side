@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersCompanyAction } from '../../redux/actions/userActions';
@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { Avatar } from '@mui/material';
 import bwipjs from 'bwip-js';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
@@ -20,6 +21,8 @@ import { getLabelAction, saveLabelOrderAction } from '../../redux/actions/labelA
 import { convertDateToYYMMDD } from '../../utilities/convertDateToYYMMDD';
 import { handleUDI } from '../../utilities/handleUDI';
 import Template1 from '../../templates/template1/Template1';
+import SideBarLabelInfo from '../../components/header/SideBarLabelInfo';
+
 const ReleasedProject = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
@@ -27,12 +30,12 @@ const ReleasedProject = () => {
 
   const {getLabel, saveDocument, saveOrderLabel} = useSelector(state => state);
     const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
-  const {saveOrderLabelRequest, saveOrderLabelSuccess, saveOrderLabelFail} = saveOrderLabel;
-
+  const {saveOrderLabelRequest, saveOrderLabelSuccess, savedOrderId, saveOrderLabelFail} = saveOrderLabel;
 
   const [projectInfo, setProjectInfo] = useState({});
   const [imageSrc, setImageSrc] = useState('');
 
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getLabelAction(projectId, token))
@@ -40,8 +43,10 @@ const ReleasedProject = () => {
 }, [])
 
 useEffect(() => {
-    if(saveOrderLabelSuccess){
-        toast.success(`Order Saved !`)
+    if(saveOrderLabelSuccess && savedOrderId){
+      console.log("savedOrderId", savedOrderId)
+      console.log("savedOrderId", savedOrderId)
+      navigate(`/dashboard/document/${savedOrderId?._id}`)
     }
 
 
@@ -59,7 +64,7 @@ useEffect(() => {
     if(getLabelFail){
       toast.warning(`${getLabelFail.message}`)
     }
-  }, [getLabelSuccess, getLabelFail])
+  }, [getLabelSuccess, getLabelFail, savedOrderId])
 
     //  handle dynamic data for label
     function formatSumDateToYYYYMMDD(date) {
@@ -74,9 +79,9 @@ useEffect(() => {
       return `${yyyy}-${mm}-${dd}`;
   }
     const [dynamicData, setDynamicData] = useState({
-        LotNumber: '',
+        LotNumber: projectInfo?.labelData?.LOTNumber || '',
         useByDate: '',
-        serialNumber: '',
+        serialNumber: projectInfo?.labelData?.serialNumber || '',
         manufacturerDate: formatSumDateToYYYYMMDD(new Date()),
         hasPatientName: projectInfo.labelData?.hasPatientName || false,
         patientName: '' ,
@@ -84,7 +89,26 @@ useEffect(() => {
         patientNumber: '',
         hasDoctorName: projectInfo.labelData?.hasDoctorName || false,
         doctorName: '',
+        quantity: projectInfo?.labelData?.quantity || 0,
+        printCount: 1
     })
+
+    useEffect(() => {
+      setDynamicData({
+        LotNumber: projectInfo?.labelData?.LOTNumber || '',
+        useByDate: projectInfo?.labelData?.useByDate || '',
+        serialNumber: projectInfo?.labelData?.serialNumber || '',
+        manufacturerDate: formatSumDateToYYYYMMDD(new Date()),
+        hasPatientName: projectInfo.labelData?.hasPatientName || false,
+        patientName: projectInfo?.labelData?.patientName || '' ,
+        hasPatientNumber: projectInfo.labelData?.hasPatientNumber || false,
+        patientNumber: projectInfo?.labelData?.patientNumber || '',
+        hasDoctorName: projectInfo.labelData?.hasDoctorName || false,
+        doctorName: projectInfo?.labelData?.doctorName || '',
+        quantity: projectInfo?.labelData?.quantity || 0,
+        printCount: 1
+    })
+    }, [projectInfo])
 
     const [dateValidation, setDateValidation] = useState(true)
      const handleManufacturerDateChange = (event) => {
@@ -201,13 +225,13 @@ useEffect(() => {
         }
         dispatch(saveLabelOrderAction(data, token))
       }
-
+      const [size, setSize] = useState('');
+      const handleSizeChange = (newSize) => {
+        setSize(newSize);
+        console.log('Size updated in parent:', newSize);
+      };
   return (
-    <div className='container label-information mb-5'>
-      <div style={{display:'flex', justifyContent:'space-between'}}>
-        <Link to='/dashboard/project/released' className='label-info-link'><ArrowBackIcon /> Back</Link>
-
-      </div>
+    <div className='container label-information mb-5' style={{padding:'0', height:'70vh', display:'flex'}}>
         <div style={{display:'none'}}>
                 <div style={{display:'flex', flexDirection:'column', width:'100px'}}>
                   <div style={{backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
@@ -235,9 +259,18 @@ useEffect(() => {
 
                   <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
         </div>
+        <SideBarLabelInfo isSidebarOpen={true} 
+                  status={projectInfo?.status}
+                  hideInfo={true}
+                  projectId={projectId}/>
       {!getLabelRequest ? 
-      <div style={{marginTop:'30px'}}>
-
+      <main style={{marginTop:'30px', width:'100%'}}>
+          <div style={{display:'flex', alignItems:'center'}}>
+            <Link to='/dashboard/templates' className='label-info-link mb-3'><ArrowBackIcon /> Back</Link>
+              {!getLabelRequest && projectInfo &&
+                  <h6  className='label-info-title mb-4' style={{color:'#', flex:'1', fontSize:'24px'}}>{projectInfo?.labelName}</h6>
+              }
+          </div>
           <div className='label-info-content-item row'>
             {projectInfo && 
               <div className='label-info-data col-md-8'>
@@ -245,16 +278,17 @@ useEffect(() => {
                     {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
                       <React.Fragment>
                         <TransformComponent >
-                          <div style={{backgroundColor:'', width:'53vw', height:'', cursor:'zoom-in'}}>
+                          <div style={{backgroundColor:'', width:'40vw', height:'', cursor:'zoom-in'}}>
                             {/* displaying label should be dynamic ...! */}
                               {projectInfo.labelTemplate == "Template1" &&
                                 <Template1
                                     scale={'1'}
-                                    width={"calc(100mm)"}
-                                    height={"calc(150mm)"} 
+                                    width={"100"}
+                                    height={"150"} 
                                     projectInfo={projectInfo}
                                     handleUDI={handleUDI}
                                     imageSrc={imageSrc}
+                                    onSizeChange={handleSizeChange}
                                     dynamicData={dynamicData}
                                 />}
                           </div>
@@ -296,8 +330,18 @@ useEffect(() => {
                           <label style={{fontWeight:'500'}}>Manufacturer Date: </label>
                           <input placeholder='yyyy-mm-dd' value={dynamicData.manufacturerDate} name='manufacturerDate' onChange={(e) => handleManufacturerDateChange(e)} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
                         </div>}
-                  
+                        {projectInfo && projectInfo?.labelData && projectInfo?.labelData?.quantity && 
+                        <div className='form-group mb-3' style={{display:'flex', flexDirection:'column'}}>
+                          <label style={{fontWeight:'500'}}>Quantity: </label>
+                          <input placeholder='quantity' type='number' min="0" value={dynamicData.quantity} name='quantity' onChange={(e) => setDynamicData({...dynamicData, quantity: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
+                        </div>}
                       </form>
+                      <div className='card mt-2'>
+                      <div className='form-group px-2 py-2' style={{display:'flex', flexDirection:'column'}}>
+                          <label style={{fontWeight:'500'}}>how many label you want to print? : {dynamicData.printCount}</label>
+                          <input placeholder='printCount' type='number' min="1" value={dynamicData.printCount} name='quantity' onChange={(e) => setDynamicData({...dynamicData, printCount: e.target.value})} style={{borderBottom:'1px solid gray', borderRadius:'0px', padding:'0px 10px', outline:'none'}}/>
+                        </div>
+                      </div>
                       <button disabled={saveOrderLabelRequest ? true : false} className='label-info-link' style={{width:'100%', marginTop:'10px'}} 
                           onClick={() => saveOrder() }>{saveOrderLabelRequest 
                           ? <RotatingLines
@@ -309,9 +353,22 @@ useEffect(() => {
                                 /> 
                           : "Save Order"}
                       </button>
+                  <div className='mt-3' style={{display:'', gridGap:'10px'}}>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Label Name: {projectInfo?.labelName}</p>
+                    {projectInfo?.labelDescription &&<p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Label description: {projectInfo?.labelDescription}</p>}
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Version: {projectInfo?.labelVersion}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>createdBy: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ReleasedBy: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>
+                    {(projectInfo?.produceBy?.lastName || projectInfo?.produceBy?.firstName) &&
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ProducedBy: {projectInfo?.produceBy?.lastName} {projectInfo?.produceBy?.firstName}</p>}
+                    {projectInfo?.printCount > 0 &&
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Print count: {projectInfo?.printCount}</p>}
+                  </div>
               </div>
+              
           </div>
-      </div>
+      </main>
       
     : (<div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
         <RotatingLines

@@ -23,6 +23,10 @@ import {ALL_LABELS_FAILED,
         GET_LABEL_REQUEST,
         GET_LABEL_RESET,
         GET_LABEL_SUCCESS,
+        GET_TEMPLATES_FAILED,
+        GET_TEMPLATES_REQUEST,
+        GET_TEMPLATES_RESET,
+        GET_TEMPLATES_SUCCESS,
         REJECTED_LABEL_FAILED,
         REJECTED_LABEL_REQUEST,
         REJECTED_LABEL_RESET,
@@ -42,7 +46,11 @@ import {ALL_LABELS_FAILED,
         SEND_TO_RELEASER_FAILED,
         SEND_TO_RELEASER_REQUEST,
         SEND_TO_RELEASER_RESET,
-        SEND_TO_RELEASER_SUCCESS} from '../constants/labelConstants';
+        SEND_TO_RELEASER_SUCCESS,
+        TO_PRINT_LABEL_FAILED,
+        TO_PRINT_LABEL_REQUEST,
+        TO_PRINT_LABEL_RESET,
+        TO_PRINT_LABEL_SUCCESS} from '../constants/labelConstants';
 
 export const getAllLabelsAction = (productId, companyId, createdBy, token) => async (dispatch) => {
     try {
@@ -469,6 +477,84 @@ export const saveLabelOrderAction = (data, token) => async (dispatch) => {
         setTimeout(() =>{
             dispatch({ 
             type: SAVE_ORDER_LABEL_RESET
+            });
+        }, 1500)
+    }
+};
+
+export const LabelsTemplateAction = (data, token) => async (dispatch) => {
+    try {
+
+        dispatch({ 
+            type: GET_TEMPLATES_REQUEST
+        });
+    
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/template-labels/${data.companyId}/${data.userId}`, config);
+        console.log(response.data)
+        dispatch({ 
+            type: GET_TEMPLATES_SUCCESS, 
+            payload: response.data
+        });
+        setTimeout(() =>{
+        dispatch({ 
+            type: GET_TEMPLATES_RESET
+        });
+        }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: GET_TEMPLATES_FAILED, 
+            payload: error?.response?.data 
+        });
+    
+        setTimeout(() =>{
+            dispatch({ 
+            type: GET_TEMPLATES_RESET
+            });
+        }, 1500)
+    }
+};
+
+export const saveToPrintAction = (data, token) => async (dispatch) => {
+    try {
+
+        dispatch({ 
+            type: TO_PRINT_LABEL_REQUEST
+        });
+    
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/save-to-print`, data, config);
+        console.log(response.data)
+        dispatch({ 
+            type: TO_PRINT_LABEL_SUCCESS, 
+            payload: response.data
+        });
+        setTimeout(() =>{
+        dispatch({ 
+            type: TO_PRINT_LABEL_RESET
+        });
+        }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: TO_PRINT_LABEL_FAILED, 
+            payload: error?.response?.data 
+        });
+    
+        setTimeout(() =>{
+            dispatch({ 
+            type: TO_PRINT_LABEL_RESET
             });
         }, 1500)
     }

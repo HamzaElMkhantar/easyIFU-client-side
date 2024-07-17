@@ -61,7 +61,7 @@ import { changeCompanyPermissionReducer,
         deleteContactReducer, 
         projectsReducer, 
         usersReducer } from './reducers/supperAdminReducers';
-import { approveLabelReducer, 
+import { LabelsTemplateReducer, approveLabelReducer, 
         approvedLabelsReducer, 
         createLabelReducer, 
         drafLabelsReducer, 
@@ -70,6 +70,7 @@ import { approveLabelReducer,
         rejectedLabelsReducer, 
         releaseLabelReducer, 
         saveOrderLabelReducer, 
+        saveToPrintReducer, 
         sendToApproverReducer, 
         sendToReleaserReducer } from './reducers/labelReducers';
 import { createProductReducer, 
@@ -145,6 +146,9 @@ const reducer = combineReducers({
     drafLabels: drafLabelsReducer ,
     rejectedLabels: rejectedLabelsReducer ,
     saveOrderLabel: saveOrderLabelReducer,
+    documentById: documentByIdReducer,
+    LabelsTemplate: LabelsTemplateReducer ,
+    saveToPrint: saveToPrintReducer,
 
     // products reducers
     getProductByProjectId: getProductByProjectIdReducer,
@@ -154,7 +158,6 @@ const reducer = combineReducers({
     // document reducers
     saveDocument: saveDocumentReducer,
     documents: documentsReducer,
-    documentById: documentByIdReducer,
     deleteDocument: deleteDocumentReducer,
 
     // supperRoot reducers

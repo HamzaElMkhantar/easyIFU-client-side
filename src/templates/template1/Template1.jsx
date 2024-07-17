@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import "./template1.css"
 import { Space } from 'react-zoomable-ui';
 
@@ -7,7 +7,8 @@ import Manufacturer from '../../assets/eIFUSymbols/Manufacturer.png'
 import Distributor from '../../assets/eIFUSymbols/Distributor.png'
 import Authorized_Representative from '../../assets/eIFUSymbols/Authorized_Representative 2.png'
 import Importer from '../../assets/eIFUSymbols/Importer.png'
-import CE_mark from '../../assets/eIFUSymbols/CE_mark.png'
+import CE_mark from '../../assets/eIFUSymbols/CE_mark.png' 
+import ukca_mark from '../../assets/eIFUSymbols/ukca-mark.webp'
 import catalogueNumberSymbol from '../../assets/eIFUSymbols/catalogue_number.png'
 import modelNumberSymbol from '../../assets/eIFUSymbols/model_number.png'
 import Serial_numberSymbol from '../../assets/eIFUSymbols/Serial_number.png'
@@ -213,7 +214,22 @@ let customStyles = {
 };
 
 
-const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) => {
+const Template1 = (prop) => {
+  const {width, 
+        height, 
+        scale,projectInfo, 
+        imageSrc, 
+        dynamicData, 
+        onSizeChange, 
+        printCount, 
+        border, 
+        isFreeTrail} = prop
+
+  useEffect(() => {
+    const size = `${height}x${width}`;
+    onSizeChange(size); // Call the callback function with the size value
+  }, [width, height, onSizeChange]);
+
   let DynamicStyleForSymbols = {}
   let DynamicStyleForOwnerInfo = {}
 
@@ -337,11 +353,15 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
     if(symbolsWithTextBehindCount < 11){ // done !
       DynamicStyleForOwnerInfo = {
         wrapperItem: {
-          width: '49%'
-        },
+          width:'49%',
+          display:'flex',
+          alignItems:'center',
+          margin:'3px 1px',
+          // marginBottom:'5px'
+       },
         image: {
           width:'45px', 
-          height:'45px'
+          height:'45px',
         },
         imageDateOfMan: {
           width:'59px', 
@@ -361,16 +381,19 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
       }
       DynamicStyleForSymbols = {
         symboleImageWrapperWithText: {
-          width:'100%', 
+          width:'49%', 
           fontSize:'12px', 
           alignItems:'center', 
           display:'flex',
           marginBottom:'3px',
           height:'auto',
+          // backgroundColor:'red'
+
         },
         imageWithText: {
-          width:'65px', 
-          height:'65px'
+          width:'45px', 
+          height:'45px',
+          // backgroundColor:'red' 
         },
         symboleImageWrapper: {
           width:'17.5%', 
@@ -378,12 +401,22 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
           padding:'0 3px',
           margin:'2px 2px',
           textAlign:'center',
+          // backgroundColor:'red'
+
+        },
+        symboleImageRangeWrapper: {
+          width:'20.5%', 
+          display:'flex',
+          justifyContent:'center',
+          alignItems:'center',
+          marginBottom:'1px',
+          
         },
       }
     }else if(symbolsWithTextBehindCount >= 11 && symbolsWithTextBehindCount < 22){
       DynamicStyleForOwnerInfo = {
         wrapperItem: {
-          width: '49%'
+          width: '33%'
         },
         image: {
           width:'45px', 
@@ -465,7 +498,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
             symbolsWithTextBehindCount, projectOwnerInfoCount
           }; 
   }
-  console.log("dynmaic data : ", dynamicData)
+
 
   // Example usage
   if (projectInfo && projectInfo.labelData) {
@@ -474,24 +507,24 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
       ownerBooleanTrueCount, 
       ownernonEmptyStringCount, 
       symbolsWithTextBehindCount, projectOwnerInfoCount} = countTrueKeys(projectInfo.labelData);
-      // console.log(`Number of true boolean keys: ${booleanTrueCount}`);
-      // console.log(`Number of non-empty string keys: ${nonEmptyStringCount}`);
-      // console.log(`Number of true Owner boolean keys: ${ownerBooleanTrueCount}`);
-      // console.log(`Number of non-empty Owner string keys: ${ownernonEmptyStringCount}`);
+      console.log(`Number of true boolean keys: ${booleanTrueCount}`);
+      console.log(`Number of non-empty string keys: ${nonEmptyStringCount}`);
+      console.log(`Number of true Owner boolean keys: ${ownerBooleanTrueCount}`);
+      console.log(`Number of non-empty Owner string keys: ${ownernonEmptyStringCount}`);
   }
   
 
-    //  handle dynamic data for label
-    function formatSumDateToYYYYMMDD(date) {
-      if (!date || isNaN(date.getTime())) {
-          console.log("Invalid date");
-          return ''; // or return some default value
-      }
-  
-      const yyyy = date.getFullYear();
-      const mm = String(date.getMonth() + 1).padStart(2, '0');
-      const dd = String(date.getDate()).padStart(2, '0');
-      return `${yyyy}-${mm}-${dd}`;
+//  handle dynamic data for label
+function formatSumDateToYYYYMMDD(date) {
+  if (!date || isNaN(date.getTime())) {
+      console.log("Invalid date");
+      return ''; // or return some default value
+  }
+
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
   }
   const projectOwnerInfo = () => {
     if(projectInfo && projectInfo.labelData){
@@ -561,7 +594,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 <img className='symbol-img' src={Serial_numberSymbol} style={{...customStyles.image, ...DynamicStyleForOwnerInfo.image}} />
                 <div className='' style={customStyles.paragraphWrapper}>
                   <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>
-                    {dynamicData?.serialNumber ? dynamicData?.serialNumber : projectInfo.labelData.serialNumber}</p>
+                    {dynamicData?.serialNumber ? dynamicData?.serialNumber : projectInfo.labelData.serialNumber}{printCount ?"-"+printCount : null}</p>
                 </div>
               </div>}
 
@@ -680,7 +713,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 || projectInfo.labelData.hasSteamOrDryHeat  == true
               ) 
               ?null
-              :<div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item sterileSymbol'>
+              :<div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
                 <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={sterileSymbol} />
               </div>)
             : null}
@@ -689,7 +722,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess &&
 
                   projectInfo.labelData.hasAsepticProcessing &&
-                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item sterileSymbol'>
+                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
                       <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={sterile_ASymbol} />
                     </div>
             }
@@ -698,7 +731,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess &&
 
                   projectInfo.labelData.hasEthyleneOxide &&
-                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item sterileSymbol'>
+                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
                       <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={Sterile_EOSymbol} />
                     </div>
             }
@@ -707,7 +740,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess &&
 
                   projectInfo.labelData.hasIrradiation &&
-                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item sterileSymbol'>
+                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
                       <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={Sterile_RSymbol} />
                     </div>
             }
@@ -715,7 +748,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess &&
 
                   projectInfo.labelData.hasSteamOrDryHeat &&
-                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item sterileSymbol'>
+                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
                       <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={Sterilized_usings_team_or_dry_heatSymbol} />
                     </div>
             }
@@ -724,7 +757,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
             {projectInfo.labelData.isSterile == true &&
               // projectInfo.labelData.hasSterilizationProcess &&
                   !projectInfo.labelData.isIntendedToBeResterilized &&
-                      <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                      <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                         <img style={customStyles.symboleImage} className='symbol-img' src={do_not_resterilizeSymbol} />
                       </div>
             }
@@ -732,7 +765,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
             {projectInfo.labelData.isSterile == true &&
               projectInfo.labelData.hasSterilizationProcess == false &&
 
-              <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+              <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                 <img style={customStyles.symboleImage} className='symbol-img' src={nonSterileSymbol} />
               </div>
             }
@@ -741,7 +774,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess == false &&
 
                 projectInfo.labelData.canBeUsedIfDamaged &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={package_is_damageSymbol} />
               </div>}
 
@@ -749,7 +782,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess == false &&
 
                 projectInfo.labelData.hasSterileFluidPath &&
-              <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+              <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                 <img style={customStyles.symboleImage} className='symbol-img' src={sterile_fluid_pathSymbol} />
             </div>}
 
@@ -757,7 +790,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess &&
           
               projectInfo.labelData.hasVaporizedHydrogenPeroxide &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={VaporizedHydrogenPeroxideSymbol} />
                 </div>}
 
@@ -765,7 +798,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess == false &&
               
                 projectInfo.labelData.hasSingleSterileBarrierSystem &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={single_S_B_S} />
                 </div>}
 
@@ -773,7 +806,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess == false &&
               
                 projectInfo.labelData.hasTwoSterileBarrierSystems &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={double_S_B_S} />
                 </div>}
 
@@ -781,7 +814,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess == false &&
               
                 projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveInside &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={double_S_B_S_inside} />
                 </div>}
 
@@ -789,13 +822,13 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
               projectInfo.labelData.hasSterilizationProcess == false &&
               
                 projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveOutside &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={double_S_B_S_outside} />
                 </div>}
 
             {projectInfo.labelData.needInstructionsForUse &&
                 !projectInfo.labelData.eIFULink &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={consult_instruction_for_use} />
                   {projectInfo.labelData.eIFULink &&
                     <div style={customStyles.paragraphWrapper} className=''>
@@ -807,28 +840,28 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 {/* storage */}
 
               {projectInfo.labelData.requiresCarefulHandling &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={fragile_handle_with_care} />
                 </div>}
 
               {projectInfo.labelData.requiresProtectionFromLight &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={keep_away_from_sunlight} />
                 </div>}
 
               {projectInfo.labelData.requiresProtectionFromHeatAndRadioactiveSources &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={protect_from_heat_and_radioactive_soures} />
                 </div>}
 
               {projectInfo.labelData.requiresProtectionFromMoisture &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={keep_dry} />
                 </div>}
 
               {projectInfo.labelData.hasLowerLimitOfTemperature &&
                 !projectInfo.labelData.hasUpperLimitOfTemperature &&
-                <div style={customStyles.symboleImageRangeWrapper} className='symbol-content-item symbol-content-item-range'>
+                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
                     <div style={customStyles.rangeMinNum} className='min-temperature '><p>
                     {projectInfo.labelData.lowerTemperatureLimit}{projectInfo?.labelData?.temperatureUnite} </p> </div>
                   <img style={customStyles.symboleImageRange} className='symbol-img' src={lower_limit_temperaure} />
@@ -836,7 +869,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
 
               {projectInfo.labelData.hasUpperLimitOfTemperature &&
                 !projectInfo.labelData.hasLowerLimitOfTemperature &&
-                <div style={customStyles.symboleImageRangeWrapper} className='symbol-content-item symbol-content-item-range'>
+                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
                   <img style={customStyles.symboleImageRange} className='symbol-img' src={upper_limit_temperaure} />
                     <div style={customStyles.rangeMaxNum}  className='max-temperature' ><p>
                     {projectInfo.labelData.upperTemperatureLimit}{projectInfo?.labelData?.temperatureUnite}</p></div>
@@ -844,7 +877,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
 
               {projectInfo.labelData.hasUpperLimitOfTemperature &&
                 projectInfo.labelData.hasLowerLimitOfTemperature &&
-                <div style={customStyles.symboleImageRangeWrapper} className='symbol-content-item symbol-content-item-range'>
+                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
                     <div style={customStyles.rangeMinNum} className='min-temperature' ><p>
                       {projectInfo.labelData.lowerTemperatureLimit}{projectInfo?.labelData?.temperatureUnite} </p></div>
                   <img style={customStyles.symboleImageRange} className='symbol-img'  src={temperature} />
@@ -853,7 +886,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 </div>}
 
               {projectInfo.labelData.hasHumidityRange &&
-                <div style={customStyles.symboleImageRangeWrapper} className='symbol-content-item symbol-content-item-range'>
+                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
                     <div style={customStyles.rangeMinNum} className='min-temperature mt-1' ><p>
                         {projectInfo.labelData.humidityMin}%
                       </p></div>
@@ -864,7 +897,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 </div>}
 
               {projectInfo.labelData.hasAtmosphericPressureRange &&
-                <div style={customStyles.symboleImageRangeWrapper} className='symbol-content-item symbol-content-item-range'>
+                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
                     <div style={customStyles.rangeMinNum} className='min mb-1' ><p>
                       </p> {projectInfo.labelData.atmosphericPressureMin}Kpa</div>
                   <img style={customStyles.symboleImageRange} className='symbol-img p-1' src={AtmPressureLimit} />
@@ -875,57 +908,57 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 {/* safe use */}
               
               {projectInfo.labelData.hasBiologicalRisks &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={biological_risks} />
                 </div>}
 
               {projectInfo.labelData.isIntendedForSingleUse &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={do_not_re_use} />
                 </div>}
 
               {projectInfo.labelData.needCaution &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={caution} />
                 </div>}
 
               {projectInfo.labelData.containsRubberLatex &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={contains_or_presence_of_natural_rubber_latex} />
                 </div>}
 
               {projectInfo.labelData.containsBloodDerivatives &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={contains_human_blood} />
                 </div>}
 
               {projectInfo.labelData.containsMedicinalSubstance &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={Contains_a_medicinal_substance} />
                 </div>}
 
               {projectInfo.labelData.containsAnimalOriginMaterial &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={Contains_biological_material_of_animal_origin} />
                 </div>}
 
               {projectInfo.labelData.containsHumanOriginMaterial &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={Contains_human_origin} />
                 </div>}
 
               {projectInfo.labelData.containsHazardousSubstances &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={Contains_hazardous_substances} />
                 </div>}
 
               {projectInfo.labelData.containsNanoMaterials &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={Contains_nano_materials} />
                 </div>}
 
               {projectInfo.labelData.multipleUsesOnSinglePatient &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={Single_patient_multiple_use} />
                 </div>}
 
@@ -933,49 +966,49 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
 
               {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
                 projectInfo.labelData.isControlMaterial &&
-                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                     <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={control} />
                   </div>
               }
 
               {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
                 projectInfo.labelData.isControlMaterialForNegativeRange &&
-                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                     <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={control_negative} />
                   </div>
               }
 
               {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
                 projectInfo.labelData.isControlMaterialForPositiveRange &&
-                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                     <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={control_positive} />
                   </div>
               }
 
               {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
                 projectInfo.labelData.isIVDForPerformanceEvaluation &&
-                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                     <img style={customStyles.symboleImage} className='symbol-img' src={for_IVD_performance_evaluation_only} />
                   </div>
               }
 
               {projectInfo.labelData.isMedicalDeviceForSampleCollection &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={sampling_site} />
                 </div>}
 
               {projectInfo.labelData.hasFluidPath &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={fluid_path} />
                 </div>}
 
               {projectInfo.labelData.isNonPyrogenic &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={Non_pyrogenic} />
                 </div>}
 
               {projectInfo.labelData.hasOneWayValve &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
+                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={one_way_valve} />
                 </div>}
 
@@ -997,7 +1030,7 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                 
                 
 
-                {projectInfo.labelData.needInstructionsForUse &&
+                {/* {projectInfo.labelData.needInstructionsForUse &&
                 <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
                   <img style={customStyles.symboleImage} className='symbol-img' src={consult_instruction_for_use} />
                   {projectInfo.labelData.eIFULink &&
@@ -1005,13 +1038,13 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
                       <p style={{...customStyles.paragraph,wordWrap: 'break-word', overflowWrap: 'break-word', fontSize:'5px', marginTop:'-5px'}} >{projectInfo.labelData.eIFULink}</p>
                     // </div>
                   }
-                </div>}
+                </div>} */}
 
 
 
                 {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
                   projectInfo.labelData.hasSpecificNumberOfTests &&
-                    <div className='symbol-content-item' style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}}>
+                    <div className='symbol-content-item' style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}}>
                         <img style={customStyles.symboleImage} className='symbol-img' src={contains_suffient_for_n_tests} />
                         {projectInfo.labelData.numberOfTests && 
                           <div style={{backgroundColor:''}} className=''>
@@ -1025,9 +1058,16 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
   }
 
   return (
-    <div style={{width:`${width}`, height:`${height}`, scale:`${scale}`, position:'relative', backgroundColor:'#fff', overflow:''}} className='Template1 p-2'>
-      {/* <p style={{position:'absolute', rotate:'-40deg',zIndex:'-99', fontWeight:'900', color:'lightgray', top:'40%', left:'10%', fontSize:'30px', letterSpacing:'3px', textAlign:'center'}}>Easy Medical Device</p>
-      <p style={{position:'absolute', rotate:'0deg',zIndex:'-99', fontWeight:'900', color:'lightgray', top:'70%', fontSize:'20px', letterSpacing:'3px', textAlign:'center', width:'100%'}}>www.easyifu.com</p> */}
+    <div style={{
+    scale:`${scale}`, 
+    position: 'relative',
+    backgroundColor:'#fff', 
+    padding:'2mm 2mm 0 2mm',
+    border: border ?'0': '1px solid lightgray',
+    width:'102mm',
+    height:'150mm'
+    }} className='Template1'>
+            
         <div className='top-content'>
           {/* header */}
           <div className='header'>
@@ -1080,28 +1120,28 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
         </div>
 
         <div className='bottom-content' style={{position:'absolute',backgroundColor:'', width:'99%', bottom:'1px', display:'flex', flexDirection:'column', justifyContent:'flex-end'}}>
-          <div className='bottom-content-first-item' style={{display:'flex', justifyContent:'space-around', alignItems:'flex-start',height:'20px'}}>
+          <div className='bottom-content-first-item' style={{display:'flex', justifyContent:'space-around', alignItems:'center',height:'30px'}}>
           {projectInfo?.labelData?.IsItForEurope === true && projectInfo?.labelData?.productClass === 'Class I' ? (
-              <p style={{fontSize: '13px', fontWeight: '600'}}>CE</p>
+              <img style={{width:'30px', height:'30px', position:''}} src={CE_mark} alt="" /> 
             ) : (
               projectInfo?.labelData?.IsItForEurope && (
-                <div style={{display: 'flex', alignItems: 'center'}} className=''>
-                  <p style={{fontSize: '13px', fontWeight: '600'}} className='mx-1'>CE:</p>
+                <div style={{display: 'flex', alignItems: 'center', height:'35px'}} className=''>
+                  <img style={{width:'30px', height:'30px', position:''}} src={CE_mark} alt="" /> 
                   {projectInfo?.labelData?.notifiedBodyNumber && (
-                    <p style={{fontSize: '10px'}}>{projectInfo.labelData.notifiedBodyNumber}</p>
+                    <p style={{fontSize: '10px', margin:'0',padding:'0'}}>{projectInfo.labelData.notifiedBodyNumber}</p>
                   )}
-                </div>
+                </div> //ukca_mark
               )
             )}
 
             {projectInfo?.labelData?.IsItForUK === true && projectInfo?.labelData?.UK_productClass === 'Class I' ? (
-              <p style={{fontSize: '13px', fontWeight: '600'}}>UKCA</p>
+             <img style={{width:'15px', height:'15px', position:''}} src={ukca_mark} alt="" /> 
             ) : (
               projectInfo?.labelData?.IsItForUK && (
                 <div style={{display: 'flex', alignItems: 'center'}} className=''>
-                  <p style={{fontSize: '13px', fontWeight: '600'}} className='mx-1'>UKCA:</p>
+                  <img style={{width:'15px', height:'15px', position:''}} src={ukca_mark} alt="" /> 
                   {projectInfo?.labelData?.UK_notifiedBodyNumber && (
-                    <p style={{fontSize: '10px'}}>{projectInfo.labelData.UK_notifiedBodyNumber}</p>
+                    <p style={{fontSize: '10px', margin:'0',padding:'0'}}>{projectInfo.labelData.UK_notifiedBodyNumber}</p>
                   )}
                 </div>
               )
@@ -1109,30 +1149,46 @@ const Template1 = ({width, height, scale,projectInfo, imageSrc, dynamicData}) =>
 
 
             {projectInfo?.labelData?.quantity > 0 && 
-              <p style={{fontSize:'13px', fontWeight:'600', display:'flex', alignItems:'center', backgroundColor:''}}>
-                QTY: <span style={{fontSize:'10px', marginLeft:'2px', fontWeight:'400'}}>{projectInfo?.labelData?.quantity}</span></p>}
+              <p style={{fontSize:'13px', fontWeight:'600', display:'flex', alignItems:'center', backgroundColor:'', margin:'0', padding:'0'}}>
+                QTY: <span style={{fontSize:'10px', marginLeft:'2px', fontWeight:'400'}}>{dynamicData?.quantity ? dynamicData?.quantity : projectInfo?.labelData?.quantity}</span></p>}
           </div>
-          <div className='bottom-content-sec-item' style={{display:'flex', alignItems:'flex-end', backgroundColor:'', }}>
+          <div className='bottom-content-sec-item' style={{display:'flex', alignItems:'flex-end', backgroundColor:'', borderTop:'1px solid lightgray', }}>
               <div style={{width:'80%', display:'flex', alignItems:'flex-end'}}>
 
-                <img style={{width:'25px'}} src={udi} alt="" />
+                <div style={{backgroundColor:'', height:'60px', position:''}}>
+                  <img style={{width:'30px', position:''}} src={udi} alt="" /> 
+
+                </div>
+                <div  style={{backgroundColor:''}}>
+
                   {projectInfo && projectInfo.labelData && handleUDI(projectInfo)}
-                  {projectInfo && projectInfo.labelData?.udiFormat == "GS1" && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
-                      imageSrc &&
-                    <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginLeft:'5px'}}>
+                  {projectInfo && projectInfo.labelData?.udiFormat == "GS1" 
+                    && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
+                    imageSrc &&
+                    <div className='' style={{display:'flex', alignItems:'center', marginBottom:'5px', marginLeft:'25px'}}>
                       <img style={{width:'70px', height:'70px'}} src={imageSrc} alt={`data matrix from`} />
-                      <div style={{fontSize:'8px'}}>
+                      <div style={{fontSize:'10px', fontWeight:'700'}}>
                         <p style={{margin:'0px px'}}>{projectInfo.labelData && projectInfo.labelData.haDateOfManufacture && projectInfo.labelData.dateOfManufacture}</p>
                         <p style={{margin:'0px 5px'}}>{projectInfo.labelData && projectInfo.labelData.useByDate}</p>
                         <p style={{margin:'0px 5px'}}>{projectInfo.labelData && projectInfo.labelData.hasLotNumber && projectInfo.labelData.LOTNumber}</p>
                         <p style={{margin:'0px 5px'}}>{projectInfo.labelData && projectInfo.labelData.haSerialNumber && projectInfo.labelData.serialNumber}</p>
                       </div>
                     </div>}
+                </div>
+
               </div>
               <div style={{width:'20%', height:'auto', backgroundColor:''}} className='bottom-content-image'>
                 {projectInfo?.labelData?.manufacturerLogo &&
                 <ImageBase64 width={"95%"} manufacturerLogo={projectInfo?.labelData?.manufacturerLogo} />}
               </div>
+          </div>
+          <div className='' style={{display:'flex', justifyContent:'space-around', alignItems:'center'}}>
+          {isFreeTrail &&
+            <div style={{backgroundColor:'', fontSize:'12px',
+                  position:'', opacity:'1', zIndex:'-9900',display:'flex', justifyContent:'space-between', alignItems:'center',fontWeight:'700'
+            }}>Created By: easyifu.com</div>}
+            <span style={{textAlign:'center', fontSize:'8px', fontWeight:'700', marginBottom:''}}>LBL-{projectInfo?.shortId}-V{projectInfo.labelVersion}</span>
+
           </div>
         </div>
     </div>

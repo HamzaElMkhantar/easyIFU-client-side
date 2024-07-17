@@ -5,6 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SendIcon from '@mui/icons-material/Send';
 import { Avatar, Box, Typography } from '@mui/material';
 import Swal from 'sweetalert2'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 // manufacturer and product info symbols
 import Manufacturer from '../../assets/eIFUSymbols/Manufacturer.png'
@@ -111,6 +112,7 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 // import label Templates
 import Template1 from '../../templates/template1/Template1';
+import SideBarLabelInfo from '../../components/header/SideBarLabelInfo';
 
 const componentMapping = {
   'Template1': Template1,
@@ -1191,294 +1193,291 @@ useEffect(() => {
 },[approveLabelSuccess, sendToReleaserSuccess, releaseLabelSuccess,
     approveLabelFail, sendToReleaserFail, releaseLabelFail])
 
-
+    const [size, setSize] = useState('');
+    const handleSizeChange = (newSize) => {
+      setSize(newSize);
+      console.log('Size updated in parent:', newSize);
+    };
   return (
-    <div className='container label-information mb-5'>
-          <div>
-            <Modal
-                show={modalToggle}  // Change 'open' to 'show'
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                centered
-                style={{
-                    backdropFilter: 'blur(5px)',
-                    width:'100vw',
-                    height:'100vh',
-                    position:'absolute'
-                }}
-            >
-            <Typography id="modal-modal-description" style={{padding:'15px', textAlign:'center'}}>
-                {!releaseAcceptProject && <form onSubmit={handleSendLabel}>
-                    <div className="form-group">
-                        <label style={{fontSize:'25px', marginBottom:'15px'}}>choose user to send the project</label>
-                    </div>
-                    {rejectProject && <div className="form-group">
-                        <textarea style={{border:'1px solid lightGray', width:'100%', padding:"6px 10px", fontSize:'18px', borderRadius:'10px', marginBottom:'10px'}} 
-                                placeholder='Explain why you reject the project' 
-                                name="" id="" 
-                                rows='6'
-                                required={rejectProject ? true : false}
-                                value={sendTo.comment}
-                                onChange={(e) => setSendTo({...sendTo, comment: e.target.value})}
-                                >
-                        </textarea>
-                    </div>}
-                    <div className="form-group mt-3 mb-2 mx-0"style={{textAlign:"left", fontSize:'18px'}}>
-                    <label>Send Project To:</label>
-                    <select value={sendTo.receivedId} onChange={(e) => setSendTo({...sendTo,receivedId: e.target.value})} style={{width:'40%', minWidth:'100px', padding:'2px 10px', borderRadius:'10px', outline:'none', border:'2px solid lightGray'}}>
-                        <option>Choose User :</option>
-                        {allUsersCompany &&
-                            allUsersCompany.map(item => {
-                            return (
-                            <option value={`${item._id}`}>{`${item.firstName} ${item.lastName}: ( ${item.role} )`}</option>
-                            )})
-                        }
-                    </select>
-                    </div>
-                    <div style={{display:'flex', justifyContent:'space-between'}}>
-                        {sendingProjectRequest
-                            ? <RotatingLines
-                            strokeColor="#011d41"
-                            strokeWidth="5"
-                            animationDuration="0.75"
-                            width="20"
-                            color="#fff"
-                          
-                            visible={true}
-                            /> :<button style={{backgroundColor:'#072D60', borderRadius:'4px', color:'#fff', padding:'2px 6px' }}
-                            disabled={sendingProjectRequest ? true : false}
-                            type='submit'
-                            >Send..</button>}
-                        <button style={{backgroundColor:'#9A3B3A', borderRadius:'4px', color:'#fff', padding:'2px 6px' }}
-                            onClick={(e) => handleResetModalState(e)}
-                            >Close</button>
-                    </div>
-                </form>}
-
-                {releaseAcceptProject && 
-                <form onSubmit={handleRelease}>
-                    <div className="form-group">
-                        <label style={{fontSize:'25px', marginBottom:'15px'}}>Release this Project</label>
-                    </div>
-
-                    <div style={{display:'flex', justifyContent:'space-between'}}>
-                        <div>
-                            {releaseProjectRequest
-                                ? <RotatingLines
-                                strokeColor="#011d41"
-                                strokeWidth="5"
-                                animationDuration="0.75"
-                                width="20"
-                                color="#fff"
-                            
-                                visible={true}
-                                /> :
-                                <>
-                                <button onClick={() => handleRelease} style={{backgroundColor:'#072D60', borderRadius:'4px', color:'#fff', padding:'2px 6px' }}
-                                        type='submit'
-                                    >Save </button>
-                                
-                                </>
-                            }
-                        </div>
-                        
-                        <button style={{backgroundColor:'#9A3B3A', borderRadius:'4px', color:'#fff', padding:'2px 6px' }}
-                            onClick={(e) => handleResetModalState(e)}
-                            >Close</button>
-                    </div>
-                </form>}
-                
-            </Typography>
-            </Modal>
-          </div>
-        <div style={{display:'none'}}>
-          <div style={{display:'flex', flexDirection:'column', width:'100px'}}>
-            <div style={{backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
-              <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="gs1-barcode"></svg>
-            </div>
-            <div style={{backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
-            <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="hibcc-barcode"></svg>
-            </div>
-            <div style={{ backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
-              <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="iccbba-barcode"></svg>
-            </div>
-            <div style={{ backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
-              <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="ifa-barcode"></svg>
-            </div>
-            
-            </div>
-            <div style={{display:'flex', justifyContent:'space-around', alignItems:'center', flexWrap:'wrap', gridGap:'10px'}}>
-              <div style={{textAlign:'center', marginRight:'5px'}}>
-                <svg id='gs1-barcode-udiDI'></svg>
-              </div>
-              <div style={{textAlign:'center'}}>
-                <svg id='gs1-barcode-udiPI'></svg>
-              </div>
-            </div>
-
-            <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
-       </div>
-       <div style={{display:'flex', alignItems:'center'}}>
-
-         <Link to='/dashboard/received-project' style={{height:'35px'}} className='label-info-link'><ArrowBackIcon /> Back</Link>
-          {!getLabelRequest && projectInfo &&
-              <h6  className='label-info-title' style={{color:'#', flex:'1', fontSize:'24px'}}>{projectInfo?.labelName}</h6>
-          }
-       </div>
-        <div className='mt-1'>
-            {!getLabelRequest
-            ?<div>
-                <div className='row' style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap'}}>
-                    <div className=''>
-                    <div className='mb-2' style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
-
-              {/* <div style={{display:'flex'}}>
-                  <button style={activeTemplate === "Template1" ? {backgroundColor:'#08408b', borderRadius:'5px', padding:'0px px', height:'30px', color:'#fff', fontSize:'14px', fontWeight:'600'} : {backgroundColor:'#046B81', borderRadius:'5px', padding:'0px px', height:'30px', color:'#fff', fontSize:'14px', fontWeight:'600'}}
-                  onClick={() => setActiveTemplate("Template1")} className='mx-1'>template1</button>
-                  <button style={activeTemplate === "Template2" ? {backgroundColor:'#08408b', borderRadius:'5px', padding:'0px px', height:'30px', color:'#fff', fontSize:'14px', fontWeight:'600'} : {backgroundColor:'#046B81', borderRadius:'5px', padding:'0px px', height:'30px', color:'#fff', fontSize:'14px', fontWeight:'600'}}
-                  onClick={() => setActiveTemplate("Template2")} className='mx-1'>template2</button>
-                    <button style={activeTemplate === "Template3" ? {backgroundColor:'#08408b', borderRadius:'5px', padding:'0px px', height:'30px', color:'#fff', fontSize:'14px', fontWeight:'600'} : {backgroundColor:'#046B81', borderRadius:'5px', padding:'0px px', height:'30px', color:'#fff', fontSize:'14px', fontWeight:'600'}}
-                  onClick={() => setActiveTemplate("Template3")} className='mx-1'>template3</button>
-              </div> */}
-            
-            </div>
-
-                  <div className='row'>
-                  <h2>temp : {activeTemplate }</h2>
-
-                          <div style={{display:'flex', gridGap:'10px'}}>
-                            <p className='' style={{color:'gray', fontSize:'16px', fontWeight:'500'}}> Version: {projectInfo?.labelVersion}</p>
-                            <p className='' style={{color:'gray', fontSize:'16px', fontWeight:'500'}}> createdBy: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
-                            {(projectInfo?.status == "approved" || projectInfo?.status == "pending_release") && <p className='' style={{color:'gray', fontSize:'16px', fontWeight:'500'}}> ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
-                          </div>
-                    <div className='col-md-8' style={{overflow:'scroll'}}>
-                    <div className='test col-md-8' style={{display:'flex',flexDirection:'column-reverse', alignItems:'center', justifyContent:'center', borderRadius:'', borderRight:'1px solid lightGray'}}>
-                        <TransformWrapper initialScale={1}>
-                              {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
-                                <React.Fragment>
-                                  <div className="" style={{backgroundColor:'',marginTop:'30px', width:'100%'}}>
-                                    <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => zoomIn()}>+</button>
-                                    <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => zoomOut()}>-</button>
-                                    <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => resetTransform()}>reset</button>
-                                  </div>
-                                  <TransformComponent >
-                                    <div style={{backgroundColor:'', width:'53vw', height:'', cursor:'zoom-in'}}>
-                                      {/* displaying label should be dynamic ...! */}
-                                           {activeTemplate === "Template1" && 
-                                           <Template1
-                                                scale={'1'}
-                                                width={"calc(100mm)"}
-                                                height={"calc(150mm)"} 
-                                                projectInfo={projectInfo}
-                                                handleUDI={handleUDI}
-                                                imageSrc={imageSrc}
-                                            />}
-                                    </div>
-                                    </TransformComponent>
-                                </React.Fragment>
-                              )}
-                        </TransformWrapper>
-                    </div>
-                    </div>
-                    <div className='col-md-4'>
-                      {(userRole?.includes("Approver") && projectInfo.status == "pending_approval")&&
-                        (<div className='card mb-3 p-2'>
-                            <p>Approve the label. You can accept or reject it.</p>
-                          <div className='card-body p-1'>
-                          {approveLabelRequest &&
-                            <div style={{}}>
-                                  <RotatingLines
-                                      strokeColor="#011d41"
-                                      strokeWidth="5"
-                                      animationDuration="0.75"
-                                      width="30"
-                                      visible={true}
-                                      /> 
-                              </div>  }
-                              {!approveLabelRequest 
-                                  && <>
-                                      <div>
-                                        {!rejectToggle &&
-                                          <button onClick={() => handleApproveLabel('accept')}  style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'green', color:'white', fontWeight:'600'}}>Accept</button>}
-                                        <button disabled={false} onClick={() => setRejectTogle(!rejectToggle)} style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>{rejectToggle ? "X" :"Reject"}</button>
-                                      </div>
-                                      {rejectToggle &&
-                                        <>
-                                          <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px', width:'97%'}} placeholder='Describe label rejection!'></textarea>
-                                          <button onClick={() => handleApproveLabel('reject')} disabled={false} style={{padding:'2px 15px', margin:'0 6px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600', width:'97%'}}>Continue</button>
-                                        </>
-                                      }
-                                </>}
-                            </div>
-
-                          </div>)
-                      }
-
-                      { (userRole?.includes("Approver") && projectInfo?.status == "approved") &&
-                          // send label to the releaser or release by approver it self if has role of release
-                          (<div className='card mb-3  p-2'>
-                            <div className='card-body p-1'>
-                              <p>Send the label to the Releaser.</p>
-                              <select onChange={(e) => setUser(e.target.value)} style={{backgroundColor:'#021d41', padding:'6px 8px', color:'white', width:'100%'}} name="" id="">
-                                <option  value="">-- select releaser --</option>
-                                {allUsersCompany.map(user => {
-                                  return user.role.includes("Release") ? <option value={user._id}>{user.firstName} {user.lastName}( {user.role.join("-")} )</option> : null
-                                })}
-                              </select>
-                            </div>
-                              <button onClick={handlesendToRelaser}  style={{padding:'2px 15px', margin:'5px 4px', backgroundColor:'green', color:'white', fontWeight:'600'}}>Send</button>
-                          </div>)
-                      }
-
-                      {(userRole?.includes("Release") && projectInfo?.status == "pending_release") &&
-                        // releaser should release the label or reject the label
-                        (<div className='card mb-3 p-2'>
-                        <div className='card-body p-1'>
-                          <p>Release the label or send it back if further changes are needed.</p>
-                          {!rejectToggle &&
-                            <button onClick={() => handleReleaseLabel('accept')}  style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'green', color:'white', fontWeight:'600'}}>Accept</button>}
-                          <button disabled={false} onClick={() => setRejectTogle(!rejectToggle)} style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>{rejectToggle ? "X" :"Reject"}</button>
-                        </div>
-                        {rejectToggle &&
-                          <>
-                            <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px'}} placeholder='Describe label rejection!'></textarea>
-                            <button onClick={() => handleReleaseLabel('reject')} disabled={false} style={{padding:'2px 15px', margin:'0 6px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>Continue</button>
-                          </>
-                        }
-                        </div>)
-                      }
-
-                      <div className='card p-1'>
-                        <h6>Description :</h6>
-                        {projectInfo && 
-                          <p style={{fontSize:'14px'}} className='label-info-description'>
-                              {projectInfo?.labelDescription}
-                          </p>
-                        }
+    <div className='container label-information mb-5' style={{padding:'0', height:'70vh', width:'100%', display:'flex'}}>
+      
+            <SideBarLabelInfo isSidebarOpen={true} 
+                  status={projectInfo?.status}
+                  hideInfo={true}
+                  projectId={projectId}/>
+            <div>
+              <Modal
+                  show={modalToggle}  // Change 'open' to 'show'
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                  centered
+                  style={{
+                      backdropFilter: 'blur(5px)',
+                      width:'100vw',
+                      height:'100vh',
+                      position:'absolute'
+                  }}
+              >
+              <Typography id="modal-modal-description" style={{padding:'15px', textAlign:'center'}}>
+                  {!releaseAcceptProject && <form onSubmit={handleSendLabel}>
+                      <div className="form-group">
+                          <label style={{fontSize:'25px', marginBottom:'15px'}}>choose user to send the project</label>
                       </div>
-                      
-                    <div>
+                      {rejectProject && <div className="form-group">
+                          <textarea style={{border:'1px solid lightGray', width:'100%', padding:"6px 10px", fontSize:'18px', borderRadius:'10px', marginBottom:'10px'}} 
+                                  placeholder='Explain why you reject the project' 
+                                  name="" id="" 
+                                  rows='6'
+                                  required={rejectProject ? true : false}
+                                  value={sendTo.comment}
+                                  onChange={(e) => setSendTo({...sendTo, comment: e.target.value})}
+                                  >
+                          </textarea>
+                      </div>}
+                      <div className="form-group mt-3 mb-2 mx-0"style={{textAlign:"left", fontSize:'18px'}}>
+                      <label>Send Project To:</label>
+                      <select value={sendTo.receivedId} onChange={(e) => setSendTo({...sendTo,receivedId: e.target.value})} style={{width:'40%', minWidth:'100px', padding:'2px 10px', borderRadius:'10px', outline:'none', border:'2px solid lightGray'}}>
+                          <option>Choose User :</option>
+                          {allUsersCompany &&
+                              allUsersCompany.map(item => {
+                              return (
+                              <option value={`${item._id}`}>{`${item.firstName} ${item.lastName}: ( ${item.role} )`}</option>
+                              )})
+                          }
+                      </select>
+                      </div>
+                      <div style={{display:'flex', justifyContent:'space-between'}}>
+                          {sendingProjectRequest
+                              ? <RotatingLines
+                              strokeColor="#011d41"
+                              strokeWidth="5"
+                              animationDuration="0.75"
+                              width="20"
+                              color="#fff"
                             
-                    </div>
-                    </div>
-                    </div> 
+                              visible={true}
+                              /> :<button style={{backgroundColor:'#072D60', borderRadius:'4px', color:'#fff', padding:'2px 6px' }}
+                              disabled={sendingProjectRequest ? true : false}
+                              type='submit'
+                              >Send..</button>}
+                          <button style={{backgroundColor:'#9A3B3A', borderRadius:'4px', color:'#fff', padding:'2px 6px' }}
+                              onClick={(e) => handleResetModalState(e)}
+                              >Close</button>
+                      </div>
+                  </form>}
 
-                    </div>
-                </div>
-                
+                  {releaseAcceptProject && 
+                  <form onSubmit={handleRelease}>
+                      <div className="form-group">
+                          <label style={{fontSize:'25px', marginBottom:'15px'}}>Release this Project</label>
+                      </div>
 
+                      <div style={{display:'flex', justifyContent:'space-between'}}>
+                          <div>
+                              {releaseProjectRequest
+                                  ? <RotatingLines
+                                  strokeColor="#011d41"
+                                  strokeWidth="5"
+                                  animationDuration="0.75"
+                                  width="20"
+                                  color="#fff"
+                              
+                                  visible={true}
+                                  /> :
+                                  <>
+                                  <button onClick={() => handleRelease} style={{backgroundColor:'#072D60', borderRadius:'4px', color:'#fff', padding:'2px 6px' }}
+                                          type='submit'
+                                      >Save </button>
+                                  
+                                  </>
+                              }
+                          </div>
+                          
+                          <button style={{backgroundColor:'#9A3B3A', borderRadius:'4px', color:'#fff', padding:'2px 6px' }}
+                              onClick={(e) => handleResetModalState(e)}
+                              >Close</button>
+                      </div>
+                  </form>}
+                  
+              </Typography>
+              </Modal>
+            </div>
+      <main style={{padding: "20px 5px", backgroundColor:'', margin:"0 auto", flex:0.95}}>
+      <div style={{display:'flex', alignItems:'center'}}>
+            <Link to='/dashboard/received-project' style={{height:'35px'}} className='label-info-link'><ArrowBackIcon /> Back</Link>
+              {!getLabelRequest && projectInfo &&
+                  <h6  className='label-info-title' style={{color:'#', flex:'1', fontSize:'24px'}}>{projectInfo?.labelName}</h6>
+              }
             </div>
 
-            // ----- rotation request -----
-            : (<div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
-                <RotatingLines
-                    strokeColor="#011d41"
-                    strokeWidth="5"
-                    animationDuration="0.75"
-                    width="90"
-                    visible={true}
-                    /> 
-            </div>)}
+          <div className='mt-1'>
+              {!getLabelRequest
+              ?<div>
+                  <div className='row' style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap'}}>
+                      <div className='mb-2'>
+
+                    <div className='row'>
+                      <p className='' style={{color:'gray', fontSize:'16px', fontWeight:'500'}}> Size: {size}mm</p>
+                      <div className='test col-md-8' style={{borderRadius:'', borderRight:'1px solid lightGray', margin:'auto'}}>
+                          <TransformWrapper initialScale={1}>
+                                {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+                                  <React.Fragment>
+                                    <TransformComponent >
+                                      <div style={{backgroundColor:'', width:'', height:'', margin:'auto', cursor:'zoom-in'}}>
+                                        {/* displaying label should be dynamic ...! */}
+                                            {activeTemplate === "Template1" && 
+                                            <Template1
+                                                  scale={'1'}
+                                                  width={"100"}
+                                                  height={"150"} 
+                                                  projectInfo={projectInfo}
+                                                  handleUDI={handleUDI}
+                                                  imageSrc={imageSrc}
+                                                  onSizeChange={handleSizeChange}
+                                              />}
+                                      </div>
+                                      </TransformComponent>
+                                      <div className="" style={{backgroundColor:'',marginTop:'30px', width:'100%'}}>
+                                      <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => zoomIn()}>+</button>
+                                      <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => zoomOut()}>-</button>
+                                      <button style={{backgroundColor:'#062D60', color:'#F0F0F0', padding:'2px 10px', margin:'5px', borderRadius:'2px'}} onClick={() => resetTransform()}>reset</button>
+                                    </div>
+                                  </React.Fragment>
+                                )}
+                          </TransformWrapper>
+
+                      </div>
+                      <div className='col-md-4'>
+                        {(userRole?.includes("Approver") && projectInfo.status == "pending_approval")&&
+                          (<div className='card mb-3 p-2'>
+                              <p>Approve the label. You can accept or reject it.</p>
+                            <div className='card-body p-1'>
+                            {approveLabelRequest &&
+                              <div style={{}}>
+                                    <RotatingLines
+                                        strokeColor="#011d41"
+                                        strokeWidth="5"
+                                        animationDuration="0.75"
+                                        width="30"
+                                        visible={true}
+                                        /> 
+                                </div>  }
+                                {!approveLabelRequest 
+                                    && <>
+                                        <div>
+                                          {!rejectToggle &&
+                                            <button onClick={() => handleApproveLabel('accept')}  style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'green', color:'white', fontWeight:'600'}}>Accept</button>}
+                                          <button disabled={false} onClick={() => setRejectTogle(!rejectToggle)} style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>{rejectToggle ? "X" :"Reject"}</button>
+                                        </div>
+                                        {rejectToggle &&
+                                          <>
+                                            <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px', width:'97%'}} placeholder='Describe label rejection!'></textarea>
+                                            <button onClick={() => handleApproveLabel('reject')} disabled={false} style={{padding:'2px 15px', margin:'0 6px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600', width:'97%'}}>Continue</button>
+                                          </>
+                                        }
+                                  </>}
+                              </div>
+                            </div>)
+                        }
+                        { (userRole?.includes("Approver") && projectInfo?.status == "approved") &&
+                            // send label to the releaser or release by approver it self if has role of release
+                            (<div className='card mb-3  p-2'>
+                              <div className='card-body p-1'>
+                                <p>Send the label to the Releaser.</p>
+                                <select onChange={(e) => setUser(e.target.value)} style={{backgroundColor:'#021d41', padding:'6px 8px', color:'white', width:'100%'}} name="" id="">
+                                  <option  value="">-- select releaser --</option>
+                                  {allUsersCompany.map(user => {
+                                    return user.role.includes("Release") ? <option value={user._id}>{user.firstName} {user.lastName}( {user.role.join("-")} )</option> : null
+                                  })}
+                                </select>
+                              </div>
+                                <button onClick={handlesendToRelaser}  style={{padding:'2px 15px', margin:'5px 4px', backgroundColor:'green', color:'white', fontWeight:'600'}}>Send</button>
+                            </div>)
+                        }
+
+                        {(userRole?.includes("Release") && projectInfo?.status == "pending_release") &&
+                          // releaser should release the label or reject the label
+                          (<div className='card mb-3 p-2'>
+                          <div className='card-body p-1'>
+                            <p>Release the label or send it back if further changes are needed.</p>
+                            {!rejectToggle &&
+                              <button onClick={() => handleReleaseLabel('accept')}  style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'green', color:'white', fontWeight:'600'}}>Accept</button>}
+                            <button disabled={false} onClick={() => setRejectTogle(!rejectToggle)} style={{padding:'2px 15px', margin:'0px 2px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>{rejectToggle ? "X" :"Reject"}</button>
+                          </div>
+                          {rejectToggle &&
+                            <>
+                              <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px'}} placeholder='Describe label rejection!'></textarea>
+                              <button onClick={() => handleReleaseLabel('reject')} disabled={false} style={{padding:'2px 15px', margin:'0 6px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>Continue</button>
+                            </>
+                          }
+                          </div>)
+                        }
+
+                        <div className='card p-1'>
+                          <h6>Description :</h6>
+                          {projectInfo && 
+                            <p style={{fontSize:'14px'}} className='label-info-description'>
+                                {projectInfo?.labelDescription}
+                            </p>
+                          }
+                        </div>
+                        <div className='mt-3' style={{display:'', gridGap:'10px'}}>
+                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Version: {projectInfo?.labelVersion}</p>
+                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>createdBy: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
+                            {(projectInfo?.approvedBy?.lastName || projectInfo?.approvedBy?.firstName) && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
+                            {(projectInfo?.releaseBy?.lastName || projectInfo?.releaseBy?.firstName) && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ReleasedBy: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>}
+                          </div>
+                      <div>
+                              
+                      </div>
+                      </div>
+                      </div> 
+
+                      </div>
+                  </div>
+                  
+
+              </div>
+
+              // ----- rotation request -----
+              : (<div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
+                  <RotatingLines
+                      strokeColor="#011d41"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      width="90"
+                      visible={true}
+                      /> 
+              </div>)}
+          </div>
+      </main>
+      <div style={{display:'none'}}>
+            <div style={{display:'flex', flexDirection:'column', width:'100px'}}>
+              <div style={{backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
+                <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="gs1-barcode"></svg>
+              </div>
+              <div style={{backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
+              <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="hibcc-barcode"></svg>
+              </div>
+              <div style={{ backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
+                <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="iccbba-barcode"></svg>
+              </div>
+              <div style={{ backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
+                <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="ifa-barcode"></svg>
+              </div>
+              
+              </div>
+              <div style={{display:'flex', justifyContent:'space-around', alignItems:'center', flexWrap:'wrap', gridGap:'10px'}}>
+                <div style={{textAlign:'center', marginRight:'5px'}}>
+                  <svg id='gs1-barcode-udiDI'></svg>
+                </div>
+                <div style={{textAlign:'center'}}>
+                  <svg id='gs1-barcode-udiPI'></svg>
+                </div>
+              </div>
+
+    
+              <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
         </div>
     </div>
   )

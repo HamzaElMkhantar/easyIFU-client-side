@@ -1,6 +1,7 @@
 import './App.css';
+import './index.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -90,15 +91,24 @@ import UpdateIntendedPurpose from './pages/DashboardPages/UpdateIntendedPurpose'
 import DraftLabels from './pages/DashboardPages/DraftLabels';
 import ApprovedLabels from './pages/DashboardPages/ApprovedLabels';
 import RejectedLabels from './pages/DashboardPages/RejectedLabels';
-// import { useState } from 'react';
+// import { useState } from 'react'; 
+import styled from 'styled-components';
+import Templates from './pages/DashboardPages/Templates';
 function App() {
+  const NoHoverLink = styled(Link)`
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+    background: none;
+  }
+`;
 if(process.env.NODE_ENV == "production"){
+  console.log = () => {};
+  console.war = () => {};
+  console.info = () => {};
+  console.debug = () => {};
+  console.error = () => {};
 }
-console.log = () => {};
-console.war = () => {};
-console.info = () => {};
-console.debug = () => {};
-console.error = () => {};
 
   const location = useLocation();
   const dispatch = useDispatch();
@@ -107,6 +117,8 @@ console.error = () => {};
     dispatch(refreshAction());
     console.log("refreshAction!!")
   }, [])
+
+  
   
   useEffect(() => {
     const checkTokenExpiration = () => {
@@ -270,6 +282,7 @@ console.error = () => {};
 
   return (
     <div className="App">
+
       {showNav && <Header />}
         <ScrollToTop />
       <Routes>
@@ -347,9 +360,18 @@ console.error = () => {};
                 <>
                   <Route path='/dashboard/project/review-release/:projectId' element={<ReleaseReview />} />
                   <Route path='/dashboard/documents' element={<Documents />} />
-                  <Route path='/dashboard/document/:documentId/:size' element={<DocumentInformation />} />
+                  <Route path='/dashboard/document/:documentId' element={<DocumentInformation />} />
                   <Route path='/dashboard/document-sizes/:documentId' element={<LabelSizes />} />
                   <Route path='/dashboard/project-released/:projectId' element={<ReleasedProject />} />
+                </>}
+
+              {/* routes for Producer */}
+              {decodedToken 
+                && decodedToken?.userInfo 
+                && (decodedToken?.userInfo?.role.includes("Admin") 
+                || decodedToken?.userInfo?.role.includes("Producer")) &&
+                <>
+                  <Route path='/dashboard/templates' element={<Templates />} />
                 </>}
 
               {/* this routes for admin users */}

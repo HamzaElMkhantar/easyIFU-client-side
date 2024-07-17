@@ -126,6 +126,13 @@ const LabelInformation = () => {
   const {usersCompanyRequest, usersCompanySuccess, usersCompanyFail, allUsers} = usersCompany;
   const {sendingProjectRequest, sendingProjectSuccess, sendingProjectFail, sendingProjectMessage} = sendingProjectToOtherRole
 
+
+  const [size, setSize] = useState('');
+
+  const handleSizeChange = (newSize) => {
+    setSize(newSize);
+    console.log('Size updated in parent:', newSize);
+  };
   
   const [activeTemplate, setActiveTemplate] = useState("Template1")
   const isTemplate3 = activeTemplate === "Template3" ? true : false
@@ -136,7 +143,8 @@ const LabelInformation = () => {
     labelId: projectId,
     senderId: decodedToken && decodedToken.userInfo && decodedToken.userInfo._id,
     receivedId: '',
-    template: activeTemplate
+    template: activeTemplate,
+    labelSize: size
   });
 
 
@@ -1749,7 +1757,7 @@ const LabelInformation = () => {
                           projectInfo={projectInfo.released}
                           status={projectInfo.status}
                           onTemplateChange={handleTemplateChange}
-                          projectId={projectId}/>
+                          projectId={projectId} />
 
         <main className='' style={{padding: "20px 5px", backgroundColor:'', margin:"0 auto", flex:0.95}}>
           <div style={{display:'none'}}>
@@ -1783,7 +1791,11 @@ const LabelInformation = () => {
               <Link style={{height:'35px'}} to={`/dashboard/labels/${projectInfo?.productId}`} className='label-info-link'><ArrowBackIcon /> Back</Link>
               {!getLabelRequest && 
               <>
-              <h5 style={{color:'gray'}}>{projectInfo?.shortId}</h5>
+               <div style={{display:'flex', alignItems:'center'}}>
+                  {!getLabelRequest && projectInfo &&
+                      <h6  className='label-info-title' style={{color:'#', flex:'1', fontSize:'24px'}}>{projectInfo?.labelName}</h6>
+                  }
+                </div>
                 <div style={{marginTop:'0px', alignItems:'center'}}>
                   {projectInfo?.status == "Draft" && <>
                         <h6>Send Project To:</h6>
@@ -1832,7 +1844,7 @@ const LabelInformation = () => {
 
             {/* --------------------------------------------------------- */}
             
-              {activeTemplate == 'Template1' &&<p style={{color: 'gray', fontSize:'14px'}}>size: 150mm x 100mm</p>}
+             {size && <p style={{color: 'gray', fontSize:'14px'}}>size: {size}mm</p>}
             <div className='row'>
             <div className='test col-md-8' style={{display:'flex',flexDirection:'column-reverse', alignItems:'center', justifyContent:'center', borderRadius:'', borderRight:'1px solid lightGray'}}>
                 <TransformWrapper initialScale={1}>
@@ -1847,11 +1859,12 @@ const LabelInformation = () => {
                             <div style={{backgroundColor:'', width:'53vw', height:'', cursor:'zoom-in'}}>
                                     <Template1
                                         scale={'1'}
-                                        width={"calc(100mm)"}
-                                        height={"calc(150mm)"}
+                                        width={"100"}
+                                        height={"150"}
                                         projectInfo={projectInfo}
                                         handleUDI={handleUDI}
                                         imageSrc={imageSrc}
+                                        onSizeChange={handleSizeChange}
                                     />
                             </div>
                             </TransformComponent>

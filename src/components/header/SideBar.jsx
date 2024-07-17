@@ -9,6 +9,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import InventoryRoundedIcon from '@mui/icons-material/InventoryRounded';
+import BeenhereIcon from '@mui/icons-material/Beenhere';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import { useDispatch, useSelector } from 'react-redux';
@@ -62,9 +63,9 @@ const SideBar = ({isSidebarOpen}) => {
 
                 {decodedToken && 
                 decodedToken?.userInfo && 
-                (decodedToken?.userInfo?.role.includes("Release") || decodedToken?.userInfo?.role.includes("Admin")) &&
+                (decodedToken?.userInfo?.role.includes("Producer") || decodedToken?.userInfo?.role.includes("Admin")) &&
                 <>
-                  <Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/documents"><CollectionsIcon style={{color:'#EEEEEE80'}}/>Labels</Link>
+                  <Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/documents"><BeenhereIcon style={{color:'#5E9F7A'}}/>Orders</Link>
                 </>}
                 <Link style={{fontSize:"11px", padding:'5px 3px'}} to="/dashboard/contact"><ContactsIcon style={{color:'#3992B0'}}/> contact Us</Link>
             </div>
@@ -76,7 +77,6 @@ const SideBar = ({isSidebarOpen}) => {
             <p style={{fontSize:'11px', margin:'0 20px', color:'rgb(81,90,104, 0.5)'}}>End Date: {decodedToken?.userInfo?.companySubscriptionInfo?.endDate}</p>
           </div>
       </div>
-      
   </div>
   );
 };

@@ -22,7 +22,7 @@ import { Accordion } from 'react-bootstrap';
 import Swal from 'sweetalert2'
 
 
-const SideBarLabelInfo = ({isSidebarOpen, projectInfo, projectId, onTemplateChange, status}) => {
+const SideBarLabelInfo = ({isSidebarOpen, projectInfo, projectId, onTemplateChange, status, hideInfo}) => {
   const {logout} = useSelector(state => state);
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const dispatch = useDispatch()
@@ -120,7 +120,7 @@ const handleMessageUpdate = () => {
             <h4>{decodedToken && decodedToken.userInfo && `${decodedToken && decodedToken.userInfo && decodedToken.userInfo.firstName} ${decodedToken && decodedToken.userInfo && decodedToken.userInfo.lastName}`}</h4>
             <p>{decodedToken && decodedToken.userInfo && decodedToken.userInfo.email}</p>
           </div>
-          <div style={{ height:'', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+          {!hideInfo &&<div style={{ height:'', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
 
             <div style={{display:'flex', flexDirection:'column', width:'95%', margin:'auto'}}>
                 {/* Collapsible header with button */}
@@ -204,7 +204,7 @@ const handleMessageUpdate = () => {
     </div>
             </div>
 
-          </div>
+          </div>}
         </div>
       </div>
   </div>

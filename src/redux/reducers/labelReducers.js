@@ -22,6 +22,10 @@ import {ALL_LABELS_FAILED,
         GET_LABEL_REQUEST,
         GET_LABEL_RESET,
         GET_LABEL_SUCCESS,
+        GET_TEMPLATES_FAILED,
+        GET_TEMPLATES_REQUEST,
+        GET_TEMPLATES_RESET,
+        GET_TEMPLATES_SUCCESS,
         REJECTED_LABEL_FAILED,
         REJECTED_LABEL_REQUEST,
         REJECTED_LABEL_RESET,
@@ -41,7 +45,11 @@ import {ALL_LABELS_FAILED,
         SEND_TO_RELEASER_FAILED,
         SEND_TO_RELEASER_REQUEST,
         SEND_TO_RELEASER_RESET,
-        SEND_TO_RELEASER_SUCCESS} from "../constants/labelConstants";
+        SEND_TO_RELEASER_SUCCESS,
+        TO_PRINT_LABEL_FAILED,
+        TO_PRINT_LABEL_REQUEST,
+        TO_PRINT_LABEL_RESET,
+        TO_PRINT_LABEL_SUCCESS} from "../constants/labelConstants";
 
 const labels = {
     labelRequest: false,
@@ -118,6 +126,21 @@ const saveOrderLabel = {
     saveOrderLabelRequest : false,
     saveOrderLabelSuccess :  false,
     saveOrderLabelFail : null,
+    savedOrderId: null
+}
+
+const labelsTemplate = {
+    labelsTemplateRequest : false,
+    labelsTemplateSuccess : false,
+    labelsTemplateFail : null,
+    labelsTemplate: null
+}
+
+const saveToPrint = {
+    saveToPrintRequest : false,
+    saveToPrintSuccess :  false,
+    saveToPrintFail : null,
+    saveToPrintData: null
 }
 
 export const drafLabelsReducer = (state = draftLabels, action) => {
@@ -456,7 +479,7 @@ export const saveOrderLabelReducer = (state = saveOrderLabel, action) => {
                 ...state,
                 saveOrderLabelRequest : false,
                 saveOrderLabelSuccess : true,
-                releaseLabelMessage: action.payload
+                savedOrderId: action.payload
             } ;
         case SAVE_ORDER_LABEL_FAILED :
             return {
@@ -467,6 +490,68 @@ export const saveOrderLabelReducer = (state = saveOrderLabel, action) => {
             } ;
         case SAVE_ORDER_LABEL_RESET :
             return saveOrderLabel;
+        default :
+            return state ;
+    }
+}
+
+
+export const LabelsTemplateReducer = (state = labelsTemplate, action) => {
+    switch(action.type){
+        case GET_TEMPLATES_REQUEST:
+            return {
+                ...state,
+                labelsTemplateRequest : true,
+                labelsTemplateSuccess :  false,
+                labelsTemplateFail : null,
+            } ;
+        case GET_TEMPLATES_SUCCESS :
+            return {
+                ...state,
+                labelsTemplateRequest : false,
+                labelsTemplateSuccess : true,
+                labelsTemplate: action.payload
+            } ;
+        case GET_TEMPLATES_FAILED :
+            return {
+                ...state,
+                labelsTemplateFail : action.payload,
+                labelsTemplateSuccess :  false,
+                labelsTemplateRequest : false
+            } ;
+        case GET_TEMPLATES_RESET :
+            return labelsTemplate;
+        default :
+            return state ;
+    }
+}
+
+
+export const saveToPrintReducer = (state = saveToPrint, action) => {
+    switch(action.type){
+        case TO_PRINT_LABEL_REQUEST:
+            return {
+                ...state,
+                saveToPrintRequest : true,
+                saveToPrintSuccess :  false,
+                saveToPrintFail : null,
+            } ;
+        case TO_PRINT_LABEL_SUCCESS :
+            return {
+                ...state,
+                saveToPrintRequest : false,
+                saveToPrintSuccess : true,
+                saveToPrintData: action.payload
+            } ;
+        case TO_PRINT_LABEL_FAILED :
+            return {
+                ...state,
+                saveToPrintFail : action.payload,
+                saveToPrintSuccess :  false,
+                saveToPrintRequest : false
+            } ;
+        case TO_PRINT_LABEL_RESET :
+            return saveToPrint;
         default :
             return state ;
     }

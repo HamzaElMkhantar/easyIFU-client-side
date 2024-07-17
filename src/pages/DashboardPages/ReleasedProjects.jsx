@@ -25,7 +25,6 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import BarLinks from '../../utilities/BarLinks';
 import { Table } from 'react-bootstrap';
 const ReleasedProjects = () => {
-
   const {productId} = useParams()
 
   // side bar toggle
@@ -82,31 +81,6 @@ const ReleasedProjects = () => {
     {title: 'Released', link: '/dashboard/project/released/'+productId},
     {title: 'Rejected', link: '/dashboard/project/rejected/'+productId}]
   
-  // if(decodedToken &&
-  //   decodedToken?.userInfo && 
-  //   (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator"))){
-  //     barLinks = [
-  //       {title: 'All Labels', link: '/dashboard/labels/'+productId},
-  //       {title: 'Draft', link: '/dashboard/project/draft/'+productId},
-  //       {title: 'Approved', link: '/dashboard/project/approved/'+productId},
-  //       {title: 'Released', link: '/dashboard/project/released/'+productId},
-  //       {title: 'Rejected', link: '/dashboard/project/rejected/'+productId},
-  //       {title: 'Received', link: '/dashboard/received-project'},
-  //       {title: 'Archived', link: '/dashboard/archived-project'},
-  //     ];
-  // } else if(decodedToken &&
-  //   decodedToken?.userInfo && 
-  //   (!decodedToken?.userInfo?.role.includes("Admin") || !decodedToken?.userInfo?.role.includes("Creator"))){
-  //     barLinks = [
-  //       {title: 'All Labels', link: '/dashboard/labels/'+productId},
-  //       {title: 'Draft', link: '/dashboard/project/draft/'+productId},
-  //       {title: 'Approved', link: '/dashboard/project/approved/'+productId},
-  //       {title: 'Released', link: '/dashboard/project/released/'+productId},
-  //       {title: 'Rejected', link: '/dashboard/project/rejected/'+productId},
-  //       {title: 'Received', link: '/dashboard/received-project'},
-  //       {title: 'Archived', link: '/dashboard/archived-project'},
-  //     ];
-  // }
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleMenu = (event) => {
@@ -193,8 +167,9 @@ const ReleasedProjects = () => {
                     <tr>
                         <th>#</th>
                         <th>Project Name</th>
+                        <th>Version</th>
                         <th>Description</th>
-                       {(decodedToken?.userInfo?.role.includes("Release") ||decodedToken?.userInfo?.role.includes("Admin") )&& <th>Manage</th>}
+                       {(decodedToken?.userInfo?.role.includes("Creator") || decodedToken?.userInfo?.role.includes("Admin") )&& <th>Manage</th>}
                     </tr>
                     </thead>
                     <tbody style={{ textAlign:'center'}}>
@@ -202,10 +177,11 @@ const ReleasedProjects = () => {
                         <tr key={item.id}>
                         <td >{index + 1}</td>
                         <td >{item.labelName}</td>
+                        <td >{item.labelVersion}</td>
                         <td >{item.labelDescription.length > 20 
                                 ? item.labelDescription.substring(0, 20) + '...' 
                                 : item.labelDescription}</td>
-                        {(decodedToken?.userInfo?.role.includes("Release") ||decodedToken?.userInfo?.role.includes("Admin") )&&<td ><Link to={`/dashboard/project-released/${item._id}`}
+                        {(decodedToken?.userInfo?.role.includes("Creator") || decodedToken?.userInfo?.role.includes("Admin") )&&<td ><Link to={`/dashboard/project-information/${item._id}`}
                             style={{backgroundColor:'#0C458F', 
                               color:"#fff", 
                               padding:'2px 10px', 

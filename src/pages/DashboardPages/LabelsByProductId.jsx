@@ -209,7 +209,7 @@ console.log("project : ", allProjects)
 
 
     if(productByIdSuccess){
-      setIntendedPurpose(productByIdData.labelData.intendedPurpose)
+      setIntendedPurpose(productByIdData?.labelData?.intendedPurpose)
     }
 
     if(createLabelFail){
