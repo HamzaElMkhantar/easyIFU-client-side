@@ -33,6 +33,8 @@ const ManageUser = () => {
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
+
+
     const [userInfo, setUserInfo] = useState({
         adminId: decodedToken ? decodedToken.userInfo._id : null,
         userId,
@@ -85,7 +87,7 @@ const ManageUser = () => {
       }, [])
 
       useEffect(() => {
-        if(user){
+        if(userSuccess){
             setUserState(user)
             setUserInfo({
               ...userInfo,
@@ -98,8 +100,12 @@ const ManageUser = () => {
         if(updatedUser){
             setUserState(updatedUser)
         }
+
+        if(userFailed){
+          toast.warning(`${userFailed.message}`)
+        }
       
-      }, [user, updatedUser])
+      }, [ updatedUser, userFailed, userSuccess])
       
       useEffect(() => {
         if(toggleUserSuccess){
@@ -117,6 +123,7 @@ const ManageUser = () => {
 
       useEffect(() => {
         if(updateUserSuccess){
+            dispatch(getUserAction(userId, token))
             toast.success("User update successfully")
         }
         if(updateUserFailed){
@@ -244,8 +251,8 @@ const ManageUser = () => {
                 </div>
             </div>
             <div className='manage-user-card-content px-3 col-lg-8'>
-                <p style={{fontSize:'14px', color:'gray'}}>FirstName: {userState && userState.firstName} </p>
-                <p style={{fontSize:'14px', color:'gray'}}>LastName: {userState && userState.lastName} </p>
+                <p style={{fontSize:'14px', color:'gray'}}>First name: {userState && userState.firstName} </p>
+                <p style={{fontSize:'14px', color:'gray'}}>Last name: {userState && userState.lastName} </p>
                 <p style={{fontSize:'14px', color:'gray'}}>Email: {userState && userState.email} </p>
                 <p style={{fontSize:'14px', color:'gray'}}>Role: {userState && userState.role.join(", ")} </p>
                 <p style={{fontSize:'14px', color:'gray'}}>Status: {userState && userState.isActive ? "active" : "not Active"} </p>
@@ -280,7 +287,7 @@ const ManageUser = () => {
                             <div className="col-md-6">
                           <div className="form-outline mb-2">
                             <label className="form-label" htmlFor="firstName">
-                              First Name
+                              First name
                             </label>
                             <input
                                 type="text"
@@ -299,7 +306,7 @@ const ManageUser = () => {
                             <div className="col-md-6">
                                 <div className="form-outline mb-2">
                                     <label className="form-label" htmlFor="lastName">
-                                    Last Name
+                                    Last name
                                     </label>
                                     <input
                                         type="text"

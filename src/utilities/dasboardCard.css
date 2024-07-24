@@ -1,0 +1,119 @@
+.custom-card {
+  box-shadow: 10px 10px 15px rgba(6,45,96, 0.2) !important;
+  /* background-color: rgba(255, 0, 0, 0.172) !important; */
+  /* border: 1px solid rgb(239, 239, 239); */
+}
+
+.custom-card .bg1 {
+  background-color: RGB(229 240 255) !important;
+}
+.custom-card .bg2 {
+  background-color: rgba(255, 0, 0, 0.172) !important;
+}
+.custom-card .bg3 {
+  background-color: rgba(255, 0, 0, 0.172) !important;
+}
+.custom-card .bg4 {
+  background-color: rgba(255, 0, 0, 0.172) !important;
+}
+
+.linearChar {
+  transition: all .3s ease;
+}
+
+.linearChar:hover {
+  box-shadow: 1px 1px 5px lightgray;
+  background-color: #ffffff61;
+  border-radius: 4px;
+  transition: all .3s ease;
+  transform: scale(1.02)
+}
+
+/* For extra small screens (phones, less than 576px) */
+@media (max-width: 576px) {
+  .custom-card {
+    margin-right: 0;
+  }
+}
+
+/* For small screens (tablets, 576px and up) */
+@media (min-width: 576px) {
+  .custom-card {
+   width: 90%;
+  }
+}
+
+/* For medium screens (desktops, 768px and up) */
+@media (min-width: 768px) {
+  .custom-card {
+    width: 48%;
+  }
+}
+
+/* For large screens (larger desktops, 992px and up) */
+@media (min-width: 992px) {
+  .custom-card {
+    width: 24%;
+  }
+}
+
+/* For extra large screens (larger desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .custom-card {
+    width: 24%;
+  }
+}
+
+
+
+/* For extra small screens (phones, less than 576px) */
+@media (max-width: 575.98px) {
+  .custom-col {
+    width: 100%;
+    margin-bottom: 10px; /* Space between rows */
+  }
+}
+
+/* For small screens (tablets, 576px and up) */
+@media (min-width: 576px) {
+  .custom-col {
+    width: 100%;
+    margin-bottom: 10px; /* Space between rows */
+  }
+}
+
+/* For medium screens (desktops, 768px and up) */
+@media (min-width: 768px) {
+  .custom-col-md-8 {
+    width: 100%; /* 8/12 columns */
+    margin-bottom: 10px; /* Space between rows */
+  }
+  .custom-col-md-4 {
+    width: 100%; /* 4/12 columns */
+    margin-bottom: 10px; /* Space between rows */
+  }
+}
+
+/* For large screens (larger desktops, 992px and up) */
+@media (min-width: 992px) {
+  .custom-col-md-8 {
+    width: 100%; /* 8/12 columns */
+    margin-bottom: 10px; /* Space between rows */
+  }
+  .custom-col-md-4 {
+    width: 100%; /* 4/12 columns */
+    margin-bottom: 10px; /* Space between rows */
+  }
+}
+
+/* For extra large screens (larger desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .custom-col-md-8 {
+    width: 66.67%; /* 8/12 columns */
+    margin-bottom: 10px; /* Space between rows */
+  }
+  .custom-col-md-4 {
+    width: 33.33%; /* 4/12 columns */
+    margin-bottom: 10px; /* Space between rows */
+  }
+}

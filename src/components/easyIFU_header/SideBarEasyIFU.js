@@ -71,7 +71,7 @@ const SideBarEasyIFU = ({isSidebarOpen}) => {
                           width="30"
                           visible={true}
                         /> 
-                        : "LogOut"}
+                        : "Logout"}
                         <LogoutIcon style={{marginLeft:'10px'}}/>
                 </button>
             </div>

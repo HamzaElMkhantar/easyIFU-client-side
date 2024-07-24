@@ -225,7 +225,8 @@ const ApproverReview = () => {
         e.preventDefault()
         const data = {
             projectId,
-            releaseId: decodedToken && decodedToken.userInfo && decodedToken.userInfo._id
+            releaseId: decodedToken && decodedToken.userInfo && decodedToken.userInfo._id,
+
         }
         dispatch(ReleaseTheProjectAction(data, token))
     }
@@ -1044,6 +1045,7 @@ useEffect(() => {
     const data = {
       labelId: projectId,
       userId: user,
+      senderId:  decodedToken?.userInfo?._id,
     }
     dispatch(sendToReleaserAction(data, token))
   }
@@ -1087,7 +1089,7 @@ useEffect(() => {
                     </div>
                     {rejectToggle &&
                       <>
-                        <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px', width:'97%'}} placeholder='Describe label rejection!'></textarea>
+                        <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px', width:'97%'}} placeholder='Please include the reasons for rejection'></textarea>
                         <button onClick={() => handleApproveLabel('reject')} disabled={false} style={{padding:'2px 15px', margin:'0 6px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600', width:'97%'}}>Continue</button>
                       </>
                     }
@@ -1124,7 +1126,7 @@ useEffect(() => {
       </div>
       {rejectToggle &&
         <>
-          <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px'}} placeholder='Describe label rejection!'></textarea>
+          <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px'}} placeholder='Please include the reasons for rejection'></textarea>
           <button onClick={() => handleReleaseLabel('reject')} disabled={false} style={{padding:'2px 15px', margin:'0 6px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>Continue</button>
         </>
       }
@@ -1350,7 +1352,7 @@ useEffect(() => {
                       <div className='col-md-4'>
                         {(userRole?.includes("Approver") && projectInfo.status == "pending_approval")&&
                           (<div className='card mb-3 p-2'>
-                              <p>Approve the label. You can accept or reject it.</p>
+                              <p>You may accept or reject it</p>
                             <div className='card-body p-1'>
                             {approveLabelRequest &&
                               <div style={{}}>
@@ -1371,7 +1373,7 @@ useEffect(() => {
                                         </div>
                                         {rejectToggle &&
                                           <>
-                                            <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px', width:'97%'}} placeholder='Describe label rejection!'></textarea>
+                                            <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px', width:'97%'}} placeholder='Please include the reasons for rejection'></textarea>
                                             <button onClick={() => handleApproveLabel('reject')} disabled={false} style={{padding:'2px 15px', margin:'0 6px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600', width:'97%'}}>Continue</button>
                                           </>
                                         }
@@ -1406,7 +1408,7 @@ useEffect(() => {
                           </div>
                           {rejectToggle &&
                             <>
-                              <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px'}} placeholder='Describe label rejection!'></textarea>
+                              <textarea onChange={(e) => setRejectDecsription(e.target.value)} style={{border:'1px solid lightGray', margin:'10px 6px', padding:'5px', minHeight:'100px'}} placeholder='Please include the reasons for rejection'></textarea>
                               <button onClick={() => handleReleaseLabel('reject')} disabled={false} style={{padding:'2px 15px', margin:'0 6px', backgroundColor:'#CE5F5D', color:'white', fontWeight:'600'}}>Continue</button>
                             </>
                           }
@@ -1423,9 +1425,9 @@ useEffect(() => {
                         </div>
                         <div className='mt-3' style={{display:'', gridGap:'10px'}}>
                             <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Version: {projectInfo?.labelVersion}</p>
-                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>createdBy: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
-                            {(projectInfo?.approvedBy?.lastName || projectInfo?.approvedBy?.firstName) && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
-                            {(projectInfo?.releaseBy?.lastName || projectInfo?.releaseBy?.firstName) && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ReleasedBy: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>}
+                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Created By: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
+                            {(projectInfo?.approvedBy?.lastName || projectInfo?.approvedBy?.firstName) && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Approved By: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
+                            {(projectInfo?.releaseBy?.lastName || projectInfo?.releaseBy?.firstName) && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Released By: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>}
                           </div>
                       <div>
                               

@@ -84,7 +84,7 @@ const Header = () => {
                         width="30"
                         visible={true}
                       /> 
-                      : "LogOut"}
+                      : "Logout"}
                   </button>
                 </Link>
               </li>
@@ -121,7 +121,7 @@ const Header = () => {
                     dashboard
                   </Link>
                   <Link style={{width:'150px', padding:'5px 20px'}} onClick={() => dispatch(logoutAction())} className='nav-link' href='#price'>
-                    logOut
+                  Logout
                   </Link>
               </ul>
               </li>

@@ -66,6 +66,7 @@ import { LabelsTemplateReducer, approveLabelReducer,
         createLabelReducer, 
         drafLabelsReducer, 
         getAllLabelsReducer, 
+        getLabelLogsReducer, 
         getLabelReducer, 
         rejectedLabelsReducer, 
         releaseLabelReducer, 
@@ -149,7 +150,7 @@ const reducer = combineReducers({
     documentById: documentByIdReducer,
     LabelsTemplate: LabelsTemplateReducer ,
     saveToPrint: saveToPrintReducer,
-
+    getLabelLogs: getLabelLogsReducer ,
     // products reducers
     getProductByProjectId: getProductByProjectIdReducer,
     productById: getProductByIdReducer ,

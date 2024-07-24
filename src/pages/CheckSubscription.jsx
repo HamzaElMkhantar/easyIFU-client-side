@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import jwtDecode from 'jwt-decode';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
-
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 const CheckSubscription = () => {
 
     const token = Cookies.get("eIfu_ATK") || null;
@@ -49,24 +49,36 @@ const CheckSubscription = () => {
         }
     }
    
-    useEffect(() => {
-        if(decodedToken.userInfo.isSubscripted == true){
-          navigate('/dashboard')
-        }
+    // useEffect(() => {
+    //     if(decodedToken.userInfo.isSubscripted == true){
+    //       navigate('/dashboard')
+    //     }
 
-    }, [])
+    // }, [])
   return (
     <div style={{width:'100vw', height:'89vh', paddingTop:'40px'}} className="container">
-        <Link to='/' style={{color:'#fff', backgroundColor:'#072D60', padding:'5px 10px', borderRadius:'4px'}}>Back Home</Link>
-        {paymentCompanyRequest && <div style={{position:'absolute', top:'10px', margin:'0 auto', display:'flex', justifyContent:'center', width:'90%'}}>
-            <RotatingLines
-                    strokeColor="#011d41"
-                    strokeWidth="5"
-                    animationDuration="0.75"
-                    width="90"
-                    visible={true}
-                /> 
-        </div>}
+        <Link to='/dashboard' style={{
+          color:'#fff',
+          backgroundColor:'#072D60',
+          padding:'6px',
+          borderRadius:'4px',
+          fontSize:'16px',
+          textDecoration:'none',
+          display: 'inline-flex',
+          alignItems: 'center'
+        }}>
+          <ArrowCircleLeftIcon style={{ marginRight: '5px' }} />Dashboard
+        </Link>
+        {paymentCompanyRequest && 
+          <div style={{position:'absolute', top:'10px', margin:'0 auto', display:'flex', justifyContent:'center', width:'90%'}}>
+              <RotatingLines
+                      strokeColor="#011d41"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      width="90"
+                      visible={true}
+                  /> 
+          </div>}
       <div className="text-center">
         <div className="pricing-card-content">
           <div className="pricing-card monthly">

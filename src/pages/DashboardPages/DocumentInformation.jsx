@@ -25,7 +25,7 @@ const DocumentInformation = () => {
     const [numOfPrint, setNumOfPrint] = useState(1);
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
-
+console.log("print num :" , numOfPrint)
     const [documentInfo, setDocumentInfo] = useState(null)
 
     const {documentById, saveToPrint} = useSelector(state => state)
@@ -117,7 +117,8 @@ const DocumentInformation = () => {
       navigate(`/dashboard/templates`)
     };
   
-    const handlePrintFailure = () => {
+    const handlePrintFailure = async () => {
+      await dispatch(saveToPrintAction({...data, action: 'failed'}, token));
       navigate(`/dashboard/templates`)
     };
   
@@ -162,11 +163,11 @@ const DocumentInformation = () => {
             }
           }).then((result) => {
             if (result.isConfirmed) {
-              console.log("succccc")
+
               handlePrintSuccess();
               navigate(`/dashboard/document-sizes/${documentId}`)
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              console.log("not ~!!")
+
               handlePrintFailure();
               navigate(`/dashboard/document-sizes/${documentId}`)
             }
@@ -264,7 +265,7 @@ const handleSizeChange = (newSize) => {
                   alignItems:'flex-start', 
                   position:'relative'}}>
             
-           {numOfPrint &&[...Array(parseInt(numOfPrint))].map((_, index) => (
+           {/* {numOfPrint &&[...Array(parseInt(numOfPrint))].map((_, index) => (
            documentInfo && documentInfo?.labelTemplate == "Template1" &&
               <Template1
                   printCount={documentInfo.printCount + index+1 - documentInfo.printLogs[0].numOfPrint < 0 ? documentInfo.printCount + index+1 : documentInfo.printCount + index+1 }
@@ -279,6 +280,29 @@ const handleSizeChange = (newSize) => {
                   isFreeTrail={true}
               />
            ))}
+            */}
+            {numOfPrint && [...Array(parseInt(numOfPrint))].map((_, index) => {
+                const printCount = documentInfo?.printCount - documentInfo?.printLogs[0]?.numOfPrint + index + 1
+                
+                console.log(`Rendering Template1: index=${index}, printCount=${printCount}`);
+
+                return documentInfo && documentInfo?.labelTemplate == "Template1" &&(
+                  <Template1
+                    key={index}
+                    printCount={printCount}
+                    border={'0'}
+                    scale={'1'}
+                    width={"100"}
+                    height={"150"}
+                    projectInfo={documentInfo}
+                    handleUDI={handleUDI}
+                    imageSrc={imageSrc}
+                    onSizeChange={handleSizeChange}
+                    isFreeTrail={true}
+                  />
+                );
+              })}
+
          </div>
         : <div style={{textAlign:'center'}}>
             <RotatingLines strokeColor="#191919"

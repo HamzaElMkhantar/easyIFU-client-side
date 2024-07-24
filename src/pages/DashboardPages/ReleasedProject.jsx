@@ -228,7 +228,6 @@ useEffect(() => {
       const [size, setSize] = useState('');
       const handleSizeChange = (newSize) => {
         setSize(newSize);
-        console.log('Size updated in parent:', newSize);
       };
   return (
     <div className='container label-information mb-5' style={{padding:'0', height:'70vh', display:'flex'}}>
@@ -357,11 +356,11 @@ useEffect(() => {
                     <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Label Name: {projectInfo?.labelName}</p>
                     {projectInfo?.labelDescription &&<p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Label description: {projectInfo?.labelDescription}</p>}
                     <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Version: {projectInfo?.labelVersion}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>createdBy: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ReleasedBy: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Created By: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Approved By: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Released By: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>
                     {(projectInfo?.produceBy?.lastName || projectInfo?.produceBy?.firstName) &&
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ProducedBy: {projectInfo?.produceBy?.lastName} {projectInfo?.produceBy?.firstName}</p>}
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Produced By: {projectInfo?.produceBy?.lastName} {projectInfo?.produceBy?.firstName}</p>}
                     {projectInfo?.printCount > 0 &&
                     <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Print count: {projectInfo?.printCount}</p>}
                   </div>

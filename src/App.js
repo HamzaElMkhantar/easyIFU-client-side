@@ -1,9 +1,13 @@
 import './App.css';
 import './index.css';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+
 
 import Header from './components/header/Header';
 import Home from './pages/home/Home';
@@ -94,6 +98,8 @@ import RejectedLabels from './pages/DashboardPages/RejectedLabels';
 // import { useState } from 'react'; 
 import styled from 'styled-components';
 import Templates from './pages/DashboardPages/Templates';
+import useUserStatus from './Hooks/useUserStatus';
+import socket from './Hooks/socket';
 function App() {
   const NoHoverLink = styled(Link)`
   &:hover {
@@ -209,29 +215,53 @@ if(process.env.NODE_ENV == "production"){
 
   const decodedToken = A_Token ? jwtDecode(A_Token) : null
   const decodedToken_R = A_Token ? jwtDecode(R_Token) : null
-  console.log(decodedToken)
+
+  // Use the custom hook to track user status
+    const userId = decodedToken?.userInfo?._id ;
+    // useUserStatus(userId);
+
+  
 
   const intervalRef = useRef(null);
   //  Memoize the interval setup function to prevent re-renders
-   const setupInterval = useMemo(() => {
-    return () => {
-      if (R_Token && A_Token) {
-        intervalRef.current = setInterval(() => {
-          dispatch(refreshAction());
-          console.log('Token refresh scheduled.');
-        }, 300000); // (900000 = 15min ) \ Refresh every 0.25 minute (6000 milliseconds)
-      }
-    };
-  }, [dispatch]);
+  //  const setupInterval = useMemo(() => {
+  //   return () => {
+  //     if (R_Token && A_Token) {
+  //       intervalRef.current = setInterval(() => {
+  //         dispatch(refreshAction());
+  //         console.log('Token refresh scheduled.');
+  //       }, 300000); // (900000 = 15min ) \ Refresh every 0.25 minute (6000 milliseconds)
+  //     }
+  //   };
+  // }, [dispatch]);
   
+  // useEffect(() => {
+  //   setupInterval();
+  //   return () => {
+  //     if(intervalRef.current){
+  //       clearInterval(intervalRef.current);
+  //     }
+  //   };
+  // }, [dispatch]);
+   // Memoize the interval setup function to prevent re-renders
+   const setupInterval = useCallback(() => {
+    if (R_Token && A_Token) {
+      intervalRef.current = setInterval(() => {
+        dispatch(refreshAction());
+        console.log('Token refresh scheduled.');
+      }, 300000); // Refresh every 5 minutes
+    }
+  }, [dispatch, R_Token, A_Token]);
+
   useEffect(() => {
     setupInterval();
+
     return () => {
-      if(intervalRef.current){
+      if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [dispatch]);
+  }, [setupInterval]);
 
   //   const setupInterval = useMemo(() => {
   //   return () => {
@@ -279,6 +309,9 @@ if(process.env.NODE_ENV == "production"){
   //     }
   //   };
   // }, [dispatch]);
+
+
+
 
   return (
     <div className="App">
@@ -436,7 +469,7 @@ if(process.env.NODE_ENV == "production"){
       <ToastContainer
                 position="top-right"
                 autoClose={2000}
-                style={{width:"200px", fontSize:"14px"}}
+                // style={{width:"200px", fontSize:"14px"}}
                 hideProgressBar={false}
                 closeOnClick
                 pauseOnHover

@@ -26,6 +26,10 @@ import {ALL_LABELS_FAILED,
         GET_TEMPLATES_REQUEST,
         GET_TEMPLATES_RESET,
         GET_TEMPLATES_SUCCESS,
+        LABEL_LOGS_FAILED,
+        LABEL_LOGS_REQUEST,
+        LABEL_LOGS_RESET,
+        LABEL_LOGS_SUCCESS,
         REJECTED_LABEL_FAILED,
         REJECTED_LABEL_REQUEST,
         REJECTED_LABEL_RESET,
@@ -141,6 +145,13 @@ const saveToPrint = {
     saveToPrintSuccess :  false,
     saveToPrintFail : null,
     saveToPrintData: null
+}
+
+const labelLogs = {
+    labelLogsRequest : false,
+    labelLogsSuccess :  false,
+    labelLogsFail : null,
+    labelLogsData: null
 }
 
 export const drafLabelsReducer = (state = draftLabels, action) => {
@@ -552,6 +563,37 @@ export const saveToPrintReducer = (state = saveToPrint, action) => {
             } ;
         case TO_PRINT_LABEL_RESET :
             return saveToPrint;
+        default :
+            return state ;
+    }
+}
+
+export const getLabelLogsReducer = (state = labelLogs, action) => {
+    
+    switch(action.type){
+        case LABEL_LOGS_REQUEST:
+            return {
+                ...state,
+                labelLogsRequest : true,
+                labelLogsSuccess :  false,
+                labelLogsFail : null,
+            } ;
+        case LABEL_LOGS_SUCCESS :
+            return {
+                ...state,
+                labelLogsRequest : false,
+                labelLogsSuccess : true,
+                labelLogsData: action.payload
+            } ;
+        case LABEL_LOGS_FAILED :
+            return {
+                ...state,
+                labelLogsFail : action.payload,
+                labelLogsSuccess :  false,
+                labelLogsRequest : false
+            } ;
+        case LABEL_LOGS_RESET :
+            return labelLogs;
         default :
             return state ;
     }

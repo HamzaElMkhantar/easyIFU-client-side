@@ -490,16 +490,6 @@ const ProductInfoComponent = () => {
                                 </div>
                             </div>
                     </div>
-                    <div className="form-group">
-                        <label className='question-bg mb-1'>- Quantity of product per packaging:</label>
-                        <input
-                        type="number"
-                        className="form-control"
-                        name="quantity"
-                        value={formData.quantity}
-                        onChange={(e) => setFormData({...formData, quantity: e.target.value})}
-                        />
-                    </div>
                 <p className='form-group-paragraph' style={{fontSize:'14px'}}>In case where there is no specified expiration date, you can add the manufacture date*</p>
                 <div className="form-group">
                     <label className='question-bg mb-1'>- Choose one :</label>
@@ -530,10 +520,8 @@ const ProductInfoComponent = () => {
                         <label className="form-check-label">No</label>
                         </div>
                     </div>
- 
-
-
                     </div>
+
                     <div style={{display:'flex'}}>
                     
                     <label className="form-check-label mx-3" htmlFor="serialNumber">Serial Number: </label>
@@ -561,9 +549,21 @@ const ProductInfoComponent = () => {
                         />
                         <label className="form-check-label">No</label>
                         </div>
+   
                     </div>
                     </div>
                 </div>
+
+                {!formData?.haSerialNumber && <div className="form-group">
+                        <label className='question-bg mb-1'>- Quantity of product per packaging:</label>
+                        <input
+                        type="number"
+                        className="form-control"
+                        name="quantity"
+                        value={formData.quantity}
+                        onChange={(e) => setFormData({...formData, quantity: e.target.value})}
+                        />
+                    </div>}
 
                 <div className="form-group">
                     <label className='question-bg mb-1'>- Catalogue Number (Ref)*:</label>

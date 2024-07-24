@@ -43,6 +43,7 @@ import NavDashboard from '../../components/header/NavDashboard';
 import { logoutAction } from '../../redux/actions/authActions';
 import { getAllLabelsAction } from '../../redux/actions/labelActions';
 import { createProductAction, getProductByIdAction, getProductByProjectIdAction } from '../../redux/actions/productActions';
+import Swal from 'sweetalert2';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -145,7 +146,31 @@ const Products = () => {
     }
 
     if(createProductFail){
-      toast.warning(`${createProductFail.message}`)
+      if(createProductFail.message == "payment_required!"){
+        handleClose()
+        Swal.fire({
+          title: "Subscription Needed",
+          text: "To unlock the ability to create additional products, please upgrade your subscription.",
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonText: "Upgrade Now",
+          cancelButtonText: "Close",
+          customClass: {
+            popup: 'custom-swal-bg',
+            confirmButton: 'custom-swal-button',
+            cancelButton: 'custom-swal-cancel-button',
+            icon: 'custom-swal-icon'
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.close()
+            navigate('/check-subscription')
+          }
+        });
+      }else{
+        toast.warning(`${createProductFail.message}`)
+      }
+
     }
   }, [createProductSuccess, createProductFail])
 
@@ -291,7 +316,7 @@ const Products = () => {
                       <Link to="/dashboard/account" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >Profile</MenuItem></Link>
                       <Link to="/dashboard/company" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >My Company</MenuItem></Link>
                       <Link style={{color:'black', borderTop:'1px solid lightGray'}}
-                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >LogOut</MenuItem>
+                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >Logout</MenuItem>
                             </Link>
                     </Menu>
                   </div>

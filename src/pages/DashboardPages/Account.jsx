@@ -20,6 +20,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
+
 const Account = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(
         JSON.parse(localStorage.getItem('sideToggle')) || false
@@ -112,7 +113,7 @@ const Account = () => {
 
         useEffect(() => {
             if(updateUserSuccess){
-                dispatch(getUserAction(decodedToken.userInfo._id, token))
+                dispatch(getUserAction(decodedToken?.userInfo?._id, token))
                 setUpdateInfo(false)
             }
         }, [updateUserSuccess])
@@ -218,7 +219,7 @@ const Account = () => {
                       <Link to="/dashboard/account" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >Profile</MenuItem></Link>
                       <Link to="/dashboard/company" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >My Company</MenuItem></Link>
                       <Link style={{color:'black', borderTop:'1px solid lightGray'}}
-                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >LogOut</MenuItem>
+                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >Logout</MenuItem>
                             </Link>
                     </Menu>
                   </div>
@@ -254,12 +255,12 @@ const Account = () => {
                         </button>
                 </div>
                 <div className='manage-user-card-content px-3 col-lg-8'>
-                    <p style={{fontSize:'14px', color:'gray'}}>FirstName: {userState && userState.firstName} </p>
-                    <p style={{fontSize:'14px', color:'gray'}}>LastName: {userState && userState.lastName} </p>
+                    <p style={{fontSize:'14px', color:'gray'}}>First name: {userState && userState.firstName} </p>
+                    <p style={{fontSize:'14px', color:'gray'}}>Last name: {userState && userState.lastName} </p>
                     <p style={{fontSize:'14px', color:'gray'}}>Email: {userState && userState.email} </p>
                     <p style={{fontSize:'14px', color:'gray', display:'flex', margin:'0'}}>Role: {userState && userState.role.length > 1 ? userState?.role?.map((item) => (<p className='mx-1'> {item},</p>))  : userState?.role?.map((item) => (<p> {item} </p>))}  </p>
                     <p style={{fontSize:'14px', color:'gray'}}>Status: {userState && userState.isActive ? "active" : "not Active"} </p>
-                    {userState && userState.createdAt && <p style={{fontSize:'14px', color:'gray'}}>Created: {userState && dateFormat(userState.createdAt)} </p>}
+                    {userState && userState.createdAt && <p style={{fontSize:'14px', color:'gray'}}> Creation Date: {userState && dateFormat(userState.createdAt)} </p>}
 
                 </div>
                 {userRequest 

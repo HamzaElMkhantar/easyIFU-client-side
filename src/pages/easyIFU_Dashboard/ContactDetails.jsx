@@ -57,8 +57,8 @@ const ContactDetails = () => {
     <div className='container py-5'>
         <Link style={{height:'35px'}} to={`/eIFU-admin/contacts`} className='label-info-link'>Back</Link>
         <div className='contact-content my-4' style={{backgroundColor:'#fff', borderRadius:'5px', padding:'10px', border:'0.5px solid lightGray', color:'gray'}}>
-            <p>FirstName: {contactInfo?.firstName}</p>
-            <p>LastName: {contactInfo?.lastName}</p>
+            <p>First name: {contactInfo?.firstName}</p>
+            <p>Last name: {contactInfo?.lastName}</p>
             <p>Sender Email: {contactInfo?.email}</p>
             <p>Company Email: {contactInfo?.companyEmail}</p>
             <p>Created At: {dateFormat(contactInfo?.createdAt)}</p>

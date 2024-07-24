@@ -58,7 +58,7 @@ const ProjectByRole = () => {
             setProjectsRole(roleProjects)
         }
         if(roleProjectFail){
-            if(roleProjectFail.message != "You didn't receive any project yet"){
+            if(roleProjectFail.message != "You have not received any projects yet"){
                 toast.error(`${roleProjectFail.message}`)
             }
         }
@@ -159,7 +159,7 @@ const ProjectByRole = () => {
                       <Link to="/dashboard/account" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >Profile</MenuItem></Link>
                       <Link to="/dashboard/company" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >My Company</MenuItem></Link>
                       <Link style={{color:'black', borderTop:'1px solid lightGray'}}
-                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >LogOut</MenuItem>
+                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >Logout</MenuItem>
                             </Link>
                     </Menu>
                   </div>
@@ -221,7 +221,7 @@ const ProjectByRole = () => {
                 }
                 {!roleProjectRequest && projectsRole.length < 1 &&
                     <p style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
-                        You didn't receive any project yet
+                        You have not received any projects yet
                 </p>
                 }
             </div>

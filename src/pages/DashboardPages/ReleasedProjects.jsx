@@ -148,7 +148,7 @@ const ReleasedProjects = () => {
                       <Link to="/dashboard/account" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >Profile</MenuItem></Link>
                       <Link to="/dashboard/company" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >My Company</MenuItem></Link>
                       <Link style={{color:'black', borderTop:'1px solid lightGray'}}
-                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >LogOut</MenuItem>
+                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >Logout</MenuItem>
                             </Link>
                     </Menu>
                   </div>
@@ -206,7 +206,7 @@ const ReleasedProjects = () => {
                 }
                 {!releasedProjectRequest && releasedProject.length < 1 &&
                     <p style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
-                        we didn't find any released project!
+                      No released projects found
                 </p>
                 }
             </div>

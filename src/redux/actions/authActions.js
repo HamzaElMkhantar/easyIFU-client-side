@@ -27,6 +27,7 @@ import {
         RESET_PASSWORD_FAILED, 
       } from '../constants/authConstants';
 import jwtDecode from 'jwt-decode';
+import { handleLogin, handleLogout } from '../../utilities/handleAuthLogs';
 
 
 export const registerAction = (userInfo) => async (dispatch) => {
@@ -83,6 +84,14 @@ export const loginAction = (email, password) => async (dispatch) => {
         type: LOGIN_SUCCESS, 
         payload: response.data 
       });
+
+      const A_Token = Cookies.get('eIfu_ATK') || null;
+      const decodedToken = A_Token ? jwtDecode(A_Token) : null
+      const userId = decodedToken?.userInfo?._id ;
+
+      if(userId){
+        handleLogin(userId)
+      }
     setTimeout(() =>{
       dispatch({ 
         type: 'LOGIN_RESET'
@@ -162,6 +171,13 @@ export const refreshAction = () => async (dispatch) => {
 
 export const logoutAction = () => async (dispatch) => {
     try {
+      const A_Token = Cookies.get('eIfu_ATK') || null;
+
+      const decodedToken = A_Token ? jwtDecode(A_Token) : null 
+  
+      const userId = decodedToken?.userInfo?._id ;
+       Cookies.set('userId')
+
   
       dispatch({ type: LOGOUT_REQUEST });
       const config =    {
@@ -173,12 +189,22 @@ export const logoutAction = () => async (dispatch) => {
         responseType: 'json'
       }
 
-      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout', {}, config)
+
+
+      const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout', {userId}, config)
       console.log(data)
   
       dispatch({ type: LOGOUT_SUCCESS });
       // Cookies.remove('eIfu_ATK');
       // Cookies.remove('eIfu_RTK');
+
+      const id = Cookies.get('userId') || null;
+
+      if(id){
+        handleLogout(id)
+      }
+      Cookies.remove('userId');
+
       setTimeout(() =>{
         dispatch({ 
           type: 'LOGOUT_RESET'

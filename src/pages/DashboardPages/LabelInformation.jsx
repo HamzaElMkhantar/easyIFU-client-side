@@ -109,8 +109,11 @@ import bwipjs from 'bwip-js';
 import SendIcon from '@mui/icons-material/Send';
 import { usersCompanyAction } from '../../redux/actions/userActions';
 import { Button } from 'react-bootstrap';
-import { getLabelAction } from '../../redux/actions/labelActions';
+import { getLabelAction, getLabelLogsAction } from '../../redux/actions/labelActions';
 import SideBarLabelInfo from '../../components/header/SideBarLabelInfo';
+import {
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+} from '@material-ui/core';
 
 // import label Templates
 import Template1 from '../../templates/template1/Template1';
@@ -121,10 +124,29 @@ const LabelInformation = () => {
   const {projectId} = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
-  const {getLabel, usersCompany, sendingProjectToOtherRole} = useSelector(state => state);
-  const {getLabelRequest, getLabelSuccess, getLabelFail, label} = getLabel;
-  const {usersCompanyRequest, usersCompanySuccess, usersCompanyFail, allUsers} = usersCompany;
-  const {sendingProjectRequest, sendingProjectSuccess, sendingProjectFail, sendingProjectMessage} = sendingProjectToOtherRole
+  const { getLabel, 
+          usersCompany, 
+          sendingProjectToOtherRole, 
+          getLabelLogs} = useSelector(state => state);
+
+  const { getLabelRequest, 
+          getLabelSuccess, getLabelFail, 
+          label} = getLabel;
+
+  const { usersCompanyRequest, 
+          usersCompanySuccess, 
+          usersCompanyFail, 
+          allUsers} = usersCompany;
+
+  const { sendingProjectRequest, 
+          sendingProjectSuccess, 
+          sendingProjectFail, 
+          sendingProjectMessage} = sendingProjectToOtherRole
+
+  const { labelLogsRequest, 
+          labelLogsSuccess, 
+          labelLogsFail, 
+          labelLogsData} = getLabelLogs
 
 
   const [size, setSize] = useState('');
@@ -137,11 +159,12 @@ const LabelInformation = () => {
   const [activeTemplate, setActiveTemplate] = useState("Template1")
   const isTemplate3 = activeTemplate === "Template3" ? true : false
   const [projectInfo, setProjectInfo] = useState({});
+  const [labelLogs, setLabelLogs] = useState([]);
   const [allUsersCompany, setAllUsersCompany] = useState([]);
   const [imageSrc, setImageSrc] = useState('');
   const [sendTo, setSendTo] = useState({
     labelId: projectId,
-    senderId: decodedToken && decodedToken.userInfo && decodedToken.userInfo._id,
+    senderId: decodedToken && decodedToken?.userInfo?._id,
     receivedId: '',
     template: activeTemplate,
     labelSize: size
@@ -152,7 +175,9 @@ const LabelInformation = () => {
   const  handleSendLabel = () => {
 
     setSendTo({...sendTo, template: activeTemplate})
-    dispatch(sendingProjectToOtherRoleAction({...sendTo, template: activeTemplate}, token))
+    dispatch(sendingProjectToOtherRoleAction({...sendTo,
+       template: activeTemplate
+      }, token))
   }
 
 
@@ -170,6 +195,8 @@ const LabelInformation = () => {
       _id:decodedToken && decodedToken.userInfo && decodedToken.userInfo._id, 
       companyId: decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId 
     }, token))
+
+    dispatch(getLabelLogsAction(projectId, token))
   }, [])
 
   useEffect(() => {
@@ -180,11 +207,18 @@ const LabelInformation = () => {
       setAllUsersCompany(allUsers)
     }
 
+    if(labelLogsSuccess){
+      setLabelLogs(labelLogsData)
+    }
+
     if(getLabelFail){
       toast.warning(`${getLabelFail.message}`)
     }
-  }, [getLabelSuccess, getLabelFail, usersCompanySuccess])
-
+    if(labelLogsFail){
+      toast.warning(`${labelLogsFail.message}`)
+    }
+  }, [getLabelSuccess, getLabelFail, usersCompanySuccess, labelLogsSuccess, labelLogsFail])
+console.log("logs : ", labelLogs)
 
 // handling the categories of the label symbol
     const symbolsWithImageAnd2ParagraphsOrMore = () => {
@@ -1889,32 +1923,30 @@ const LabelInformation = () => {
                 <div className='card-bpdy'>
                 <div style={{display:'', gridGap:'10px'}}>
                             <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> Version: {projectInfo?.labelVersion}</p>
-                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> createdBy: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
-                            {(projectInfo?.status == "approved" || projectInfo?.status == "pending_release" || projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> ApprovedBy: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
-                            {(projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> ReleasedBy: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>}
+                            <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> Created By: {projectInfo?.createdBy?.lastName} {projectInfo?.createdBy?.firstName}</p>
+                            {(projectInfo?.status == "approved" || projectInfo?.status == "pending_release" || projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> Approved By: {projectInfo?.approvedBy?.lastName} {projectInfo?.approvedBy?.firstName}</p>}
+                            {(projectInfo?.status == "released") && <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> Released By: {projectInfo?.releaseBy?.lastName} {projectInfo?.releaseBy?.firstName}</p>}
                           </div>
                 </div>
                 
 
                   {projectInfo?.comments?.length > 0 &&
-                  <div className='card p-2'>
+                  <div className=' p-2'>
                     <h5>Rejected :</h5>
                       <div className='card-body'>
-                      {projectInfo?.comments?.map(item => (
                         <div style={{borderBottom:'1px solid lightgray'}}>
                           <div style={{marginBottom:'5px' ,display:'flex', alignItems:'', backgroundColor:'#EFEFEF', borderRadius:'4px'}}>
                             <AccountCircleIcon style={{fontSize:'45px', marginRight:'6px'}} />
                           <div>
-                            <h6 style={{padding:'0', margin:'0 '}}>{item.name} 
-                                <p style={{padding:'0', margin:'3px 0', fontSize:'12px'}}>({item.role.join("-")})</p>
+                            <h6 style={{padding:'0', margin:'0 '}}>{projectInfo?.comments[projectInfo?.comments.length - 1].name}
+                                <p style={{padding:'0', margin:'3px 0', fontSize:'12px'}}>({projectInfo?.comments[projectInfo?.comments.length - 1].role.join("-")})</p>
                             </h6>
                           </div>
                           </div>
-                          <p style={{border:''}}>
-                            {item.comment}
+                          <p style={{fontSize:'12px'}}>
+                          {projectInfo?.comments[projectInfo?.comments.length - 1].comment}
                           </p>
                         </div>
-                      ))}
                       </div>
                     </div>}
                 </div>
@@ -1924,8 +1956,52 @@ const LabelInformation = () => {
             {/*  */}
             {/* --------------------------------------------------------- */}
 
-            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap'}}>
+            <div className='mt-5 pb-5'>
+              <h6>Label Logs:</h6>
+              <TableContainer style={{backgroundColor:'#ecf0f3', boxShadow:'none', border:'0'}} className='' component={Paper}>
+                  <Table style={{backgroundColor:'#ecf0f3', boxShadow:'none', border:'0'}}>
+                      <TableHead>
+                          <TableRow>
+                              <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Label</TableCell>
+                              <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Version</TableCell>
+                              <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Sender</TableCell>
+                              <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Receiver</TableCell>
+                              <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Action</TableCell>
+                              <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Approved By</TableCell>
+                              <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Released By</TableCell>
+                              <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Rejected By</TableCell>
+                              <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Action Date</TableCell>
+                          </TableRow>
+                      </TableHead>
+                      <TableBody style={{backgroundColor:''}}>
+                          {labelLogs.map((log) => (
+                              <TableRow key={log._id}>
+                                  <TableCell style={{ fontSize: '12px' }}>{log.labelId.labelName}</TableCell>
+                                  <TableCell style={{ fontSize: '12px' }}>{log.labelVersion}</TableCell>
+                                  <TableCell style={{ fontSize: '12px' }}>
+                                      {log.senderId ? `${log.senderId.firstName} ${log.senderId.lastName}` : 'N/A'}
+                                  </TableCell>
+                                  <TableCell style={{ fontSize: '12px' }}>
+                                      {log.recieverId ? `${log.recieverId.firstName} ${log.recieverId.lastName}` : 'N/A'}
+                                  </TableCell>
+                                  <TableCell style={{ fontSize: '12px' }}>{log.action}</TableCell>
+                                  <TableCell style={{ fontSize: '12px' }}>
+                                      {log.approvedBy ? `${log.approvedBy.firstName} ${log.approvedBy.lastName}` : 'N/A'}
+                                  </TableCell>
+                                  <TableCell style={{ fontSize: '12px' }}>
+                                      {log.releasedBy ? `${log.releasedBy.firstName} ${log.releasedBy.lastName}` : 'N/A'}
+                                  </TableCell>
+                                  <TableCell style={{ fontSize: '12px' }}>
+                                      {log.rejectedBy ? `${log.rejectedBy.firstName} ${log.rejectedBy.lastName}` : 'N/A'}
+                                  </TableCell>
+                                  <TableCell style={{ fontSize: '12px' }}>{new Date(log.createdAt).toLocaleString()}</TableCell>
+                              </TableRow>
+                          ))}
+                      </TableBody>
+                  </Table>
+              </TableContainer>
             </div>
+
 
           </div>)
 

@@ -63,6 +63,8 @@ const Documents = () => {
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
 
+    const [searchBy, setSearchBy] = useState('LOTNumber')
+    const [searchWords, setSearchWords] = useState('')
     const [companyDocument, setCompanyDocument] = useState([])
 
     const {documents, deleteDocument } = useSelector(state => state)
@@ -72,10 +74,25 @@ const Documents = () => {
     const companyId = decodedToken && decodedToken?.userInfo?.companyId
     const producerId = decodedToken && decodedToken?.userInfo._id
 
+
     const dispatch = useDispatch()
     useEffect(() => {
-      dispatch(documentsAction(companyId, producerId, token))
+      dispatch(documentsAction({companyId, producerId}, token))
     }, [])
+
+    useEffect(() => {
+      // if(searchWords != ''){
+        dispatch(documentsAction({
+          searchBy,
+          searchWords: searchWords.trim(),
+          companyId, 
+          producerId
+        }, token))
+      // }
+      // if(searchWords === ''){
+      //   dispatch(documentsAction({companyId, producerId}, token))
+      // }
+    }, [searchWords, searchBy])
 
 
     useEffect(() => {
@@ -174,7 +191,7 @@ const Documents = () => {
                       <Link to="/dashboard/account" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >Profile</MenuItem></Link>
                       <Link to="/dashboard/company" style={{color:'black'}} onClick={handleCloseAnchor}> <MenuItem >My Company</MenuItem></Link>
                       <Link style={{color:'black', borderTop:'1px solid lightGray'}}
-                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >LogOut</MenuItem>
+                            onClick={() => handleLogout()} > <MenuItem style={{fontSize:'14px', fontWeight:'700', borderTop:'1px solid lightGray'}} >Logout</MenuItem>
                             </Link>
                     </Menu>
                   </div>
@@ -185,17 +202,59 @@ const Documents = () => {
         </div>
 
         {/* Dashboard  content   */}
-        <section  className='container py-5' style={{paddingTop:'20px', overflowY:'scroll', height:'94.3vh'}}> 
-        <Link to='/dashboard/templates'>
-          <button style={{
-                        padding: "8px 20px",
-                        backgroundColor:"#9a3b3a",
-                        borderRadius:'3px',
-                        color: "#ecf0f3",
-                        fontWeight:'700'
-                      }}>
-                  New Order</button>
-        </Link>
+        <section  className='container py-4' style={{paddingTop:'0px', overflowY:'scroll', height:'94.3vh'}}> 
+          <div className='' style={{display:'flex', justifyContent:'space-between',}}>
+            <Link to='/dashboard/templates'>
+              <button style={{
+                            padding: "8px 20px",
+                            backgroundColor:"#9a3b3a",
+                            borderRadius:'3px',
+                            color: "#ecf0f3",
+                            fontWeight:'700'
+                          }}>
+                      New Order</button>
+            </Link>
+
+            <div className='search'>
+            <div style={{textAlign:'center', display:'flex', flexDirection:'', alignItems:'center', justifyContent:'center'}} className="form-group">
+                    <div className='mx-4' style={{textAlign:'center', display:'', flexDirection:'row-reverse', alignItems:'center', justifyContent:'center', alignItems:'center'}} >
+                        <div className="form-check">
+                            <label style={{fontSize:'12px'}} className="form-check-label">LOT number</label>
+                            <input style={{width:'15px', height:'15px'}}
+                                type="checkbox"
+                                className="form-check-input"
+                                name="LOTNumber"
+                                value="LOTNumber"
+                                checked={searchBy == 'LOTNumber'}
+                                onClick={e => setSearchBy(e.target.value)}
+                            />
+                        </div>
+                        <div style={{fontSize:'12px'}} className="form-check p">
+                            <input style={{width:'15px', height:'15px'}}
+                                type="checkbox"
+                                className="form-check-input"
+                                name="serialNumber"
+                                value="serialNumber"
+                                checked={searchBy == 'serialNumber'}
+                                onClick={e => setSearchBy(e.target.value)}
+                            />
+                            <label className="form-check-label">Serial number</label>
+                        </div>
+                    </div>
+                    <label className='-bg mb-1'>
+                    <input  style={{width:'220px', height:'30px', borderBottom:'1px solid black', borderLeft:'1px solid black', fontSize:'12px'}}
+                                type="text"
+                                className="form-check- px-2"
+                                placeholder={`search by ${searchBy == "LOTNumber" ? "LOT number" : 'Serial number'}`}
+                                name="search-word"
+                                value={searchWords}
+                                onChange={e => setSearchWords(e.target.value)}
+                            />
+                    </label>
+
+                </div>
+            </div>
+          </div>
         {!documentsRequest ? <div className="row row_branchen">
         {!companyDocument.length > 0 && <div style={{textAlign:'center', width:'100%'}}>
           <h5>No Order Created</h5>
@@ -206,9 +265,10 @@ const Documents = () => {
                 <tr style={{color:'#fff'}}>
                   <th scope="col">#</th>
                   <th scope="col">label Name</th>
-                  <th scope="col">label Description</th>
-                  <th scope="col">label Size</th>
-                  <th scope="col">createdAt</th>
+                  <th scope="col">LOT number</th>
+                  <th scope="col">Serial number</th>
+                  <th scope="col">Produced By</th>
+                  <th scope="col">Created At</th>
                   <th scope="col">Details</th>
                 </tr>
               </thead>
@@ -219,16 +279,14 @@ const Documents = () => {
                       <tr key={index}>
                         <th scope="row">{index+1}</th>
                           <td>{item?.labelName}</td>
-                          <td>{item?.labelDescription?.length > 20 
-                            ? item?.labelDescription.substring(0, 20) + '...' 
-                            :item?.labelDescription 
-                          }</td>
-                          <td>{item.labelSize}mm</td>
+                          <td>{item?.labelData.hasLotNumber ? item?.labelData.LOTNumber : "N/A" }</td>
+                          <td>{item?.labelData.haSerialNumber ? item?.labelData.serialNumber : "N/A"}</td>
+                          <td>{item?.produceBy?.firstName} {item?.produceBy?.lastName}</td>
                           <td>{formatDate(item?.createdAt)}</td>
                           <td>
                             <Link to={`/dashboard/document-sizes/${item._id}`} 
                                 style={{color:'#021D41', 
-                                backgroundColor:"#efefef", 
+                                backgroundColor:"#efefef",
                                 padding:'2px 10px', 
                                 borderRadius:'4px'}}>
                               <VisibilityIcon style={{paddingBottom:'', fontSize:'24px', color:"#03295C"}} />

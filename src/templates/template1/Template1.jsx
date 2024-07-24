@@ -83,6 +83,7 @@ import Repackaging from '../../assets/eIFUSymbols/Repackaging.png'
 import udi from '../../assets/eIFUSymbols/udi.png'
 import ImageBase64 from '../../utilities/ImageBase64';
 import { handleUDI } from '../../utilities/handleUDI';
+import DateFormat from '../../utilities/FormatDate';
 
 let customStyles = {
   wrapper: {
@@ -557,6 +558,7 @@ function formatSumDateToYYYYMMDD(date) {
                     <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>{projectInfo.labelData.importerName}</p>
                     <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>{projectInfo.labelData.importerAddress}</p> 
                   </div>
+
 
                 </div>}
 
@@ -1059,14 +1061,14 @@ function formatSumDateToYYYYMMDD(date) {
 
   return (
     <div style={{
-    scale:`${scale}`, 
-    position: 'relative',
-    backgroundColor:'#fff', 
-    padding:'2mm 2mm 0 2mm',
-    border: border ?'0': '1px solid lightgray',
-    width:'102mm',
-    height:'150mm'
-    }} className='Template1'>
+          scale:`${scale}`, 
+          position: 'relative',
+          backgroundColor:'#fff', 
+          padding:'2mm 2mm 0 2mm',
+          border: border ?'0': '1px solid lightgray',
+          width:'102mm',
+          height:'150mm'
+          }} className='Template1'>
             
         <div className='top-content'>
           {/* header */}
@@ -1187,7 +1189,8 @@ function formatSumDateToYYYYMMDD(date) {
             <div style={{backgroundColor:'', fontSize:'12px',
                   position:'', opacity:'1', zIndex:'-9900',display:'flex', justifyContent:'space-between', alignItems:'center',fontWeight:'700'
             }}>Created By: easyifu.com</div>}
-            <span style={{textAlign:'center', fontSize:'8px', fontWeight:'700', marginBottom:''}}>LBL-{projectInfo?.shortId}-V{projectInfo.labelVersion}</span>
+            <span style={{textAlign:'center', fontSize:'8px', fontWeight:'700', marginBottom:''}}>{projectInfo?.shortId}-V{projectInfo.labelVersion}</span>
+            <span style={{textAlign:'center', fontSize:'8px', fontWeight:'700', marginBottom:''}}>Created At: {DateFormat(projectInfo.createdAt)}</span>
 
           </div>
         </div>

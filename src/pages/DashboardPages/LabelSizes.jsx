@@ -17,7 +17,12 @@ import SideBarLabelInfo from '../../components/header/SideBarLabelInfo';
 import { saveToPrintAction } from '../../redux/actions/labelActions';
 
 
+import {
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+} from '@material-ui/core';
 
+import { utils, writeFile } from 'xlsx';
+import DownloadIcon from '@mui/icons-material/Download';
 
 const LabelSizes = () => {
     const {documentId} = useParams()
@@ -131,6 +136,187 @@ useEffect(() => {
 const saveDataToPrint = () => {
   dispatch(saveToPrintAction(data, token))
 }
+
+
+// const handleDownload = () => {
+//     // Data mapping with custom headers
+//     const printLogs = documentInfo?.printLogs?.map((log, i) => ({
+//         '#': `${i + 1}`,
+//         'Id': `${documentInfo._id}`,
+//         'Company Name': `${documentInfo.companyId?.companyName}`,
+//         'Label Id': `${documentInfo.shortId}-V${documentInfo.labelVersion}`,
+//         'Printed By': log.printedBy ? `${log.printedBy.firstName} ${log.printedBy.lastName}` : 'N/A',
+//         'Number of print': parseInt(log.numOfPrint),
+//         'Print Status': log.printStatus === "starting" ? "start to print" : log.printStatus,
+//         'Print Date': new Date(log.printDate).toLocaleString()
+//     }));
+
+//     // Convert data to worksheet
+//     const ws = utils.json_to_sheet(printLogs);
+//     // Insert title row before data rows
+//     // utils.sheet_add_aoa(ws, [titleRow], { origin: 'A1' });
+
+//     // Adjust column widths
+//     ws['!cols'] = [
+//         { wch: 5 }, 
+//         { wch: 30 },
+//         { wch: 20 },
+//         { wch: 20 },
+//         { wch: 25 },
+//         { wch: 15 },
+//         { wch: 20 },
+//         { wch: 25 } 
+//     ];
+
+//     // Create a new workbook and add the worksheet
+//     const wb = utils.book_new();
+//     utils.book_append_sheet(wb, ws, 'Print Logs');
+
+//     // Generate Excel file and trigger download
+//     writeFile(wb, 'PrintLogs.xlsx');
+// };
+
+
+// const handleDownload = () => {
+//     // Data mapping with custom fields directly included
+//     const printLogs = documentInfo?.printLogs?.map((log, i) => ({
+//         '#': `${i + 1}`,
+//         'Id': `${documentInfo._id}`,
+//         'Company Name': `${documentInfo.companyId?.companyName || 'N/A'}`,
+//         'Label Id': `${documentInfo.shortId}-V${documentInfo.labelVersion}`,
+//         'Printed By': log.printedBy ? `${log.printedBy.firstName} ${log.printedBy.lastName}` : 'N/A',
+//         'Number of print': parseInt(log.numOfPrint),
+//         'Print Status': log.printStatus === "starting" ? "start to print" : log.printStatus,
+//         'Print Date': new Date(log.printDate).toLocaleString()
+//     }));
+
+//     // Define headers for the data rows
+//     const headers = [
+//         '#', 'Id', 'Company Name', 'Label Id', 'Printed By', 'Number of print', 'Print Status', 'Print Date'
+//     ];
+
+//     // Convert data to worksheet
+//     const ws = utils.json_to_sheet(printLogs, { header: headers });
+
+//     // Insert headers as the first row
+//     utils.sheet_add_aoa(ws, [headers], { origin: 'A1' });
+
+//     // Adjust column widths
+//     ws['!cols'] = [
+//         { wch: 5 },   // Width for '#'
+//         { wch: 30 },  // Width for 'Id'
+//         { wch: 30 },  // Width for 'Company Name'
+//         { wch: 20 },  // Width for 'Label Id'
+//         { wch: 25 },  // Width for 'Printed By'
+//         { wch: 15 },  // Width for 'Number of print'
+//         { wch: 20 },  // Width for 'Print Status'
+//         { wch: 25 }   // Width for 'Print Date'
+//     ];
+
+//     // Apply styles to the header row
+//     headers.forEach((header, colIndex) => {
+//         const cellAddress = utils.encode_cell({ r: 0, c: colIndex });
+//         ws[cellAddress] = { v: header, s: { font: { bold: true, sz: 18 }, fill: { fgColor: { rgb: 'FFFF00' } }, alignment: { horizontal: 'left' } } };
+//     });
+
+//     // Apply specific alignment to 'Number of print' column (left alignment example)
+//     const numberOfPrintColumnIndex = headers.indexOf('Number of print');
+//     printLogs.forEach((log, rowIndex) => {
+//         const cellAddress = utils.encode_cell({ r: rowIndex + 1, c: numberOfPrintColumnIndex });
+//         ws[cellAddress] = { v: log['Number of print'], s: { alignment: { horizontal: 'left' } } };  // Set alignment to left
+//     });
+
+//     // Create a new workbook and add the worksheet
+//     const wb = utils.book_new();
+//     utils.book_append_sheet(wb, ws, 'Print Logs');
+
+//     // Generate Excel file and trigger download
+//     writeFile(wb, 'PrintLogs.xlsx');
+// };
+
+
+
+const handleDownload = () => {
+    // Data mapping with custom fields directly included
+    const printLogs = documentInfo?.printLogs?.map((log, i) => ({
+        '#': `${i + 1}`,
+        'Id': `${documentInfo._id}`,
+        'Company Name': `${documentInfo.companyId?.companyName || 'N/A'}`,
+        'Label Id': `${documentInfo.shortId}-V${documentInfo.labelVersion}`,
+        'Printed By': log.printedBy ? `${log.printedBy.firstName} ${log.printedBy.lastName}` : 'N/A',
+        'Number of print': parseInt(log.numOfPrint),
+        'Print Status': log.printStatus === "starting" ? "start to print" : log.printStatus,
+        'Print Date': new Date(log.printDate).toLocaleString()
+    }));
+
+    // Define headers for the data rows
+    const headers = [
+        '#', 'Id', 'Company Name', 'Label Id', 'Printed By', 'Number of print', 'Print Status', 'Print Date'
+    ];
+
+    // Convert data to worksheet
+    const ws = utils.json_to_sheet(printLogs, { header: headers });
+
+    // Insert headers as the first row
+    utils.sheet_add_aoa(ws, [headers], { origin: 'A1' });
+
+    // Adjust column widths
+    ws['!cols'] = [
+        { wch: 5 },   // Width for '#'
+        { wch: 30 },  // Width for 'Id'
+        { wch: 30 },  // Width for 'Company Name'
+        { wch: 20 },  // Width for 'Label Id'
+        { wch: 25 },  // Width for 'Printed By'
+        { wch: 15 },  // Width for 'Number of print'
+        { wch: 20 },  // Width for 'Print Status'
+        { wch: 25 }   // Width for 'Print Date'
+    ];
+
+    // Apply styles to the header row
+    headers.forEach((header, colIndex) => {
+        const cellAddress = utils.encode_cell({ r: 0, c: colIndex });
+        ws[cellAddress] = { 
+            v: header, 
+            s: { 
+                font: { 
+                    bold: true, 
+                    sz: 18, 
+                    name: 'Arial'
+                }, 
+                fill: { fgColor: { rgb: 'FFFF00' } }, // Yellow background
+                alignment: { horizontal: 'left' } 
+            } 
+        };
+    });
+
+    // Apply styles to the body rows
+    printLogs.forEach((log, rowIndex) => {
+        Object.keys(log).forEach((key, colIndex) => {
+            const cellAddress = utils.encode_cell({ r: rowIndex + 1, c: colIndex });
+            ws[cellAddress] = { 
+                v: log[key], 
+                s: { 
+                    font: { 
+                        sz: 14, 
+                        name: 'Arial' 
+                    }, 
+                    alignment: { horizontal: 'left' } 
+                } 
+            };
+        });
+    });
+
+    // Create a new workbook and add the worksheet
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Print Logs');
+
+    // Generate Excel file and trigger download
+    writeFile(wb, 'PrintLogs.xlsx');
+};
+
+
+
+
   return (
     <div className="container" style={{padding:'0', height:'70vh', width:'100%', display:'flex'}}>
       <SideBarLabelInfo isSidebarOpen={true} 
@@ -209,13 +395,53 @@ const saveDataToPrint = () => {
                     <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Label Name: {documentInfo?.labelName}</p>
                     {documentInfo?.labelDescription &&<p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Label description: {documentInfo?.labelDescription}</p>}
                     <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Version: {documentInfo?.labelVersion}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>createdBy: {documentInfo?.createdBy?.lastName} {documentInfo?.createdBy?.firstName}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ApprovedBy: {documentInfo?.approvedBy?.lastName} {documentInfo?.approvedBy?.firstName}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ReleasedBy: {documentInfo?.releaseBy?.lastName} {documentInfo?.releaseBy?.firstName}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>ProducedBy: {documentInfo?.produceBy?.lastName} {documentInfo?.produceBy?.firstName}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Print count: {documentInfo?.printCount}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Created By: {documentInfo?.createdBy?.lastName} {documentInfo?.createdBy?.firstName}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Approved By: {documentInfo?.approvedBy?.lastName} {documentInfo?.approvedBy?.firstName}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Released By: {documentInfo?.releaseBy?.lastName} {documentInfo?.releaseBy?.firstName}</p>
+                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Produced By: {documentInfo?.produceBy?.lastName} {documentInfo?.produceBy?.firstName}</p>
+                    {/* <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Print count: {documentInfo?.printCount}</p> */}
                 </div>
               </div>
+
+              <div className='mt-5 pb-5'>
+               {documentInfo && 
+                <>
+                <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+                  <h6>Print Logs:</h6>
+                  <button onClick={handleDownload} style={{backgroundColor:'lightgray', borderRadius:'4px'}}>
+                        {/* Download Excel */}
+                      <DownloadIcon />
+                    </button>
+
+                </div>
+                  <TableContainer style={{backgroundColor:'#ecf0f3', boxShadow:'none', border:'0'}} className='' component={Paper}>
+                      <Table style={{backgroundColor:'#ecf0f3', boxShadow:'none', border:'0'}}>
+                          <TableHead>
+                              <TableRow>
+                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>#</TableCell>
+                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Label Id</TableCell>
+                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Printed By</TableCell>
+                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Number of print</TableCell>
+                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Print Status</TableCell>
+                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Print Date</TableCell>
+                              </TableRow>
+                          </TableHead>
+                          <TableBody style={{backgroundColor:''}}>
+                              {documentInfo?.printLogs?.map((log, i) => (
+                                  <TableRow key={log._id}>
+                                      <TableCell style={{ fontSize: '12px' }}>{i + 1}</TableCell>
+                                      <TableCell style={{ fontSize: '12px' }}>{documentInfo.shortId}-V{documentInfo.labelVersion}</TableCell>
+                                      <TableCell style={{ fontSize: '12px' }}>{log.printedBy && `${log.printedBy.firstName} ${log.printedBy.lastName}`}</TableCell>
+                                      <TableCell style={{ fontSize: '12px' }}>{log.numOfPrint}</TableCell>
+                                      <TableCell style={{ fontSize: '12px' }}>{log.printStatus == "starting" ?  "start to print" : log.printStatus}</TableCell>
+                                      <TableCell style={{ fontSize: '12px' }}>{new Date(log.printDate).toLocaleString()}</TableCell>
+                                  </TableRow>
+                              ))}
+                          </TableBody>
+                      </Table>
+                  </TableContainer>
+                </>}
+            </div>
             </>
               : (<div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
                   <RotatingLines

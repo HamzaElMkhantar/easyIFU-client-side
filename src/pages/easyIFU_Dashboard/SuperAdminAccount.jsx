@@ -170,12 +170,12 @@ const SuperAdminAccount = () => {
                     
                 </div>
                 <div className='manage-user-card-content px-3 col-lg-8'>
-                    <p style={{fontSize:'14px', color:'gray'}}>FirstName: {userState && userState.firstName} </p>
-                    <p style={{fontSize:'14px', color:'gray'}}>LastName: {userState && userState.lastName} </p>
+                    <p style={{fontSize:'14px', color:'gray'}}>First name: {userState && userState.firstName} </p>
+                    <p style={{fontSize:'14px', color:'gray'}}>Last name: {userState && userState.lastName} </p>
                     <p style={{fontSize:'14px', color:'gray'}}>Email: {userState && userState.email} </p>
                     <p style={{fontSize:'14px', color:'gray'}}>Role: {userState && userState.role} </p>
                     <p style={{fontSize:'14px', color:'gray'}}>Status: {userState && userState.isActive ? "active" : "not Active"} </p>
-                    {userState && userState.createdAt && <p style={{fontSize:'14px', color:'gray'}}>Created: {userState && dateFormat(userState.createdAt)} </p>}
+                    {userState && userState.createdAt && <p style={{fontSize:'14px', color:'gray'}}> Creation Date: {userState && dateFormat(userState.createdAt)} </p>}
 
                 </div>
                 {userRequest 

@@ -27,6 +27,10 @@ import {ALL_LABELS_FAILED,
         GET_TEMPLATES_REQUEST,
         GET_TEMPLATES_RESET,
         GET_TEMPLATES_SUCCESS,
+        LABEL_LOGS_FAILED,
+        LABEL_LOGS_REQUEST,
+        LABEL_LOGS_RESET,
+        LABEL_LOGS_SUCCESS,
         REJECTED_LABEL_FAILED,
         REJECTED_LABEL_REQUEST,
         REJECTED_LABEL_RESET,
@@ -555,6 +559,45 @@ export const saveToPrintAction = (data, token) => async (dispatch) => {
         setTimeout(() =>{
             dispatch({ 
             type: TO_PRINT_LABEL_RESET
+            });
+        }, 1500)
+    }
+};
+
+export const getLabelLogsAction = (labelId, token) => async (dispatch) => {
+    try {
+
+        dispatch({ 
+            type: LABEL_LOGS_REQUEST
+        });
+    
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/label-logs/${labelId}`, config);
+        console.log(response.data)
+        dispatch({ 
+            type: LABEL_LOGS_SUCCESS, 
+            payload: response.data
+        });
+        setTimeout(() =>{
+        dispatch({ 
+            type: LABEL_LOGS_RESET
+        });
+        }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: LABEL_LOGS_FAILED, 
+            payload: error?.response?.data 
+        });
+    
+        setTimeout(() =>{
+            dispatch({ 
+            type: LABEL_LOGS_RESET
             });
         }, 1500)
     }
