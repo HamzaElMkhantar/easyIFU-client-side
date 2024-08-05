@@ -28,15 +28,16 @@ const Login = () => {
 
   useEffect(() => {
     if(loginFail){
-      if (!loginFail.status) {
-        toast.error('No Server Response');
-    } else if (loginFail.status === 400) {
-        toast.warning('Missing Username or Password');
-    } else if (loginFail.status === 401) {
-        toast.warning('Unauthorized');
-    } else {
-        toast.error(loginFail.data?.message);
-    }
+      console.log('Login failed : ', loginFail);
+      toast.error(`${loginFail?.message}`);
+    //   if (!loginFail.status) {
+    // } else if (loginFail.status === 400) {
+    //     toast.warning('Missing Username or Password');
+    // } else if (loginFail.status === 401) {
+    //     toast.warning('Unauthorized');
+    // } else {
+    //     toast.error(loginFail.data?.message);
+    // }
     errRef.current.focus();
     }
 

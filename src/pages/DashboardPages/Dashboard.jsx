@@ -73,6 +73,7 @@ const Dashboard = () => {
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
     const companyId = decodedToken && decodedToken?.userInfo?.companyId
+    const userId = decodedToken && decodedToken?.userInfo?._id
 
     const [companyData, setCompanyData] = useState(null)
     const {dashboardCompanyInfo} = useSelector(state => state)
@@ -259,7 +260,6 @@ const Dashboard = () => {
   // ---  fetch dashboard data ---
 
 
-
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -267,17 +267,17 @@ const Dashboard = () => {
   const [recentLabels, setRecentLabels] = useState(null);
   const [metrics, setMetrics] = useState(null);
   const [printLogs, setPrintLogs] = useState(null);
-
+console.log({recentOrder})
   const [dashboardCardData, setDashboardCardData] = useState({
     labelCount: 0 ,
     productCount: 0,
-    projectCount: 0,
+    onGoingLabels: 0,
     totalPrintCount: 0,
   })
     // Dummy data
     const DummyData = [
-      { icon: <TaskOutlinedIcon style={{ fontSize: '50px', color: '#ff9800' }} />, title: 'Total Project', count: dashboardCardData.projectCount, color: '#BE7609' },
-      { icon: <CategoryOutlinedIcon style={{ fontSize: '50px', color: '#4caf50' }} />, title: 'Total Product', count: dashboardCardData.productCount , color: '#207D23' },
+      { icon: <TaskOutlinedIcon style={{ fontSize: '50px', color: '#ff9800' }} />, title: 'Ongoing Labels', count: dashboardCardData.onGoingLabels, color: '#BE7609' },
+      { icon: <CategoryOutlinedIcon style={{ fontSize: '50px', color: '#4caf50' }} />, title: 'Received Labels', count: dashboardCardData.productCount , color: '#207D23' },
       { icon: <LabelOutlinedIcon style={{ fontSize: '50px', color: '#2196f3' }} />, title: 'Total Labels', count: dashboardCardData.labelCount , color: '#062D60' },
       { icon: <Print style={{ fontSize: '50px', color: '#f44336' }} />, title: 'Total Order Print', count: dashboardCardData.totalPrintCount , color: '#AC190E' },
     ];
@@ -291,7 +291,7 @@ const Dashboard = () => {
 
     try {
       setLoading(true);
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/dashboard-data/${companyId}`, config);
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/dashboard-data/${companyId}/${userId}`, config);
       const { labelStatusDistribution } = response.data;
       const { recentOrder } = response.data;
       const { recentLabels } = response.data;
@@ -306,7 +306,7 @@ const Dashboard = () => {
       setDashboardCardData({
         labelCount: response.data.labelCount ,
         productCount:  response.data.productCount,
-        projectCount:  response.data.projectCount,
+        onGoingLabels:  response.data.onGoingLabels,
         totalPrintCount:   response.data.totalPrintCount,
       })
 
@@ -371,7 +371,7 @@ const Dashboard = () => {
   return (
     <div className='' style={{height:'70vh', width:'100vw', display:'flex', overflow: 'hidden', width: '100vw', height: ''}}>
       <SideBar isSidebarOpen={isSidebarOpen} />
-      <main className='' style={{ paddingBottom: '200px', width: '100%', overflow: 'hidden' }}>
+      <main className='' style={{ paddingBottom: '0px', width: '100%', overflow: 'hidden' }}>
         {/* Dashboard header  */}
         <div  style={{position:'sticky', top:'0'}} id="page-content-wrapper">
           <Box sx={{ flexGrow: 1}} className="" >
@@ -438,16 +438,16 @@ const Dashboard = () => {
 
 
         {/* Dashboard content   */}
-        {/* <div className='' style={{ paddingBottom:'100px', backgroundColor:''}}>
+        <div className='' style={{ paddingBottom:'50px', backgroundColor:''}}>
           <section className='chart-section container mt-4' >
-            <div className='mb-3'>
+           {recentOrder?.length > 0 && <div className='mb-3'>
               {<h3 style={{color:'#062d60', fontWeight:'700', margin:'0'}}>{ !loading &&
-                  chartData ?  recentOrder[0].companyId?.companyName: "..."}</h3>}
+                  chartData ?  recentOrder[0]?.companyId?.companyName: "..."}</h3>}
                 {<p style={{color:'#062d60', fontWeight:'500', fontSize:'15px', margin:'0'}}>{ !loading && 
-                chartData ?  recentOrder[0].companyId?.companyAddress + " " + recentOrder[0].companyId?.companyCity + " " + recentOrder[0].companyId?.companyCountry 
+                chartData ?  recentOrder[0]?.companyId?.companyAddress + " " + recentOrder[0]?.companyId?.companyCity + " " + recentOrder[0]?.companyId?.companyCountry 
                 
                 : "..."}</p>}
-            </div>
+            </div>}
 
             <div className='row' style={{display:'flex', justifyContent:'space-between', margin:'auto'}}>
               {DummyData?.map((item, index) => (
@@ -467,8 +467,14 @@ const Dashboard = () => {
                 <LineChart companyId={companyId} token={token} />
               </div>
               <div className='custom-col custom-col-md-4 p-1' >
-              <h6>Recent Order Details:</h6>
-              <div className='card p-2' style={{ display: 'flex', flexDirection: 'column', height: '400px', overflowY: 'auto', zIndex:'-1' }}>
+                <div className='mb-1' style={{display:'flex', justifyContent:'space-between'}}>
+                  <h6>Received Labels:</h6>
+                  <Link to="/dashboard/received-project" style={{display:'flex', alignItems:'center', color:'#fff', backgroundColor:'#021d41', borderRadius:'5px', padding:'0 5px'}}>
+                            Show More
+                            <PlayArrowRoundedIcon/>
+                        </Link>   
+                </div>
+              <div className='p-2 ' style={{ display: 'flex', flexDirection: 'column', height: '350px', overflowY: 'auto', zIndex:'1', backgroundColor:'#fff', borderRadius:'5px'}}>
                   {!loading &&
                   chartData && 
                   <OrderDetailsDashboard data={recentOrder} />}
@@ -490,7 +496,13 @@ const Dashboard = () => {
               chartData && 
               <div className='row container'>
               <div className='col-md-6'>
+                <div className='mb-1' style={{display:'flex', justifyContent:'space-between'}}>
                 <h6>Recent Labels:</h6>
+                  <Link to="/dashboard/project" style={{display:'flex', alignItems:'center', color:'#fff', backgroundColor:'#021d41', borderRadius:'5px', padding:'0 5px'}}>
+                            Show More
+                            <PlayArrowRoundedIcon/>
+                        </Link>   
+                </div>
                 <DashTable recentLabels={recentLabels} />
               </div>
               <div className='col-md-6'   >
@@ -530,10 +542,10 @@ const Dashboard = () => {
               </div>
             </div>}
           </section>
-        </div> */}
+        </div>
 
         {/* ------------------ Dashboard  content  ----------------- */}
-        <section  className='container' style={{paddingTop:'20px', overflowY:'scroll', height:'87.3vh'}}>
+        {/* <section  className='container' style={{paddingTop:'20px', overflowY:'scroll', height:'87.3vh'}}>
             <div className=" mt-4" style={{overflowY:'scroll', height:''}}>
                 <div  className="row mt-4">
                     <div className="col-12 col-md-6 col-lg-4 my-1">
@@ -678,7 +690,7 @@ const Dashboard = () => {
                 </div>
             </div>
 
-        </section>
+        </section> */}
       </main>
     </div>
   )

@@ -4,13 +4,13 @@ const OrderDetailsDashboard = ({data}) => {
   return (
     <div>
     <div style={{display:'flex', fontSize:'14px', justifyContent:'space-between'}}>
-        <p><strong>Order Name:</strong></p> 
-        <p><strong>Produced Name:</strong></p>
-        <p><strong>Print Count:</strong></p>
+        <p><strong>ID</strong></p> 
+        <p><strong>Order Name</strong></p> 
+        <p><strong>Status</strong></p>
         <hr />
     </div>
-     {data && data?.map((item, index) => (
-    <div key={index} style={{ display:'flex', 
+     {data?.map((item, index) => (
+    <div key={item._id} style={{ display:'flex', 
                                 fontSize:'11px', 
                                 justifyContent:'space-between',
                                 alignItems:'center',
@@ -19,9 +19,9 @@ const OrderDetailsDashboard = ({data}) => {
                                 marginBottom:"2px",
                                 borderRadius:'5px',
                             }}>
-        <p style={{flex:'0.4'}}>{item.labelName.length > 16 ? item.labelName.slice(0,16) + "...": item.labelName}</p>
-        <p style={{flex:'0.4'}}>{item?.produceBy?.firstName} {item?.produceBy?.lastName}</p>
-        <p style={{flex:'0.2'}}>{item.printCount}</p>
+        <p style={{flex:'0.4'}}>{item.shortId}</p>
+        <p style={{flex:'0.4'}}>{item.labelName.length > 16 ? item.labelName?.slice(0,16) + "...": item.labelName}</p>
+        <p style={{flex:'0.2'}}>{item.status}</p>
         <hr />
     </div>
     ))}

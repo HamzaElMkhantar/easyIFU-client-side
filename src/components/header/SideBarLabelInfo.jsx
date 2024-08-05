@@ -109,8 +109,8 @@ const handleMessageUpdate = () => {
 }
 
   return (
-    <div id="wrapper" className={!isSidebarOpen ? '' : 'toggled'}>
-      <div id="sidebar-wrapper" style={{ height:'100vh'}}>
+    <div id="wrapper" className={!isSidebarOpen ? '' : 'toggled'} style={{zIndex:'100'}}>
+      <div id="sidebar-wrapper" style={{ height:'100vh', zIndex:'100'}}>
         <img  src={sidebarBG} className='bg-sidebar-img' />
         <div className="sidebar-nav">
           <Link style={{marginBottom:'20px', display:'flex', justifyContent:'center'}} to='/' className='navbar-brand mx-auto'>

@@ -25,7 +25,7 @@ export default function DashTable({recentLabels}) {
             <TableBody> 
             {recentLabels?.map((row) => (
             <TableRow
-            key={row.name}
+            key={row._id}
             sx={{
               '&:hover': { backgroundColor: 'rgba(244,117,96, .1)' },
             }}

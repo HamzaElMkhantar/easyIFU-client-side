@@ -337,6 +337,15 @@ const CreateUser = () => {
                                     />
                                     Release
                                   </label>
+                                  <label>
+                                    <input className='mx-1'
+                                      type="checkbox"
+                                      id="Producer"
+                                      checked={userInfo.role.includes('Producer')}
+                                      onChange={() => handleCheckboxChange('Producer')}
+                                    />
+                                    Producer
+                                  </label>
                                 </div>
                               </div>
                             </div>

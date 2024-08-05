@@ -8,7 +8,6 @@ import { documentByIdAction } from '../../redux/actions/projectActions';
 import { toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import { handleUDI } from '../../utilities/handleUDI';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import bwipjs from 'bwip-js';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Template1 from '../../templates/template1/Template1';
@@ -16,6 +15,8 @@ import { convertDateToYYMMDD } from '../../utilities/convertDateToYYMMDD';
 import SideBarLabelInfo from '../../components/header/SideBarLabelInfo';
 import { saveToPrintAction } from '../../redux/actions/labelActions';
 
+import Swal from 'sweetalert2';
+import Modal from 'react-modal';
 
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
@@ -314,69 +315,161 @@ const handleDownload = () => {
     writeFile(wb, 'PrintLogs.xlsx');
 };
 
+const [modalIsOpen, setModalIsOpen] = useState(false);
 
 
+const openModal = () => {
+  setModalIsOpen(true);
+};
+
+const closeModal = () => {
+  setModalIsOpen(false);
+};
 
   return (
-    <div className="container" style={{padding:'0', height:'70vh', width:'100%', display:'flex'}}>
-      <SideBarLabelInfo isSidebarOpen={true} 
-                  status={documentInfo?.status}
-                  hideInfo={true}
-                  projectId={documentId}/>
-      <main style={{padding: "20px 5px", backgroundColor:'', margin:"0 auto", flex:0.95}}>
-          <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-            <Link style={{height:'35px'}} to={'/dashboard/documents'} className='label-info-link'><ArrowBackIcon /> Back</Link>
+    <div
+      className="container"
+      style={{ padding: "0", height: "70vh", width: "100%", display: "flex" }}
+    >
+      <SideBarLabelInfo
+        isSidebarOpen={true}
+        status={documentInfo?.status}
+        hideInfo={true}
+        projectId={documentId}
+      />
+      <main
+        style={{
+          padding: "20px 5px",
+          backgroundColor: "",
+          margin: "0 auto",
+          flex: 0.95,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Link
+            style={{ height: "35px" }}
+            to={"/dashboard/documents"}
+            className="label-info-link"
+          >
+            <ArrowBackIcon /> Back
+          </Link>
+        </div>
+        <div style={{ display: "none" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", width: "100px" }}
+          >
+            <div
+              style={{
+                backgroundColor: "#fff",
+                textAlign: "center",
+                width: "300px",
+              }}
+            >
+              <svg
+                style={{
+                  width: "100px",
+                  backgroundColor: "#fff",
+                  textAlign: "center",
+                }}
+                id="gs1-barcode"
+              ></svg>
+            </div>
+            <div
+              style={{
+                backgroundColor: "#fff",
+                textAlign: "center",
+                width: "300px",
+              }}
+            >
+              <svg
+                style={{
+                  width: "100px",
+                  backgroundColor: "#fff",
+                  textAlign: "center",
+                }}
+                id="hibcc-barcode"
+              ></svg>
+            </div>
+            <div
+              style={{
+                backgroundColor: "#fff",
+                textAlign: "center",
+                width: "300px",
+              }}
+            >
+              <svg
+                style={{
+                  width: "100px",
+                  backgroundColor: "#fff",
+                  textAlign: "center",
+                }}
+                id="iccbba-barcode"
+              ></svg>
+            </div>
+            <div
+              style={{
+                backgroundColor: "#fff",
+                textAlign: "center",
+                width: "300px",
+              }}
+            >
+              <svg
+                style={{
+                  width: "100px",
+                  backgroundColor: "#fff",
+                  textAlign: "center",
+                }}
+                id="ifa-barcode"
+              ></svg>
+            </div>
           </div>
-          <div style={{display:'none'}}>
-                          <div style={{display:'flex', flexDirection:'column', width:'100px'}}>
-                            <div style={{backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
-                              <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="gs1-barcode"></svg>
-                            </div>
-                            <div style={{backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
-                            <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="hibcc-barcode"></svg>
-                            </div>
-                            <div style={{ backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
-                              <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="iccbba-barcode"></svg>
-                            </div>
-                            <div style={{ backgroundColor:'#fff', textAlign:'center', width:'300px'}}>
-                              <svg style={{width:'100px', backgroundColor:'#fff', textAlign:'center'}} id="ifa-barcode"></svg>
-                            </div>
-                            
-                            </div>
-                            <div style={{display:'flex', justifyContent:'space-around', alignItems:'center', flexWrap:'wrap', gridGap:'10px'}}>
-                              <div style={{textAlign:'center', marginRight:'5px'}}>
-                                <svg id='gs1-barcode-udiDI'></svg>
-                              </div>
-                              <div style={{textAlign:'center'}}>
-                                <svg id='gs1-barcode-udiPI'></svg>
-                              </div>
-                            </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gridGap: "10px",
+            }}
+          >
+            <div style={{ textAlign: "center", marginRight: "5px" }}>
+              <svg id="gs1-barcode-udiDI"></svg>
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <svg id="gs1-barcode-udiPI"></svg>
+            </div>
+          </div>
 
-                            <img  width={"100px"} src={imageSrc} alt={`data matrix from`} />
-                </div>
-            <div className='row mt-2'>
-              
-            {!documentByIdRequest 
-            ?<>
-              <div className='label-info-data col-md-7'> 
-                {size && <p style={{color:'gray'}}>size: {size}mm</p>}
-                {documentInfo?.labelTemplate == "Template1" &&
-                    <Template1
-                        scale={'1'}
-                        width={"100"}
-                        height={"150"} 
-                        projectInfo={documentInfo}
-                        handleUDI={handleUDI}
-                        imageSrc={imageSrc}
-                        onSizeChange={handleSizeChange}
-                    />}
+          <img width={"100px"} src={imageSrc} alt={`data matrix from`} />
+        </div>
+        <div className="row mt-2">
+          {!documentByIdRequest ? (
+            <>
+              <div className="label-info-data col-md-7">
+                {size && <p style={{ color: "gray" }}>size: {size}mm</p>}
+                {documentInfo?.labelTemplate == "Template1" && (
+                  <Template1
+                    scale={"1"}
+                    width={"100"}
+                    height={"150"}
+                    projectInfo={documentInfo}
+                    handleUDI={handleUDI}
+                    imageSrc={imageSrc}
+                    onSizeChange={handleSizeChange}
+                  />
+                )}
               </div>
-              <div className='col-md-5' style={{height:'100%'}}>
-                <div className='card-body' style={{backgroundColor:'white', border:'1px solid lightgray', height:'100%'}}>
+              <div className="col-md-5" style={{ height: "100%" }}>
+                {/* <div className='card-body' style={{backgroundColor:'white', border:'1px solid lightgray', height:'100%'}}>
                   <h5 className='my-2 pb-1' style={{textAlign:'', borderBottom:'1px solid lightgray'}}>how many label you want to print? : {data.numOfPrint}</h5>
                   <input style={{borderBottom:'1px solid black'}}
                   type="number" min='1' value={data.numOfPrint} onChange={e => setData({...data, numOfPrint: e.target.value})} />
-                  {/* <Link to={`/dashboard/document/${documentId}`}> */}
                       <button 
                         onClick={saveDataToPrint} 
                         disabled={saveToPrintRequest ? true : false}
@@ -389,73 +482,344 @@ const handleDownload = () => {
                               animationDuration="0.75"
                               width="30"
                               visible={true}/> :"Save"}</button>
-                  {/* </Link>  */}
+
+                </div> */}
+                <div className="mt-4" style={{ display: "", gridGap: "10px" }}>
+                  <p
+                    className="mb-1"
+                    style={{
+                      color: "gray",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "0",
+                    }}
+                  >
+                    {" "}
+                    <CheckCircleOutlineIcon
+                      style={{
+                        width: "20px",
+                        marginRight: "5px",
+                        color: "#08408B",
+                        marginBottom: "1px",
+                      }}
+                    />
+                    Label Name: {documentInfo?.labelName}
+                  </p>
+                  {documentInfo?.labelDescription && (
+                    <p
+                      className="mb-1"
+                      style={{
+                        color: "gray",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        margin: "0",
+                      }}
+                    >
+                      {" "}
+                      <CheckCircleOutlineIcon
+                        style={{
+                          width: "20px",
+                          marginRight: "5px",
+                          color: "#08408B",
+                          marginBottom: "1px",
+                        }}
+                      />
+                      Label description: {documentInfo?.labelDescription}
+                    </p>
+                  )}
+                  <p
+                    className="mb-1"
+                    style={{
+                      color: "gray",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "0",
+                    }}
+                  >
+                    {" "}
+                    <CheckCircleOutlineIcon
+                      style={{
+                        width: "20px",
+                        marginRight: "5px",
+                        color: "#08408B",
+                        marginBottom: "1px",
+                      }}
+                    />
+                    Version: {documentInfo?.labelVersion}
+                  </p>
+                  <p
+                    className="mb-1"
+                    style={{
+                      color: "gray",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "0",
+                    }}
+                  >
+                    {" "}
+                    <CheckCircleOutlineIcon
+                      style={{
+                        width: "20px",
+                        marginRight: "5px",
+                        color: "#08408B",
+                        marginBottom: "1px",
+                      }}
+                    />
+                    Created By: {documentInfo?.createdBy?.lastName}{" "}
+                    {documentInfo?.createdBy?.firstName}
+                  </p>
+                  <p
+                    className="mb-1"
+                    style={{
+                      color: "gray",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "0",
+                    }}
+                  >
+                    {" "}
+                    <CheckCircleOutlineIcon
+                      style={{
+                        width: "20px",
+                        marginRight: "5px",
+                        color: "#08408B",
+                        marginBottom: "1px",
+                      }}
+                    />
+                    Approved By: {documentInfo?.approvedBy?.lastName}{" "}
+                    {documentInfo?.approvedBy?.firstName}
+                  </p>
+                  <p
+                    className="mb-1"
+                    style={{
+                      color: "gray",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "0",
+                    }}
+                  >
+                    {" "}
+                    <CheckCircleOutlineIcon
+                      style={{
+                        width: "20px",
+                        marginRight: "5px",
+                        color: "#08408B",
+                        marginBottom: "1px",
+                      }}
+                    />
+                    Released By: {documentInfo?.releaseBy?.lastName}{" "}
+                    {documentInfo?.releaseBy?.firstName}
+                  </p>
+                  <p
+                    className="mb-1"
+                    style={{
+                      color: "gray",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "0",
+                    }}
+                  >
+                    {" "}
+                    <CheckCircleOutlineIcon
+                      style={{
+                        width: "20px",
+                        marginRight: "5px",
+                        color: "#08408B",
+                        marginBottom: "1px",
+                      }}
+                    />
+                    Produced By: {documentInfo?.produceBy?.lastName}{" "}
+                    {documentInfo?.produceBy?.firstName}
+                  </p>
                 </div>
-                <div className='mt-3' style={{display:'', gridGap:'10px'}}>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Label Name: {documentInfo?.labelName}</p>
-                    {documentInfo?.labelDescription &&<p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Label description: {documentInfo?.labelDescription}</p>}
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Version: {documentInfo?.labelVersion}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Created By: {documentInfo?.createdBy?.lastName} {documentInfo?.createdBy?.firstName}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Approved By: {documentInfo?.approvedBy?.lastName} {documentInfo?.approvedBy?.firstName}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}>  <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Released By: {documentInfo?.releaseBy?.lastName} {documentInfo?.releaseBy?.firstName}</p>
-                    <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Produced By: {documentInfo?.produceBy?.lastName} {documentInfo?.produceBy?.firstName}</p>
-                    {/* <p className='mb-1' style={{color:'gray', fontSize:'14px', fontWeight:'500', margin:'0'}}> <CheckCircleOutlineIcon style={{width:'20px', marginRight:"5px", color:"#08408B", marginBottom:'1px'}}/>Print count: {documentInfo?.printCount}</p> */}
+
+                <button
+                  onClick={openModal}
+                  variant="contained"
+                  color="primary"
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: "#062D60",
+                    width: "100%",
+                    height: "35px",
+                    borderRadius: "5px",
+                    color: "#fff",
+                  }}
+                >
+                  Show Logs
+                </button>
+                <div style={{ zIndex: "99999", width: "100%" }}>
+
+                  <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Print Logs"
+                    style={{
+                      minHeight: "600px",
+                      border: "0",
+                      content: {
+                        top: "13%",
+                        left: "50%",
+                        right: "auto",
+                        bottom: "auto",
+                        marginRight: "-50%",
+                        transform: "translate(-50%, 0%)",
+                        width: "80%",
+                        height: "70%", // Set a fixed height
+                        overflowY: "scroll", // Enable vertical scrolling
+                        backgroundColor: "#ecf0f3",
+                        zIndex: "99999",
+                      },
+                      overlay: {
+                        zIndex: "99999",
+                        backgroundColor: "rgba(0, 0, 0, 0.6)",
+                        backdropFilter: "blur(2px)",
+                      },
+                    }}
+                  >
+
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <h6>Print Logs:</h6>
+                      <div>
+                      <button className='mx-2'
+                      onClick={closeModal}
+                      style={{
+                        marginTop: "10px",
+                        backgroundColor: "#062D60",
+                        borderRadius: "5px",
+                        color: "#fff",
+                      }}
+                      variant="contained"
+                      color="secondary"
+                    >
+                      Close
+                    </button>
+                      <button
+                        onClick={handleDownload}
+                        style={{
+                          backgroundColor: "lightgray",
+                          borderRadius: "4px",
+                          border:'2px solid #062D60'
+                        }}
+                      >
+                        <DownloadIcon />
+                      </button>
+                      </div>
+                    </div>
+                    <TableContainer
+                      style={{
+                        backgroundColor: "#ecf0f3",
+                        boxShadow: "none",
+                        border: "0",
+                        height:'460px',
+
+                      }}
+                      component={Paper}
+                    >
+                      <Table
+                        style={{
+                          backgroundColor: "#ecf0f3",
+                          boxShadow: "none",
+                          border: "0",
+                        }}
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell
+                              style={{ fontSize: "12px", fontWeight: "600" }}
+                            >
+                              #
+                            </TableCell>
+                            <TableCell
+                              style={{ fontSize: "12px", fontWeight: "600" }}
+                            >
+                              Label Id
+                            </TableCell>
+                            <TableCell
+                              style={{ fontSize: "12px", fontWeight: "600" }}
+                            >
+                              Printed By
+                            </TableCell>
+                            <TableCell
+                              style={{ fontSize: "12px", fontWeight: "600" }}
+                            >
+                              Number of print
+                            </TableCell>
+                            <TableCell
+                              style={{ fontSize: "12px", fontWeight: "600" }}
+                            >
+                              Print Status
+                            </TableCell>
+                            <TableCell
+                              style={{ fontSize: "12px", fontWeight: "600" }}
+                            >
+                              Print Date
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {documentInfo?.printLogs?.map((log, i) => (
+                            <TableRow key={log._id}>
+                              <TableCell style={{ fontSize: "12px" }}>
+                                {i + 1}
+                              </TableCell>
+                              <TableCell style={{ fontSize: "12px" }}>
+                                {documentInfo.shortId}-V
+                                {documentInfo.labelVersion}
+                              </TableCell>
+                              <TableCell style={{ fontSize: "12px" }}>
+                                {log.printedBy &&
+                                  `${log.printedBy.firstName} ${log.printedBy.lastName}`}
+                              </TableCell>
+                              <TableCell style={{ fontSize: "12px" }}>
+                                {log.numOfPrint}
+                              </TableCell>
+                              <TableCell style={{ fontSize: "12px" }}>
+                                {log.printStatus === "starting"
+                                  ? "start to print"
+                                  : log.printStatus}
+                              </TableCell>
+                              <TableCell style={{ fontSize: "12px" }}>
+                                {new Date(log.printDate).toLocaleString()}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Modal>
                 </div>
               </div>
 
-              <div className='mt-5 pb-5'>
-               {documentInfo && 
-                <>
-                <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
-                  <h6>Print Logs:</h6>
-                  <button onClick={handleDownload} style={{backgroundColor:'lightgray', borderRadius:'4px'}}>
-                        {/* Download Excel */}
-                      <DownloadIcon />
-                    </button>
-
-                </div>
-                  <TableContainer style={{backgroundColor:'#ecf0f3', boxShadow:'none', border:'0'}} className='' component={Paper}>
-                      <Table style={{backgroundColor:'#ecf0f3', boxShadow:'none', border:'0'}}>
-                          <TableHead>
-                              <TableRow>
-                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>#</TableCell>
-                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Label Id</TableCell>
-                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Printed By</TableCell>
-                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Number of print</TableCell>
-                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Print Status</TableCell>
-                                  <TableCell style={{ fontSize: '12px', fontWeight:'600' }}>Print Date</TableCell>
-                              </TableRow>
-                          </TableHead>
-                          <TableBody style={{backgroundColor:''}}>
-                              {documentInfo?.printLogs?.map((log, i) => (
-                                  <TableRow key={log._id}>
-                                      <TableCell style={{ fontSize: '12px' }}>{i + 1}</TableCell>
-                                      <TableCell style={{ fontSize: '12px' }}>{documentInfo.shortId}-V{documentInfo.labelVersion}</TableCell>
-                                      <TableCell style={{ fontSize: '12px' }}>{log.printedBy && `${log.printedBy.firstName} ${log.printedBy.lastName}`}</TableCell>
-                                      <TableCell style={{ fontSize: '12px' }}>{log.numOfPrint}</TableCell>
-                                      <TableCell style={{ fontSize: '12px' }}>{log.printStatus == "starting" ?  "start to print" : log.printStatus}</TableCell>
-                                      <TableCell style={{ fontSize: '12px' }}>{new Date(log.printDate).toLocaleString()}</TableCell>
-                                  </TableRow>
-                              ))}
-                          </TableBody>
-                      </Table>
-                  </TableContainer>
-                </>}
-            </div>
             </>
-              : (<div style={{width:'100%', marginTop:'20px', display:'flex', justifyContent:'center'}}>
-                  <RotatingLines
-                      strokeColor="#011d41"
-                      strokeWidth="5"
-                      animationDuration="0.75"
-                      width="90"
-                      visible={true}
-                    /> 
-                </div>)}
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <RotatingLines
+                strokeColor="#011d41"
+                strokeWidth="5"
+                animationDuration="0.75"
+                width="90"
+                visible={true}
+              />
             </div>
+          )}
+        </div>
       </main>
-</div>
-  )
+    </div>
+  );
 }
 
 export default LabelSizes

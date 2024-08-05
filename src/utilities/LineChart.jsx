@@ -83,6 +83,7 @@ const LineChart = ({ companyId, token }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top',
@@ -113,7 +114,7 @@ const LineChart = ({ companyId, token }) => {
   };
 
   return (
-    <div className='mt-3 linearChar py-3'>
+    <div className='mt-3 linearChar py-3' style={{minHeight:'350px'}}> 
       <Line data={data} options={options} />
     </div>
   );

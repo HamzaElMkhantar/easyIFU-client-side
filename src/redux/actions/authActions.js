@@ -75,14 +75,14 @@ export const loginAction = (email, password) => async (dispatch) => {
           email,
           password,
         }, config);
-
+        console.log(response.data)
 
     // Store the access token and refresh token in cookies
     // Cookies.set('eIfu_ATK', response.data.accessToken);
     // Cookies.set('eIfu_RTK', response.data.refreshToken); // Set the expiration time as needed
     dispatch({ 
         type: LOGIN_SUCCESS, 
-        payload: response.data 
+        payload: response 
       });
 
       const A_Token = Cookies.get('eIfu_ATK') || null;
@@ -101,7 +101,7 @@ export const loginAction = (email, password) => async (dispatch) => {
 
     dispatch({
         type: LOGIN_FAILED, 
-        payload: error.response });
+        payload: error?.response?.data });
     setTimeout(() =>{
       dispatch({ 
         type: 'LOGIN_RESET'

@@ -3,7 +3,7 @@
     position: fixed;
     width: 100%;
     background-color: #ecf0f3 !important;
-    z-index: 999;
+    z-index: 99;
     border-bottom: .5px solid lightgray;
 }
 .navbar a {
@@ -39,7 +39,7 @@
 }
 
 #sidebar-wrapper {
-  z-index: 1000;
+  z-index: 100;
   position: fixed;
   left: 250px;
   width: 0;
