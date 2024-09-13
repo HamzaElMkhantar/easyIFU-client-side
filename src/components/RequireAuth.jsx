@@ -14,6 +14,15 @@ const RequireAuth = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
+  const R_Token = Cookies.get('eIfu_RTK') || null;
+  const A_Token = Cookies.get('eIfu_ATK') || null;
+
+  const decodedToken = A_Token ? jwtDecode(A_Token) : null
+  const decodedToken_R = A_Token ? jwtDecode(R_Token) : null
+
+  // Use the custom hook to track user status
+    const userId = decodedToken?.userInfo?._id ;
+
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   useEffect(() => {
     const checkTokenExpiration = () => {
@@ -24,7 +33,7 @@ const RequireAuth = () => {
         // Check Access Token expiration
         if (!accessToken) {
           // console.log('Access Token not found');
-          dispatch(logoutAction());
+          dispatch(logoutAction(userId));
           // <Navigate to="/login" state={{ from: location }} replace />;
           setShowLogoutModal(true);
           return;
@@ -53,7 +62,7 @@ const RequireAuth = () => {
           // console.log('Refresh Token not found');
           // setShowLogoutModal(true);
           toast.info('Your Session is Expired, Please LogIn Again RT');
-          dispatch(logoutAction());
+          dispatch(logoutAction(userId));
           // <Navigate to="/login" state={{ from: location }} replace />;
           return;
         }
@@ -66,7 +75,7 @@ const RequireAuth = () => {
             if (decodedRefreshToken.exp < currentTimeInSeconds) {
               // console.log('Refresh Token has expired');
               // toast.info('Your Session is Expired, Please LogIn Again');
-              dispatch(logoutAction());
+              dispatch(logoutAction(userId));
               setShowLogoutModal(true);
               return;
             }

@@ -13,7 +13,7 @@ const PaymentFailed = () => {
         Subscription Failed! <br/>
         We're here to help. Please check your payment details and try again.
         </p>
-        <Link to={'/'} style={{color:'#09566F', 
+        <Link to={'/'} replace={true} style={{color:'#09566F', 
               textDecorationLine: 'underline', 
               padding:'5px 15px',
               borderRadius:'4px',

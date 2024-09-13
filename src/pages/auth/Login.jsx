@@ -97,7 +97,7 @@ const Login = () => {
                           required
                         />
                         <label className="form-label" htmlFor="email">
-                          Username
+                          Email
                         </label>
                       </div>
                       <div className="form-outline mb-2">

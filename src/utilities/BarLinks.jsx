@@ -37,7 +37,7 @@ function BarLinks({pages}) {
   console.log("pathName: ", currentPage)
 
   return (
-    <AppBar position="static"style={{backgroundColor:'#021d41'}}>
+    <AppBar position="static"style={{backgroundColor:'#021d41', marginBottom:'px', padding:'0'}}>
       <div className='container' >
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>

@@ -6,7 +6,8 @@ import { logoutAction } from '../redux/actions/authActions';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { RotatingLines } from 'react-loader-spinner';
-
+import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
 
 const style = {
     position: 'absolute',
@@ -22,7 +23,9 @@ const style = {
     borderRadius: '3px'
   };
 const LogoutModal = () => {
-
+  const token = Cookies.get("eIfu_ATK") || null;
+  const decodedToken = token ? jwtDecode(token) : null;
+  const userId = decodedToken?.userInfo?._id || null; 
 
   const {logout} = useSelector(state => state);
   const {logoutRequest, logoutSuccess, logoutFail} = logout
@@ -30,7 +33,7 @@ const LogoutModal = () => {
   const dispatch = useDispatch()
   const handleLogout = (e) => {
     e.preventDefault();
-    dispatch(logoutAction())
+    dispatch(logoutAction(userId))
   }
 const navigate = useNavigate()
   useEffect(() => {

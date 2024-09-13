@@ -129,6 +129,7 @@ import {
 import Template1 from "../../templates/template1/Template1";
 import { convertDateToYYMMDD } from "../../utilities/convertDateToYYMMDD";
 import Swal from "sweetalert2";
+import Template2 from "../../templates/template2/Template2";
 
 const LabelInformation = () => {
   const { projectId } = useParams();
@@ -1676,7 +1677,7 @@ const LabelInformation = () => {
               <div className="symbol-content-item">
                 <img className="symbol-img" src={consult_instruction_for_use} />
                 {projectInfo.labelData.eIFULink && (
-                  <div className="">
+                   <div className="">
                     <p>{projectInfo.labelData.eIFULink}</p>
                   </div>
                 )}
@@ -2455,6 +2456,7 @@ const LabelInformation = () => {
 
           <img width={"100px"} src={imageSrc} alt={`data matrix from`} />
         </div>
+
         <div
           style={{
             display: "flex",
@@ -2507,8 +2509,8 @@ const LabelInformation = () => {
                         }}
                       >
                         <option>Choose User :</option>
-                        {allUsersCompany &&
-                          allUsersCompany.map((item) => {
+                        {allUsersCompany.length > 0 &&
+                          allUsersCompany?.map((item) => {
                             return (
                               <option
                                 value={`${item._id}`}
@@ -2567,6 +2569,19 @@ const LabelInformation = () => {
         <div></div>
         {!getLabelRequest ? (
           <div className="container">
+            {/* <div
+              style={{ height: "90vh", width: "" }}
+              className="workspace"
+            >
+              <Template2
+                width={"76"}
+                height={"102"}
+                projectInfo={projectInfo}
+                handleUDI={handleUDI}
+                imageSrc={imageSrc}
+                onSizeChange={handleSizeChange}
+              />
+            </div> */}
             {/* --------------------------------------------------------- */}
 
             {size && (

@@ -14,7 +14,7 @@ const Header = () => {
   const [toggle, setToggle] = useState(false);
   const token = Cookies.get('eIfu_ATK') || null;
   const decodedToken = token ? jwtDecode(token) : null;
-
+  const userId = decodedToken?.userInfo?._id || null;
   const dispatch = useDispatch()
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -23,7 +23,7 @@ const Header = () => {
   const {logout} = useSelector(state => state);
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const handleLogout = () => {
-    dispatch(logoutAction())
+    dispatch(logoutAction(userId))
   }
 
  
@@ -74,7 +74,7 @@ const Header = () => {
                   dashboard
                 </Link>
                 
-                <Link onClick={() => dispatch(logoutAction())}  className='btn' style={{backgroundColor:'#ecf0f3'}}>
+                <Link onClick={() => dispatch(logoutAction(userId))}  className='btn' style={{backgroundColor:'#ecf0f3'}}>
                   <button style={{backgroundColor:'#0E2F78', color:'#fff', borderRadius:'10px', padding:'2px 10px'}}>
                   {logoutRequest 
                        ? <RotatingLines
@@ -120,7 +120,7 @@ const Header = () => {
                   <Link to={decodedToken && decodedToken?.userInfo?.role.includes("superAdmin") ? "/eIFU-admin/companies" : "/dashboard"} style={{width:'150px', padding:'5px 20px'}} onClick={() => setMenuOpen(false)} className='nav-link' href='#price'>
                     dashboard
                   </Link>
-                  <Link style={{width:'150px', padding:'5px 20px'}} onClick={() => dispatch(logoutAction())} className='nav-link' href='#price'>
+                  <Link style={{width:'150px', padding:'5px 20px'}} onClick={() => dispatch(logoutAction(userId))} className='nav-link' href='#price'>
                   Logout
                   </Link>
               </ul>

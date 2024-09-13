@@ -20,16 +20,24 @@ import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 
 const SideBarEasyIFU = ({isSidebarOpen}) => {
+  const R_Token = Cookies.get('eIfu_RTK') || null;
+  const A_Token = Cookies.get('eIfu_ATK') || null;
+
+  const decodedToken = A_Token ? jwtDecode(A_Token) : null
+  const decodedToken_R = A_Token ? jwtDecode(R_Token) : null
+
+  // Use the custom hook to track user status
+    const userId = decodedToken?.userInfo?._id ;
+
   const {logout} = useSelector(state => state);
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const dispatch = useDispatch()
   const handleLogout = () => {
-    dispatch(logoutAction())
+    dispatch(logoutAction(userId))
 
   }
   const navigate = useNavigate()
   const token = Cookies.get("eIfu_ATK") || null;
-  const decodedToken = token ? jwtDecode(token) : null;
   useEffect(() => {
     if(logoutSuccess){
       navigate("/login")

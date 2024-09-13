@@ -31,6 +31,10 @@ import {ALL_LABELS_FAILED,
         LABEL_LOGS_REQUEST,
         LABEL_LOGS_RESET,
         LABEL_LOGS_SUCCESS,
+        LOT_GENERATOR_REQUEST,
+        LOT_GENERATOR_SUCCESS,
+        LOT_GENERATOR_FAILED,
+        LOT_GENERATOR_RESET,
         REJECTED_LABEL_FAILED,
         REJECTED_LABEL_REQUEST,
         REJECTED_LABEL_RESET,
@@ -421,7 +425,7 @@ export const rejectedLabelsAction = ({productId, companyId, createdBy}, token) =
         }
     
         const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/rejected/${productId}/${companyId}/${createdBy}`, config);
-        console.log(response.data)
+
         dispatch({ 
             type: REJECTED_LABEL_SUCCESS, 
             payload: response.data
@@ -499,7 +503,7 @@ export const LabelsTemplateAction = (data, token) => async (dispatch) => {
             }
         }
     
-        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/template-labels/${data.companyId}/${data.userId}`, config);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/label/template-labels/${data.companyId}/${data.userId}?searchWords=${data?.searchWords ? data.searchWords : ''}`, config);
         console.log(response.data)
         dispatch({ 
             type: GET_TEMPLATES_SUCCESS, 
@@ -598,6 +602,45 @@ export const getLabelLogsAction = (labelId, token) => async (dispatch) => {
         setTimeout(() =>{
             dispatch({ 
             type: LABEL_LOGS_RESET
+            });
+        }, 1500)
+    }
+};
+
+export const generateLotNumberAction = (data, token) => async (dispatch) => {
+    try {
+
+        dispatch({ 
+            type: LOT_GENERATOR_REQUEST
+        });
+    
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/label/lotNumber-generator`, data, config);
+        console.log(response.data)
+        dispatch({ 
+            type: LOT_GENERATOR_SUCCESS, 
+            payload: response.data
+        });
+        setTimeout(() =>{
+        dispatch({ 
+            type: LOT_GENERATOR_RESET
+        });
+        }, 1500)
+    } catch (error) {
+        console.error(error);
+        dispatch({
+            type: LOT_GENERATOR_FAILED, 
+            payload: error?.response?.data 
+        });
+    
+        setTimeout(() =>{
+            dispatch({ 
+            type: LOT_GENERATOR_RESET
             });
         }, 1500)
     }

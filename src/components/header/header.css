@@ -1,3 +1,10 @@
+.linkStyle {
+  color:'#dee3e8 !important'
+}
+
+.linkStyle:hover {
+  color:'#062d60'
+}
 
 .navbar{
     position: fixed;

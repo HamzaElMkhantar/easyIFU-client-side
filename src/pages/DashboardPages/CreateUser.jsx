@@ -45,6 +45,7 @@ const CreateUser = () => {
     const {createUserRequest, createUserSuccess, createUserFail} = createUser;
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
+    const userId = decodedToken?.userInfo?._id || null;
 
     const [userInfo, setUserInfo] = useState({
         adminId: decodedToken ? decodedToken.userInfo._id : null,
@@ -113,7 +114,7 @@ const CreateUser = () => {
   const {logout} = useSelector(state => state)
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const handleLogout = () => {
-    dispatch(logoutAction())
+    dispatch(logoutAction(userId))
   }
   let barLinks = []
 

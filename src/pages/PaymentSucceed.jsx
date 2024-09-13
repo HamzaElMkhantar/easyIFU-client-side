@@ -12,7 +12,7 @@ const PaymentSucceed = () => {
         <p className="text-dark">
         Subscription successful! Welcome to  <br />easyIFU.com
         </p>
-        <Link to={'/'} style={{color:'#09566F', 
+        <Link to={'/'} replace={true} style={{color:'#09566F', 
               textDecorationLine: 'underline', 
               padding:'5px 15px',
               borderRadius:'4px',

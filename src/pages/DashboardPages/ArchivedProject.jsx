@@ -43,7 +43,9 @@ const ArchivedProject = () => {
   // -- component logic --
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
-  const companyId = decodedToken && decodedToken?.userInfo?.companyId
+  const companyId = decodedToken?.userInfo?.companyId || null;
+  const userId = decodedToken?.userInfo?._id || null;
+
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
@@ -55,7 +57,7 @@ const ArchivedProject = () => {
   const {archiveToggleProjectRequest, archiveToggleProjectSuccess, archiveToggleProjectFail, archiveToggleData} = archivedProjectToggle
 
   const handleLogout = () => {
-    dispatch(logoutAction())
+    dispatch(logoutAction(userId))
   }
 
   useEffect(() => {

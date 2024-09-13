@@ -65,6 +65,7 @@ import { LabelsTemplateReducer, approveLabelReducer,
         approvedLabelsReducer, 
         createLabelReducer, 
         drafLabelsReducer, 
+        generateLotNumberReducer, 
         getAllLabelsReducer, 
         getLabelLogsReducer, 
         getLabelReducer, 
@@ -151,6 +152,8 @@ const reducer = combineReducers({
     LabelsTemplate: LabelsTemplateReducer ,
     saveToPrint: saveToPrintReducer,
     getLabelLogs: getLabelLogsReducer ,
+    generateLotNumber: generateLotNumberReducer,
+    
     // products reducers
     getProductByProjectId: getProductByProjectIdReducer,
     productById: getProductByIdReducer ,

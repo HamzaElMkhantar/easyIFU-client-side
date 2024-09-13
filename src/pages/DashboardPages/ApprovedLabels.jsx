@@ -49,8 +49,8 @@ const ApprovedLabels = () => {
   // -- component logic --
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null
-  const companyId = decodedToken && decodedToken.userInfo && decodedToken.userInfo.companyId
-  const userId = decodedToken && decodedToken.userInfo && decodedToken.userInfo._id
+  const companyId =decodedToken?.userInfo?.companyId || null
+  const userId = decodedToken?.userInfo?._id || null
 
   const [data, setData] = useState([])
   const {approvedLabels} = useSelector(state => state)
@@ -69,14 +69,11 @@ const ApprovedLabels = () => {
       }
   }, [approvedLabelsSuccess, approvedLabelsFail])
 
-
-
-
   // ------ headers ------
   const {logout} = useSelector(state => state)
   const {logoutRequest, logoutSuccess, logoutFail} = logout
   const handleLogout = () => {
-    dispatch(logoutAction())
+    dispatch(logoutAction(userId))
   }
   // ------ headers ------
   let barLinks = [

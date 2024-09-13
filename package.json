@@ -41,7 +41,7 @@
     "moment": "^2.29.4",
     "qrcode-generator": "^1.4.4",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.10.2",
+    "react-bootstrap": "^2.10.4",
     "react-chartjs-2": "^3.3.0",
     "react-charts": "^3.0.0-beta.57",
     "react-countup": "^6.5.3",

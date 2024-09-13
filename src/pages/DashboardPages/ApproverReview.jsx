@@ -1336,7 +1336,8 @@ useEffect(() => {
                                                   handleUDI={handleUDI}
                                                   imageSrc={imageSrc}
                                                   onSizeChange={handleSizeChange}
-                                              />}
+                                              />
+                                              }
                                       </div>
                                       </TransformComponent>
                                       <div className="" style={{backgroundColor:'',marginTop:'30px', width:'100%'}}>

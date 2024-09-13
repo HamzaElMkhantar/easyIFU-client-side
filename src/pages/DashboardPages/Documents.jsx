@@ -3,20 +3,13 @@ import SideBar from '../../components/header/SideBar'
 import Avatar from '@mui/material/Avatar';
 import '../../components/header/header.css';
 import easyIFUlogo from '../../assets/easyIFU_Logo.png'
-import '../../components/header/header.css';
-import { Card, Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
-import TurnedInRoundedIcon from '@mui/icons-material/TurnedInRounded';
-import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteDocumentsAction, documentsAction } from '../../redux/actions/projectActions';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
-import DeleteIcon from '@mui/icons-material/Delete';
 import './documentInformation.css'
 import { RotatingLines } from 'react-loader-spinner';
 import { logoutAction } from '../../redux/actions/authActions';
@@ -28,9 +21,9 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Heading from '../../components/Heading/Heading';
+import '../../components/Heading/styles.css'
 
 
 const Documents = () => {
@@ -62,6 +55,7 @@ const Documents = () => {
 
     const token = Cookies.get("eIfu_ATK") || null;
     const decodedToken = token ? jwtDecode(token) : null
+    const userId = decodedToken?.userInfo?._id || null;
 
     const [searchBy, setSearchBy] = useState('LOTNumber')
     const [searchWords, setSearchWords] = useState('')
@@ -124,7 +118,7 @@ const Documents = () => {
 
     // ------ headers ------
     const handleLogout = () => {
-      dispatch(logoutAction())
+      dispatch(logoutAction(userId))
     }
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleMenu = (event) => {
@@ -137,6 +131,7 @@ const Documents = () => {
     <div className='' style={{height:'70vh', width:'100%', display:'flex'}}>      
     <SideBar isSidebarOpen={isSidebarOpen} />
     <main className='' style={{paddingTop:'0px', width:'100%'}}>
+      
         {/* Dashboard header  */}
         <div  style={{position:'sticky', top:'0'}} id="page-content-wrapper">
           <Box sx={{ flexGrow: 1}} className="" >
@@ -199,6 +194,7 @@ const Documents = () => {
               </Toolbar>
             </AppBar>
           </Box>
+        <Heading><Link className='linkStyle' to='/dashboard/documents'>Orders</Link> / </Heading>
         </div>
 
         {/* Dashboard  content   */}
@@ -254,6 +250,7 @@ const Documents = () => {
 
                 </div>
             </div>
+            
           </div>
         {!documentsRequest ? <div className="row row_branchen">
         {!companyDocument.length > 0 && <div style={{textAlign:'center', width:'100%'}}>
@@ -264,25 +261,24 @@ const Documents = () => {
               <thead style={{backgroundColor:'#075670', textAlign:'center'}} className="thead-dark">
                 <tr style={{color:'#fff'}}>
                   <th scope="col">#</th>
-                  <th scope="col">label Name</th>
-                  <th scope="col">LOT number</th>
-                  <th scope="col">Serial number</th>
-                  <th scope="col">Produced By</th>
                   <th scope="col">Created At</th>
+                  <th scope="col">label Name</th>
+                  <th scope="col">LOT/Serial number</th>
+                  {/* <th scope="col"></th> */}
+                  <th scope="col">Produced By</th>
                   <th scope="col">Details</th>
                 </tr>
               </thead>
               <tbody style={{ textAlign:'center'}}>
-                 {companyDocument &&
-                  companyDocument?.map((item, index) => {
+                 {companyDocument?.map((item, index) => {
                     return (
                       <tr key={index}>
                         <th scope="row">{index+1}</th>
-                          <td>{item?.labelName}</td>
-                          <td>{item?.labelData.hasLotNumber ? item?.labelData.LOTNumber : "N/A" }</td>
-                          <td>{item?.labelData.haSerialNumber ? item?.labelData.serialNumber : "N/A"}</td>
-                          <td>{item?.produceBy?.firstName} {item?.produceBy?.lastName}</td>
                           <td>{formatDate(item?.createdAt)}</td>
+                          <td>{item?.labelName}</td>
+                          <td>{item?.labelData.hasLotNumber ? item?.labelData.LOTNumber : item?.labelData.haSerialNumber ? item?.labelData.serialNumber : "N/A" }</td>
+                          {/* <td>{item?.labelData.haSerialNumber ? item?.labelData.serialNumber : "N/A"}</td> */}
+                          <td>{item?.produceBy?.firstName} {item?.produceBy?.lastName}</td>
                           <td>
                             <Link to={`/dashboard/document-sizes/${item._id}`} 
                                 style={{color:'#021D41', 

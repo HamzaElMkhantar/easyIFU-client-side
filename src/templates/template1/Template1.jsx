@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import "./template1.css"
-import { Space } from 'react-zoomable-ui';
 
 // manufacturer and product info symbols
 import Manufacturer from '../../assets/eIFUSymbols/Manufacturer.png'
@@ -215,7 +214,7 @@ let customStyles = {
 };
 
 
-const Template1 = (prop) => {
+const Template1 = (props) => {
   const {width, 
         height, 
         scale,projectInfo, 
@@ -224,8 +223,9 @@ const Template1 = (prop) => {
         onSizeChange, 
         printCount, 
         border, 
-        isFreeTrail} = prop
-
+        isFreeTrail,
+         activeSerialNumber} = props
+// return null;
   useEffect(() => {
     const size = `${height}x${width}`;
     onSizeChange(size); // Call the callback function with the size value
@@ -558,8 +558,6 @@ function formatSumDateToYYYYMMDD(date) {
                     <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>{projectInfo.labelData.importerName}</p>
                     <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>{projectInfo.labelData.importerAddress}</p> 
                   </div>
-
-
                 </div>}
 
               {projectInfo.labelData.haDateOfManufacture &&
@@ -596,7 +594,7 @@ function formatSumDateToYYYYMMDD(date) {
                 <img className='symbol-img' src={Serial_numberSymbol} style={{...customStyles.image, ...DynamicStyleForOwnerInfo.image}} />
                 <div className='' style={customStyles.paragraphWrapper}>
                   <p style={{...customStyles.paragraph, ...DynamicStyleForOwnerInfo.paragraph}}>
-                    {dynamicData?.serialNumber ? dynamicData?.serialNumber : projectInfo.labelData.serialNumber}{printCount ?"-"+printCount : null}</p>
+                    {activeSerialNumber ? `${projectInfo.labelData.serialNumber}-${activeSerialNumber}`: dynamicData?.serialNumber ? dynamicData?.serialNumber : projectInfo.labelData.serialNumber}{printCount ?"-"+printCount : null}</p>
                 </div>
               </div>}
 
@@ -1076,7 +1074,7 @@ function formatSumDateToYYYYMMDD(date) {
             <div className='header-item Patient_information_website'>
              {projectInfo?.labelData?.website && <>
                 <img className='header-img' src={Patient_information_website} alt="" />
-                <p className=''>www.website.com</p>
+                <p className=''>{projectInfo.labelData.website}</p>
               </>}
             </div>
             <div className='header-item product-title'>
@@ -1094,8 +1092,8 @@ function formatSumDateToYYYYMMDD(date) {
               {/* <p>custom-made device </p> */}
             </div>
             <div className='header-item right'>
-              {projectInfo?.labelData?.productType == "Medical device" &&<img className='header-img' src={Medical_deviceSymbol} alt="" />}
-              {projectInfo?.labelData?.productType == "In Vitro Diagnostic (IVD) Medical Device" &&<img className='header-img' src={IVD} alt="" />}
+              {projectInfo?.labelData?.productType === "Medical device" &&<img className='header-img' src={Medical_deviceSymbol} alt="" />}
+              {projectInfo?.labelData?.productType === "In Vitro Diagnostic (IVD) Medical Device" &&<img className='header-img' src={IVD} alt="" />}
             </div>
           </div>
           {/* header End*/}
@@ -1132,7 +1130,7 @@ function formatSumDateToYYYYMMDD(date) {
                   {projectInfo?.labelData?.notifiedBodyNumber && (
                     <p style={{fontSize: '10px', margin:'0',padding:'0'}}>{projectInfo.labelData.notifiedBodyNumber}</p>
                   )}
-                </div> //ukca_mark
+                </div>
               )
             )}
 
@@ -1162,10 +1160,9 @@ function formatSumDateToYYYYMMDD(date) {
 
                 </div>
                 <div  style={{backgroundColor:''}}>
-
-                  {projectInfo && projectInfo.labelData && handleUDI(projectInfo)}
-                  {projectInfo && projectInfo.labelData?.udiFormat == "GS1" 
-                    && projectInfo.labelData.udiType == 'GS1 (Data Matrix)' && 
+                  {projectInfo && projectInfo.labelData && handleUDI({projectInfo, customWidth: 0.53, customHeight: 40, activeSerialNumber})}
+                  {projectInfo && projectInfo.labelData?.udiFormat === "GS1" 
+                    && projectInfo.labelData.udiType === 'GS1 (Data Matrix)' && 
                     imageSrc &&
                     <div className='' style={{display:'flex', alignItems:'center', marginBottom:'5px', marginLeft:'25px'}}>
                       <img style={{width:'70px', height:'70px'}} src={imageSrc} alt={`data matrix from`} />
@@ -1190,7 +1187,7 @@ function formatSumDateToYYYYMMDD(date) {
                   position:'', opacity:'1', zIndex:'-9900',display:'flex', justifyContent:'space-between', alignItems:'center',fontWeight:'700'
             }}>Created By: easyifu.com</div>}
             <span style={{textAlign:'center', fontSize:'8px', fontWeight:'700', marginBottom:''}}>{projectInfo?.shortId}-V{projectInfo.labelVersion}</span>
-            <span style={{textAlign:'center', fontSize:'8px', fontWeight:'700', marginBottom:''}}>Created At: {DateFormat(projectInfo.createdAt)}</span>
+            <span style={{textAlign:'center', fontSize:'8px', fontWeight:'700', marginBottom:''}}>{DateFormat(projectInfo.createdAt)}</span>
 
           </div>
         </div>

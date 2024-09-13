@@ -169,14 +169,11 @@ export const refreshAction = () => async (dispatch) => {
 };
 
 
-export const logoutAction = () => async (dispatch) => {
+export const logoutAction = (userId) => async (dispatch) => {
     try {
       const A_Token = Cookies.get('eIfu_ATK') || null;
-
       const decodedToken = A_Token ? jwtDecode(A_Token) : null 
-  
       const userId = decodedToken?.userInfo?._id ;
-       Cookies.set('userId')
 
   
       dispatch({ type: LOGOUT_REQUEST });
@@ -192,7 +189,6 @@ export const logoutAction = () => async (dispatch) => {
 
 
       const {data} = await axios.post(process.env.REACT_APP_BASE_URL+'/api/v1/auth/logout', {userId}, config)
-      console.log(data)
   
       dispatch({ type: LOGOUT_SUCCESS });
       // Cookies.remove('eIfu_ATK');
