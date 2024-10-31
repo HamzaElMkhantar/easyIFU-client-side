@@ -82,32 +82,7 @@ const ApprovedLabels = () => {
     {title: 'Approved', link: '/dashboard/project/approved/'+productId},
     {title: 'Released', link: '/dashboard/project/released/'+productId},
     {title: 'Rejected', link: '/dashboard/project/rejected/'+productId}]
-  
-  // if(decodedToken &&
-  //   decodedToken?.userInfo && 
-  //   (decodedToken?.userInfo?.role.includes("Admin") || decodedToken?.userInfo?.role.includes("Creator"))){
-  //     barLinks = [
-  //       {title: 'All Labels', link: '/dashboard/labels/'+productId},
-  //       {title: 'Draft', link: '/dashboard/project/draft/'+productId},
-  //       {title: 'Approved', link: '/dashboard/project/approved/'+productId},
-  //       {title: 'Released', link: '/dashboard/project/released/'+productId},
-  //       {title: 'Rejected', link: '/dashboard/project/rejected/'+productId},
-  //       {title: 'Received', link: '/dashboard/received-project'},
-  //       {title: 'Archived', link: '/dashboard/archived-project'},
-  //     ];
-  // } else if(decodedToken &&
-  //   decodedToken?.userInfo && 
-  //   (!decodedToken?.userInfo?.role.includes("Admin") || !decodedToken?.userInfo?.role.includes("Creator"))){
-  //     barLinks = [
-  //       {title: 'All Labels', link: '/dashboard/labels/'+productId},
-  //       {title: 'Draft', link: '/dashboard/project/draft/'+productId},
-  //       {title: 'Approved', link: '/dashboard/project/approved/'+productId},
-  //       {title: 'Released', link: '/dashboard/project/released/'+productId},
-  //       {title: 'Rejected', link: '/dashboard/project/rejected/'+productId},
-  //       {title: 'Received', link: '/dashboard/received-project'},
-  //       {title: 'Archived', link: '/dashboard/archived-project'},
-  //     ];
-  // }
+
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleMenu = (event) => {

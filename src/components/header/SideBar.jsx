@@ -19,8 +19,6 @@ import { logoutAction } from "../../redux/actions/authActions";
 import { RotatingLines } from "react-loader-spinner";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
-import { getUserAction } from "../../redux/actions/userActions";
-import { toast } from "react-toastify";
 
 const SideBar = ({ isSidebarOpen }) => {
   const navigate = useNavigate();

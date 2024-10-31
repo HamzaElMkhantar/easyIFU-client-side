@@ -9,6 +9,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /pdf\.worker\.js$/,
+        use: 'worker-loader',
+      },
+      {
         test: /\.jsx?$/, // matches .js and .jsx files
         exclude: /node_modules/,
         use: {

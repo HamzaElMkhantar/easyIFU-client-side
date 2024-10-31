@@ -2,11 +2,20 @@ import JsBarcode from "jsbarcode";
 import { convertDateToYYMMDD } from "./convertDateToYYMMDD";
 
 export const handleUDI = (props = {}) => {
-  const {projectInfo, customWidth, customHeight, customFontSize, marginTop, hideParagraph, activeSerialNumber } = props; 
-  if(!projectInfo) return <p style={{fontSize:'6px'}}>missing udi info</p>
+  const {
+    projectInfo,
+    customWidth,
+    customHeight,
+    customFontSize,
+    marginTop,
+    hideParagraph,
+    activeSerialNumber,
+  } = props;
+  console.log({projectInfo})
+  if (!projectInfo) return <p style={{ fontSize: "6px" }}>missing udi info</p>;
   if (projectInfo?.labelData) {
     const {
-      udiDI, 
+      udiDI,
       dateOfManufacture,
       useByDate,
       serialNumber,
@@ -17,68 +26,68 @@ export const handleUDI = (props = {}) => {
       haSerialNumber,
     } = projectInfo?.labelData;
 
-
     let handleSerialNumber = serialNumber;
-    if(haSerialNumber){
-      if(activeSerialNumber){
-        handleSerialNumber = `(21)${serialNumber}-${activeSerialNumber}`
-      }else{
-        handleSerialNumber = `(21)${serialNumber}`
+    if (haSerialNumber) {
+      if (activeSerialNumber) {
+        handleSerialNumber = `(21)${serialNumber}-${activeSerialNumber}`;
+      } else {
+        handleSerialNumber = `(21)${serialNumber}`;
       }
-    }else{
-      handleSerialNumber = ''
+    } else {
+      handleSerialNumber = "";
     }
 
-    let handleLotNumber = '';
-    if(hasLotNumber){
-      handleLotNumber =  serialNumber ? `(10)${serialNumber}` : ''
-    }else{
-      handleLotNumber = ''
+    let handleLotNumber = "";
+    if (hasLotNumber) {
+      handleLotNumber = serialNumber ? `(10)${serialNumber}` : "";
+    } else {
+      handleLotNumber = "";
     }
 
-    let handleDateOfManufacture = '';
-    if(haDateOfManufacture){
-      handleDateOfManufacture =  dateOfManufacture ? `(11)${dateOfManufacture}` : ''
-    }else{
-      handleDateOfManufacture = ''
+    let handleDateOfManufacture = "";
+    if (haDateOfManufacture) {
+      handleDateOfManufacture = dateOfManufacture
+        ? `(11)${dateOfManufacture}`
+        : "";
+    } else {
+      handleDateOfManufacture = "";
     }
-
 
     let udiData =
       (udiDI && udiDI !== "" ? "(01)" + udiDI : "") +
-      (haDateOfManufacture ? dateOfManufacture : handleDateOfManufacture)+
+      (haDateOfManufacture ? dateOfManufacture : handleDateOfManufacture) +
       (useByDate && useByDate !== ""
         ? "(17)" + convertDateToYYMMDD(useByDate)
         : "") +
-      (hasLotNumber ?  handleLotNumber : '')+
-      (haSerialNumber ? handleSerialNumber : '');
-        
-        // (hasLotNumber && LOTNumber && LOTNumber !== ""
-        //   ? "(10)" + "XXXXXXXX"
-        //   : "") +
-      // (haSerialNumber && serialNumber && serialNumber !== ""
-      //   ? "(21)" + "XXXXXXXX"
-      //   : "");
-        
-      // (haDateOfManufacture && dateOfManufacture && dateOfManufacture !== ""
-      //   ? "(11)" + "XXXXXXXX"
-      //   : "") +
-    let udiPI =
-    (haDateOfManufacture ? handleDateOfManufacture : '')+
-      (useByDate && useByDate !== ""
-        ? "(17)" + convertDateToYYMMDD(useByDate)
-        : "") +
-        (hasLotNumber ?  handleLotNumber : '')+
-        (haSerialNumber ? handleSerialNumber : '');
-      // (hasLotNumber && LOTNumber && LOTNumber !== ""
-      //   ? "(10)" + "XXXXXXXX"
-      //   : "") +
-      // (haSerialNumber && serialNumber && serialNumber !== ""
-      //   ? "(21)" + "XXXXXXXX"
-      //   : "");
+      (hasLotNumber ? handleLotNumber : "") +
+      (haSerialNumber ? handleSerialNumber : "");
 
-    if (projectInfo.labelData.udiFormat == "GS1") {
-      if (projectInfo.labelData.udiType == "GS1 (1D Bar Code)") {
+    // (hasLotNumber && LOTNumber && LOTNumber !== ""
+    //   ? "(10)" + "XXXXXXXX"
+    //   : "") +
+    // (haSerialNumber && serialNumber && serialNumber !== ""
+    //   ? "(21)" + "XXXXXXXX"
+    //   : "");
+
+    // (haDateOfManufacture && dateOfManufacture && dateOfManufacture !== ""
+    //   ? "(11)" + "XXXXXXXX"
+    //   : "") +
+    let udiPI =
+      (haDateOfManufacture ? handleDateOfManufacture : "") +
+      (useByDate && useByDate !== ""
+        ? "(17)" + convertDateToYYMMDD(useByDate)
+        : "") +
+      (hasLotNumber ? handleLotNumber : "") +
+      (haSerialNumber ? handleSerialNumber : "");
+    // (hasLotNumber && LOTNumber && LOTNumber !== ""
+    //   ? "(10)" + "XXXXXXXX"
+    //   : "") +
+    // (haSerialNumber && serialNumber && serialNumber !== ""
+    //   ? "(21)" + "XXXXXXXX"
+    //   : "");
+
+    if (projectInfo.labelData.udiFormat === "GS1") {
+      if (projectInfo.labelData.udiType === "GS1 (1D Bar Code)") {
         JsBarcode("#gs1-barcode", udiData, {
           format: "CODE128",
           width: customWidth ? customWidth : 0.35, // Set the width of the bars
@@ -93,11 +102,20 @@ export const handleUDI = (props = {}) => {
         return (
           <div style={{ textAlign: "center", width: "100%" }}>
             <svg id="gs1-barcode" style={{ width: "100%" }}></svg>
-            {!hideParagraph &&<p style={{ fontSize:customFontSize? customFontSize : "7px", fontWeight: "600" }}>{udiData}</p>}
+            {!hideParagraph && (
+              <p
+                style={{
+                  fontSize: customFontSize ? customFontSize : "7px",
+                  fontWeight: "600",
+                }}
+              >
+                {udiData}
+              </p>
+            )}
           </div>
         );
       }
-      if (projectInfo.labelData.udiType == "GS1 (Separate Bar Code)") {
+      if (projectInfo.labelData.udiType === "GS1 (Separate Bar Code)") {
         JsBarcode("#gs1-barcode-udiDI", udiDI, {
           format: "CODE128",
           width: customWidth ? customWidth : 0.35, // Set the width of the bars
@@ -130,11 +148,29 @@ export const handleUDI = (props = {}) => {
           >
             <div style={{ textAlign: "center", margin: "0" }}>
               <svg id="gs1-barcode-udiDI" style={{ width: "100%" }}></svg>
-              {!hideParagraph &&<p style={{ fontSize:customFontSize? customFontSize : "6px", fontWeight: "900" }}>(01){udiDI}</p>}
+              {!hideParagraph && (
+                <p
+                  style={{
+                    fontSize: customFontSize ? customFontSize : "6px",
+                    fontWeight: "900",
+                  }}
+                >
+                  (01){udiDI}
+                </p>
+              )}
             </div>
             <div style={{ textAlign: "center", margin: "0" }}>
               <svg id="gs1-barcode-udiPI" style={{ width: "100%" }}></svg>
-              {!hideParagraph &&<p style={{ fontSize:customFontSize? customFontSize : "6px", fontWeight: "900" }}>{udiPI}</p>}
+              {!hideParagraph && (
+                <p
+                  style={{
+                    fontSize: customFontSize ? customFontSize : "6px",
+                    fontWeight: "900",
+                  }}
+                >
+                  {udiPI}
+                </p>
+              )}
             </div>
           </div>
         );
@@ -168,7 +204,7 @@ export const handleUDI = (props = {}) => {
       // }
     }
 
-    if (projectInfo.labelData.udiFormat == "HIBCC") {
+    if (projectInfo.labelData.udiFormat === "HIBCC") {
       JsBarcode("#hibcc-barcode", udiData, {
         format: "CODE128",
         width: customWidth ? customWidth : 0.35, // Set the width of the bars
@@ -181,11 +217,20 @@ export const handleUDI = (props = {}) => {
       return (
         <div style={{ textAlign: "center", width: "100%" }}>
           <svg id="hibcc-barcode" style={{ width: "100%" }}></svg>
-          {!hideParagraph &&<p style={{ fontSize:customFontSize? customFontSize : "7px", fontWeight: "600" }}>{udiData}</p>}
+          {!hideParagraph && (
+            <p
+              style={{
+                fontSize: customFontSize ? customFontSize : "7px",
+                fontWeight: "600",
+              }}
+            >
+              {udiData}
+            </p>
+          )}
         </div>
       );
     }
-    if (projectInfo.labelData.udiFormat == "ICCBBA") {
+    if (projectInfo.labelData.udiFormat === "ICCBBA") {
       JsBarcode("#iccbba-barcode", udiData, {
         format: "CODE128",
         width: customWidth ? customWidth : 0.35, // Set the width of the bars
@@ -198,11 +243,20 @@ export const handleUDI = (props = {}) => {
       return (
         <div style={{ textAlign: "center", width: "100%" }}>
           <svg id="iccbba-barcode" style={{ width: "100%" }}></svg>
-          {!hideParagraph &&<p style={{ fontSize:customFontSize? customFontSize : "7px", fontWeight: "600" }}>{udiData}</p>}
+          {!hideParagraph && (
+            <p
+              style={{
+                fontSize: customFontSize ? customFontSize : "7px",
+                fontWeight: "600",
+              }}
+            >
+              {udiData}
+            </p>
+          )}
         </div>
       );
     }
-    if (projectInfo.labelData.udiFormat == "IFA") {
+    if (projectInfo.labelData.udiFormat === "IFA") {
       JsBarcode("#ifa-barcode", udiData, {
         format: "CODE128",
         width: customWidth ? customWidth : 0.35, // Set the width of the bars
@@ -215,7 +269,16 @@ export const handleUDI = (props = {}) => {
       return (
         <div style={{ textAlign: "center", width: "100%" }}>
           <svg id="ifa-barcode" style={{ width: "100%" }}></svg>
-          {!hideParagraph &&<p style={{ fontSize:customFontSize? customFontSize : "7px", fontWeight: "600" }}>{udiData}</p>}
+          {!hideParagraph && (
+            <p
+              style={{
+                fontSize: customFontSize ? customFontSize : "7px",
+                fontWeight: "600",
+              }}
+            >
+              {udiData}
+            </p>
+          )}
         </div>
       );
     }

@@ -83,6 +83,7 @@ import udi from '../../assets/eIFUSymbols/udi.png'
 import ImageBase64 from '../../utilities/ImageBase64';
 import { handleUDI } from '../../utilities/handleUDI';
 import DateFormat from '../../utilities/FormatDate';
+import QRCodeHandler from '../../components/QRCodeHandler/QRCodeHandler'
 
 let customStyles = {
   wrapper: {
@@ -351,7 +352,7 @@ const Template1 = (props) => {
     let symbolsWithTextBehindCount = booleanTrueCount + nonEmptyStringCount ;
     let projectOwnerInfoCount = ownerBooleanTrueCount + ownernonEmptyStringCount ;
 
-    if(symbolsWithTextBehindCount < 11){ // done !
+    if(symbolsWithTextBehindCount < 5){ // done !
       DynamicStyleForOwnerInfo = {
         wrapperItem: {
           width:'49%',
@@ -414,7 +415,7 @@ const Template1 = (props) => {
           
         },
       }
-    }else if(symbolsWithTextBehindCount >= 11 && symbolsWithTextBehindCount < 22){
+    }else if(symbolsWithTextBehindCount >= 5 && symbolsWithTextBehindCount < 22){
       DynamicStyleForOwnerInfo = {
         wrapperItem: {
           width: '33%'
@@ -633,426 +634,1109 @@ function formatSumDateToYYYYMMDD(date) {
   const symbolsWithTextBehind = () => {
     if(projectInfo && projectInfo.labelData){
       return (
-        <div  style={customStyles.symboleTextBehindWrapper} className='symbols-with-text-behind'>
-
-                {/* ------------ */}
-                {projectInfo.labelData.associatedWithIndividualPatient &&
-                  ( projectInfo.labelData.healthCareCentreName == ''
-                    || projectInfo.labelData.healthCareCentreAddress == ''
-                    || projectInfo.labelData.doctorName == ''
-                  ) &&
-                <div style={{...customStyles.symboleImageWrapperWithText, ...DynamicStyleForSymbols.symboleImageWrapperWithText}} className='symbol-content-item symbol-content-item-with-text'>
-                  <img style={{...customStyles.image, ...DynamicStyleForSymbols.imageWithText}} className='symbol-img' src={Health_care_centre_or_doctor} />
-                  <div style={customStyles.paragraphWrapper}>
-                    {projectInfo.labelData.healthCareCentreName && 
-                      <p style={customStyles.paragraph} >{projectInfo.labelData.healthCareCentreName}</p>
-                    }
-                    {projectInfo.labelData.healthCareCentreAddress && 
-                      <p style={customStyles.paragraph} >{projectInfo.labelData.healthCareCentreAddress}</p>
-                    }
-                    {projectInfo.labelData.doctorName && 
-                      <p style={customStyles.paragraph} >
-                        {dynamicData.doctorName ? dynamicData.doctorName : projectInfo.labelData.doctorName}</p>
-                    }
-                  </div>
-                </div>}
-
-                {projectInfo.labelData.translationActivity &&
-                  <div style={{...customStyles.symboleImageWrapperWithText, ...DynamicStyleForSymbols.symboleImageWrapperWithText}} className='symbol-content-item symbol-content-item-with-text'>
-                    <img className='symbol-img sm-img' src={Translation} style={{...customStyles.image, ...DynamicStyleForSymbols.imageWithText}} />
-                    <div style={customStyles.paragraphWrapper}>
-                      {projectInfo.labelData.translationEntityName &&
-                        <p style={customStyles.paragraph}>{projectInfo.labelData.translationEntityName}</p>}
-                      {projectInfo.labelData.translationEntityAddress &&
-                        <p style={customStyles.paragraph}>{projectInfo.labelData.translationEntityAddress}</p>}
-                    </div>
-                  </div>}
-
-                {projectInfo.labelData.modificationToPackaging &&
-                  <div style={{...customStyles.symboleImageWrapperWithText, ...DynamicStyleForSymbols.symboleImageWrapperWithText}} className='symbol-content-item symbol-content-item-with-text'>
-                    <img style={{...customStyles.image, ...DynamicStyleForSymbols.imageWithText}} className='symbol-img sm-img' src={Repackaging} />
-                    <div>
-                      {projectInfo.labelData.repackagingEntityName &&
-                        <p style={customStyles.paragraph}>{projectInfo.labelData.repackagingEntityName}</p>}
-                      {projectInfo.labelData.repackagingEntityAddress &&
-                        <p style={customStyles.paragraph}>{projectInfo.labelData.repackagingEntityAddress}</p>}
-                    </div>
-                  </div>}
-              {projectInfo.labelData.associatedWithIndividualPatient &&
-                (projectInfo.labelData.patientName || projectInfo.labelData.patientNumber) &&
-                <div style={{...customStyles.symboleImageWrapperWithText, ...DynamicStyleForSymbols.symboleImageWrapperWithText}} className='symbol-content-item symbol-content-item-with-text'>
-                  <img style={{...customStyles.image, ...DynamicStyleForSymbols.imageWithText}} className='symbol-img' src={patient_identification} />
-                  <div style={customStyles.paragraphWrapper}>
+        <div
+          style={customStyles.symboleTextBehindWrapper}
+          className="symbols-with-text-behind"
+        >
+          {/* ------------ */}
+          {projectInfo.labelData.associatedWithIndividualPatient &&
+            (projectInfo.labelData.healthCareCentreName == "" ||
+              projectInfo.labelData.healthCareCentreAddress == "" ||
+              projectInfo.labelData.doctorName == "") && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapperWithText,
+                  ...DynamicStyleForSymbols.symboleImageWrapperWithText,
+                }}
+                className="symbol-content-item symbol-content-item-with-text"
+              >
+                <img
+                  style={{
+                    ...customStyles.image,
+                    ...DynamicStyleForSymbols.imageWithText,
+                  }}
+                  className="symbol-img"
+                  src={Health_care_centre_or_doctor}
+                />
+                <div style={customStyles.paragraphWrapper}>
+                  {projectInfo.labelData.healthCareCentreName && (
                     <p style={customStyles.paragraph}>
-                      {dynamicData.patientName ? dynamicData.patientName : projectInfo.labelData.patientName}
-                      </p>
+                      {projectInfo.labelData.healthCareCentreName}
+                    </p>
+                  )}
+                  {projectInfo.labelData.healthCareCentreAddress && (
                     <p style={customStyles.paragraph}>
-                      { dynamicData.patientNumber ? dynamicData.patientNumber : projectInfo.labelData.patientNumber}
-                      </p>
-                  </div>
-                </div>}
+                      {projectInfo.labelData.healthCareCentreAddress}
+                    </p>
+                  )}
+                  {projectInfo.labelData.doctorName && (
+                    <p style={customStyles.paragraph}>
+                      {dynamicData.doctorName
+                        ? dynamicData.doctorName
+                        : projectInfo.labelData.doctorName}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
 
-                {projectInfo.labelData.reprocessedDevice &&
-                  <div style={{...customStyles.symboleImageWrapperWithText, ...DynamicStyleForSymbols.symboleImageWrapperWithText}} className='symbol-content-item symbol-content-item-with-text'>
-                    <img style={{...customStyles.image, ...DynamicStyleForSymbols.imageWithText}} className='symbol-' src={Repackaging} />
-                    <div style={customStyles.paragraphWrapper}>
-                      {projectInfo.labelData.reprocessingCycles &&
-                        <p style={customStyles.paragraph}>number of reprocessing cycles: {projectInfo.labelData.reprocessingCycles}</p>}
-                      {projectInfo.labelData.reprocessingLimitation &&
-                        <p style={customStyles.paragraph}>Limitation: {projectInfo.labelData.reprocessingLimitation}</p>}
-                    </div>
-                  </div>} 
+          {projectInfo.labelData.translationActivity && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapperWithText,
+                ...DynamicStyleForSymbols.symboleImageWrapperWithText,
+              }}
+              className="symbol-content-item symbol-content-item-with-text"
+            >
+              <img
+                className="symbol-img sm-img"
+                src={Translation}
+                style={{
+                  ...customStyles.image,
+                  ...DynamicStyleForSymbols.imageWithText,
+                }}
+              />
+              <div style={customStyles.paragraphWrapper}>
+                {projectInfo.labelData.translationEntityName && (
+                  <p style={customStyles.paragraph}>
+                    {projectInfo.labelData.translationEntityName}
+                  </p>
+                )}
+                {projectInfo.labelData.translationEntityAddress && (
+                  <p style={customStyles.paragraph}>
+                    {projectInfo.labelData.translationEntityAddress}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {projectInfo.labelData.modificationToPackaging && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapperWithText,
+                ...DynamicStyleForSymbols.symboleImageWrapperWithText,
+              }}
+              className="symbol-content-item symbol-content-item-with-text"
+            >
+              <img
+                style={{
+                  ...customStyles.image,
+                  ...DynamicStyleForSymbols.imageWithText,
+                }}
+                className="symbol-img sm-img"
+                src={Repackaging}
+              />
+              <div>
+                {projectInfo.labelData.repackagingEntityName && (
+                  <p style={customStyles.paragraph}>
+                    {projectInfo.labelData.repackagingEntityName}
+                  </p>
+                )}
+                {projectInfo.labelData.repackagingEntityAddress && (
+                  <p style={customStyles.paragraph}>
+                    {projectInfo.labelData.repackagingEntityAddress}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          {projectInfo.labelData.associatedWithIndividualPatient &&
+            (projectInfo.labelData.patientName ||
+              projectInfo.labelData.patientNumber) && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapperWithText,
+                  ...DynamicStyleForSymbols.symboleImageWrapperWithText,
+                }}
+                className="symbol-content-item symbol-content-item-with-text"
+              >
+                <img
+                  style={{
+                    ...customStyles.image,
+                    ...DynamicStyleForSymbols.imageWithText,
+                  }}
+                  className="symbol-img"
+                  src={patient_identification}
+                />
+                <div style={customStyles.paragraphWrapper}>
+                  <p style={customStyles.paragraph}>
+                    {dynamicData.patientName
+                      ? dynamicData.patientName
+                      : projectInfo.labelData.patientName}
+                  </p>
+                  <p style={customStyles.paragraph}>
+                    {dynamicData.patientNumber
+                      ? dynamicData.patientNumber
+                      : projectInfo.labelData.patientNumber}
+                  </p>
+                </div>
+              </div>
+            )}
+
+          {projectInfo.labelData.reprocessedDevice && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapperWithText,
+                ...DynamicStyleForSymbols.symboleImageWrapperWithText,
+              }}
+              className="symbol-content-item symbol-content-item-with-text"
+            >
+              <img
+                style={{
+                  ...customStyles.image,
+                  ...DynamicStyleForSymbols.imageWithText,
+                }}
+                className="symbol-"
+                src={Repackaging}
+              />
+              <div style={customStyles.paragraphWrapper}>
+                {projectInfo.labelData.reprocessingCycles && (
+                  <p style={customStyles.paragraph}>
+                    number of reprocessing cycles:{" "}
+                    {projectInfo.labelData.reprocessingCycles}
+                  </p>
+                )}
+                {projectInfo.labelData.reprocessingLimitation && (
+                  <p style={customStyles.paragraph}>
+                    Limitation: {projectInfo.labelData.reprocessingLimitation}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* sterility */}
-            {projectInfo.labelData.isSterile ?
-              (projectInfo.labelData.hasSterilizationProcess &&
-              (projectInfo.labelData.hasVaporizedHydrogenPeroxide  == true
-                || projectInfo.labelData.hasAsepticProcessing  == true
-                || projectInfo.labelData.hasEthyleneOxide  == true
-                || projectInfo.labelData.hasIrradiation  == true
-                || projectInfo.labelData.hasSteamOrDryHeat  == true
-              ) 
-              ?null
-              :<div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
-                <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={sterileSymbol} />
-              </div>)
-            : null}
-
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess &&
-
-                  projectInfo.labelData.hasAsepticProcessing &&
-                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
-                      <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={sterile_ASymbol} />
-                    </div>
-            }
-
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess &&
-
-                  projectInfo.labelData.hasEthyleneOxide &&
-                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
-                      <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={Sterile_EOSymbol} />
-                    </div>
-            }
-
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess &&
-
-                  projectInfo.labelData.hasIrradiation &&
-                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
-                      <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={Sterile_RSymbol} />
-                    </div>
-            }
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess &&
-
-                  projectInfo.labelData.hasSteamOrDryHeat &&
-                    <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item sterileSymbol'>
-                      <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={Sterilized_usings_team_or_dry_heatSymbol} />
-                    </div>
-            }
-
-
-            {projectInfo.labelData.isSterile == true &&
-              // projectInfo.labelData.hasSterilizationProcess &&
-                  !projectInfo.labelData.isIntendedToBeResterilized &&
-                      <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                        <img style={customStyles.symboleImage} className='symbol-img' src={do_not_resterilizeSymbol} />
-                      </div>
-            }
-
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess == false &&
-
-              <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                <img style={customStyles.symboleImage} className='symbol-img' src={nonSterileSymbol} />
+          {projectInfo.labelData.isSterile ? (
+            projectInfo.labelData.hasSterilizationProcess &&
+            (projectInfo.labelData.hasVaporizedHydrogenPeroxide == true ||
+              projectInfo.labelData.hasAsepticProcessing == true ||
+              projectInfo.labelData.hasEthyleneOxide == true ||
+              projectInfo.labelData.hasIrradiation == true ||
+              projectInfo.labelData.hasSteamOrDryHeat == true) ? null : (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item sterileSymbol"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img sterileSymbol-img"
+                  src={sterileSymbol}
+                />
               </div>
-            }
+            )
+          ) : null}
 
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess == false &&
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess &&
+            projectInfo.labelData.hasAsepticProcessing && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item sterileSymbol"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img sterileSymbol-img"
+                  src={sterile_ASymbol}
+                />
+              </div>
+            )}
 
-                projectInfo.labelData.canBeUsedIfDamaged &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={package_is_damageSymbol} />
-              </div>}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess &&
+            projectInfo.labelData.hasEthyleneOxide && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item sterileSymbol"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img sterileSymbol-img"
+                  src={Sterile_EOSymbol}
+                />
+              </div>
+            )}
 
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess == false &&
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess &&
+            projectInfo.labelData.hasIrradiation && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item sterileSymbol"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img sterileSymbol-img"
+                  src={Sterile_RSymbol}
+                />
+              </div>
+            )}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess &&
+            projectInfo.labelData.hasSteamOrDryHeat && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item sterileSymbol"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img sterileSymbol-img"
+                  src={Sterilized_usings_team_or_dry_heatSymbol}
+                />
+              </div>
+            )}
 
-                projectInfo.labelData.hasSterileFluidPath &&
-              <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                <img style={customStyles.symboleImage} className='symbol-img' src={sterile_fluid_pathSymbol} />
-            </div>}
+          {projectInfo.labelData.isSterile == true &&
+            // projectInfo.labelData.hasSterilizationProcess &&
+            !projectInfo.labelData.isIntendedToBeResterilized && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={do_not_resterilizeSymbol}
+                />
+              </div>
+            )}
 
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess &&
-          
-              projectInfo.labelData.hasVaporizedHydrogenPeroxide &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={VaporizedHydrogenPeroxideSymbol} />
-                </div>}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess == false && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={nonSterileSymbol}
+                />
+              </div>
+            )}
 
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess == false &&
-              
-                projectInfo.labelData.hasSingleSterileBarrierSystem &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={single_S_B_S} />
-                </div>}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess == false &&
+            projectInfo.labelData.canBeUsedIfDamaged && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={package_is_damageSymbol}
+                />
+              </div>
+            )}
 
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess == false &&
-              
-                projectInfo.labelData.hasTwoSterileBarrierSystems &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={double_S_B_S} />
-                </div>}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess == false &&
+            projectInfo.labelData.hasSterileFluidPath && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={sterile_fluid_pathSymbol}
+                />
+              </div>
+            )}
 
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess == false &&
-              
-                projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveInside &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={double_S_B_S_inside} />
-                </div>}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess &&
+            projectInfo.labelData.hasVaporizedHydrogenPeroxide && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img sterileSymbol-img"
+                  src={VaporizedHydrogenPeroxideSymbol}
+                />
+              </div>
+            )}
 
-            {projectInfo.labelData.isSterile == true &&
-              projectInfo.labelData.hasSterilizationProcess == false &&
-              
-                projectInfo.labelData.hasSingleSterileBarrierSystemWithProtectiveOutside &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={double_S_B_S_outside} />
-                </div>}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess == false &&
+            projectInfo.labelData.hasSingleSterileBarrierSystem && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={single_S_B_S}
+                />
+              </div>
+            )}
 
-            {projectInfo.labelData.needInstructionsForUse &&
-                !projectInfo.labelData.eIFULink &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={consult_instruction_for_use} />
-                  {projectInfo.labelData.eIFULink &&
-                    <div style={customStyles.paragraphWrapper} className=''>
-                      <p style={customStyles.paragraph} >{projectInfo.labelData.eIFULink}</p>
-                    </div>
-                  }
-                </div>}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess == false &&
+            projectInfo.labelData.hasTwoSterileBarrierSystems && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={double_S_B_S}
+                />
+              </div>
+            )}
 
-                {/* storage */}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess == false &&
+            projectInfo.labelData
+              .hasSingleSterileBarrierSystemWithProtectiveInside && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={double_S_B_S_inside}
+                />
+              </div>
+            )}
 
-              {projectInfo.labelData.requiresCarefulHandling &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={fragile_handle_with_care} />
-                </div>}
+          {projectInfo.labelData.isSterile == true &&
+            projectInfo.labelData.hasSterilizationProcess == false &&
+            projectInfo.labelData
+              .hasSingleSterileBarrierSystemWithProtectiveOutside && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={double_S_B_S_outside}
+                />
+              </div>
+            )}
 
-              {projectInfo.labelData.requiresProtectionFromLight &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={keep_away_from_sunlight} />
-                </div>}
-
-              {projectInfo.labelData.requiresProtectionFromHeatAndRadioactiveSources &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={protect_from_heat_and_radioactive_soures} />
-                </div>}
-
-              {projectInfo.labelData.requiresProtectionFromMoisture &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={keep_dry} />
-                </div>}
-
-              {projectInfo.labelData.hasLowerLimitOfTemperature &&
-                !projectInfo.labelData.hasUpperLimitOfTemperature &&
-                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
-                    <div style={customStyles.rangeMinNum} className='min-temperature '><p>
-                    {projectInfo.labelData.lowerTemperatureLimit}{projectInfo?.labelData?.temperatureUnite} </p> </div>
-                  <img style={customStyles.symboleImageRange} className='symbol-img' src={lower_limit_temperaure} />
-                </div>}
-
-              {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                !projectInfo.labelData.hasLowerLimitOfTemperature &&
-                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
-                  <img style={customStyles.symboleImageRange} className='symbol-img' src={upper_limit_temperaure} />
-                    <div style={customStyles.rangeMaxNum}  className='max-temperature' ><p>
-                    {projectInfo.labelData.upperTemperatureLimit}{projectInfo?.labelData?.temperatureUnite}</p></div>
-                </div>}
-
-              {projectInfo.labelData.hasUpperLimitOfTemperature &&
-                projectInfo.labelData.hasLowerLimitOfTemperature &&
-                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
-                    <div style={customStyles.rangeMinNum} className='min-temperature' ><p>
-                      {projectInfo.labelData.lowerTemperatureLimit}{projectInfo?.labelData?.temperatureUnite} </p></div>
-                  <img style={customStyles.symboleImageRange} className='symbol-img'  src={temperature} />
-                    <div style={customStyles.rangeMaxNum}  className='max-temperature' ><p>
-                      {projectInfo.labelData.upperTemperatureLimit}{projectInfo?.labelData?.temperatureUnite} </p></div>
-                </div>}
-
-              {projectInfo.labelData.hasHumidityRange &&
-                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
-                    <div style={customStyles.rangeMinNum} className='min-temperature mt-1' ><p>
-                        {projectInfo.labelData.humidityMin}%
-                      </p></div>
-                  <img style={customStyles.symboleImageRange} className='symbol-img p-1' src={HumidityLimit} />
-                    <div style={customStyles.rangeMaxNum}  className='max mb-' ><p >
-                        {projectInfo.labelData.humidityMax}%
-                      </p></div>
-                </div>}
-
-              {projectInfo.labelData.hasAtmosphericPressureRange &&
-                <div style={{...customStyles.symboleImageRangeWrapper, ...DynamicStyleForSymbols.symboleImageRangeWrapper}} className='symbol-content-item symbol-content-item-range'>
-                    <div style={customStyles.rangeMinNum} className='min mb-1' ><p>
-                      </p> {projectInfo.labelData.atmosphericPressureMin}Kpa</div>
-                  <img style={customStyles.symboleImageRange} className='symbol-img p-1' src={AtmPressureLimit} />
-                    <div style={customStyles.rangeMaxNum}  className='max mb-2' ><p>
-                      </p> {projectInfo.labelData.atmosphericPressureMax}Kpa</div>
-                </div>}
-              
-                {/* safe use */}
-              
-              {projectInfo.labelData.hasBiologicalRisks &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={biological_risks} />
-                </div>}
-
-              {projectInfo.labelData.isIntendedForSingleUse &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={do_not_re_use} />
-                </div>}
-
-              {projectInfo.labelData.needCaution &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={caution} />
-                </div>}
-
-              {projectInfo.labelData.containsRubberLatex &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={contains_or_presence_of_natural_rubber_latex} />
-                </div>}
-
-              {projectInfo.labelData.containsBloodDerivatives &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={contains_human_blood} />
-                </div>}
-
-              {projectInfo.labelData.containsMedicinalSubstance &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={Contains_a_medicinal_substance} />
-                </div>}
-
-              {projectInfo.labelData.containsAnimalOriginMaterial &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={Contains_biological_material_of_animal_origin} />
-                </div>}
-
-              {projectInfo.labelData.containsHumanOriginMaterial &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={Contains_human_origin} />
-                </div>}
-
-              {projectInfo.labelData.containsHazardousSubstances &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={Contains_hazardous_substances} />
-                </div>}
-
-              {projectInfo.labelData.containsNanoMaterials &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={Contains_nano_materials} />
-                </div>}
-
-              {projectInfo.labelData.multipleUsesOnSinglePatient &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={Single_patient_multiple_use} />
-                </div>}
-
-                {/* Diagnostic IVD */}
-
-              {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
-                projectInfo.labelData.isControlMaterial &&
-                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                    <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={control} />
+          {/* {projectInfo.labelData.needInstructionsForUse &&
+            !projectInfo.labelData.eIFULink && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={consult_instruction_for_use}
+                />
+                {projectInfo.labelData.eIFULink && (
+                  <div style={customStyles.paragraphWrapper} className="">
+                    <p style={customStyles.paragraph}>
+                      {projectInfo.labelData.eIFULink}
+                    </p>
                   </div>
-              }
+                )}
+              </div>
+            )} */}
 
-              {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
-                projectInfo.labelData.isControlMaterialForNegativeRange &&
-                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                    <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={control_negative} />
+          {/* storage */}
+
+          {projectInfo.labelData.requiresCarefulHandling && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={fragile_handle_with_care}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.requiresProtectionFromLight && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={keep_away_from_sunlight}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData
+            .requiresProtectionFromHeatAndRadioactiveSources && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={protect_from_heat_and_radioactive_soures}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.requiresProtectionFromMoisture && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={keep_dry}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.hasLowerLimitOfTemperature &&
+            !projectInfo.labelData.hasUpperLimitOfTemperature && (
+              <div
+                style={{
+                  ...customStyles.symboleImageRangeWrapper,
+                  ...DynamicStyleForSymbols.symboleImageRangeWrapper,
+                }}
+                className="symbol-content-item symbol-content-item-range"
+              >
+                <div
+                  style={customStyles.rangeMinNum}
+                  className="min-temperature "
+                >
+                  <p>
+                    {projectInfo.labelData.lowerTemperatureLimit}
+                    {projectInfo?.labelData?.temperatureUnite}{" "}
+                  </p>{" "}
+                </div>
+                <img
+                  style={customStyles.symboleImageRange}
+                  className="symbol-img"
+                  src={lower_limit_temperaure}
+                />
+              </div>
+            )}
+
+          {projectInfo.labelData.hasUpperLimitOfTemperature &&
+            !projectInfo.labelData.hasLowerLimitOfTemperature && (
+              <div
+                style={{
+                  ...customStyles.symboleImageRangeWrapper,
+                  ...DynamicStyleForSymbols.symboleImageRangeWrapper,
+                }}
+                className="symbol-content-item symbol-content-item-range"
+              >
+                <img
+                  style={customStyles.symboleImageRange}
+                  className="symbol-img"
+                  src={upper_limit_temperaure}
+                />
+                <div
+                  style={customStyles.rangeMaxNum}
+                  className="max-temperature"
+                >
+                  <p>
+                    {projectInfo.labelData.upperTemperatureLimit}
+                    {projectInfo?.labelData?.temperatureUnite}
+                  </p>
+                </div>
+              </div>
+            )}
+
+          {projectInfo.labelData.hasUpperLimitOfTemperature &&
+            projectInfo.labelData.hasLowerLimitOfTemperature && (
+              <div
+                style={{
+                  ...customStyles.symboleImageRangeWrapper,
+                  ...DynamicStyleForSymbols.symboleImageRangeWrapper,
+                }}
+                className="symbol-content-item symbol-content-item-range"
+              >
+                <div
+                  style={customStyles.rangeMinNum}
+                  className="min-temperature"
+                >
+                  <p>
+                    {projectInfo.labelData.lowerTemperatureLimit}
+                    {projectInfo?.labelData?.temperatureUnite}{" "}
+                  </p>
+                </div>
+                <img
+                  style={customStyles.symboleImageRange}
+                  className="symbol-img"
+                  src={temperature}
+                />
+                <div
+                  style={customStyles.rangeMaxNum}
+                  className="max-temperature"
+                >
+                  <p>
+                    {projectInfo.labelData.upperTemperatureLimit}
+                    {projectInfo?.labelData?.temperatureUnite}{" "}
+                  </p>
+                </div>
+              </div>
+            )}
+
+          {projectInfo.labelData.hasHumidityRange && (
+            <div
+              style={{
+                ...customStyles.symboleImageRangeWrapper,
+                ...DynamicStyleForSymbols.symboleImageRangeWrapper,
+              }}
+              className="symbol-content-item symbol-content-item-range"
+            >
+              <div
+                style={customStyles.rangeMinNum}
+                className="min-temperature mt-1"
+              >
+                <p>{projectInfo.labelData.humidityMin}%</p>
+              </div>
+              <img
+                style={customStyles.symboleImageRange}
+                className="symbol-img p-1"
+                src={HumidityLimit}
+              />
+              <div style={customStyles.rangeMaxNum} className="max mb-">
+                <p>{projectInfo.labelData.humidityMax}%</p>
+              </div>
+            </div>
+          )}
+
+          {projectInfo.labelData.hasAtmosphericPressureRange && (
+            <div
+              style={{
+                ...customStyles.symboleImageRangeWrapper,
+                ...DynamicStyleForSymbols.symboleImageRangeWrapper,
+              }}
+              className="symbol-content-item symbol-content-item-range"
+            >
+              <div style={customStyles.rangeMinNum} className="min mb-1">
+                <p></p> {projectInfo.labelData.atmosphericPressureMin}Kpa
+              </div>
+              <img
+                style={customStyles.symboleImageRange}
+                className="symbol-img p-1"
+                src={AtmPressureLimit}
+              />
+              <div style={customStyles.rangeMaxNum} className="max mb-2">
+                <p></p> {projectInfo.labelData.atmosphericPressureMax}Kpa
+              </div>
+            </div>
+          )}
+
+          {/* safe use */}
+
+          {projectInfo.labelData.hasBiologicalRisks && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={biological_risks}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.isIntendedForSingleUse && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={do_not_re_use}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.needCaution && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={caution}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.containsRubberLatex && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={contains_or_presence_of_natural_rubber_latex}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.containsBloodDerivatives && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={contains_human_blood}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.containsMedicinalSubstance && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={Contains_a_medicinal_substance}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.containsAnimalOriginMaterial && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={Contains_biological_material_of_animal_origin}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.containsHumanOriginMaterial && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={Contains_human_origin}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.containsHazardousSubstances && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={Contains_hazardous_substances}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.containsNanoMaterials && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={Contains_nano_materials}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.multipleUsesOnSinglePatient && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={Single_patient_multiple_use}
+              />
+            </div>
+          )}
+
+          {/* Diagnostic IVD */}
+
+          {projectInfo.labelData.productType ==
+            "In Vitro Diagnostic (IVD) Medical Device" &&
+            projectInfo.labelData.isControlMaterial && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img sterileSymbol-img"
+                  src={control}
+                />
+              </div>
+            )}
+
+          {projectInfo.labelData.productType ==
+            "In Vitro Diagnostic (IVD) Medical Device" &&
+            projectInfo.labelData.isControlMaterialForNegativeRange && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img sterileSymbol-img"
+                  src={control_negative}
+                />
+              </div>
+            )}
+
+          {projectInfo.labelData.productType ==
+            "In Vitro Diagnostic (IVD) Medical Device" &&
+            projectInfo.labelData.isControlMaterialForPositiveRange && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img sterileSymbol-img"
+                  src={control_positive}
+                />
+              </div>
+            )}
+
+          {projectInfo.labelData.productType ==
+            "In Vitro Diagnostic (IVD) Medical Device" &&
+            projectInfo.labelData.isIVDForPerformanceEvaluation && (
+              <div
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+                className="symbol-content-item"
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={for_IVD_performance_evaluation_only}
+                />
+              </div>
+            )}
+
+          {projectInfo.labelData.isMedicalDeviceForSampleCollection && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={sampling_site}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.hasFluidPath && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={fluid_path}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.isNonPyrogenic && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={Non_pyrogenic}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.hasOneWayValve && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols.symboleImageWrapper,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={one_way_valve}
+              />
+            </div>
+          )}
+
+          {projectInfo.labelData.numberOfDropsPerMilliliter !==
+            "Not applicable" && (
+            <div
+              style={{
+                ...customStyles.dropPeMillWrapper,
+                margin: "0",
+                padding: "0",
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={Drops_per_millilitre}
+              />
+              {/* <div style={customStyles.dropPeMillContent}> */}
+              <p style={customStyles.numberOfDropsPerMilliliterStyle}>
+                {projectInfo.labelData.numberOfDropsPerMilliliter}
+              </p>
+              {/* </div> */}
+            </div>
+          )}
+
+          {projectInfo.labelData.liquidFilterPoreSize !== "Not applicable" && (
+            <div
+              style={{
+                ...customStyles.dropPeMillWrapper,
+                margin: "0px",
+                padding: "0px",
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={Liquid_filter_with_pore_size}
+              />
+              {/* <div style={customStyles.dropPeMillContent}> */}
+              <p style={customStyles.liquidFilterPoreSizeStyle}>
+                {projectInfo.labelData.liquidFilterPoreSize}
+              </p>
+              {/* </div> */}
+            </div>
+          )}
+
+          {projectInfo.labelData.needInstructionsForUse && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols,
+              }}
+              className="symbol-content-item"
+            >
+              <img
+                style={customStyles.symboleImage}
+                className="symbol-img"
+                src={consult_instruction_for_use} alt='consult_instruction_for_use'
+              />
+              {
+                projectInfo.labelData.eIFULink !== '' && (
+                  <p
+                    style={{
+                      ...customStyles.paragraph,
+                      wordWrap: "break-word",
+                      overflowWrap: "break-word",
+                      fontSize: "5px",
+                      marginTop: "-5px",
+                    }}
+                  >
+                    {projectInfo.labelData.eIFULink}
+                  </p>
+                )
+              }
+            </div>
+          )}
+
+          {projectInfo.labelData.needInstructionsForUse && projectInfo.labelData.eIFULink !== '' && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols,
+              }}
+              className="symbol-content-item"
+            > <QRCodeHandler link={projectInfo.labelData.eIFULink} size={40} />
+                  <p
+                    style={{
+                      ...customStyles.paragraph,
+                      wordWrap: "break-word",
+                      overflowWrap: "break-word",
+                      fontSize: "5px",
+                      marginTop: "-5px",
+                      textAlign:'center'
+                    }}
+                  >
+                    {projectInfo.labelData.eIFULink}
+                  </p>
+            </div>
+          )}
+
+          {projectInfo.labelData.productType ==
+            "In Vitro Diagnostic (IVD) Medical Device" &&
+            projectInfo.labelData.hasSpecificNumberOfTests && (
+              <div
+                className="symbol-content-item"
+                style={{
+                  ...customStyles.symboleImageWrapper,
+                  ...DynamicStyleForSymbols.symboleImageWrapper,
+                }}
+              >
+                <img
+                  style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={contains_suffient_for_n_tests}
+                />
+                {projectInfo.labelData.numberOfTests && (
+                  <div style={{ backgroundColor: "" }} className="">
+                    <p
+                      style={{
+                        marginTop: "-6px",
+                        padding: "0px",
+                        fontSize: "8px",
+                        fontWeight: "600",
+                      }}
+                    >
+                      {projectInfo.labelData.numberOfTests}
+                    </p>
                   </div>
-              }
-
-              {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
-                projectInfo.labelData.isControlMaterialForPositiveRange &&
-                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                    <img style={customStyles.symboleImage} className='symbol-img sterileSymbol-img' src={control_positive} />
-                  </div>
-              }
-
-              {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
-                projectInfo.labelData.isIVDForPerformanceEvaluation &&
-                  <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                    <img style={customStyles.symboleImage} className='symbol-img' src={for_IVD_performance_evaluation_only} />
-                  </div>
-              }
-
-              {projectInfo.labelData.isMedicalDeviceForSampleCollection &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={sampling_site} />
-                </div>}
-
-              {projectInfo.labelData.hasFluidPath &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={fluid_path} />
-                </div>}
-
-              {projectInfo.labelData.isNonPyrogenic &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={Non_pyrogenic} />
-                </div>}
-
-              {projectInfo.labelData.hasOneWayValve &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={one_way_valve} />
-                </div>}
-
-                {projectInfo.labelData.numberOfDropsPerMilliliter !== "Not applicable" &&
-                <div style={{...customStyles.dropPeMillWrapper, margin:'0', padding:'0'}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={Drops_per_millilitre} />
-                    {/* <div style={customStyles.dropPeMillContent}> */}
-                      <p style={customStyles.numberOfDropsPerMilliliterStyle}>{projectInfo.labelData.numberOfDropsPerMilliliter}</p>
-                    {/* </div> */}
-                </div>}
-
-              {projectInfo.labelData.liquidFilterPoreSize !== "Not applicable" &&
-                <div style={{...customStyles.dropPeMillWrapper, margin:'0px', padding:'0px'}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={Liquid_filter_with_pore_size} />
-                    {/* <div style={customStyles.dropPeMillContent}> */}
-                      <p style={customStyles.liquidFilterPoreSizeStyle}>{projectInfo.labelData.liquidFilterPoreSize}</p>
-                    {/* </div> */}
-                </div>}
-                
-                
-
-                {/* {projectInfo.labelData.needInstructionsForUse &&
-                <div style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols}} className='symbol-content-item'>
-                  <img style={customStyles.symboleImage} className='symbol-img' src={consult_instruction_for_use} />
-                  {projectInfo.labelData.eIFULink &&
-                    // <div style={{...customStyles.paragraphWrapper, width: '100%'}} className=''>
-                      <p style={{...customStyles.paragraph,wordWrap: 'break-word', overflowWrap: 'break-word', fontSize:'5px', marginTop:'-5px'}} >{projectInfo.labelData.eIFULink}</p>
-                    // </div>
-                  }
-                </div>} */}
-
-
-
-                {projectInfo.labelData.productType == "In Vitro Diagnostic (IVD) Medical Device" &&
-                  projectInfo.labelData.hasSpecificNumberOfTests &&
-                    <div className='symbol-content-item' style={{...customStyles.symboleImageWrapper, ...DynamicStyleForSymbols.symboleImageWrapper}}>
-                        <img style={customStyles.symboleImage} className='symbol-img' src={contains_suffient_for_n_tests} />
-                        {projectInfo.labelData.numberOfTests && 
-                          <div style={{backgroundColor:''}} className=''>
-                            <p style={{marginTop:"-6px", padding:'0px', fontSize:'8px', fontWeight:'600'}}>{projectInfo.labelData.numberOfTests}</p>
-                          </div>}
-                    </div>}
+                )}
+              </div>
+            )}
         </div>
-      )
+      );
     }
     return ;
   }
@@ -1160,8 +1844,8 @@ function formatSumDateToYYYYMMDD(date) {
 
                 </div>
                 <div  style={{backgroundColor:''}}>
-                  {projectInfo && projectInfo.labelData && handleUDI({projectInfo, customWidth: 0.53, customHeight: 40, activeSerialNumber})}
-                  {projectInfo && projectInfo.labelData?.udiFormat === "GS1" 
+                  {projectInfo?.labelData && handleUDI({projectInfo, customWidth: 0.5, customHeight: 40, activeSerialNumber, hideParagraph:true, customFontSize: 7 })}
+                  {projectInfo?.labelData?.udiFormat === "GS1" 
                     && projectInfo.labelData.udiType === 'GS1 (Data Matrix)' && 
                     imageSrc &&
                     <div className='' style={{display:'flex', alignItems:'center', marginBottom:'5px', marginLeft:'25px'}}>

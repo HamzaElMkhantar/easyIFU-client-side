@@ -1,14 +1,12 @@
 import "./App.css";
 import "./index.css";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useLocation,
   Navigate,
-  useNavigate,
-  Link,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -57,8 +55,6 @@ import ReleasedProjects from "./pages/DashboardPages/ReleasedProjects";
 import PaymentSucceed from "./pages/PaymentSucceed";
 import PaymentFailed from "./pages/PaymentFailed";
 import CheckSubscription from "./pages/CheckSubscription";
-import SubscriptionChecker from "./pages/SubscriptionChecker";
-import axios from "axios";
 import Documents from "./pages/DashboardPages/Documents";
 import DocumentInformation from "./pages/DashboardPages/DocumentInformation";
 import Companies from "./pages/easyIFU_Dashboard/Companies";
@@ -86,35 +82,34 @@ import UpdateTranslationAndRepackaging from "./pages/DashboardPages/UpdateTransl
 import ArchivedProject from "./pages/DashboardPages/ArchivedProject";
 import Products from "./pages/DashboardPages/Products";
 import LabelsByProject from "./pages/DashboardPages/LabelsByProductId";
-
-// import { Navigate, Outlet, useLocation } from 'react-router-dom';
-// import Cookies from 'js-cookie';
-import jwt_decode from "jwt-decode";
-// import { useDispatch } from 'react-redux';
 import { logoutAction } from "./redux/actions/authActions";
 import IntendedPurpose from "./pages/DashboardPages/IntendedPurpose";
 import UpdateIntendedPurpose from "./pages/DashboardPages/UpdateIntendedPurpose";
 import DraftLabels from "./pages/DashboardPages/DraftLabels";
 import ApprovedLabels from "./pages/DashboardPages/ApprovedLabels";
 import RejectedLabels from "./pages/DashboardPages/RejectedLabels";
-import styled from "styled-components";
 import Templates from "./pages/DashboardPages/Templates";
+import IFUsByProductId from "./pages/DashboardPages/IFUsByIFUsContainerId";
+import DraftIFUs from "./pages/DashboardPages/DraftIFUs";
+import ApprovedIFUs from "./pages/DashboardPages/ApprovedIFUs";
+import ReleasedIFUs from "./pages/DashboardPages/ReleasedIFUs";
+import RejectedIFUs from "./pages/DashboardPages/RejectedIFUs";
+import Instructions from "./pages/DashboardPages/Instructions";
+import CreateInstructions from "./pages/DashboardPages/CreateInstructions";
+import IFUsByIFUsContainerId from "./pages/DashboardPages/IFUsByIFUsContainerId";
+import IFUsInformation from "./pages/DashboardPages/IFUsInformation";
+import ReceivedIFUs from "./pages/DashboardPages/ReceivedIFUs";
+import IFUsReview from "./pages/DashboardPages/IFUsReview";
+import UpdateInstruction from "./pages/DashboardPages/UpdateInstruction";
+import PublicIFU from "./pages/DashboardPages/PublicIFU";
 
 function App() {
   const R_Token = Cookies.get("eIfu_RTK") || null;
-
   const A_Token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = A_Token ? jwtDecode(A_Token) : null;
   const userId = decodedToken?.userInfo?._id;
 
-  const NoHoverLink = styled(Link)`
-    &:hover {
-      text-decoration: none;
-      color: inherit;
-      background: none;
-    }
-  `;
-  if (process.env.NODE_ENV == "production") {
+  if (process.env.NODE_ENV === "production") {
     console.log = () => {};
     console.war = () => {};
     console.info = () => {};
@@ -127,8 +122,7 @@ function App() {
 
   useEffect(() => {
     dispatch(refreshAction());
-    console.log("refreshAction!!");
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const checkTokenExpiration = () => {
@@ -174,7 +168,6 @@ function App() {
 
   const [showNav, setShowNav] = useState(true);
   const [showFooter, setShowFooter] = useState(true);
-  const token = Cookies.get("eIfu_ATK") || null;
   // const dateNow = Cookies.get('d_n') || null;
 
   useEffect(() => {
@@ -191,7 +184,8 @@ function App() {
       currentPage === "payment-failed" ||
       currentPage === "not-found" ||
       currentPage === "check-subscription" ||
-      currentPage === "eIFU-admin"
+      currentPage === "eIFU-admin" ||
+      currentPage === "p-eIFU"
     ) {
       setShowNav(false);
     } else {
@@ -205,7 +199,8 @@ function App() {
       currentPage === "not-found" ||
       currentPage === "payment-succeed" ||
       currentPage === "payment-failed" ||
-      currentPage === "check-subscription"
+      currentPage === "check-subscription" ||
+      currentPage === "p-eIFU"
     ) {
       setShowFooter(false);
     } else {
@@ -213,30 +208,8 @@ function App() {
     }
   }, [location]);
 
-  // useUserStatus(userId);
 
   const intervalRef = useRef(null);
-  //  Memoize the interval setup function to prevent re-renders
-  //  const setupInterval = useMemo(() => {
-  //   return () => {
-  //     if (R_Token && A_Token) {
-  //       intervalRef.current = setInterval(() => {
-  //         dispatch(refreshAction());
-  //         console.log('Token refresh scheduled.');
-  //       }, 300000); // (900000 = 15min ) \ Refresh every 0.25 minute (6000 milliseconds)
-  //     }
-  //   };
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   setupInterval();
-  //   return () => {
-  //     if(intervalRef.current){
-  //       clearInterval(intervalRef.current);
-  //     }
-  //   };
-  // }, [dispatch]);
-  // Memoize the interval setup function to prevent re-renders
   const setupInterval = useCallback(() => {
     if (R_Token && A_Token) {
       intervalRef.current = setInterval(() => {
@@ -256,57 +229,31 @@ function App() {
     };
   }, [setupInterval]);
 
-  //   const setupInterval = useMemo(() => {
-  //   return () => {
-  //     if (R_Token || A_Token) {
-  //       const refresh = () => {
-  //         if (document.visibilityState === 'visible') {
-  //           // Dispatch the refresh action only when the document is visible
-  //           dispatch(refreshAction());
-  //         }
-  //       };
-
-  //       // Setup a timeout to refresh the token after a certain idle period
-  //       let timeoutId;
-
-  //       const setupTimeout = () => {
-  //         timeoutId = setTimeout(() => {
-  //           refresh();
-  //           setupTimeout(); // Reset the timeout for the next idle period
-  //         }, 600); // Refresh every 15 minutes (900,000 milliseconds)
-  //       };
-
-  //       // Set up initial timeout
-  //       setupTimeout();
-
-  //       // Set up an event listener to reset the timeout on user activity
-  //       const resetTimeout = () => {
-  //         clearTimeout(timeoutId);
-  //         setupTimeout();
-  //       };
-
-  //       window.addEventListener('mousemove', resetTimeout);
-  //       window.addEventListener('keydown', resetTimeout);
-
-  //       intervalRef.current = { refresh, resetTimeout };
-  //     }
-  //   };
-  // }, [dispatch, R_Token, A_Token]);
-
-  // useEffect(() => {
-  //   setupInterval();
-  //   return () => {
-  //     if(intervalRef.current){
-  //       clearInterval(intervalRef.current);
-  //     }
-  //   };
-  // }, [dispatch]);
 
   return (
     <div className="App">
       {showNav && <Header />}
       <ScrollToTop />
       <Routes>
+
+        {/* ---------- IFUs pages -------- */}
+          <Route path="/dashboard/IFUs/:IFUsContainerId" element={<IFUsByIFUsContainerId />} />
+          <Route path="/dashboard/IFUs-draft/:IFUsContainerId" element={<DraftIFUs />} />
+          <Route path="/dashboard/IFUs-approved/:IFUsContainerId" element={<ApprovedIFUs />} />
+          <Route path="/dashboard/IFUs-released/:IFUsContainerId" element={<ReleasedIFUs />} />
+          <Route path="/dashboard/IFUs-rejected/:IFUsContainerId" element={<RejectedIFUs />} />
+          <Route path="/dashboard/Instructions-for-use/:projectId" element={<Instructions />} /> 
+
+          <Route path="/dashboard/Instructions-for-use-create/:IFUsContainerId" element={<CreateInstructions />} /> 
+          <Route path="/dashboard/Instructions-for-use-update/:ifuId" element={<UpdateInstruction />} /> 
+          <Route path="/dashboard/Instructions-for-use/info/:IFUId" element={<IFUsInformation />} /> 
+          <Route path="/dashboard/received-ifu" element={<ReceivedIFUs />} /> 
+          <Route path="/dashboard/review-ifu/:IFUId" element={<IFUsReview />} /> 
+          <Route path="/p-eIFU/:IFUId" element={<PublicIFU />} /> 
+
+        {/* ---------- IFUs pages -------- */}
+
+
         <Route path="/" element={<Home />} />
         {/*  */}
         <Route element={<ProtectedRoute />}>
@@ -333,10 +280,8 @@ function App() {
             <Route path="/check-subscription" element={<CheckSubscription />} />
 
             {/* <Route element={<SubscriptionChecker  /> }> */}
-            {/* routes for creator */}
-            {decodedToken &&
-              decodedToken?.userInfo &&
-              (decodedToken?.userInfo?.role.includes("Admin") ||
+            {/* routes for creating labels */}
+            {(decodedToken?.userInfo?.role.includes("Admin") ||
                 decodedToken?.userInfo?.role.includes("Creator")) && (
                 <>
                   {/* create projects steps */}
@@ -443,36 +388,25 @@ function App() {
               )}
 
             {/* routes for Approver */}
-            {decodedToken &&
-              decodedToken?.userInfo &&
-              (decodedToken?.userInfo?.role.includes("Admin") ||
+            {(decodedToken?.userInfo?.role.includes("Admin") ||
                 decodedToken?.userInfo?.role.includes("Approver") ||
                 decodedToken?.userInfo?.role.includes("Release")) && (
-                <>
                   <Route
                     path="/dashboard/project/review-approver/:projectId"
                     element={<ApproverReview />}
-                  />
-                </>
-              )}
+                  /> )}
 
             {/* routes for Release */}
-            {decodedToken &&
-              decodedToken?.userInfo &&
-              (decodedToken?.userInfo?.role.includes("Admin") ||
+            {(decodedToken?.userInfo?.role.includes("Admin") ||
                 decodedToken?.userInfo?.role.includes("Release")) && (
-                <>
                   <Route
                     path="/dashboard/project/review-release/:projectId"
                     element={<ReleaseReview />}
                   />
-                </>
               )}
 
             {/* routes for Producer */}
-            {decodedToken &&
-              decodedToken?.userInfo &&
-              (decodedToken?.userInfo?.role.includes("Admin") ||
+            {(decodedToken?.userInfo?.role.includes("Admin") ||
                 decodedToken?.userInfo?.role.includes("Producer")) && (
                 <>
                   <Route path="/dashboard/templates" element={<Templates />} />
@@ -493,9 +427,7 @@ function App() {
               )}
 
             {/* this routes for admin users */}
-            {decodedToken &&
-              decodedToken?.userInfo &&
-              decodedToken?.userInfo?.role.includes("Admin") && (
+            {decodedToken?.userInfo?.role.includes("Admin") && (
                 <>
                   <Route
                     path="/dashboard/user/:userId"
@@ -510,9 +442,7 @@ function App() {
 
             <Route path="/dashboard" element={<Dashboard />} />
 
-            {decodedToken &&
-              decodedToken?.userInfo &&
-              (decodedToken?.userInfo?.role.includes("Admin") ||
+            {(decodedToken?.userInfo?.role.includes("Admin") ||
                 decodedToken?.userInfo?.role.includes("Creator")) && (
                 <Route path="/dashboard/project" element={<Project />} />
               )}
@@ -560,9 +490,7 @@ function App() {
           </Route>
 
           {/* easyIFU Admin routes */}
-          {decodedToken &&
-            decodedToken?.userInfo &&
-            decodedToken?.userInfo?.role.includes("superAdmin") && (
+          {decodedToken?.userInfo?.role.includes("superAdmin") && (
               <>
                 <Route path="/eIFU-admin/companies" element={<Companies />} />
                 <Route

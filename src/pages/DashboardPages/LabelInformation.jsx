@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Space } from "react-zoomable-ui";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Modal from 'react-modal';
 import "./project.css";
@@ -7,7 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sendingProjectToOtherRoleAction } from "../../redux/actions/projectActions";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
@@ -95,7 +94,6 @@ import * as htmlToImage from "html-to-image"; // Correct import statement
 import { saveAs } from "file-saver";
 import html2canvas from "html2canvas";
 // import imageToSvg from 'image-to-svg';
-import domToImage from "dom-to-image";
 import { jsPDF } from "jspdf";
 
 // bar  code generator library
@@ -202,12 +200,8 @@ const LabelInformation = () => {
     dispatch(
       usersCompanyAction(
         {
-          _id:
-            decodedToken && decodedToken.userInfo && decodedToken.userInfo._id,
-          companyId:
-            decodedToken &&
-            decodedToken.userInfo &&
-            decodedToken.userInfo.companyId,
+          _id:decodedToken?.userInfo?._id,
+          companyId: decodedToken?.userInfo?.companyId,
         },
         token
       )
@@ -3019,119 +3013,6 @@ const LabelInformation = () => {
                 </TableContainer>
               </Modal>
             </div>
-            {/* <div className="mt-5 pb-5">
-              <h6>Label Logs:</h6>
-              <TableContainer
-                style={{
-                  backgroundColor: "#ecf0f3",
-                  boxShadow: "none",
-                  border: "0",
-                }}
-                className=""
-                component={Paper}
-              >
-                <Table
-                  style={{
-                    backgroundColor: "#ecf0f3",
-                    boxShadow: "none",
-                    border: "0",
-                  }}
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell
-                        style={{ fontSize: "12px", fontWeight: "600" }}
-                      >
-                        Label
-                      </TableCell>
-                      <TableCell
-                        style={{ fontSize: "12px", fontWeight: "600" }}
-                      >
-                        Version
-                      </TableCell>
-                      <TableCell
-                        style={{ fontSize: "12px", fontWeight: "600" }}
-                      >
-                        Sender
-                      </TableCell>
-                      <TableCell
-                        style={{ fontSize: "12px", fontWeight: "600" }}
-                      >
-                        Receiver
-                      </TableCell>
-                      <TableCell
-                        style={{ fontSize: "12px", fontWeight: "600" }}
-                      >
-                        Action
-                      </TableCell>
-                      <TableCell
-                        style={{ fontSize: "12px", fontWeight: "600" }}
-                      >
-                        Approved By
-                      </TableCell>
-                      <TableCell
-                        style={{ fontSize: "12px", fontWeight: "600" }}
-                      >
-                        Released By
-                      </TableCell>
-                      <TableCell
-                        style={{ fontSize: "12px", fontWeight: "600" }}
-                      >
-                        Rejected By
-                      </TableCell>
-                      <TableCell
-                        style={{ fontSize: "12px", fontWeight: "600" }}
-                      >
-                        Action Date
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody style={{ backgroundColor: "" }}>
-                    {labelLogs.map((log) => (
-                      <TableRow key={log._id}>
-                        <TableCell style={{ fontSize: "12px" }}>
-                          {log.labelId.labelName}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "12px" }}>
-                          {log.labelVersion}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "12px" }}>
-                          {log.senderId
-                            ? `${log.senderId.firstName} ${log.senderId.lastName}`
-                            : "N/A"}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "12px" }}>
-                          {log.recieverId
-                            ? `${log.recieverId.firstName} ${log.recieverId.lastName}`
-                            : "N/A"}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "12px" }}>
-                          {log.action}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "12px" }}>
-                          {log.approvedBy
-                            ? `${log.approvedBy.firstName} ${log.approvedBy.lastName}`
-                            : "N/A"}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "12px" }}>
-                          {log.releasedBy
-                            ? `${log.releasedBy.firstName} ${log.releasedBy.lastName}`
-                            : "N/A"}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "12px" }}>
-                          {log.rejectedBy
-                            ? `${log.rejectedBy.firstName} ${log.rejectedBy.lastName}`
-                            : "N/A"}
-                        </TableCell>
-                        <TableCell style={{ fontSize: "12px" }}>
-                          {new Date(log.createdAt).toLocaleString()}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div> */}
           </div>
         ) : (
           // ----- rotation request -----

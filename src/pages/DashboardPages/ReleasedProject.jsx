@@ -534,9 +534,7 @@ const ReleasedProject = () => {
                   </div>
                 )}
 
-                {projectInfo &&
-                  projectInfo?.labelData &&
-                  !projectInfo?.labelData?.haDateOfManufacture &&
+                {!projectInfo?.labelData?.haDateOfManufacture &&
                   projectInfo?.labelData?.useByDate && (
                     <div
                       className="form-group mb-3"
@@ -560,9 +558,7 @@ const ReleasedProject = () => {
                     </div>
                   )}
 
-                {projectInfo &&
-                  projectInfo?.labelData &&
-                  projectInfo?.labelData?.haSerialNumber && (
+                {projectInfo?.labelData?.haSerialNumber && (
                     <div
                       className="form-group mb-3"
                       style={{ display: "flex", flexDirection: "column" }}
@@ -588,9 +584,7 @@ const ReleasedProject = () => {
                       />
                     </div>
                   )}
-                {projectInfo &&
-                  projectInfo?.labelData &&
-                  projectInfo?.labelData?.haDateOfManufacture && (
+                {projectInfo?.labelData?.haDateOfManufacture && (
                     <div
                       className="form-group mb-3"
                       style={{ display: "flex", flexDirection: "column" }}

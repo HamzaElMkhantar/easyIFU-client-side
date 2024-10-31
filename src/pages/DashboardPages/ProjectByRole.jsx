@@ -20,7 +20,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import BarLinks from "../../utilities/BarLinks";
-import { Tab, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 
 const ProjectByRole = () => {
   // side bar toggle
@@ -33,16 +33,10 @@ const ProjectByRole = () => {
     localStorage.setItem("sideToggle", JSON.stringify(newToggleState));
   };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
   // -- component logic --
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null;
-  const roleId =
-    decodedToken && decodedToken?.userInfo && decodedToken?.userInfo._id;
+  const roleId = decodedToken?.userInfo?._id;
 
   const [projectsRole, setProjectsRole] = useState([]);
   const { ProjectByRoleId } = useSelector((state) => state);
@@ -52,56 +46,34 @@ const ProjectByRole = () => {
     roleProjectFail,
     roleProjects,
   } = ProjectByRoleId;
-  console.log(roleProjects);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(ProjectByRoleIdAction(roleId, token));
-  }, []);
+  }, [dispatch]);
+  
   useEffect(() => {
     if (roleProjectSuccess) {
       setProjectsRole(roleProjects);
     }
     if (roleProjectFail) {
-      if (roleProjectFail.message != "You have not received any projects yet") {
+      if (roleProjectFail.message !== "You have not received any projects yet") {
         toast.error(`${roleProjectFail.message}`);
       }
     }
-  }, [roleProjectSuccess, roleProjectFail]);
+  }, [roleProjectSuccess, roleProjectFail, roleProjects]);
 
   // ------ headers ------
-  const { logout } = useSelector((state) => state);
-  const { logoutRequest, logoutSuccess, logoutFail } = logout;
   const userId = decodedToken?.userInfo?._id || null;
   const handleLogout = () => {
     dispatch(logoutAction(userId));
   };
   // ------ headers ------
-  let barLinks = [];
-
-  if (
-    decodedToken &&
-    decodedToken?.userInfo &&
-    (decodedToken?.userInfo?.role.includes("Admin") ||
-      decodedToken?.userInfo?.role.includes("Creator"))
-  ) {
-    barLinks = [
-      { title: "Projects", link: "/dashboard/project" },
-      { title: "Received", link: "/dashboard/received-project" },
-      { title: "Archived", link: "/dashboard/archived-project" },
-    ];
-  } else if (
-    decodedToken &&
-    decodedToken?.userInfo &&
-    (!decodedToken?.userInfo?.role.includes("Admin") ||
-      !decodedToken?.userInfo?.role.includes("Creator"))
-  ) {
-    barLinks = [
-      // {title: 'Projects', link: '/dashboard/project'},
-      { title: "Received", link: "/dashboard/received-project" },
-      { title: "Archived", link: "/dashboard/archived-project" },
-    ];
-  }
+  let barLinks = [
+    // {title: 'Projects', link: '/dashboard/project'},
+    { title: "Received Labels", link: "/dashboard/received-project" },
+    { title: "Received IFUs", link: "/dashboard/received-ifu" },
+  ];
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleMenu = (event) => {
@@ -243,7 +215,7 @@ const ProjectByRole = () => {
               >
                 <tr>
                   <th>#</th>
-                  <th>Project Name</th>
+                  <th>Label Name</th>
                   <th>Description</th>
                   <th>Manage</th>
                 </tr>
@@ -260,10 +232,7 @@ const ProjectByRole = () => {
                     </td>
                     <td>
                       <Link
-                        to={
-                          token &&
-                          decodedToken &&
-                          decodedToken?.userInfo &&
+                        to={token && 
                           (decodedToken?.userInfo?.role?.includes("Approver") ||
                             decodedToken?.userInfo?.role?.includes("Release") ||
                             decodedToken?.userInfo?.role?.includes("Admin")) &&
@@ -310,7 +279,7 @@ const ProjectByRole = () => {
                   justifyContent: "center",
                 }}
               >
-                You have not received any projects yet
+                You have no label to approve or release yet
               </p>
             )}
           </div>

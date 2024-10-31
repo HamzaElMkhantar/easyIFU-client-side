@@ -9,11 +9,8 @@ import MenuItem from "@mui/material/MenuItem";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import { Link, useLocation } from "react-router-dom";
 
-
-
-function BarLinks({pages}) {
+function BarLinks({ pages }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -23,22 +20,18 @@ function BarLinks({pages}) {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  // ---
   const location = useLocation();
-  const [currentPage, setCurrentPage] = React.useState('')
-  React.useEffect(()=>{
-    setCurrentPage(location.pathname)
-  }, [location])
-
-  console.log("pathName: ", currentPage)
+  const [currentPage, setCurrentPage] = React.useState("");
+  React.useEffect(() => {
+    setCurrentPage(location.pathname);
+  }, [location]);
 
   return (
-    <AppBar position="static"style={{backgroundColor:'#021d41', marginBottom:'px', padding:'0'}}>
-      <div className='container' >
+    <AppBar
+      position="static"
+      style={{ backgroundColor: "#021d41", marginBottom: "px", padding: "0" }}
+    >
+      <div className="container">
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -71,28 +64,48 @@ function BarLinks({pages}) {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link style={ page.link == currentPage ?
-                     {marginRight:'10px'} : {color:'black'}
-                     } to={page.link} textAlign="center">{page.title}</Link>
+                  <Link
+                    style={
+                      page.link === currentPage
+                        ? { marginRight: "10px" }
+                        : { color: "black" }
+                    }
+                    to={page.link}
+                    textAlign="center"
+                  >
+                    {page.title}
+                  </Link>
                 </MenuItem>
               ))}
-
             </Menu>
           </Box>
           <AccountTreeIcon
             sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
           />
 
-          <Box style={{ display:'flex', justifyContent:''}} sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            style={{ display: "flex", justifyContent: "" }}
+            sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
+          >
             {pages.map((page) => (
-              <Link to={page.link}
-                style={page.link !== currentPage ?
-                  {color:'#ecf0f3', fontWeight:'500', marginRight:'10px',  padding:'2px 10px'}
-                  : {color:'#ecf0f3', fontWeight:'500', marginRight:'10px', backgroundColor:'#08408B', 
-                  padding:'2px 10px', 
-                  borderRadius:'5px',
-                  fontWeight:'700'
-                  }
+              <Link
+                to={page.link}
+                className="mx-2"
+                style={
+                  page.link !== currentPage 
+                    ? {
+                        color: "#ecf0f3",
+                        fontWeight: "500",
+                        marginRight: "10px",
+                        padding: "2px 2px",
+                      }
+                    : {
+                        color: "#ecf0f3",
+                        fontWeight: "500",
+                        marginRight: "10px",
+                        padding: "2px 2px",
+                        borderBottom: "1px solid #fff",
+                      }
                 }
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -100,7 +113,6 @@ function BarLinks({pages}) {
               >
                 {page.title}
               </Link>
-              
             ))}
           </Box>
         </Toolbar>

@@ -2,55 +2,37 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SideBar from "../../components/header/SideBar";
 import Avatar from "@mui/material/Avatar";
-import { Routes, Route, Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "../../components/header/header.css";
-import DeleteIcon from "@mui/icons-material/Delete";
 import WidgetsRoundedIcon from "@mui/icons-material/WidgetsRounded";
-import Dropdown from "react-bootstrap/Dropdown";
 import { Table } from "react-bootstrap";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import {
-  archivedProjectToggleAction,
-  deleteProjectAction,
-  duplicateProjectAction,
-  getAllProjectsAction,
   startProjectAction,
 } from "../../redux/actions/projectActions";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
-
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-
-import { Popover } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
-
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import easyIFUlogo from "../../assets/easyIFU_Logo.png";
 import BarLinks from "../../utilities/BarLinks";
-import NavDashboard from "../../components/header/NavDashboard";
 import { logoutAction } from "../../redux/actions/authActions";
-import { getAllLabelsAction } from "../../redux/actions/labelActions";
 import {
   createProductAction,
-  getProductByIdAction,
   getProductByProjectIdAction,
 } from "../../redux/actions/productActions";
 import Swal from "sweetalert2";
 import Heading from "../../components/Heading/Heading";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -65,14 +47,23 @@ const style = {
   borderRadius: "3px",
 };
 
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+
+  return `${day}/${month}/${year}  ${hours}:${minutes}:${seconds}`;
+}
+
+
 const Products = () => {
   const { projectId } = useParams();
-
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
+ 
   // toggle form
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -91,12 +82,12 @@ const Products = () => {
   // --- component logic ---
   const token = Cookies.get("eIfu_ATK") || null;
   const decodedToken = token ? jwtDecode(token) : null;
-  const companyId = decodedToken && decodedToken?.userInfo?.companyId;
+  const companyId =  decodedToken?.userInfo?.companyId;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [allProjects, setAllProjects] = useState([]);
-  const { logout, getProductByProjectId, getProductById, createProduct } =
+  const { logout, getProductByProjectId, createProduct } =
     useSelector((state) => state);
 
   const { createProductRequest, createProductSuccess, createProductFail } =
@@ -104,14 +95,10 @@ const Products = () => {
   const { logoutRequest, logoutSuccess, logoutFail } = logout;
   const { productRequest, productSuccess, productsData, productFail } =
     getProductByProjectId;
-
+console.log({logoutRequest, logoutSuccess, logoutFail })
   const [formData, setFormData] = useState({
-    companyId:
-      decodedToken &&
-      decodedToken?.userInfo &&
-      decodedToken?.userInfo?.companyId,
-    createdBy:
-      decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id,
+    companyId:decodedToken?.userInfo?.companyId,
+    createdBy:decodedToken?.userInfo?._id,
     projectId,
     productDescription: "",
     productName: "",
@@ -127,7 +114,7 @@ const Products = () => {
     if (logoutSuccess) {
       navigate("/login");
     }
-  }, [logoutSuccess]);
+  }, [logoutSuccess, navigate]);
 
   // get all products
   useEffect(() => {
@@ -139,7 +126,7 @@ const Products = () => {
         token
       )
     );
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (createProductSuccess) {
@@ -153,12 +140,8 @@ const Products = () => {
       );
       handleClose();
       setFormData({
-        companyId:
-          decodedToken &&
-          decodedToken?.userInfo &&
-          decodedToken?.userInfo?.companyId,
-        createdBy:
-          decodedToken && decodedToken?.userInfo && decodedToken?.userInfo?._id,
+        companyId: decodedToken?.userInfo?.companyId,
+        createdBy: decodedToken?.userInfo?._id,
         projectId,
         productDescription: "",
         productName: "",
@@ -166,7 +149,7 @@ const Products = () => {
     }
 
     if (createProductFail) {
-      if (createProductFail.message == "payment_required!") {
+      if (createProductFail.message === "payment_required!") {
         handleClose();
         Swal.fire({
           title: "Subscription Needed",
@@ -199,7 +182,6 @@ const Products = () => {
     }
 
     if (productFail) {
-      // toast.warning(`${getAllProjectsFail.message}`)
       setAllProjects([]);
     }
   }, [productSuccess, productFail]);
@@ -210,7 +192,7 @@ const Products = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.projectName == "" || formData.projectDescription == "") {
+    if (formData.projectName === "" || formData.projectDescription === "") {
       toast.warning("Fields are Empty !");
     } else {
       dispatch(startProjectAction(formData, token));
@@ -218,30 +200,15 @@ const Products = () => {
   };
 
   // ------ headers ------
-  let barLinks = [];
+  let barLinks = [
+    { title: "Products", link: "/dashboard/products/" + projectId },
+    {
+      title: "Instructions for Use",
+      link: "/dashboard/Instructions-for-use/" + projectId,
+    },
+  ];
 
-  if (
-    decodedToken &&
-    decodedToken?.userInfo &&
-    (decodedToken?.userInfo?.role.includes("Admin") ||
-      decodedToken?.userInfo?.role.includes("Creator"))
-  ) {
-    barLinks = [
-      { title: "Projects", link: "/dashboard/project" },
-      { title: "Received", link: "/dashboard/received-project" },
-      { title: "Archived", link: "/dashboard/archived-project" },
-    ];
-  } else if (
-    decodedToken &&
-    decodedToken?.userInfo &&
-    (!decodedToken?.userInfo?.role.includes("Admin") ||
-      !decodedToken?.userInfo?.role.includes("Creator"))
-  ) {
-    barLinks = [
-      { title: "Received", link: "/dashboard/received-project" },
-      { title: "Archived", link: "/dashboard/archived-project" },
-    ];
-  }
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -250,33 +217,7 @@ const Products = () => {
     setAnchorEl(null);
   };
 
-  // table menu
-  const [anchorETable, setAnchorElTable] = useState(null);
 
-  const handleMenuClick = (event) => {
-    setAnchorElTable(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorElTable(null);
-  };
-
-  const handleArchive = (_id) => {
-    dispatch(archivedProjectToggleAction(_id, token));
-    handleCloseMenu();
-  };
-
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-
-    return `${day}/${month}/${year}  ${hours}:${minutes}:${seconds}`;
-  }
 
   return (
     <div
@@ -409,12 +350,13 @@ const Products = () => {
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 <form onSubmit={handleSubmit}>
                   <div className="form-group">
-                    <label>1- Product Name:</label>
+                    <label htmlFor="projectName">1- Product Name:</label>
                     <input
                       type="text"
                       className="form-control"
                       name="projectName"
-                      value={formData.projectName}
+                      id="projectName"
+                      value={formData.productName}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -424,11 +366,12 @@ const Products = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>2- Product Description:</label>
+                    <label htmlFor="projectDescription">2- Product Description:</label>
                     <input
                       type="text"
                       className="form-control"
                       name="projectDescription"
+                      id="projectDescription"
                       value={formData.projectDescription}
                       onChange={(e) =>
                         setFormData({
@@ -499,9 +442,7 @@ const Products = () => {
           </Modal>
 
           {/* <Link to='/dashboard/create-project/step1'> */}
-          {decodedToken &&
-            decodedToken?.userInfo &&
-            (decodedToken?.userInfo?.role.includes("Admin") ||
+          {(decodedToken?.userInfo?.role.includes("Admin") ||
               decodedToken?.userInfo?.role.includes("Creator")) && (
               <button
                 onClick={handleOpen}
@@ -533,9 +474,7 @@ const Products = () => {
                   <th scope="col">#</th>
                   <th scope="col">Product Name</th>
                   <th scope="col">Description</th>
-                  {decodedToken &&
-                    decodedToken?.userInfo &&
-                    (decodedToken?.userInfo?.role.includes("Admin") ||
+                  {(decodedToken?.userInfo?.role.includes("Admin") ||
                       decodedToken?.userInfo?.role.includes("Creator")) && (
                       <>
                         <th scope="col">createdAt</th>
@@ -545,10 +484,10 @@ const Products = () => {
                 </tr>
               </thead>
               <tbody style={{ textAlign: "center" }}>
-                {allProjects &&
+                {allProjects.length > 0 &&
                   allProjects?.map((item, index) => {
                     return (
-                      <tr key={index}>
+                      <tr key={item._id}>
                         <th scope="row">{index + 1}</th>
                         <td>{item.productName}</td>
                         <td>
@@ -557,9 +496,7 @@ const Products = () => {
                             : item.productDescription}
                         </td>
                         <td>{formatDate(item?.createdAt)}</td>
-                        {decodedToken &&
-                          decodedToken?.userInfo &&
-                          (decodedToken?.userInfo?.role.includes("Admin") ||
+                        {(decodedToken?.userInfo?.role.includes("Admin") ||
                             decodedToken?.userInfo?.role.includes(
                               "Creator"
                             )) && (

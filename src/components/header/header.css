@@ -289,6 +289,12 @@
   }
 }
 
+@media screen and (max-width: 720px) {
+  .publicSideBar{
+    display: none;
+  }
+}
+
 
 
 

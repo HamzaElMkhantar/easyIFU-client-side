@@ -316,7 +316,7 @@ function Template2(props) {
           </div>
         ) : (
           <div style={{ width: "100%", height: "100%" }}>
-            {handleUDI(data)}
+            {/* {handleUDI(data)} */}
           </div>
         )}
       </div>

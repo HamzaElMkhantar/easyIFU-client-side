@@ -204,7 +204,7 @@ const UpdateSafeUseComponent = () => {
                 value="Yes"
                 checked={formData.needInstructionsForUse}
                 onChange={() => handleCheckboxChange('needInstructionsForUse', 'Yes')}
-                disabled
+                // disabled
               />
             </div>
             <div className="form-check">
@@ -216,7 +216,7 @@ const UpdateSafeUseComponent = () => {
                 value="No"
                 checked={!formData.needInstructionsForUse}
                 onChange={() => handleCheckboxChange('needInstructionsForUse', 'No')}
-                disabled
+                // disabled
               />
             </div>
           </div>
@@ -232,7 +232,6 @@ const UpdateSafeUseComponent = () => {
               name="eIFULink"
               value={formData.eIFULink}
               onChange={(e) => handleInputChange('eIFULink', e.target.value)}
-              readOnly
             />
           </div>
          )}
