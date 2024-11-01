@@ -27,7 +27,7 @@ const PublicIFU = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [metadata, setMetadata] = useState(null);
   const [allVersion, setAllVersion] = useState([]);
-
+  let pdfData = pdfFile
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(findPublicIFUAction(IFUId));
@@ -46,17 +46,39 @@ const PublicIFU = () => {
           type: "application/pdf",
         }
       );
-
       // Create URL for the blob
       const pdfUrl = URL.createObjectURL(pdfBlob);
       setPdfFile(pdfUrl);
+      pdfData = pdfUrl
       setMetadata(findPublicIFUData.metadata);
       setAllVersion(findPublicIFUData.allVersions);
     }
   }, [findPublicIFUSuccess, findPublicIFUFail, findPublicIFUData]);
+
+  // useEffect(() => {
+  //   if (findPublicIFUSuccess && findPublicIFUData?.pdfData) {
+  //     try {
+  //       const pdfBlob = new Blob(
+  //         [Uint8Array.from(atob(findPublicIFUData.pdfData), (c) => c.charCodeAt(0))],
+  //         { type: "application/pdf" }
+  //       );
+  //       const pdfUrl = URL.createObjectURL(pdfBlob);
+  //       // const _ = URL.createObjectURL(new Blob(
+  //       //   [Uint8Array.from(atob(pdfFile), (c) => c.charCodeAt(0))],
+  //       //   { type: "application/pdf" }
+  //       // ));
+  //       setPdfFile(pdfUrl);
+  //       setMetadata(findPublicIFUData.metadata);
+  //       setAllVersion(findPublicIFUData.allVersions);
+  //     } catch (error) {
+  //       console.error("Error creating PDF Blob:", error);
+  //     }
+  //   }
+  // }, [findPublicIFUSuccess, findPublicIFUData]);
+
   return (
     <>
-      {pdfFile ? (
+      {!findPublicIFURequest ? (
         <div style={{ display: "flex", flexDirection: "row", height: "100vh" }}>
           <PublicSideBar metaData={metadata} allVersion={allVersion} />
           <div
@@ -68,27 +90,110 @@ const PublicIFU = () => {
               boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)", // Shadow effect
             }}
           >
-            {pdfFile ? (
+            
               <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "#ffffff", // Light background to offset gray
-                }}
+                style={{ overflow: "auto", width: "100%", height: "100dvh" }}
               >
-                <iframe
-                  src={`${pdfFile}#100`}
-                  width="100%"
-                  height="100%"
-                  style={{
-                    border: "none",
-                  }}
+                {/* <iframe
+                  // src={`${pdfFile}#toolbar=0&view=FitH`}
+                  src={pdfFile} 
+                  type="application/pdf"
+                  style={{ width: '100%', height: '100%', overflowY:'auto' }}
                   title="PDF Viewer"
                 />
+                */}
+                <div
+                  className="isLaptop"
+                  style={{
+                    overflow: "auto",
+                    width: "100%",
+                    height: "100dvh",
+                    textAlin: "center",
+                  }}
+                >
+                  <object
+                    data={pdfFile}
+                    type="application/pdf"
+                    width="100%"
+                    height="100%"
+                  >
+                    <p style={{marginBottom:'10px'}}>
+                      Your browser does not support PDFs.{" "}
+                      <a
+                        href={pdfFile}
+                        download={`${metadata?.IFUName || 'eIFU'} version${metadata?.ifuVerssion}.pdf`}
+                      >
+                        Download the eIFU
+                      </a>
+                      
+                    </p>
+                  </object>
+                </div>
+
+                {/* <div 
+                  className="isMobile m-4"
+                  >
+                  Your browser does not support eIFU.{" "}
+                  Download the eIFU's versions
+                  {allVersion.length > 0 &&
+                    allVersion.map((item, index) => 
+                       (
+                        <div key={index}>
+                          <p>
+                            <a
+                              href={pdfFile}
+                              download={`${metadata?.IFUName || 'eIFU'} version${item?.ifuVersion}.pdf`}
+                            >
+                             {index + 1}- version: {item?.ifuVersion}
+                            </a>
+                            
+                          </p>
+                        </div>
+                      )
+                    )}
+                </div> */}
+                <object
+                  // src={`${pdfFile}#toolbar=0&view=FitH`}
+                  data={`${pdfFile}#toolbar=0&view=FitH`}
+                  type="application/pdf"
+                  width="100%"
+                  height="100%"
+                >
+                  {/* <p style={{marginBottom:'5px'}}>
+                      Your browser does not support PDFs.{" "}
+                      <a
+                        href={pdfData}
+                        download={`${metadata?.IFUName || 'eIFU'} version${metadata?.ifuVerssion}.pdf`}
+                      >
+                        version {metadata?.ifuVerssion}
+                      </a>
+                      
+                    </p> */}
+
+
+                     <div 
+                  className="isMobile m-4"
+                  >
+                  Your browser does not support eIFU.{" "}
+                  Download the eIFU's versions
+                  {allVersion.length > 0 &&
+                    allVersion.map((item, index) => 
+                       (
+                        <div key={index}>
+                            <a className="mb-2 p-1"
+                              href={pdfFile}
+                              download={`${metadata?.IFUName || 'eIFU'} version${item?.ifuVersion}.pdf`}
+                            >
+                             - version: {item?.ifuVersion}
+                            </a>
+                            
+                        </div>
+                      )
+                    )}
+                </div>
+                </object>
               </div>
-            ) : (
-              <p>No eIFU selected</p>
-            )}
+            
           </div>
         </div>
       ) : (
@@ -100,8 +205,8 @@ const PublicIFU = () => {
             alignItems: "center",
           }}
         >
-          {" "}
-          <Lottie animationData={lottieLoader} style={{ width: "20%" }} />
+          {" pending"}
+          {/* <Lottie animationData={lottieLoader} style={{ width: "20%" }} /> */}
         </div>
       )}
     </>

@@ -102,6 +102,7 @@ import ReceivedIFUs from "./pages/DashboardPages/ReceivedIFUs";
 import IFUsReview from "./pages/DashboardPages/IFUsReview";
 import UpdateInstruction from "./pages/DashboardPages/UpdateInstruction";
 import PublicIFU from "./pages/DashboardPages/PublicIFU";
+import PdfViewer from "./pages/DashboardPages/PdfViewer";
 
 function App() {
   const R_Token = Cookies.get("eIfu_RTK") || null;
@@ -250,6 +251,7 @@ function App() {
           <Route path="/dashboard/received-ifu" element={<ReceivedIFUs />} /> 
           <Route path="/dashboard/review-ifu/:IFUId" element={<IFUsReview />} /> 
           <Route path="/p-eIFU/:IFUId" element={<PublicIFU />} /> 
+          <Route path="/eIFU/public/:ifuId" element={<PdfViewer />} /> 
 
         {/* ---------- IFUs pages -------- */}
 

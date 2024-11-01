@@ -1354,3 +1354,22 @@ form div input {
 
 
 /* manufacture-img */
+
+
+
+.isMobile {
+    display: none;
+}
+.isLaptop{
+    display: block;
+
+}
+
+@media screen and (max-width: 768px) {
+    .isMobile {
+        display: block;
+    }
+    .isLaptop{
+        display: none ;
+    }
+  }
