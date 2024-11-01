@@ -182,7 +182,21 @@ const PublicIFU = () => {
                         <div key={index}>
                             <a className="mb-2 p-1"
                               href={pdfFile}
-                              download={`${metadata?.IFUName || 'eIFU'} version${item?.ifuVersion}.pdf`}
+                              // download={`${metadata?.IFUName || 'eIFU'} version${metadata?.ifuVersion}.pdf`}
+                              // target="_blank"
+                              // rel="noopener noreferrer" 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                
+                                // Create an anchor element to trigger download
+                                const downloadLink = document.createElement("a");
+                                downloadLink.href = pdfFile;
+                                // downloadLink.download = `${item?.ifuVersion}_IFU.pdf`;
+                                downloadLink.click();
+                      
+                                // Open in a new tab after download
+                                window.open(pdfFile, "_blank");
+                              }}
                             >
                              - version: {item?.ifuVersion}
                             </a>
