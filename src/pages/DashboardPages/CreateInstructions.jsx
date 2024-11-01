@@ -176,7 +176,7 @@ const CreateInstructions = () => {
       formSubmissionData.append("checklistData", JSON.stringify(checklistData));
 
       // Dispatch the action to your Redux store
-      dispatch(createIFUAction(formSubmissionData));
+      dispatch(createIFUAction(formSubmissionData, token));
     } else {
       console.log("Form has errors");
     }
