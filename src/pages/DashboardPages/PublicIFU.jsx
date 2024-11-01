@@ -152,13 +152,13 @@ const PublicIFU = () => {
                       )
                     )}
                 </div> */}
-                <object
+                {/* <object
                   // src={`${pdfFile}#toolbar=0&view=FitH`}
                   data={`${pdfFile}#toolbar=0&view=FitH`}
                   type="application/pdf"
                   width="100%"
                   height="100%"
-                >
+                > */}
                   {/* <p style={{marginBottom:'5px'}}>
                       Your browser does not support PDFs.{" "}
                       <a
@@ -191,7 +191,7 @@ const PublicIFU = () => {
                       )
                     )}
                 </div>
-                </object>
+                {/* </object> */}
               </div>
             
           </div>
@@ -205,8 +205,8 @@ const PublicIFU = () => {
             alignItems: "center",
           }}
         >
-          {" pending"}
-          {/* <Lottie animationData={lottieLoader} style={{ width: "20%" }} /> */}
+          {/* {" pending"} */}
+          <Lottie animationData={lottieLoader} style={{ width: "20%" }} />
         </div>
       )}
     </>
