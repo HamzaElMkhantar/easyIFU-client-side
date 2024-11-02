@@ -1650,38 +1650,9 @@ function formatSumDateToYYYYMMDD(date) {
             </div>
           )}
 
-          {projectInfo.labelData.needInstructionsForUse && (
-            <div
-              style={{
-                ...customStyles.symboleImageWrapper,
-                ...DynamicStyleForSymbols,
-              }}
-              className="symbol-content-item"
-            >
-              <img
-                style={customStyles.symboleImage}
-                className="symbol-img"
-                src={consult_instruction_for_use} alt='consult_instruction_for_use'
-              />
-              {
-                projectInfo.labelData.eIFULink !== '' && (
-                  <p
-                    style={{
-                      ...customStyles.paragraph,
-                      wordWrap: "break-word",
-                      overflowWrap: "break-word",
-                      fontSize: "5px",
-                      marginTop: "-5px",
-                    }}
-                  >
-                    {projectInfo.labelData.eIFULink}
-                  </p>
-                )
-              }
-            </div>
-          )}
 
-          {projectInfo.labelData.needInstructionsForUse && projectInfo.labelData.eIFULink !== '' && (
+
+          {/* {projectInfo.labelData.needInstructionsForUse && projectInfo.labelData.eIFULink !== '' && (
             <div
               style={{
                 ...customStyles.symboleImageWrapper,
@@ -1702,7 +1673,7 @@ function formatSumDateToYYYYMMDD(date) {
                     {projectInfo.labelData.eIFULink}
                   </p>
             </div>
-          )}
+          )} */}
 
           {projectInfo.labelData.productType ==
             "In Vitro Diagnostic (IVD) Medical Device" &&
@@ -1735,6 +1706,51 @@ function formatSumDateToYYYYMMDD(date) {
                 )}
               </div>
             )}
+
+{projectInfo.labelData.needInstructionsForUse && (
+            <div
+              style={{
+                ...customStyles.symboleImageWrapper,
+                ...DynamicStyleForSymbols,
+                // backgroundColor:'red',
+                width:'120px',
+                height:'60px',
+                
+              }
+            }
+              className="symbol-content-item"
+            >
+              <div style={{display:'flex', alignItems:'center',justifyContent:'', gridGap:'10%'}}>
+                <img
+                  style={{width:'49%', }}
+                  // style={customStyles.symboleImage}
+                  className="symbol-img"
+                  src={consult_instruction_for_use} alt='consult_instruction_for_use'
+                />
+                  {projectInfo.labelData.eIFULink !== '' && 
+                  <QRCodeHandler link={projectInfo.labelData.eIFULink} size={50} />}
+              </div>
+                {
+                  projectInfo.labelData.eIFULink !== ''&&
+                  <p
+                    style={{
+                      // ...customStyles.paragraph,
+                      wordWrap: "break-word",
+                      overflowWrap: "break-word",
+                      fontSize: "5px",
+                      marginTop: "-2px",
+                      width:'100%',
+                      textAlign:'left',
+                      fontWeight:'500',
+                    }}
+                  >
+                    {projectInfo.labelData.eIFULink}
+                  </p>
+              }
+              
+            </div>
+          )}
+            
         </div>
       );
     }
