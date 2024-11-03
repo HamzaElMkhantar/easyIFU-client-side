@@ -716,7 +716,7 @@ export const findPublicIFUAction = (ifuId) => async (dispatch) => {
     dispatch({ type: FIND_PUBLIC_IFU_REQUEST });
     const config = {
       headers: {
-        
+        'Accept': 'application/json',
       },
     };
 

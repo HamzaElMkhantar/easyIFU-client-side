@@ -10,6 +10,24 @@ import Lottie from "lottie-react";
 import lottieLoader from "../../assets/lotties/spinner.json";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ContentCopySharpIcon from '@mui/icons-material/ContentCopySharp';
+
+import { Worker, Viewer} from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+
+
+const base64ToBlob = (base64) => {
+    const binaryString = window.atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return new Blob([bytes], { type: 'application/pdf' });
+};
+
 const PublicIFU = () => {
   const { IFUId } = useParams();
 
@@ -25,11 +43,14 @@ const PublicIFU = () => {
     findPublicIFUFail,
     findPublicIFUData,
   });
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  const [pdfData, setPdfData] = useState(null);
 
+  const [filerReader, setFileReader] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [metadata, setMetadata] = useState(null);
   const [allVersion, setAllVersion] = useState([]);
-  let pdfData = pdfFile
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(findPublicIFUAction(IFUId));
@@ -37,25 +58,75 @@ const PublicIFU = () => {
 
   useEffect(() => {
     if (findPublicIFUSuccess) {
+      setPdfData(findPublicIFUData.pdfData)
       // Decode base64 PDF data
       const pdfBlob = new Blob(
         [
           Uint8Array.from(atob(findPublicIFUData.pdfData), (c) =>
             c.charCodeAt(0)
-          ),
-        ],
-        {
-          type: "application/pdf",
-        }
-      );
-      // Create URL for the blob
-      const pdfUrl = URL.createObjectURL(pdfBlob);
+        ),
+      ],
+      {
+        type: "application/pdf",
+      }
+    );
+    // Create URL for the blob
+    // const pdfUrl = URL.createObjectURL(pdfBlob);
+    // setPdfFile(pdfUrl);
+
+    try {
+      console.log("Base64 length:", findPublicIFUData.pdfData.length);
+      const blob = base64ToBlob(findPublicIFUData.pdfData);
+      console.log("Blob size:", blob.size); // Check blob size
+      const pdfUrl = URL.createObjectURL(blob);
+      console.log("Blob URL:", pdfUrl);
+      // window.open(pdfUrl); // This should open the PDF directly
+
       setPdfFile(pdfUrl);
-      pdfData = pdfUrl
+  } catch (error) {
+      console.error("Error creating PDF Blob:", error);
+  }
+    
+            //  // Decode base64 PDF data
+            //  const binaryString = atob(findPublicIFUData.pdfData);
+            //  const len = binaryString.length;
+            //  const bytes = new Uint8Array(len);
+     
+            //  for (let i = 0; i < len; i++) {
+            //    bytes[i] = binaryString.charCodeAt(i);
+            //  }
+     
+            //  const mobilePdfBlob = new Blob([bytes], { type: 'application/pdf' });
+            //  console.log("Blob created:", mobilePdfBlob);
+             
+            //  const url = URL.createObjectURL(mobilePdfBlob);
+            //  console.log("Blob URL:", pdfUrl);
+            //  setFileReader(url);
+
+
+    // const read = new FileReader();
+    // read.readAsDataURL(pdfBlob);
+    // read.onload = (e) => {
+    //   setFileReader(e.target.result);
+    // } 
+
       setMetadata(findPublicIFUData.metadata);
       setAllVersion(findPublicIFUData.allVersions);
+      // Cleanup the object URL after component unmounts
+      return () => {
+        URL.revokeObjectURL(pdfUrl);
+      };
     }
   }, [findPublicIFUSuccess, findPublicIFUFail, findPublicIFUData]);
+
+   // Convert base64 PDF data to a Blob URL
+   const getBlobUrl = () => {
+    if (!pdfData) return null;
+    const pdfBlob = new Blob([new Uint8Array(atob(pdfData).split("").map(c => c.charCodeAt(0)))], { type: 'application/pdf' });
+    return URL.createObjectURL(pdfBlob);
+  };
+
+  const pdfUrl = getBlobUrl();
 
   // useEffect(() => {
   //   if (findPublicIFUSuccess && findPublicIFUData?.pdfData) {
@@ -93,14 +164,6 @@ const PublicIFU = () => {
             }}
           >
             <div style={{ overflow: "auto", width: "100%", height: "100dvh" }}>
-              {/* <iframe
-                  // src={`${pdfFile}#toolbar=0&view=FitH`}
-                  src={pdfFile} 
-                  type="application/pdf"
-                  style={{ width: '100%', height: '100%', overflowY:'auto' }}
-                  title="PDF Viewer"
-                />
-                */}
               <div
                 className="isLaptop"
                 style={{
@@ -130,47 +193,15 @@ const PublicIFU = () => {
                 </object>
               </div>
 
-              {/* <div 
-                  className="isMobile m-4"
-                  >
-                  Your browser does not support eIFU.{" "}
-                  Download the eIFU's versions
-                  {allVersion.length > 0 &&
-                    allVersion.map((item, index) => 
-                       (
-                        <div key={index}>
-                          <p>
-                            <a
-                              href={pdfFile}
-                              download={`${metadata?.IFUName || 'eIFU'} version${item?.ifuVersion}.pdf`}
-                            >
-                             {index + 1}- version: {item?.ifuVersion}
-                            </a>
-                            
-                          </p>
-                        </div>
-                      )
-                    )}
-                </div> */}
-              {/* <object
-                  // src={`${pdfFile}#toolbar=0&view=FitH`}
-                  data={`${pdfFile}#toolbar=0&view=FitH`}
-                  type="application/pdf"
-                  width="100%"
-                  height="100%"
-                > */}
-              {/* <p style={{marginBottom:'5px'}}>
-                      Your browser does not support PDFs.{" "}
-                      <a
-                        href={pdfData}
-                        download={`${metadata?.IFUName || 'eIFU'} version${metadata?.ifuVerssion}.pdf`}
-                      >
-                        version {metadata?.ifuVerssion}
-                      </a>
-                      
-                    </p> */}
-
-              <div className="isMobile">
+              <div
+                style={{
+                  height: "100dvh",
+                  width: "100dvw",
+                  paddingTop: "80px",
+                  margin:'auto'
+                }}
+                className="isMobile"
+              >
                 <div
                   className=""
                   style={{
@@ -181,8 +212,8 @@ const PublicIFU = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     padding: "10px",
-                    position:'fixed',
-                    top:'0',
+                    position: "fixed",
+                    top: "0",
                     zIndex: 1000,
                   }}
                 >
@@ -206,129 +237,29 @@ const PublicIFU = () => {
                       />
                     </Link>
                   </div>
-                </div>
-                <div className="container" style={{ marginTop:'100px'}}>
-                  <h2
-                    className="card p-2"
-                    style={{ fontSize: "22px", border: "0", color: "#3F3F3F" }}
-                  >
-                    {metadata?.IFUName}
-                  </h2>
-
-                  <p
-                    style={{
-                      fontWeight: "600",
-                      margin: "0",
-                      marginBottom: "5px",
-                    }}
-                  >
-                    description:
-                  </p>
-                  <p
-                    className="card p-2"
-                    style={{ border: "0", fontSize: "14px" }}
-                  >
-                    <span style={{ color: "gray" }}>
-                      {metadata?.IFUDescription ||
-                        "No description available for this eIFU."}
-                    </span>
-                  </p>
-                  <p
-                    className="mb-1"
-                    style={{
-                      color: "gray",
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      margin: "0",
-                    }}
-                  >
-                    {" "}
-                    <CheckCircleOutlineIcon
+                </div>  
+                  <Worker style={{border:'0'}} workerUrl="https://unpkg.com/pdfjs-dist@2.15.349/build/pdf.worker.min.js">
+                    <div className=""
                       style={{
-                        width: "20px",
-                        marginRight: "5px",
-                        color: "#08408B",
-                        marginBottom: "1px",
+                        width: "100dvw",
+                        height: "100%",
+                        overflowY: "auto",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        paddingTop: "10px",
+                        border:'0'
                       }}
-                    />
-                    Language: {metadata?.language}
-                  </p>
-                  <p
-                    className="mb-1"
-                    style={{
-                      color: "gray",
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      margin: "0",
-                    }}
-                  >
-                    {" "}
-                    <CheckCircleOutlineIcon
-                      style={{
-                        width: "20px",
-                        marginRight: "5px",
-                        color: "#08408B",
-                        marginBottom: "1px",
-                      }}
-                    />
-                    Created by : {metadata?.companyName}
-                  </p>
-
-                  {/* <h2 style={{ fontSize: "30px" }}>Select an eIFU Version</h2> */}
-                  <h6 className="mt-3">Explore all eIFU document versions:</h6>
-                  <div
-                    className="card p-2"
-                    style={{ fontSize: "22px", border: "0", color: "#3F3F3F" }}
-                  >
-                    {allVersion.length > 0 &&
-                      allVersion.map((item, index) => (
-                              
-                        <div className="mb-2" key={index} style={{width:'100%', borderTop: index === 0 ? '' : '1px solid lightgray'}}>
-                          <a
-                            style={{
-                              color: "#9A3B39",
-                              fontSize: "15px",
-                              fontWeight: "500",
-                              margin: "0",
-                            }}
-                            className=" p-2"
-                            href={pdfFile}
-                            // download={`${metadata?.IFUName || 'eIFU'} version${metadata?.ifuVersion}.pdf`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => {
-                              e.preventDefault();
-
-                              // Create an anchor element to trigger download
-                              const downloadLink = document.createElement("a");
-                              downloadLink.href = pdfFile;
-                              // downloadLink.download = `${item?.ifuVersion}_IFU.pdf`;
-                              downloadLink.click();
-
-                              // Open in a new tab after download
-                              window.open(
-                                pdfFile,
-                                "_blank",
-                                "noopener,noreferrer"
-                              );
-                            }}
-                          >
-                            <ContentCopySharpIcon
-                              style={{
-                                width: "20px",
-                                marginRight: "5px",
-                                color: "#9A3B39",
-                                marginBottom: "1px",
-                              }}
-                            />
-                            version: {item?.ifuVersion}
-                          </a>
-                        </div>
-                      ))}
-                  </div>
-                </div>
+                    >
+                      {pdfFile && (
+                        <Viewer style={{border:'0'}} 
+                          fileUrl={pdfFile}
+                          plugins={[defaultLayoutPluginInstance]}
+                        />
+                      )}
+                    </div>
+                  </Worker>
               </div>
-              {/* </object> */}
             </div>
           </div>
         </div>
@@ -341,7 +272,6 @@ const PublicIFU = () => {
             alignItems: "center",
           }}
         >
-          {/* {" pending"} */}
           <Lottie animationData={lottieLoader} style={{ width: "20%" }} />
         </div>
       )}
