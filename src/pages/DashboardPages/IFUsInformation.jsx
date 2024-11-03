@@ -14,6 +14,9 @@ import Swal from "sweetalert2";
 import { RotatingLines } from "react-loader-spinner";
 import CheckListTable from "../../components/checklistTable/CheckListTable";
 import EditIcon from '@mui/icons-material/Edit';
+import QRCodeHandler from "../../components/QRCodeHandler/QRCodeHandler";
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+
 const IFUsInformation = () => {
   const { IFUId } = useParams();
   const token = Cookies.get("eIfu_ATK") || null;
@@ -203,90 +206,15 @@ const IFUsInformation = () => {
                   </p>
                 )}
               </div>
-              <div className="mt-3" style={{ display: "", gridGap: "10px" }}>
-                <p
-                  className="mb-1"
+              <div className="row mt-3 md-12">
+                <div
+                  className="col-md-6"
                   style={{
-                    color: "gray",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    margin: "0",
+                    display: "",
+                    gridGap: "10px",
+                    backgroundColor: "",
                   }}
                 >
-                  {" "}
-                  <CheckCircleOutlineIcon
-                    style={{
-                      width: "20px",
-                      marginRight: "5px",
-                      color: "#08408B",
-                      marginBottom: "1px",
-                    }}
-                  />
-                  Language: {instruction?.language}
-                </p>
-                <p
-                  className="mb-1"
-                  style={{
-                    color: "gray",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    margin: "0",
-                  }}
-                >
-                  {" "}
-                  <CheckCircleOutlineIcon
-                    style={{
-                      width: "20px",
-                      marginRight: "5px",
-                      color: "#08408B",
-                      marginBottom: "1px",
-                    }}
-                  />
-                  Version: {instruction?.ifuVersion}
-                </p>
-                <p
-                  className="mb-1"
-                  style={{
-                    color: "gray",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    margin: "0",
-                  }}
-                >
-                  {" "}
-                  <CheckCircleOutlineIcon
-                    style={{
-                      width: "20px",
-                      marginRight: "5px",
-                      color: "#08408B",
-                      marginBottom: "1px",
-                    }}
-                  />
-                  Status: {instruction?.status}
-                </p>
-                <p
-                  className="mb-1"
-                  style={{
-                    color: "gray",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    margin: "0",
-                  }}
-                >
-                  {" "}
-                  <CheckCircleOutlineIcon
-                    style={{
-                      width: "20px",
-                      marginRight: "5px",
-                      color: "#08408B",
-                      marginBottom: "1px",
-                    }}
-                  />
-                  Created By: {instruction?.createdBy?.lastName}{" "}
-                  {instruction?.createdBy?.firstName}
-                </p>
-                {(instruction?.approvedBy?.lastName ||
-                  instruction?.approvedBy?.firstName) && (
                   <p
                     className="mb-1"
                     style={{
@@ -305,12 +233,8 @@ const IFUsInformation = () => {
                         marginBottom: "1px",
                       }}
                     />
-                    Approved By: {instruction?.approvedBy?.lastName}{" "}
-                    {instruction?.approvedBy?.firstName}
+                    Language: {instruction?.language}
                   </p>
-                )}
-                {(instruction?.releaseBy?.lastName ||
-                  instruction?.releaseBy?.firstName) && (
                   <p
                     className="mb-1"
                     style={{
@@ -329,83 +253,191 @@ const IFUsInformation = () => {
                         marginBottom: "1px",
                       }}
                     />
-                    Released By: {instruction?.releaseBy?.lastName}{" "}
-                    {instruction?.releaseBy?.firstName}
+                    Version: {instruction?.ifuVersion}
                   </p>
-                )}
+                  <p
+                    className="mb-1"
+                    style={{
+                      color: "gray",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "0",
+                    }}
+                  >
+                    {" "}
+                    <CheckCircleOutlineIcon
+                      style={{
+                        width: "20px",
+                        marginRight: "5px",
+                        color: "#08408B",
+                        marginBottom: "1px",
+                      }}
+                    />
+                    Status: {instruction?.status}
+                  </p>
+                  <p
+                    className="mb-1"
+                    style={{
+                      color: "gray",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      margin: "0",
+                    }}
+                  >
+                    {" "}
+                    <CheckCircleOutlineIcon
+                      style={{
+                        width: "20px",
+                        marginRight: "5px",
+                        color: "#08408B",
+                        marginBottom: "1px",
+                      }}
+                    />
+                    Created By: {instruction?.createdBy?.lastName}{" "}
+                    {instruction?.createdBy?.firstName}
+                  </p>
+                  {(instruction?.approvedBy?.lastName ||
+                    instruction?.approvedBy?.firstName) && (
+                    <p
+                      className="mb-1"
+                      style={{
+                        color: "gray",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        margin: "0",
+                      }}
+                    >
+                      {" "}
+                      <CheckCircleOutlineIcon
+                        style={{
+                          width: "20px",
+                          marginRight: "5px",
+                          color: "#08408B",
+                          marginBottom: "1px",
+                        }}
+                      />
+                      Approved By: {instruction?.approvedBy?.lastName}{" "}
+                      {instruction?.approvedBy?.firstName}
+                    </p>
+                  )}
+                  {(instruction?.releaseBy?.lastName ||
+                    instruction?.releaseBy?.firstName) && (
+                    <p
+                      className="mb-1"
+                      style={{
+                        color: "gray",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        margin: "0",
+                      }}
+                    >
+                      {" "}
+                      <CheckCircleOutlineIcon
+                        style={{
+                          width: "20px",
+                          marginRight: "5px",
+                          color: "#08408B",
+                          marginBottom: "1px",
+                        }}
+                      />
+                      Released By: {instruction?.releaseBy?.lastName}{" "}
+                      {instruction?.releaseBy?.firstName}
+                    </p>
+                  )}
+                </div>
+                {instruction?.status === "published" &&<div className="col-md-6">
+                  <QRCodeHandler IFUId={IFUId} size={100} /> <br />
+                  <Link style={{color:'#001E43', fontWeight:'600'}} to={`https://www.easyifu.com/p-eIFU/${IFUId}`}> <InsertLinkIcon style={{color:'#ECF0F3', fontSize:'25px', backgroundColor:'#001E43', borderRadius:'5px', padding:'2px'}}/>: https://www.easyifu.com/p-eIFU/{IFUId}
+                  </Link>
+                </div>}
               </div>
-            <CheckListTable checkList={instruction?.checkList} />
+              <CheckListTable checkList={instruction?.checkList} />
 
-             {instruction?.status === "Draft" && <>
-             <div  style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                <button
-                  onClick={
-                    formData.receivedId === ""
-                      ? () => setIsPopupOpen(true)
-                      : handleSend
-                  }
-                  style={{
-                    backgroundColor: "#062D60",
-                    width: "80%",
-                    padding: "3px 10px",
-                    borderRadius: "4px",
-                    marginTop: "15px",
-                    color: "#FEFEFE",
-                    fontSize: "18px",
-                    fontWeight: "600",
-                    height:'35px'
-                  }}
-                  disabled={approverRequest}
-                >
-                  {formData.receivedId === "" 
-                  ? "choose user" 
-                  : approverRequest 
-                  ?
-                  <RotatingLines
-                    strokeColor="#ffffff"
-                    strokeWidth="5"
-                    animationDuration="0.75"
-                    width="20"
-                    visible={true}
-                  />
-                  : "Send"}
-                </button>
-                <Link to={`/dashboard/Instructions-for-use-update/${IFUId}`} style={{
-                    backgroundColor: "#066F05",
-                    width: "40px",
-                    padding: "3px 10px",
-                    borderRadius: "4px",
-                    marginTop: "15px",
-                    color: "#FEFEFE",
-                    fontSize: "18px",
-                    fontWeight: "600",
-                    height:'35px'
-                  }}> <EditIcon/></Link>
-             </div>
-                <p
-                  style={{
-                    marginTop: "10px",
-                    color: "gray",
-                    fontSize: "16px",
-                    fontWeight: "500",
-                  }}
-                >
-                  {receiverInfo &&
-                    "Received: " +
-                      receiverInfo.firstName +
-                      " " +
-                      receiverInfo.lastName}
-                  <br />
-                  <span
+              {instruction?.status === "Draft" && (
+                <>
+                  <div
                     style={{
-                      color: "gray",
-                      fontSize: "12px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                     }}
                   >
-                    {receiverInfo?.role?.join(", ")}
-                  </span>
-                </p>
-              </>}
+                    <button
+                      onClick={
+                        formData.receivedId === ""
+                          ? () => setIsPopupOpen(true)
+                          : handleSend
+                      }
+                      style={{
+                        backgroundColor: "#062D60",
+                        width: "80%",
+                        padding: "3px 10px",
+                        borderRadius: "4px",
+                        marginTop: "15px",
+                        color: "#FEFEFE",
+                        fontSize: "18px",
+                        fontWeight: "600",
+                        height: "35px",
+                      }}
+                      disabled={approverRequest}
+                    >
+                      {formData.receivedId === "" ? (
+                        "choose user"
+                      ) : approverRequest ? (
+                        <RotatingLines
+                          strokeColor="#ffffff"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="20"
+                          visible={true}
+                        />
+                      ) : (
+                        "Send"
+                      )}
+                    </button>
+                    <Link
+                      to={`/dashboard/Instructions-for-use-update/${IFUId}`}
+                      style={{
+                        backgroundColor: "#066F05",
+                        width: "40px",
+                        padding: "3px 10px",
+                        borderRadius: "4px",
+                        marginTop: "15px",
+                        color: "#FEFEFE",
+                        fontSize: "18px",
+                        fontWeight: "600",
+                        height: "35px",
+                      }}
+                    >
+                      {" "}
+                      <EditIcon />
+                    </Link>
+                  </div>
+                  <p
+                    style={{
+                      marginTop: "10px",
+                      color: "gray",
+                      fontSize: "16px",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {receiverInfo &&
+                      "Received: " +
+                        receiverInfo.firstName +
+                        " " +
+                        receiverInfo.lastName}
+                    <br />
+                    <span
+                      style={{
+                        color: "gray",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {receiverInfo?.role?.join(", ")}
+                    </span>
+                  </p>
+                </>
+              )}
             </div>
             {isPopupOpen && (
               <UsersListModal
